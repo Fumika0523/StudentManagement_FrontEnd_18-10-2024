@@ -8,8 +8,10 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import {useNavigate} from 'react-router-dom'
+import axios from 'axios';
+import { url } from '../utils/constant';
 
-function SignIn(){
+function SignIn({isAuthenticated,setIsAuthenticated}){
 
     const formSchema = Yup.object().shape({
         password:Yup.string().required(),
@@ -30,6 +32,17 @@ function SignIn(){
 
     const navigate=useNavigate()
 
+    const postSignInUser=async(loginUser)=>{
+        console.log(loginUser)
+        const res = await axios.post(`${url}/signin`,loginUser)
+        console.log(res.data)
+        sessionStorage.setItem('token',res.data.token)
+        sessionStorage.setItem('username',res.data.user.name)
+        if(res.data.token){
+            setIsAuthenticated(true) // signed in >> true
+        }
+        navigate('/signup')
+    }
 
     return(
         <>
@@ -52,7 +65,7 @@ function SignIn(){
                     onChange={formik.handleChange} />
                 </Form.Group>
                 <div className='text-end my-1 mb-4' style={{fontSize:"80%"}}></div>
-                <Button className="mb-5 signInStyle" style={{width:"100%",borderRadius:"20px"}}>SIGN IN</Button>
+                <Button type="submit" className="mb-5 signInStyle" style={{width:"100%",borderRadius:"20px"}}>SIGN IN</Button>
                 <div className='text-center'>
                 <div style={{fontSize:"90%"}}>Or Sign Up Using</div>
                 <div className='gap-1 fs-3 mt-3 d-flex' style={{justifyContent:"center"}}>

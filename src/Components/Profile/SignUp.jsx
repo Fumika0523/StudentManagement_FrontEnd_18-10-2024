@@ -8,6 +8,8 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useNavigate } from 'react-router-dom';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import { url } from '../utils/constant';
+import axios from 'axios';
 
 
 function SignUp(){
@@ -29,11 +31,20 @@ function SignUp(){
         validationSchema:formSchema,
         onSubmit:(values)=>{
             console.log(values)
-           // postSignInUser(values)
+            postSignUpUser(values)
         }
     })
 
     const navigate=useNavigate()
+
+    const postSignUpUser=async(newUser)=>{
+        console.log(newUser)
+        const res = await axios.post(`${url}/signup`,newUser)
+        console.log(res)
+        if(res.status == 200){
+            //navigate to signin page
+            navigate('/signin')
+        }}
 
     return(
         <>
