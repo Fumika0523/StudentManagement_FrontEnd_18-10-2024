@@ -41,7 +41,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
         if(res.data.token){
             setIsAuthenticated(true) // signed in >> true
         }
-        navigate('/signup')
+        navigate('/homepage')
     }
 
     return(
@@ -79,7 +79,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     <GoogleIcon sx={{color:"#ea4335",fontSize:"35px"}} />
                     </div>
                     <div style={{marginTop:"22%",fontSize:"90%"}}>Or Sign Up Using</div>
-                    <div style={{marginTop:"5%",fontSize:"90%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
+                    <div style={{marginTop:"5%",fontSize:"90%"}} onClick={()=>{navigate('/homepage')}}>SIGN UP</div>
                     </div>
             </Form>
         </div>

@@ -3,8 +3,18 @@ import './App.css'
 import SignIn from './Components/Profile/SignIn'
 import SignUp from './Components/Profile/SignUp'
 import { useEffect, useState } from 'react'
+import ProfileForm from './Components/Profile/ProfileForm'
+import { Box } from '@mui/material'
+import SideBar from './HomePage/SideBar'
+import NavBar from './HomePage/NavBar'
+import axios from 'axios'
+import UserNameForm from './Components/Profile/usernameForm'
+import { url } from './Components/utils/constant'
+
 
 function App() {
+  const [userData,setUserData] = useState([])
+
 //signin part
 //initially you are not loggin,its set as false,
 //when you get the token(signed in), your authentication as true
@@ -15,17 +25,43 @@ useEffect(()=>{
   const token = sessionStorage.getItem('token') //if you have a token,
   console.log(token) 
   setIsAuthenticated(true) //signed in,>>authentication > true
+  getUserData()
 },[])
+
+// Get Student Data
+const getUserData = async()=>{
+  const token=sessionStorage.getItem('token')
+  let config = {
+    headers:{
+      Authorization:`Bearer ${token}`
+    }
+  }
+  console.log("User data is called......");
+  let res = await axios.get(`${url}/users/profile`,config)
+  console.log(res.data.userData)
+  console.log("userData")
+  setUserData(res.data.userData)
+}
+
+console.log(userData)
 
   return (
     <>
-    <div>
+    <div className='d-flex'>
+      <SideBar/>
+    <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
       {/* <div>Welcome to new App</div> */}
+      {/* We always wannt present Homepagenav bar */}
+      {/* <HomePage/>  */}
+      <NavBar/>
       <Routes>
-        {/*  */}
+        <Route path="/profile" element={<ProfileForm userData={userData} />}/>
+        {/* //<Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/signin" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
         <Route path="/signup" element={<SignUp/>}/>
+        <Route path="/usernameform" element={<UserNameForm userData={userData}/>}/>
       </Routes>
+      </Box>
       </div>
     </>
   )
