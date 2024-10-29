@@ -78,7 +78,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
                      {/* Gender*/}
                      <div className='d-flex text-secondary pt-3' style={{fontSize:"80%"}}>
                   <div style={{width:"30%"}}>Gender</div>
-                  <div>{gender}</div>
+                  <div onClick={()=>{navigate('/genderform')}} >{gender}</div>
                   </div>
               </div>
       

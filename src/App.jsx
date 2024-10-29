@@ -8,8 +8,9 @@ import { Box } from '@mui/material'
 import SideBar from './HomePage/SideBar'
 import NavBar from './HomePage/NavBar'
 import axios from 'axios'
-import UserNameForm from './Components/Profile/usernameForm'
+import UserNameForm from './Components/Profile/Edit/userNameForm'
 import { url } from './Components/utils/constant'
+import GenderForm from './Components/Profile/Edit/genderForm'
 
 
 function App() {
@@ -43,6 +44,7 @@ const getUserData = async()=>{
   setUserData(res.data.userData)
 }
 
+
 console.log(userData)
 
   return (
@@ -60,6 +62,7 @@ console.log(userData)
         <Route path="/signin" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
         <Route path="/signup" element={<SignUp/>}/>
         <Route path="/usernameform" element={<UserNameForm userData={userData}/>}/>
+        <Route path="/genderform" element={<GenderForm userData={userData}/>}/>
       </Routes>
       </Box>
       </div>
