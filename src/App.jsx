@@ -11,6 +11,7 @@ import axios from 'axios'
 import UserNameForm from './Components/Profile/Edit/userNameForm'
 import { url } from './Components/utils/constant'
 import GenderForm from './Components/Profile/Edit/genderForm'
+import BirthdateForm from './Components/Profile/Edit/birthdateForm'
 
 
 function App() {
@@ -31,6 +32,7 @@ useEffect(()=>{
 
 // Get Student Data
 const getUserData = async()=>{
+  console.log("App.jsx call")
   const token=sessionStorage.getItem('token')
   let config = {
     headers:{
@@ -38,12 +40,11 @@ const getUserData = async()=>{
     }
   }
   console.log("User data is called......");
-  let res = await axios.get(`${url}/users/profile`,config)
+  let res = await axios.get(`${url}/users/profile`,config) //API call retrieving from users/profile
   console.log(res.data.userData)
   console.log("userData")
-  setUserData(res.data.userData)
+  setUserData(res.data.userData) //useState is updated
 }
-
 
 console.log(userData)
 
@@ -57,12 +58,13 @@ console.log(userData)
       {/* <HomePage/>  */}
       <NavBar/>
       <Routes>
-        <Route path="/profile" element={<ProfileForm userData={userData} />}/>
+        <Route path="/profile" element={<ProfileForm />}/>
         {/* //<Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/signin" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
         <Route path="/signup" element={<SignUp/>}/>
-        <Route path="/usernameform" element={<UserNameForm userData={userData}/>}/>
-        <Route path="/genderform" element={<GenderForm userData={userData}/>}/>
+        <Route path="/usernameform" element={<UserNameForm/>}/>
+        <Route path="/genderform" element={<GenderForm />}/>
+        <Route path="/birthdateform" element={<BirthdateForm/>}/>
       </Routes>
       </Box>
       </div>

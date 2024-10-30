@@ -3,26 +3,32 @@ import { useFormik } from 'formik'
 import { Box, TextField } from "@mui/material";
 import axios from "axios";
 import { url } from "../../utils/constant";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-function userNameForm({userData}){
+function userNameForm(){
+    const [userData,setUserData]=useState([]) //useState valiable
+
     const navigate = useNavigate()
 
     const formSchema = Yup.object().shape({
         username:Yup.string().required()
     })
-    
+    console.log(userData?.username) //checking if the data is stored or not
+
+    //useFormik,
     const formik=useFormik({
         initialValues:{
-            username:userData?.username
+            //  || << or operator, if you dont have username, pass empty string
+            username:userData.username || ""
         },
+        enableReinitialize: true, //if there is any update in my initial value, please make it update >> enable > true
         onSubmit:(values)=>{
             console.log(values)
             updateProfile(values)
-        }})
-
+     }})
+      
     const token = sessionStorage.getItem('token')
     console.log('token')
 
@@ -46,10 +52,14 @@ function userNameForm({userData}){
         console.log("User data is called")
         let res = await fetch(`${url}/users/profile`,config)
         let data = await res.json()
-        console.log(data)
-        getUserData(data)
+        console.log(data.userData)
+        setUserData(data?.userData)
     }
-
+    useEffect(()=>{
+        getUserData()
+    },[])
+    //console.log(userData.userData)
+   
 
     return(
     <>
@@ -68,11 +78,11 @@ function userNameForm({userData}){
     name="username"
     id="username"
     onChange={formik.handleChange}
-    defaultValue={formik.values.username}/>
+    // not defaultValue >> value
+    value={formik.values.username}/> 
     {formik.errors.username && formik.touched.username? (
     <div>{formik.errors.username}</div>
     ) : null }
-
     <div className="mt-3 text-end" >
     {/* Cancel */}
     <button className="btn text-primary" style={{fontSize:"90%"}}

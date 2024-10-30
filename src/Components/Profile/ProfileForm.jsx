@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 import { url } from "../utils/constant"
 import { useNavigate } from "react-router-dom"
 
-
 function ProfileForm(){
 const navigate = useNavigate()
 //dateString is a parameter, its accpeting the birthdate
@@ -68,13 +67,14 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
                   <div style={{width:"30%"}}>Username</div>
                   <div onClick={()=>{navigate('/usernameform')}} >{username}</div>
                   </div>
+
                      {/* Birthday */}
                      <div className='border-bottom border-secondary-subtle d-flex text-secondary py-3' style={{fontSize:"80%"}}>
                   <div style={{width:"30%"}}>Birthday</div>
                    {/*  calling formatDate() function */}
-                  <div>{formatDate(birthdate)}</div> 
-                 
+                  <div onClick={()=>{navigate('/birthdateform')}}>{formatDate(birthdate)}</div> 
                   </div>
+
                      {/* Gender*/}
                      <div className='d-flex text-secondary pt-3' style={{fontSize:"80%"}}>
                   <div style={{width:"30%"}}>Gender</div>
