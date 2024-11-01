@@ -2,9 +2,10 @@ import * as Yup from "yup";
 import { useFormik } from 'formik'
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Form from 'react-bootstrap/Form';
 import { url } from "../../utils/constant";
 import axios from "axios";
+import Form from 'react-bootstrap/Form';
+
 
 function genderForm(){
     const [userData,setUserData] = useState([]) // useState variable
@@ -14,17 +15,16 @@ function genderForm(){
     const formSchema = Yup.object().shape({
         gender:Yup.string()
     })
-    
-    console.log(userData?.gender)
+     console.log(userData?.gender)
 
     const formik=useFormik({
         initialValues:{
-            username:userData.gender || ""
+            gender:userData.gender || ""
         },
         enableReinitialize:true,
         onSubmit:(values)=>{
             console.log(values)
-            //updateProfile(values)
+            updateProfile(values)
         }})
 
         const token = sessionStorage.getItem('token')
@@ -37,7 +37,7 @@ function genderForm(){
 
         const updateProfile=async(updatedProfile)=>{
             console.log("Gender posted to the DB")
-            console.log("Update Gender:",updatedProfile)
+            // console.log("Update Gender:",updatedProfile)
 
         let res = await axios.put(`${url}/users/profile`,updatedProfile,config)
         console.log(res)
@@ -58,26 +58,33 @@ function genderForm(){
 
     return(
         <>
+        {/* Boostrap FOrm >>> div with a component form  */}
+        {/* Material UI Form > <Box> with a component form */}
+        {/* If you using <Form> % formik cannot be used together > */}
         <div className="border border-secondary-subtle rounded m-5 p-3"
-        component="form"
-        noValidate autoComplete="off"
-        onSubmit={formik.handleSubmit}>
+                component="form"
+                noValidate autoComplete="off"
+                onSubmit={formik.handleSubmit}>
 
         <div>Gender</div>
+
         {/* MALE */}
         <div className='form-check form-check-inline'>                 
-        <Form.Check type="radio" name="gender" label={`Male`}
-        value="male"
-         onChange={formik.handleChange}/>
+        <Form.Check type="radio" name="gender" label="Male" value="male" 
+         onChange={formik.handleChange}
+         checked={formik.values.gender ==="male"}
+         />
          {formik.errors.gender && formik.touched.gender?(
             <div>{formik.errors.gender}</div>
          ): null }
          </div>
          {/* FEMALE */}
         <div className='form-check form-check-inline'>
-        <Form.Check type="radio" name="gender" label={`Female`}
-        value="female"
-         onChange={formik.handleChange}/>
+        <Form.Check type="radio" name="gender" label="Female" value="female"
+         onChange={formik.handleChange}
+        //  if formik.values.gender is equal to female , then check
+         checked={formik.values.gender === "female"}
+         />
            {formik.errors.gender && formik.touched.gender?(
             <div>{formik.errors.gender}</div>
          ): null }
@@ -94,13 +101,14 @@ function genderForm(){
 
         {/* Save */}
         <button type="submit" className="btn btn-secondary px-3"
-        style={{fontSize:"90%",borderRadius:"16px"}}
-        onClick={()=>{
-       
-        }}>Save</button>
+        style={{fontSize:"90%",borderRadius:"16px"}}>
+            Save
+        </button>
         </div>
         </div>
         </>
+
+    
     )}
 
 export default genderForm
