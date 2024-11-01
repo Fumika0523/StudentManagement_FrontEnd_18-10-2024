@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import axios from "axios";
 import { Form, Formik, useFormik } from "formik";
 import { useEffect, useState } from "react";
@@ -47,20 +47,31 @@ let config = {
         navigate('/profile')
     }}
 
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const options = { year: 'numeric', month: 'long', day: 'numeric' }; // showing only year, month, day in number
-        return date.toLocaleDateString('en-US', options); // show in US date style
-    };
-
-
     const getUserData=async()=>{
         console.log("User data is called")
         let res = await fetch(`${url}/users/profile`,config)
         let data = await res.json()
         console.log(data.userData)
-        setUserData(data?.userData)
+        if (data.userData) {
+            // Extract YYYY-MM-DD from the date string
+            const formattedDate = data.userData.birthdate
+            //if data.userData.birthdate exist, >> convert into ISOString
+                ? new Date(data.userData.birthdate).toISOString().split('T')[0]  //split method,
+                //otherwise make it empty
+                : "";
+            //spreading operator, we are updating only birthdate. the rest is remaing the same
+            setUserData({ ...data.userData, birthdate: formattedDate });
+        }
+        // date is ISOSstring >> convert >> toISOString()
+        console.log("2024-10-29T15:07:54.366Z".split('T'))
+        //['2024-10-29', '15:07:54.366Z']
+        console.log("2024-10-29T15:07:54.366Z".split('T')[0])
+        //2024-10-29
+        
+    
+        //we want a date and its a array,
+        console.log(data.userData)
+       // setUserData(data?.userData)
     }
     useEffect(()=>{
         getUserData()
@@ -69,50 +80,52 @@ let config = {
     return (
         <>
             <div className="m-5 p-3 border border-secondary-subtle rounded" style={{ width: "80%" }}>
-                <Form
-                    component="form"
-                    noValidate autoComplete="off"
-                    onSubmit={formik.handleSubmit}>
-
-                    {/* Birthday */}
-                    <div className='border-bottom border-secondary-subtle d-flex text-secondary py-3' style={{ fontSize: "80%" }}>
-                        <div style={{ width: "30%" }}>Birthday</div>
-                        {/*  calling formatDate() function */}
-                        {/* <div 
+            <form onSubmit={formik.handleSubmit}>
+                {/* Material UI */}
+                {/* Birthday */}
+                <Box className="border-bottom border-secondary-subtle d-flex text-secondary py-3" style={{ fontSize: "80%" }}>
+                    <Box style={{ width: "30%" }}>Birthday</Box>
+                    <TextField
+                        fullWidth
+                        type="date"
+                        name="birthdate"
+                        value={formik.values.birthdate}
                         onChange={formik.handleChange}
-                        value={formik.values.birthdate}>
-                               {formik.errors.birthdate && formik.touched.birthdate? (
-                         <div>{formik.errors.birthdate}</div>
-                          ) : null }
-                            {formatDate(formik.values.birthdate)}
-                        </div> */}
-                            <Form.Group className='mt-3'>
-                            <Form.Label className='m-0'>Birthdate</Form.Label>
-                            <Form.Control type="date" placeholder="Type your Birthdate" name="birthdate"
-                                value={formik.values.birthdate}
-                                onChange={formik.handleChange} />
-                        </Form.Group>
-                    </div>
+                        //
+                        error={formik.touched.birthdate && Boolean(formik.errors.birthdate)}
+                        helperText={formik.touched.birthdate && formik.errors.birthdate}
+                        variant="outlined"
+                        size="small"
+                    />
+                </Box>
 
+                {/* Action Buttons */}
+                <Box className="mt-3 text-end">
+                    {/* Cancel Button */}
+                    <Button
+                        variant="text"
+                        color="primary"
+                        style={{ fontSize: "90%" }}
+                        onClick={() => navigate('/profile')}
+                        type="button"
+                    >
+                    Cancel
+                    </Button>
 
+                    {/* Save Button */}
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        style={{ fontSize: "90%", borderRadius: "16px" }}
+                        type="submit"
+                    >
+                    Save
+                    </Button>
+                </Box>
+            </form>
 
-                    <div className="mt-3 text-end" >
-                        {/* Cancel */}
-                        <button className="btn text-primary" style={{ fontSize: "90%" }}
-                            onClick={() => {
-                                navigate('/profile')
-                            }}>
-                            Cancel
-                        </button>
+        
 
-                        {/* Save */}
-                        <button className="btn btn-secondary px-3"
-                            style={{ fontSize: "90%", borderRadius: "16px" }}
-                            onClick={() => {
-                                updateProfile()
-                            }}>Save</button>
-                    </div>
-                </Form>
             </div>
         </>
     )

@@ -45,6 +45,7 @@ function userNameForm(){
     let res = await axios.put(`${url}/users/profile`,updatedProfile,config)
     console.log(res)
     if(res){
+        // When there is a response, it should b navigated to progile page
        navigate('/profile')
     }}
 
@@ -83,7 +84,7 @@ function userNameForm(){
     {formik.errors.username && formik.touched.username? (
     <div>{formik.errors.username}</div>
     ) : null }
-    
+
     <div className="mt-3 text-end" >
     {/* Cancel */}
     <button className="btn text-primary" style={{fontSize:"90%"}}
@@ -96,9 +97,7 @@ function userNameForm(){
     {/* Save */}
     <button className="btn btn-secondary px-3"
     style={{fontSize:"90%",borderRadius:"16px"}}
-     onClick={()=>{
-        updateProfile()
-    }}>Save</button>
+    >Save</button>
     </div>
     </Box>
     </div>
