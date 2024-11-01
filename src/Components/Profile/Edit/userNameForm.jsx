@@ -83,6 +83,7 @@ function userNameForm(){
     {formik.errors.username && formik.touched.username? (
     <div>{formik.errors.username}</div>
     ) : null }
+    
     <div className="mt-3 text-end" >
     {/* Cancel */}
     <button className="btn text-primary" style={{fontSize:"90%"}}
