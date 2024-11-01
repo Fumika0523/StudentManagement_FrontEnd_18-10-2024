@@ -16,3 +16,10 @@ type="submit">
 Save
 </Button>
 </form>
+
+//phone number edit form
+//update password form >> when you updating need encrypting
+//navBar >> search bar + 2 icons
+//logout >> navigate to signup page
+///dashboard create only 1 card
+// import 4 icons and 4 colours

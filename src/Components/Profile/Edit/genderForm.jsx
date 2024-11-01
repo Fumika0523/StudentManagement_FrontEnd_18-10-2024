@@ -58,14 +58,11 @@ function genderForm(){
 
     return(
         <>
-        {/* Boostrap FOrm >>> div with a component form  */}
         {/* Material UI Form > <Box> with a component form */}
         {/* If you using <Form> % formik cannot be used together > */}
-        <div className="border border-secondary-subtle rounded m-5 p-3"
-                component="form"
-                noValidate autoComplete="off"
-                onSubmit={formik.handleSubmit}>
-
+        {/* Boostrap also have <Form> 
+        never use the different component together. */}
+        <Form className="border border-secondary-subtle rounded m-5 p-3" onSubmit={formik.handleSubmit}>
         <div>Gender</div>
 
         {/* MALE */}
@@ -105,7 +102,8 @@ function genderForm(){
             Save
         </button>
         </div>
-        </div>
+        </Form>
+
         </>
 
     
