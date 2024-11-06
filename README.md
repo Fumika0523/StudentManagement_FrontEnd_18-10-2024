@@ -23,3 +23,11 @@ Save
 //logout >> navigate to signup page
 ///dashboard create only 1 card
 // import 4 icons and 4 colours
+
+import { TfiBag } from "react-icons/tfi";
+<TfiBag />
+
+//create 1 card
+
+
+

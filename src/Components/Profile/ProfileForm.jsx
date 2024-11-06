@@ -90,8 +90,8 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
                       <div style={{width:"70%"}} >{email}</div>
                   </div>
                   <div className='d-flex text-secondary border-bottom border-secondary-subtle py-3' style={{fontSize:"80%"}}>
-                      <div style={{width:"30%"}}>Phone</div>
-                      <div style={{width:"70%"}}>{phoneNumber}</div>
+                      <div style={{width:"30%"}} >Phone</div>
+                      <div style={{width:"70%"}} onClick={()=>{navigate('/phonenumberform')}}>{phoneNumber}</div>
                   </div>
               </div>
 
@@ -106,7 +106,8 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
                 
                 {/* Password */}
               <div className="border border-secondary-subtle rounded p-3">
-                  <div className="fs-5">Password</div>
+                  <div
+                  onClick={()=>{navigate('/passwordform')}} className="fs-5">Password</div>
                   <div className="text-secondary" style={{fontSize:"80%"}}>A secure password helps protect your Student Management Account</div>
                   <div style={{fontSize:"70%"}}>Last changed Jul 19,2023</div>
               </div>

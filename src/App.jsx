@@ -12,7 +12,9 @@ import UserNameForm from './Components/Profile/Edit/userNameForm'
 import { url } from './Components/utils/constant'
 import GenderForm from './Components/Profile/Edit/genderForm'
 import BirthdateForm from './Components/Profile/Edit/birthdateForm'
-
+import PhoneNumberForm from './Components/Profile/Edit/phoneNumberForm'
+import PasswordForm from './Components/Profile/Edit/passwordForm'
+import DashboardCard from './Components/Dashboard/dashboardCard'
 
 function App() {
   const [userData,setUserData] = useState([])
@@ -65,6 +67,9 @@ console.log(userData)
         <Route path="/usernameform" element={<UserNameForm/>}/>
         <Route path="/genderform" element={<GenderForm />}/>
         <Route path="/birthdateform" element={<BirthdateForm/>}/>
+        <Route path="/phonenumberform" element={<PhoneNumberForm/>}/>
+        <Route path="/" element={<DashboardCard/>}></Route>
+        <Route path="/passwordform" element={<PasswordForm/>}/>
       </Routes>
       </Box>
       </div>

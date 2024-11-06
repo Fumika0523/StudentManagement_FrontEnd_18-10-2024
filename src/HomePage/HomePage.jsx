@@ -1,5 +1,6 @@
 import NavBar from './NavBar'
 import SideBar from './SideBar'
+import dashboardCard from './dashboardCard'
 
 function HomePage(){
     return(
@@ -7,9 +8,8 @@ function HomePage(){
         <div className='d-flex'>
         <SideBar/>
         <NavBar/>
-    
+        <dashboardCard/>
         </div>
-  
         </>
     )
 }
