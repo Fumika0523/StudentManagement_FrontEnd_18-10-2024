@@ -27,7 +27,10 @@ Save
 import { TfiBag } from "react-icons/tfi";
 <TfiBag />
 
-//create 1 card
+<!-- Bg color -->
+background-color: #4e73df;
+
+<!-- WHen  -->
 
 
 
