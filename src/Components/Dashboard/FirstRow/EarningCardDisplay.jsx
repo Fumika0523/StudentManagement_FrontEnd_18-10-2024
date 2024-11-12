@@ -4,7 +4,7 @@ import {earningCardList} from '../../utils/constant'
 function EarningCardDisplay(){
     return(
         <>
-        <div className="d-flex border" >
+        <div className="d-flex" >
             {
                 earningCardList.map((element,index)=> <EarningCard {...element} key={index}/>
                 )

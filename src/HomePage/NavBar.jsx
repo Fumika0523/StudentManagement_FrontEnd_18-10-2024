@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar';
 import InputBase from '@mui/material/InputBase';
 import { Box } from '@mui/material';
 import { IoMdNotifications } from "react-icons/io";
-import { MdOutlineMailOutline } from "react-icons/md";
+import { MdOutlineMail } from "react-icons/md";
 
 export default function NavBar() {
 
@@ -30,6 +30,10 @@ export default function NavBar() {
     },
   }));
 
+  const iconStyle={
+    fontSize:"150%",
+     color:"#dddfeb",
+  }
   
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -64,7 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" style={{backgroundColor:"white"}} >
       <Toolbar>
-      <Search style={{border:"1px solid grey", width:"100%"}}>
+      <Search style={{border:"1px solid grey", width:"80%"}}>
             <SearchIconWrapper style={{borderColor:"black", color:"grey"}}>
               <SearchIcon />
             </SearchIconWrapper>
@@ -75,9 +79,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
           </Search>
 
     
-        <Dropdown className='d-flex justify-content-end' >
-        <IoMdNotifications className='text-secondary' style={{fontSize:"130%"}}/>
-        <MdOutlineMailOutline className='text-secondary' style={{fontSize:"130%"}} />
+        <Dropdown className='d-flex justify-content-end ' >
+        <div className='me-3 border-end'>
+        <IoMdNotifications className='my-2 mx-3' style={iconStyle}/>
+        <MdOutlineMail className='my-2 me-3' style={iconStyle} />
+        </div>
         <Dropdown.Toggle style={{width:"4%",backgroundColor:"transparent",padding:"0.1%",border:"none"}} >
         <Image src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' roundedCircle style={{width:"100%"}}/>
         </Dropdown.Toggle>

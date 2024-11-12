@@ -1,6 +1,6 @@
 import NavBar from './NavBar'
 import SideBar from './SideBar'
-import DashboardCard from '../Components/Dashboard/DashboardCard'
+import DashboardCard from '../Components/Dashboard'
 
 function HomePage(){
     return(
