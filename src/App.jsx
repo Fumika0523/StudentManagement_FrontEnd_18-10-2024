@@ -19,6 +19,7 @@ import DashboardCard from './Components/Dashboard/dashboardCard'
 
 function App() {
   const [userData,setUserData] = useState([])
+  const [earnings,setEarnings] = useState([])
 
 //signin part
 //initially you are not loggin,its set as false,
@@ -44,12 +45,23 @@ const getUserData = async()=>{
   }
   console.log("User data is called......");
   let res = await axios.get(`${url}/users/profile`,config) //API call retrieving from users/profile
-  console.log(res.data.userData)
+  //console.log(res.data.userData)
   console.log("userData")
   setUserData(res.data.userData) //useState is updated
 }
 
-console.log(userData)
+//console.log(userData)
+
+const getEarningData = async()=>{
+  console.log("Earning data is called..........")
+  let res = await axios.get(`${url}/earnings`)
+  console.log(res.data)
+  setEarnings(res.data)
+}
+useEffect(()=>{
+  getEarningData()
+},[])
+//console.log(getEarningData)
 
   return (
     <>
