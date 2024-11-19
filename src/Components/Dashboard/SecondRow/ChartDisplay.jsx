@@ -2,6 +2,7 @@ import { Line } from "react-chartjs-2";
 import { lineData } from "./ChartData";
 import Chart from 'chart.js/auto'; 
 import Card from 'react-bootstrap/Card';
+import styled from "styled-components";
 
 export const ChartDisplay =()=>{
     // const data ={
@@ -44,12 +45,13 @@ export const ChartDisplay =()=>{
           label: "Earnings",
           data: lineData.map((element) => element.earning),
           fill: true,
-          backgroundColor: "rgba(75,192,192,0.2)",
-          borderColor: "rgba(75,192,192,1)",
+          backgroundColor: "#f4f6fd",
+          borderColor: "#4e73df",
           tension: 0.4 // Add this line to create smooth edges
         },
       ],
   };
+
 
 
   // check the design
@@ -60,25 +62,28 @@ export const ChartDisplay =()=>{
       legend: { display: false }
     },
     scales: {
-      x: {
-        grid: { display: false }
+         x: {
+        grid: { display: false,
+         },
       },
       y: {
-        grid: { display: true },
+        grid: { display: true,
+         },
         beginAtZero: true,
         ticks: {
           stepSize: 10000
         }
+      
       }
     }
 };
     return(
 
-      <Card style={{ width: '55rem',margin:"1.6%"}}>
+      <Card style={{ width: '55rem',margin:"1.6%", height:"440px"}}>
       <Card.Body>
         <Card.Title style={{color:"#4e73df"}} className="pb-3 border-bottom">Earnings Overview</Card.Title>
         <div  >
-        <Line data={data} options={options} className="p-3" />
+        <Line data={data} options={options} style={{paddingBottom:"5%",width:"100%"}} />
         </div>
      </Card.Body>
     </Card>   

@@ -14,7 +14,7 @@ function EarningCard({title,totalRevenue,icon,color}) {
 
     const borderStyle={
          backgroundColor: "white",
-         width:"297px",
+         width:"302px",
          height:"120px",
          borderLeft:"solid",
          borderLeftWidth:"thick",
@@ -24,7 +24,7 @@ function EarningCard({title,totalRevenue,icon,color}) {
     return (
         <>
             <div >
-                <div className=" rounded ms-3 p-4" style={borderStyle}>
+                <div className=" rounded ms-4 p-4" style={borderStyle}>
 
                     <div className="d-flex justify-content-between py-1">
                         <div>
