@@ -1,17 +1,10 @@
+import React from "react";
 import { TfiBag } from "react-icons/tfi";
 import { FaDollarSign } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosChatbubbles } from "react-icons/io";
-import React from "react";
-
-// const backgroundDesign= {
-//     // backgroundColor:"#efeff5",
-//     backgroundColor:"green",
-//     height:"100vh"
-// }
 
 function EarningCard({title,totalRevenue,icon,color}) {
-
     const borderStyle={
          backgroundColor: "white",
          width:"302px",
@@ -20,7 +13,7 @@ function EarningCard({title,totalRevenue,icon,color}) {
          borderLeftWidth:"thick",
          borderColor:color,
     }
-
+   
     return (
         <>
             <div >
@@ -29,10 +22,11 @@ function EarningCard({title,totalRevenue,icon,color}) {
                     <div className="d-flex justify-content-between py-1">
                         <div>
                             <div style={{ fontSize: "112%",color:color }}>{title}</div>
-                            <div className="fw-bold fs-4"> {totalRevenue}</div>
+                            <div className="fw-bold fs-4"> $ {totalRevenue}</div>
                         </div>
                         <div  style={{ fontSize: "250%" ,color:"#dddfeb"}}>
-                                                       {React.createElement(icon) }
+                                                       {/* {React.createElement(icon) } */}
+                                                       {icon}
                         </div>
                     </div>
                 </div>

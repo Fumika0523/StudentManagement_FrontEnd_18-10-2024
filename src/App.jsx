@@ -19,7 +19,7 @@ import DashboardCard from './Components/Dashboard/dashboardCard'
 
 function App() {
   const [userData,setUserData] = useState([])
-  const [earnings,setEarnings] = useState([])
+
 
 //signin part
 //initially you are not loggin,its set as false,
@@ -49,19 +49,7 @@ const getUserData = async()=>{
   console.log("userData")
   setUserData(res.data.userData) //useState is updated
 }
-
 //console.log(userData)
-
-const getEarningData = async()=>{
-  console.log("Earning data is called..........")
-  let res = await axios.get(`${url}/earnings`)
-  console.log(res.data)
-  setEarnings(res.data)
-}
-useEffect(()=>{
-  getEarningData()
-},[])
-//console.log(getEarningData)
 
   return (
     <>
@@ -81,7 +69,7 @@ useEffect(()=>{
         <Route path="/genderform" element={<GenderForm />}/>
         <Route path="/birthdateform" element={<BirthdateForm/>}/>
         <Route path="/phonenumberform" element={<PhoneNumberForm/>}/>
-        <Route path="/" element={<DashboardCard/>}></Route>
+        <Route path="/" element={<DashboardCard />}></Route>
         <Route path="/passwordform" element={<PasswordForm/>}/>
       </Routes>
       </Box>
