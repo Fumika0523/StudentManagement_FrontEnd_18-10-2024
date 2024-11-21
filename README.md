@@ -32,5 +32,8 @@ background-color: #4e73df;
 
 <!-- WHen  -->
 
+//TEST from POST , add the admissionFee
+
+
 
 

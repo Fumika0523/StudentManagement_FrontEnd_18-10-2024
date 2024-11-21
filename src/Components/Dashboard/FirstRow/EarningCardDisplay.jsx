@@ -5,6 +5,7 @@ import axios from "axios"
 
 
 function EarningCardDisplay(){
+    //I can pass it to the next component (EarningCard), where is the usage.
     const [earnings,setEarnings] = useState([])
     const getEarningData = async()=>{
         console.log("Earning data is called..........")

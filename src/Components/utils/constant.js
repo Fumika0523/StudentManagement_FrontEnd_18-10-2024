@@ -3,6 +3,7 @@ import { FaDollarSign } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosChatbubbles } from "react-icons/io";
 
+//static data
 
 export const url = "http://localhost:8000"  
 export const earningCardList = [
