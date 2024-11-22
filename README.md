@@ -20,7 +20,7 @@ Save
 //phone number edit form
 //update password form >> when you updating need encrypting
 //navBar >> search bar + 2 icons
-//logout >> navigate to signup page
+//logout >> navigate to signup page <<<DONE>>>
 ///dashboard create only 1 card
 // import 4 icons and 4 colours
 
@@ -34,6 +34,6 @@ background-color: #4e73df;
 
 //TEST from POST , add the admissionFee
 
-
+//Components > Button : View all student >
 
 

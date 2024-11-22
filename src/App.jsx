@@ -15,11 +15,11 @@ import BirthdateForm from './Components/Profile/Edit/birthdateForm'
 import PhoneNumberForm from './Components/Profile/Edit/phoneNumberForm'
 import PasswordForm from './Components/Profile/Edit/passwordForm'
 import DashboardCard from './Components/Dashboard/dashboardCard'
-
+import ViewStudent from './Components/Dashboard/StudentData/ViewStudent'
+import HomePage from './HomePage/HomePage'
 
 function App() {
   const [userData,setUserData] = useState([])
-
 
 //signin part
 //initially you are not loggin,its set as false,
@@ -62,7 +62,7 @@ const getUserData = async()=>{
       <NavBar/>
       <Routes>
         <Route path="/profile" element={<ProfileForm />}/>
-        {/* //<Route path="/homepage" element = {<HomePage/>} /> */}
+        {/* <Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/signin" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
         <Route path="/signup" element={<SignUp/>}/>
         <Route path="/usernameform" element={<UserNameForm/>}/>
@@ -71,7 +71,9 @@ const getUserData = async()=>{
         <Route path="/phonenumberform" element={<PhoneNumberForm/>}/>
         <Route path="/" element={<DashboardCard />}></Route>
         <Route path="/passwordform" element={<PasswordForm/>}/>
+        <Route path="/studentdata" element={<ViewStudent isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
       </Routes>
+
       </Box>
       </div>
     </>

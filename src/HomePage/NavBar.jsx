@@ -1,7 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Image from 'react-bootstrap/image'
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -12,6 +12,9 @@ import { IoMdNotifications } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
 
 export default function NavBar() {
+  const navigate = useNavigate()
+  const token = sessionStorage.getItem('token')
+  console.log("token", token)
 
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -62,6 +65,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const handleLogOut = ()=>{
+  sessionStorage.removeItem('token')
+  navigate('/signin')
+}
+let username = sessionStorage.getItem('username')
+
   return (
     <>
     <div>
@@ -77,8 +86,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-
-    
         <Dropdown className='d-flex justify-content-end ' >
         <div className='me-3 border-end'>
         <IoMdNotifications className='my-2 mx-3' style={iconStyle}/>
@@ -90,7 +97,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         <Dropdown.Menu>
           <Dropdown.Item  ><Link to="/profile">Profile</Link></Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item >Logout</Dropdown.Item>
+          <Dropdown.Item  onClick={()=>handleLogOut()} >Logout</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
       </Toolbar>
