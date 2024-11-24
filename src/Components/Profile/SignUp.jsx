@@ -43,7 +43,7 @@ function SignUp() {
         console.log(res)
         if (res.status == 200) {
             //navigate to signin page
-            navigate('/signin')
+            navigate('/')
         }
     }
 
@@ -119,7 +119,7 @@ function SignUp() {
                                 <GoogleIcon sx={{ color: "#ea4335", fontSize: "35px" }} />
                             </div>
                             <div style={{ marginTop: "13%", fontSize: "90%" }}>Or Already Have Account?</div>
-                            <div style={{ marginTop: "5%", fontSize: "90%" }} onClick={() => { navigate('/signin') }}>SIGN IN</div>
+                            <div style={{ marginTop: "5%", fontSize: "90%" }}>SIGN IN</div>
                         </div>
                     </Form>
                 </div>

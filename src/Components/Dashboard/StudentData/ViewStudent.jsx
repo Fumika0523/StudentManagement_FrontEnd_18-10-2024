@@ -3,6 +3,10 @@ import { useState } from "react"
 import { url } from "../../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./customisedTables"
+import { Button } from "react-bootstrap"
+import SideBar from "../../../HomePage/SideBar"
+import { Box } from "@mui/material"
+
 
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])
@@ -31,8 +35,12 @@ function ViewStudent(){
 
     return(
         <>
+         <div className="d-flex">
+    <SideBar/>
+        <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
+        <NavBar/>
         {/* create a table */}
-        <h1>Student Data Page</h1>
+        <Button>View Student Data</Button>
         {/* <p>
             {studentData.map((element)=>(
                 <div>{element.username}</div>
@@ -40,6 +48,8 @@ function ViewStudent(){
             ))}
         </p> */}
         {<CustomizedTables studentData = {studentData}/>}
+        </Box>
+        </div>
         </>
     )
 }

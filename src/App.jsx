@@ -54,22 +54,24 @@ const getUserData = async()=>{
   return (
     <>
     <div className='d-flex'>
-      <SideBar/>
+      {/* <SideBar/> */}
     <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
       {/* <div>Welcome to new App</div> */}
       {/* We always wannt present Homepagenav bar */}
       {/* <HomePage/>  */}
-      <NavBar/>
+      {/* <NavBar/> */}
       <Routes>
+      <Route path="/signup" element={<SignUp/>}/>
+      <Route path="/" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/dashboard" element={<DashboardCard />}></Route>
+
+
         <Route path="/profile" element={<ProfileForm />}/>
         {/* <Route path="/homepage" element = {<HomePage/>} /> */}
-        <Route path="/signin" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-        <Route path="/signup" element={<SignUp/>}/>
         <Route path="/usernameform" element={<UserNameForm/>}/>
         <Route path="/genderform" element={<GenderForm />}/>
         <Route path="/birthdateform" element={<BirthdateForm/>}/>
         <Route path="/phonenumberform" element={<PhoneNumberForm/>}/>
-        <Route path="/" element={<DashboardCard />}></Route>
         <Route path="/passwordform" element={<PasswordForm/>}/>
         <Route path="/studentdata" element={<ViewStudent isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
       </Routes>

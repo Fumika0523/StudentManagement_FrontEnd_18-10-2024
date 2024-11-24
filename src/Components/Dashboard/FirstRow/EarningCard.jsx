@@ -10,9 +10,10 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
         FaDollarSign: FaDollarSign,
       }; // key:value , key > response from the server , passed as a prop and used here. value: is your react icon.
     const IconComponent = Icons[icon]; //dynamically retrieving the icons and mapping to the UI
+ 
     const borderStyle={
          backgroundColor: "white",
-         width:"302px",
+         width:"350px",
          height:"100px",
          borderLeft:"solid",
          borderLeftWidth:"thick",
@@ -30,9 +31,9 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
                             <div style={{ fontSize: "100%",color:color }}>{title}</div>
                             <div className="fw-bold fs-4"> $ {totalRevenue}</div>
                         </div>
-                        <div >
+                        <div className="my-2">
                                 {/* {React.createElement(icon) } */}
-                                <IconComponent style={{ fontSize: "230%" ,color:"#dddfeb",margin:"25% 0"}}  />       
+                                <IconComponent style={{ fontSize: "230%" ,color:"#dddfeb",marginTop:"25% 0"}}  />       
                         </div>
                     </div>
                 </div>

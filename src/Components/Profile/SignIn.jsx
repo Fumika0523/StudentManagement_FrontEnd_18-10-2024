@@ -41,7 +41,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
         if(res.data.token){
             setIsAuthenticated(true) // signed in >> true
         }
-        navigate('/homepage')
+        navigate('/dashboard')
     }
 
     return(
@@ -66,7 +66,8 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                 </Form.Group>
                 <div className='text-end my-1 mb-4' style={{fontSize:"80%"}}></div>
                 <Button type="submit" className="mb-5 signInStyle" style={{width:"100%",borderRadius:"20px"}}>SIGN IN</Button>
-                <div className='text-center'>
+            </Form>
+            <div className='text-center'>
                 <div style={{fontSize:"90%"}}>Or Sign Up Using</div>
                 <div className='gap-1 fs-3 mt-3 d-flex' style={{justifyContent:"center"}}>
                     {/* Facebook */}
@@ -78,10 +79,9 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     {/* Google */}
                     <GoogleIcon sx={{color:"#ea4335",fontSize:"35px"}} />
                     </div>
-                    <div style={{marginTop:"22%",fontSize:"90%"}}>Or Sign Up Using</div>
-                    <div style={{marginTop:"5%",fontSize:"90%"}} onClick={()=>{navigate('/homepage')}}>SIGN UP</div>
+                    <div style={{marginTop:"10%",fontSize:"90%"}}>Or Sign Up Using</div>
+                    <div style={{marginTop:"5%",fontSize:"90%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
                     </div>
-            </Form>
         </div>
         </div>
         </>
