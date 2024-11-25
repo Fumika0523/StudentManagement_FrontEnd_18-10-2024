@@ -40,7 +40,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
 
     return(
         <>   
-            <div style={{width:"90%",marginLeft:"5%",marginRight:"5%"}} className="py-4 ">
+            <div style={{margin:"0 20%"}} className="py-5 ">
               {/* Top Section */}
               <div className='fs-4 text-center'>Personal info</div>
               <div style={{fontSize:"100%"}} className="text-center" > Info about you and your preferences across Student Management Service</div>
@@ -102,8 +102,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
                 <div className="py-1"> Ways to verify it’s you and settings for the web</div></div>
                 <img src="https://www.gstatic.com/identity/boq/accountsettingsmobile/profile_scene_preferences_720x256_b83e731b89910d1e55bbe298246b0a12.png" alt="" style={{width:"45%"}}/>
                 </div>
-                
-                
+                                
                 {/* Password */}
               <div className="border border-secondary-subtle rounded p-3">
                   <div
@@ -111,7 +110,9 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
                   <div className="text-secondary" style={{fontSize:"80%"}}>A secure password helps protect your Student Management Account</div>
                   <div style={{fontSize:"70%"}}>Last changed Jul 19,2023</div>
               </div>
+              <button className="mt-4 btn  btn-secondary px-4" onClick={()=>navigate('/dashboard')} >Back</button>
               </div>
+     
         </>
     )
 }

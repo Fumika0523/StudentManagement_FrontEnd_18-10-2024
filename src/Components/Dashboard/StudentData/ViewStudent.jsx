@@ -6,6 +6,7 @@ import CustomizedTables from "./customisedTables"
 import { Button } from "react-bootstrap"
 import SideBar from "../../../HomePage/SideBar"
 import { Box } from "@mui/material"
+import NavBar from "../../../HomePage/NavBar"
 
 
 function ViewStudent(){
@@ -40,14 +41,21 @@ function ViewStudent(){
         <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
         <NavBar/>
         {/* create a table */}
-        <Button>View Student Data</Button>
+        <Button >View Student Data</Button>
+        <div className="mx-4 mt-3">
+        <div className="fs-3">Tables</div>
+        <div>DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the official DataTables documentation.</div>
+        </div>
         {/* <p>
             {studentData.map((element)=>(
                 <div>{element.username}</div>
-                
             ))}
         </p> */}
-        {<CustomizedTables studentData = {studentData}/>}
+        <div className="m-4" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
+            <div className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>DataTables Example
+            </div>
+            {<CustomizedTables studentData = {studentData}/>}
+        </div>
         </Box>
         </div>
         </>

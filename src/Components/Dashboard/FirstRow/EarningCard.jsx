@@ -25,15 +25,15 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
     return (
         <>
             <div >
-                <div className=" rounded ms-4 p-3" style={borderStyle}>
+                <div className="rounded ms-4 p-3" style={borderStyle}>
                     <div className="d-flex justify-content-between py-1">
                         <div>
                             <div style={{ fontSize: "100%",color:color }}>{title}</div>
-                            <div className="fw-bold fs-4"> $ {totalRevenue}</div>
+                            <div className="fw-bold fs-4">$ {totalRevenue}</div>
                         </div>
                         <div className="my-2">
-                                {/* {React.createElement(icon) } */}
-                                <IconComponent style={{ fontSize: "230%" ,color:"#dddfeb",marginTop:"25% 0"}}  />       
+                            {/* {React.createElement(icon) } */}
+                            <IconComponent style={{ fontSize: "230%" ,color:"#dddfeb",marginTop:"25% 0"}}  />       
                         </div>
                     </div>
                 </div>

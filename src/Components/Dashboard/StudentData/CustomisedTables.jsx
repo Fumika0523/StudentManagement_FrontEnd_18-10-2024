@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Table from '@mui/material/Table';
+// import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
@@ -7,6 +7,9 @@ import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
+import { Table } from 'react-bootstrap';
+
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -35,10 +38,39 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     padding:"0.5% 1%",
   }
 
+  const thStyle={
+    color:"#5a5c69",
+    padding:"1%"
+  }
 export default function CustomizedTables({studentData}){
     return(
         <>
-        <TableContainer component={Paper} style={{ width:"90%",margin:"2% 5%",border:"1px solid grey"}}>
+   <Table>
+   <thead  style={{borderBottom:"4px solid #e3e6f0",}}>
+        <tr >
+          <th className='fw-bold' style={thStyle}>Student ID</th>
+          <th style={thStyle}>Username</th>
+          <th style={thStyle}>Email</th>
+          <th style={thStyle}>Phone Number</th>
+          <th style={thStyle}>Gender</th>
+          <th style={thStyle}>Birthdate</th>
+        </tr>
+      </thead>
+      <tbody>
+      {studentData.map((element)=>(
+                <tr >
+                <td style={thStyle}>{element._id}</td>
+                <td style={thStyle}>{element.username}</td>
+                <td style={thStyle}>{element.email}</td>
+                <td style={thStyle}>{element.phoneNumber}</td>
+                <td style={thStyle}>{element.gender}</td>
+                <td style={thStyle}>{element.birthdate}</td>
+              </tr>   
+        ))}
+      </tbody>
+    </Table>
+
+        {/* <TableContainer component={Paper} style={{ width:"97%",margin:"2% 1.5%",border:"1px solid grey"}}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead >
                 <TableRow>
@@ -87,7 +119,7 @@ export default function CustomizedTables({studentData}){
                     ))}
                 </TableBody>
             </Table>
-        </TableContainer>
+        </TableContainer> */}
         </>
     )
 }

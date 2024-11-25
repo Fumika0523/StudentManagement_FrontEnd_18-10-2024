@@ -50,7 +50,7 @@ function SignUp() {
     return (
         <>
             <div className='signInStyle py-5' style={{ height: "100vh" }}>
-                <div className='container py-4' style={{ width: "45%", border: "1px solid black", borderRadius: "10px", backgroundColor: "white" }}>
+                <div className='container py-4' style={{ width: "40n %", border: "1px solid black", borderRadius: "10px", backgroundColor: "white" }}>
                     <h3 className="text-center" style={{ fontWeight: "bold" }}>Sign Up</h3>
                     <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}}>
                         {/* Username */}
@@ -107,8 +107,8 @@ function SignUp() {
 
                         <Button type="subumit" className="mb-4 signInStyle py-2" style={{ width: "100%", borderRadius: "20px" }}>SIGN UP</Button>
                         <div className='text-center'>
-                            <div style={{ fontSize: "90%" }}>Or Sign Up Using</div>
-                            <div className='gap-1 fs-3 mt-3 d-flex' style={{ justifyContent: "center" }}>
+                            <div style={{ fontSize: "120%" }}>Or Sign Up Using</div>
+                            <div className='gap-1 mt-3 d-flex' style={{ justifyContent: "center" }}>
                                 {/* Facebook */}
                                 <FacebookIcon sx={{ color: "navy", fontSize: "35px" }} />
                                 {/* LinkedIn */}
@@ -118,8 +118,8 @@ function SignUp() {
                                 {/* Google */}
                                 <GoogleIcon sx={{ color: "#ea4335", fontSize: "35px" }} />
                             </div>
-                            <div style={{ marginTop: "13%", fontSize: "90%" }}>Or Already Have Account?</div>
-                            <div style={{ marginTop: "5%", fontSize: "90%" }}>SIGN IN</div>
+                            <div style={{ marginTop: "3%", fontSize: "110%" }}>Or Already Have Account?</div>
+                            <div className='btn btn-link' style={{ marginTop: "3%", fontSize: "110%" }} onClick={()=>{navigate('/')}}>SIGN IN</div>
                         </div>
                     </Form>
                 </div>

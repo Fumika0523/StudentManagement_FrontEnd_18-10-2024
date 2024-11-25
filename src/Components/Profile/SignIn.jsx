@@ -65,7 +65,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     onChange={formik.handleChange} />
                 </Form.Group>
                 <div className='text-end my-1 mb-4' style={{fontSize:"80%"}}></div>
-                <Button type="submit" className="mb-5 signInStyle" style={{width:"100%",borderRadius:"20px"}}>SIGN IN</Button>
+                <Button type="submit" className="mb-3 signInStyle" style={{width:"100%",borderRadius:"20px"}}>SIGN IN</Button>
             </Form>
             <div className='text-center'>
                 <div style={{fontSize:"90%"}}>Or Sign Up Using</div>
@@ -79,8 +79,8 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     {/* Google */}
                     <GoogleIcon sx={{color:"#ea4335",fontSize:"35px"}} />
                     </div>
-                    <div style={{marginTop:"10%",fontSize:"90%"}}>Or Sign Up Using</div>
-                    <div style={{marginTop:"5%",fontSize:"90%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
+                    <div style={{marginTop:"4%",fontSize:"90%"}}>Or</div>
+                    <div className="btn btn-link" style={{marginTop:"4%",fontSize:"90%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
                     </div>
         </div>
         </div>
