@@ -18,7 +18,7 @@ function SignUp() {
         password: Yup.string().required(),
         username: Yup.string().required(),
         email: Yup.string().required(),
-        phoneNumber: Yup.number().required(),
+        phoneNumber: Yup.number().required(),      
     })
 
     const formik = useFormik({
@@ -49,8 +49,8 @@ function SignUp() {
 
     return (
         <>
-            <div className='signInStyle py-5' style={{ height: "100vh" }}>
-                <div className='container py-4' style={{ width: "40n %", border: "1px solid black", borderRadius: "10px", backgroundColor: "white" }}>
+            <div className='signInStyle py-5' style={{ height: "100vh", }}>
+                <div className='container py-4' style={{ width: "40%", border: "1px solid black", borderRadius: "10px", backgroundColor: "white" }}>
                     <h3 className="text-center" style={{ fontWeight: "bold" }}>Sign Up</h3>
                     <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}}>
                         {/* Username */}
@@ -106,6 +106,7 @@ function SignUp() {
                         <div className='text-end my-1 mb-4' style={{ fontSize: "80%" }}></div>
 
                         <Button type="subumit" className="mb-4 signInStyle py-2" style={{ width: "100%", borderRadius: "20px" }}>SIGN UP</Button>
+                        </Form>
                         <div className='text-center'>
                             <div style={{ fontSize: "120%" }}>Or Sign Up Using</div>
                             <div className='gap-1 mt-3 d-flex' style={{ justifyContent: "center" }}>
@@ -121,7 +122,7 @@ function SignUp() {
                             <div style={{ marginTop: "3%", fontSize: "110%" }}>Or Already Have Account?</div>
                             <div className='btn btn-link' style={{ marginTop: "3%", fontSize: "110%" }} onClick={()=>{navigate('/')}}>SIGN IN</div>
                         </div>
-                    </Form>
+                   
                 </div>
             </div>
         </>

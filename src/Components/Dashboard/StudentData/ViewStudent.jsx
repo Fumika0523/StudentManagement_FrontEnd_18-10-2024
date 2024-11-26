@@ -7,7 +7,7 @@ import { Button } from "react-bootstrap"
 import SideBar from "../../../HomePage/SideBar"
 import { Box } from "@mui/material"
 import NavBar from "../../../HomePage/NavBar"
-
+import ModalAddStudent from "../StudentData/ModalAddStudent"
 
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])
@@ -33,6 +33,7 @@ function ViewStudent(){
     },[])
 
     console.log(studentData)
+    const [show, setShow] = useState(false);
 
     return(
         <>
@@ -41,11 +42,13 @@ function ViewStudent(){
         <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
         <NavBar/>
         {/* create a table */}
-        <Button >View Student Data</Button>
-        <div className="mx-4 mt-3">
-        <div className="fs-3">Tables</div>
-        <div>DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the official DataTables documentation.</div>
-        </div>
+        <div className="mx-4 mt-3 d-flex gap-4">
+        <div className="fs-3">View Student Data</div>
+        <div className="btn  py-auto px-3" onClick={()=>setShow(true)} style={{backgroundColor:"#4e73df",color:"white"}}>Add Student</div>
+           </div>
+       
+      
+
         {/* <p>
             {studentData.map((element)=>(
                 <div>{element.username}</div>
@@ -57,6 +60,9 @@ function ViewStudent(){
             {<CustomizedTables studentData = {studentData}/>}
         </div>
         </Box>
+        
+                {show && <ModalAddStudent show={show} setShow={setShow}/>}
+           
         </div>
         </>
     )

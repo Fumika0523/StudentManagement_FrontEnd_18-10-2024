@@ -49,11 +49,11 @@ export default function CustomizedTables({studentData}){
    <thead  style={{borderBottom:"4px solid #e3e6f0",}}>
         <tr >
           <th className='fw-bold' style={thStyle}>Student ID</th>
-          <th style={thStyle}>Username</th>
-          <th style={thStyle}>Email</th>
-          <th style={thStyle}>Phone Number</th>
-          <th style={thStyle}>Gender</th>
-          <th style={thStyle}>Birthdate</th>
+          <th className='fw-bold' style={thStyle}>Username</th>
+          <th className='fw-bold' style={thStyle}>Email</th>
+          <th className='fw-bold' style={thStyle}>Phone Number</th>
+          <th className='fw-bold' style={thStyle}>Gender</th>
+          <th className='fw-bold' style={thStyle}>Birthdate</th>
         </tr>
       </thead>
       <tbody>
