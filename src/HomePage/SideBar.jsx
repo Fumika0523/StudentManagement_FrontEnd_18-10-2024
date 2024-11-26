@@ -1,5 +1,3 @@
-import { TbBackground } from "react-icons/tb"
-import { IoSettings } from "react-icons/io5";
 import { FaFolder } from "react-icons/fa";
 import { FaChartArea } from "react-icons/fa";
 import { FaTable } from "react-icons/fa6";
@@ -7,22 +5,44 @@ import { FiTool } from "react-icons/fi";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { PiStudentBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import Accordion from 'react-bootstrap/Accordion';
+import Dropdown from 'react-bootstrap/Dropdown';
+import { Container } from "react-bootstrap";
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Collapse from 'react-bootstrap/Collapse';
+import { IoSettings } from "react-icons/io5";
 
 
 function SideBar() {
+    const [open, setOpen] = useState(false);
+
+    const iconStyle={
+        marginRight:"7%"
+    }
+
     const sideBarStyle = {
         width: "20%",
         height: "150vh",
         backgroundColor: "#4e73df",
+        padding:"1% 1%",
+        textAlign:"start"
     }
 
     const sideBarFont = {
+        textAlign:"start",
         color: "#f8f9fc",
-        margin: "2% 7%",
-        // border:"1px solid red",
-        textAlign: "start",
-        padding: "4% 0"
+        width:"100%",
+        height:"50px,",
+        padding:"5% 0",
+        border:"0px solid",
+        backgroundColor:"transparent",
+    }
+
+    const titleStyle={
+      fontSize: "70%",
+       fontWeight: "bold",
+        color: "#bfbfbf",
+        paddingTop:"6%",
     }
     // when you hover the options, the color changes to #fff
 
@@ -30,27 +50,52 @@ function SideBar() {
     return (
         <>
             <div style={sideBarStyle} >
-                <div className="text-white border-bottom mx-3 text-center fw-bold py-3"><PiStudentBold className="fs-2" /> SB ADMIN</div>
-                <div className="text-white border-bottom mx-3 py-3" onClick={() => { navigate('/') }}><AiOutlineDashboard className="me-2 text-white" />Dashboard</div>
-                <div style={{ fontSize: "70%", fontWeight: "bold", color: "#bfbfbf", padding: "4% 0", margin: "2% 7%" }}>INTERFACE</div>
-                {/* <div style={sideBarFont} ><IoSettings className="me-2"/> Components</div> */}
-                <Accordion style={{ margin: "8%" }} defaultActiveKey="0">
-                    <Accordion.Item eventKey="0" tyle={{ backgroundColor: "transparent", padding: "0%" }} >
-                        <Accordion.Header tyle={{ backgroundColor: "transparent", padding: "0%" }} ><IoSettings className="me-2" />Component</Accordion.Header>
-                        <Accordion.Body style={{ fontSize: "90%", padding: "5% 10%" }} onClick={() => { navigate('/studentdata') }}>
+                <Container >
+                <div className="text-white border-bottom fw-bold"><PiStudentBold className="fs-2" /> SB ADMIN</div>
+                <div className="text-white border-bottom" onClick={() => { navigate('/') }} style={sideBarFont}><AiOutlineDashboard style={iconStyle} />Dashboard</div>
+                <div style={titleStyle}>INTERFACE</div>
+                {/* Component */}
+                {/* <Dropdown defaultActiveKey="0" >
+                        <Dropdown.Toggle style={sideBarFont}><IoSettings style={iconStyle} />Component</Dropdown.Toggle>
+                        <Dropdown.Menu>
+                        <Dropdown.Item style={{ fontSize: "90%", padding: "5% 10%" }} onClick={() => { navigate('/studentdata') }}>
                             View All Student
-                        </Accordion.Body>
-                        <Accordion.Body>
+                        </Dropdown.Item>
+                        <Dropdown.Item style={{ fontSize: "90%", padding: "5% 10%" }} >
                             Card
-                        </Accordion.Body>
-                    </Accordion.Item>
-                </Accordion>
-                <div style={sideBarFont} className="border-bottom"><FiTool className="me-2" />Utilities</div>
-                <div style={{ fontSize: "70%", fontWeight: "bold", color: "#bfbfbf", padding: "4% 0", margin: "2% 7%" }}>ADDONS</div>
-                <div style={sideBarFont}><FaFolder className="me-2" />Pages</div>
-                <div style={sideBarFont}><FaChartArea className="me-2" />Charts</div>
-                <div style={sideBarFont} className="border-bottom"><FaTable className="me-2 " />Tables</div>
+                        </Dropdown.Item>
+                        </Dropdown.Menu>                    
+              
+                </Dropdown> */}
+                      <Button
+        onClick={() => setOpen(!open)}
+        aria-controls="example-collapse-text"
+        aria-expanded={open}
+        style={sideBarFont}
+      >
+        <IoSettings style={iconStyle} />Component
+      </Button>
+      <Collapse in={open}>
+       <div id="example-collapse-text" style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"white",padding:"1% 0", marginBottom:"2%"}}>
+       <div id="example-collapse-text" style={{ fontSize: "85%", padding: "5% 10%",fontWeight:"bold",        color: "#bfbfbf", }} >
+       Custom Components: </div>
+        <div className="btn btn-no-outline border-white" id="example-collapse-text" style={{ fontSize: "90%", padding: "5% 10%" }} onClick={() => { navigate('/studentdata') }} >
+        View All Student
+        </div>
+          <div id="example-collapse-text" style={{ fontSize: "90%", padding: "5% 10%" }} >
+            Card
+        </div>
             </div>
+      </Collapse>
+
+                <div style={sideBarFont} className="border-bottom"><FiTool style={iconStyle} />Utilities</div>
+                <div style={titleStyle} >ADDONS</div>
+                <div style={sideBarFont}><FaFolder style={iconStyle}  />Pages</div>
+                <div style={sideBarFont}><FaChartArea style={iconStyle}  />Charts</div>
+                <div style={sideBarFont} className="border-bottom"><FaTable style={iconStyle}  />Tables</div>
+                </Container>
+            </div>
+
         </>
     )
 }

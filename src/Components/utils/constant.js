@@ -5,7 +5,7 @@ import { IoIosChatbubbles } from "react-icons/io";
 
 //static data
 
-export const url = "http://localhost:8000"  
+export const url = "http://localhost:8001"  
 export const earningCardList = [
     {
         title:"EARNINGS (MONTHLY)",

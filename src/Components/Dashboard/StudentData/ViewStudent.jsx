@@ -2,12 +2,13 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { url } from "../../utils/constant"
 import axios from "axios"
-import CustomizedTables from "./customisedTables"
+import CustomizedTables from "./CustomisedTables"
 import { Button } from "react-bootstrap"
 import SideBar from "../../../HomePage/SideBar"
 import { Box } from "@mui/material"
 import NavBar from "../../../HomePage/NavBar"
 import ModalAddStudent from "../StudentData/ModalAddStudent"
+
 
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])
@@ -37,7 +38,7 @@ function ViewStudent(){
 
     return(
         <>
-         <div className="d-flex">
+<div className="d-flex">
     <SideBar/>
         <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
         <NavBar/>
@@ -46,10 +47,7 @@ function ViewStudent(){
         <div className="fs-3">View Student Data</div>
         <div className="btn  py-auto px-3" onClick={()=>setShow(true)} style={{backgroundColor:"#4e73df",color:"white"}}>Add Student</div>
            </div>
-       
-      
-
-        {/* <p>
+               {/* <p>
             {studentData.map((element)=>(
                 <div>{element.username}</div>
             ))}

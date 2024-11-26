@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@canvasjs/charts": "^3.10.14",
+    "@coreui/coreui": "^5.2.0",
+    "@coreui/react": "^5.4.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.4",
@@ -18,6 +20,7 @@
     "@mui/styled-engine-sc": "^6.1.4",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "cdbreact": "^1.5.19",
     "chart.js": "^4.4.6",
     "chartjs-plugin-datalabels": "^2.2.0",
     "formik": "^2.4.6",

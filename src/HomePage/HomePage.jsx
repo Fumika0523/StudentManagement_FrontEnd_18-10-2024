@@ -2,6 +2,7 @@ import DashboardCard from '../Components/Dashboard/dashboardCard'
 import NavBar from './NavBar'
 import SideBar from './SideBar'
 
+
 function HomePage(){
     return(
         <>

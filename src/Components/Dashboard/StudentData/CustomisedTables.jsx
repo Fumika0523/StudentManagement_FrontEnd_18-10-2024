@@ -1,15 +1,11 @@
 import * as React from 'react';
 // import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import Paper from '@mui/material/Paper';
 import { Table } from 'react-bootstrap';
-
-
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -42,12 +38,21 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color:"#5a5c69",
     padding:"1%"
   }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString); 
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }; // showing only year, month, day in number
+    return date.toLocaleDateString('en-US', options); // show in US date style
+    };
+
+
 export default function CustomizedTables({studentData}){
     return(
         <>
    <Table>
    <thead  style={{borderBottom:"4px solid #e3e6f0",}}>
         <tr >
+          <th style={{width:"5%"}}></th>
           <th className='fw-bold' style={thStyle}>Student ID</th>
           <th className='fw-bold' style={thStyle}>Username</th>
           <th className='fw-bold' style={thStyle}>Email</th>
@@ -59,12 +64,13 @@ export default function CustomizedTables({studentData}){
       <tbody>
       {studentData.map((element)=>(
                 <tr >
-                <td style={thStyle}>{element._id}</td>
+                <td className='py-auto ps-2 d-flex gap-3' ><FaEdit className='text-danger fs-3'/><MdDelete className='text-secondary fs-3 p-0 m-0 '/></td>
+                <td style={thStyle}> {element._id}</td>
                 <td style={thStyle}>{element.username}</td>
                 <td style={thStyle}>{element.email}</td>
                 <td style={thStyle}>{element.phoneNumber}</td>
                 <td style={thStyle}>{element.gender}</td>
-                <td style={thStyle}>{element.birthdate}</td>
+                <td style={thStyle}>{formatDate(element.birthdate)}</td>
               </tr>   
         ))}
       </tbody>
