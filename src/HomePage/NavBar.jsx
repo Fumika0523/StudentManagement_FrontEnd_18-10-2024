@@ -67,7 +67,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const handleLogOut = ()=>{
   sessionStorage.removeItem('token')
-  navigate('/signin')
+  navigate('/')
 }
 let username = sessionStorage.getItem('username')
 
@@ -86,18 +86,24 @@ let username = sessionStorage.getItem('username')
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
+
+        {/* ICONS */}
         <Dropdown className='d-flex justify-content-end ' >
         <div className='me-3 border-end'>
         <IoMdNotifications className='my-2 mx-3' style={iconStyle}/>
         <MdOutlineMail className='my-2 me-3' style={iconStyle} />
         </div>
+
         <Dropdown.Toggle style={{width:"4%",backgroundColor:"transparent",padding:"0.1%",border:"none"}} >
         <Image src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' roundedCircle style={{width:"100%"}}/>
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          <Dropdown.Item  ><Link to="/profile">Profile</Link></Dropdown.Item>
+          {/* PROFILE */}
+          <Dropdown.Item style={{backgroundColor:"white"}}  ><Link to="/profile" className='link-offset-2 link-underline link-underline-opacity-0 text-decoration-none' style={{ color:"#5a5c69"}}>Profile</Link></Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item  onClick={()=>handleLogOut()} >Logout</Dropdown.Item>
+
+          {/* LOGOUT */}
+          <Dropdown.Item style={{ color:"#5a5c69",backgroundColor:"white"}} onClick={()=>handleLogOut()} >Log out</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
       </Toolbar>

@@ -74,7 +74,7 @@ function phoneNumber(){
      onSubmit={formik.handleSubmit}
     >
     {/* Phone No.*/}
- <Form.Group className='mt-3'>
+    <Form.Group className='mt-3'>
    <Form.Label className='m-0'>Phone No.</Form.Label>
  <Form.Control type="phoneNumber"  name="phoneNumber"
       value={formik.values.phoneNumber}
@@ -82,7 +82,6 @@ function phoneNumber(){
       {formik.errors.phoneNumber && formik.touched.phoneNumber? (
     <div>{formik.errors.phoneNumber}</div>
     ) : null }
-
      </Form.Group>
 
     <div className="mt-3 text-end" >

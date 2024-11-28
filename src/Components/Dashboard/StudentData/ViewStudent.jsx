@@ -3,39 +3,35 @@ import { useState } from "react"
 import { url } from "../../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./CustomisedTables"
-import { Button } from "react-bootstrap"
 import SideBar from "../../../HomePage/SideBar"
 import { Box } from "@mui/material"
 import NavBar from "../../../HomePage/NavBar"
 import ModalAddStudent from "../StudentData/ModalAddStudent"
 
-
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])
     const [isAuthenticated,setIsAuthenticated]=useState(false)
+    const [show, setShow] = useState(false);
+
+    const token = sessionStorage.getItem('token')
+    let config = {
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    }
 
     const getStudentData = async()=>{
-        const token = sessionStorage.getItem('token')
-        let config = {
-            headers:{
-                AUthorization:`Bearer ${token}`
-            }
-        }
         console.log("Student data is called........")
         let res = await axios.get(`${url}/allstudent`,config)
         console.log(res.data.studentData)
         setStudentData(res.data.studentData)
-    }
-    useEffect(()=>{
-        const token = sessionStorage.getItem('token')
-        console.log(token)
-        setIsAuthenticated(true)
-        getStudentData()
-    },[])
+        }
+        useEffect(()=>{
 
+            getStudentData()
+        },[])
     console.log(studentData)
-    const [show, setShow] = useState(false);
-
+    const {username,email,password,phoneNumber,gender,birthdate}=studentData
     return(
         <>
 <div className="d-flex">

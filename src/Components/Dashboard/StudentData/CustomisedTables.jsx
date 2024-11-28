@@ -6,16 +6,28 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { Table } from 'react-bootstrap';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { useState } from "react"
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { url } from '../../utils/constant';
+import EditStudentData from './EditStudentData';
+import Paper from '@mui/material/Paper';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import { TableBody } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.grey,
-      color: theme.palette.common.grey,
-      
+      // color: theme.palette.common.grey,
+      fontSize:"18px",
+      color:"#5a5c69",
+      margin:"0%",
+      fontWeight:"bold",
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: "15px",
-      padding:"0.5% 1%",
+      fontSize:"16.5px",
+      padding:"1%"
     },
   }));
 
@@ -24,84 +36,117 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       backgroundColor: theme.palette.action.hover,
     },
     // hide last border
-    '&:last-child td, &:last-child th': {
+    '&:last-child StyledTableCell, &:last-child th': {
       border: 0,
     },
   }));
 
-  const tableHeadStyle ={
-    fontSize:"17px",
-    padding:"0.5% 1%",
-  }
+  
 
-  const thStyle={
-    color:"#5a5c69",
-    padding:"1%"
-  }
-
-  const formatDate = (dateString) => {
+  const formaStyledTableCellate = (dateString) => {
     const date = new Date(dateString); 
     const options = { year: 'numeric', month: 'long', day: 'numeric' }; // showing only year, month, day in number
     return date.toLocaleDateString('en-US', options); // show in US date style
     };
 
-
 export default function CustomizedTables({studentData}){
+  const [show, setShow] = useState(false);
+  const [singleStudent, setSingleStudent]=useState()
+  const {id}=useParams()
+
+  const token = sessionStorage.getItem('token')
+  console.log(token)
+
+  let config = {
+  headers:{
+    Authorization:`Bearer ${token}`
+    }
+  }
+
+  const getStudentData=async()=>{
+    console.log("Student data is called.......")
+    let res = await fetch(`${url}/student/${id}`,config)//API Call
+    let data = await res.json() //responding in string so we can not use string, converting to json format
+    console.log(`studentData:`,data[0])
+    setSingleStudent(data[0])
+  }
+  console.log(studentData)
+  useEffect(()=>{
+    getStudentData()
+  },[])
+
     return(
         <>
-   <Table>
-   <thead  style={{borderBottom:"4px solid #e3e6f0",}}>
-        <tr >
-          <th style={{width:"5%"}}></th>
-          <th className='fw-bold' style={thStyle}>Student ID</th>
-          <th className='fw-bold' style={thStyle}>Username</th>
-          <th className='fw-bold' style={thStyle}>Email</th>
-          <th className='fw-bold' style={thStyle}>Phone Number</th>
-          <th className='fw-bold' style={thStyle}>Gender</th>
-          <th className='fw-bold' style={thStyle}>Birthdate</th>
-        </tr>
-      </thead>
-      <tbody>
-      {studentData.map((element)=>(
-                <tr >
-                <td className='py-auto ps-2 d-flex gap-3' ><FaEdit className='text-danger fs-3'/><MdDelete className='text-secondary fs-3 p-0 m-0 '/></td>
-                <td style={thStyle}> {element._id}</td>
-                <td style={thStyle}>{element.username}</td>
-                <td style={thStyle}>{element.email}</td>
-                <td style={thStyle}>{element.phoneNumber}</td>
-                <td style={thStyle}>{element.gender}</td>
-                <td style={thStyle}>{formatDate(element.birthdate)}</td>
-              </tr>   
+  <TableContainer component={Paper}>
+   <Table >
+   <TableHead  style={{borderBottom:"4px solid #e3e6f0"}}>
+        <TableRow >
+          <StyledTableCell style={{width:"3%"}}></StyledTableCell>
+          <StyledTableCell style={{width:"3%"}}></StyledTableCell>
+          <StyledTableCell  >Student ID</StyledTableCell>
+          <StyledTableCell >Username</StyledTableCell>
+          <StyledTableCell >Email</StyledTableCell>
+          <StyledTableCell >Phone Number</StyledTableCell>
+          <StyledTableCell >Gender</StyledTableCell>
+          <StyledTableCell >Birthdate</StyledTableCell>
+        </TableRow>
+      </TableHead>
+     <TableBody>
+      {studentData?.map((element)=>(
+                <StyledTableRow >
+                <StyledTableCell>
+                {/* EDIT */}
+                 <FaEdit onClick={()=>setShow(true)}   className='text-danger fs-3'/></StyledTableCell>
+
+                  {/* DELETE */}
+                <StyledTableCell><MdDelete  className='text-secondary fs-3 p-0 m-0 border border-white'/></StyledTableCell>
+            
+                <StyledTableCell > {element._id}</StyledTableCell>
+                <StyledTableCell  >{element.username}</StyledTableCell>
+                <StyledTableCell  >{element.email}</StyledTableCell>
+                <StyledTableCell >{element.phoneNumber}</StyledTableCell>
+                <StyledTableCell >{element.gender}</StyledTableCell>
+                <StyledTableCell  >{formaStyledTableCellate(element.birthdate)}</StyledTableCell>
+              </StyledTableRow>   
         ))}
-      </tbody>
+     </TableBody>
     </Table>
+    </TableContainer>
+    
+    {
+        show && 
+    <EditStudentData 
+    show={show} setShow={setShow} singleStudent={singleStudent} id={id} />
+  
+  }
+
 
         {/* <TableContainer component={Paper} style={{ width:"97%",margin:"2% 1.5%",border:"1px solid grey"}}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead >
                 <TableRow>
-                    <StyledTableCell style={tableHeadStyle}>
+                    <StyledTableCell style={TableHead}>
                        Student ID
                     </StyledTableCell>
-                    <StyledTableCell style={tableHeadStyle}>
+                    <StyledTableCell style={TableHead}>
                         Username
                     </StyledTableCell>
-                    <StyledTableCell style={tableHeadStyle}>
+                    <StyledTableCell style={TableHead}>
                         Email
                     </StyledTableCell>
-                    <StyledTableCell style={tableHeadStyle}>
+                    <StyledTableCell style={TableHead}>
                         Phone Number
                     </StyledTableCell>
-                    <StyledTableCell style={tableHeadStyle}>
+                    <StyledTableCell style={TableHead}>
                         Gender
                     </StyledTableCell>
-                    <StyledTableCell style={tableHeadStyle}>
+                    <StyledTableCell style={TableHead}>
                         Birthdate
                     </StyledTableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                    {studentData.map((element)=>(
+                    {studenStyledTableCellata.map((element)=>(
                         <StyledTableRow>
                             <StyledTableCell>
                                 {element._id}
