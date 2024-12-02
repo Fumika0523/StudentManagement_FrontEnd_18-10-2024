@@ -15,6 +15,8 @@ import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import { TableBody } from '@mui/material';
+import axios from 'axios';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -51,9 +53,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 export default function CustomizedTables({studentData}){
   const [show, setShow] = useState(false);
-  const [singleStudent, setSingleStudent]=useState()
+  const [singleStudent, setSingleStudent]=useState(false)
   const {id}=useParams()
-
+  // const [studentData, setStudentData] = useState([])
   const token = sessionStorage.getItem('token')
   console.log(token)
 
@@ -65,12 +67,27 @@ export default function CustomizedTables({studentData}){
 
   const getStudentData=async()=>{
     console.log("Student data is called.......")
-    let res = await fetch(`${url}/student/${id}`,config)//API Call
-    let data = await res.json() //responding in string so we can not use string, converting to json format
-    console.log(`studentData:`,data[0])
-    setSingleStudent(data[0])
-  }
-  console.log(studentData)
+    // let res = await fetch(`${url}/student/${id}`,config)//API Call
+    // let data = await res.json() //responding in string so we can not use string, converting to json format
+    // console.log(`studentData:`,studentData[0])
+    // //setSingleStudent(data[0])
+
+     let res = await axios.get(`${url}/allstudent`,config)
+    console.log(res.data.studentData[0])
+    if (res.data.studentData) {
+      // // Extract YYYY-MM-DD from the date string
+      // const formattedDate = res.data.studentData.birthdate
+      // //if data.userData.birthdate exist, >> convert into ISOString
+      //     ? new Date(data.studentData.birthdate).toISOString().split('T')[0]  //split method,
+      //     //otherwise make it empty
+      //     : "";
+      // //spreading operator, we are updating only birthdate. the rest is remaing the same
+      // getStudentData({ ...data.studentData, birthdate: formattedDate });
+    }setSingleStudent(res.data.studentData[0]) 
+    }
+   
+  console.log(singleStudent)
+
   useEffect(()=>{
     getStudentData()
   },[])
@@ -112,7 +129,6 @@ export default function CustomizedTables({studentData}){
      </TableBody>
     </Table>
     </TableContainer>
-    
     {
         show && 
     <EditStudentData 
@@ -173,4 +189,5 @@ export default function CustomizedTables({studentData}){
         </TableContainer> */}
         </>
     )
-}
+  }
+

@@ -21,7 +21,7 @@ function EditStudentData({show,setShow,singleStudent,id,}){
   
   const formSchema = Yup.object().shape({
     password: Yup.string().required(),
-    username: Yup.string().required(),
+    studentname: Yup.string().required(),
     email: Yup.string().required(),
     phoneNumber: Yup.number().required(),
     gender:Yup.string().required(),
@@ -30,43 +30,23 @@ function EditStudentData({show,setShow,singleStudent,id,}){
 
 const formik = useFormik({
     initialValues: {
-        username: singleStudent.username,
-        password: singleStudent.password,
-        email: singleStudent.email,
-        phoneNumber: singleStudent.phoneNumber,
-        gender:singleStudent.gender,
-        birthdate:singleStudent.birthdate,
+        username: singleStudent?.username,
+        password: singleStudent?.password,
+        email: singleStudent?.email,
+        phoneNumber: singleStudent?.phoneNumber,
+        gender:singleStudent?.gender,
+        birthdate:singleStudent?.birthdate,
     },
+
     // enableReinitialize: true, //if there is any update in my initial value, please make it update >> enable > true
     onSubmit:(values)=>{
         console.log(values)
         updateStudent(values)
  }})
+ console.log(singleStudent)
   
-const token = sessionStorage.getItem('token')
-console.log(token)
 
-let config = {
-  headers:{
-    Authorization:`Bearer ${token}`
-  }}
 
-const updateStudent=async(updatedStudent)=>{
-console.log("A new student data is posted to the DB")
-console.log("Updated student data:",updatedStudent)
-
-let res = await axios.put(`${url}/updatestudent/${id}`,updatedStudent,config)
-console.log(res)
-}
-
-//updating a data
-const getStudentData=async()=>{
-    console.log("Student data is called")
-    let res = await fetch(`${url}/allstudent`,config) //API call to get all student data
-    let data = await res.json()
-    xonsole.log(data)
-    getStudentData(data)
-}
 
     return(
     <>
@@ -80,10 +60,10 @@ const getStudentData=async()=>{
         </Modal.Header>
         <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}}>
         <Modal.Body>
-                        {/* Username */}
+                        {/* studentname */}
                         <Form.Group className='my-3'>
-                            <Form.Label className='m-0'>Username</Form.Label>
-                            <Form.Control type="username" placeholder='Type your Username' name="username"
+                            <Form.Label className='m-0'>username</Form.Label>
+                            <Form.Control type="username" placeholder='Type your username' name="username"
                                 value={formik.values.username}
                                 // onChange={formik.handleChange}
                                  />
@@ -148,7 +128,6 @@ const getStudentData=async()=>{
                             <div>{formik.errors.phoneNumber}</div>
                             ) : null }
                             </Form.Group>
-
 
                         {/* Password*/}
                         <Form.Group className='mt-3'>

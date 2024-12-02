@@ -23,15 +23,14 @@ function ViewStudent(){
     const getStudentData = async()=>{
         console.log("Student data is called........")
         let res = await axios.get(`${url}/allstudent`,config)
-        console.log(res.data.studentData)
+        console.log("StudentData",res.data.studentData)
         setStudentData(res.data.studentData)
         }
         useEffect(()=>{
-
-            getStudentData()
+         getStudentData()
         },[])
-    console.log(studentData)
-    const {username,email,password,phoneNumber,gender,birthdate}=studentData
+    //console.log(studentData)
+
     return(
         <>
 <div className="d-flex">

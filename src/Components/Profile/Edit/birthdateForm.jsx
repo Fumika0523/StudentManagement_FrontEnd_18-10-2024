@@ -123,10 +123,7 @@ let config = {
                     </Button>
                 </Box>
             </form>
-
-        
-
-            </div>
+         </div>
         </>
     )
 }
