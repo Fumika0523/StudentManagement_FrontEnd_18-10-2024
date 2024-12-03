@@ -42,55 +42,24 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       border: 0,
     },
   }));
-
   
 
   const formaStyledTableCellate = (dateString) => {
     const date = new Date(dateString); 
     const options = { year: 'numeric', month: 'long', day: 'numeric' }; // showing only year, month, day in number
+    console.log(date.toLocaleDateString('en-US', options))
     return date.toLocaleDateString('en-US', options); // show in US date style
     };
 
 export default function CustomizedTables({studentData}){
   const [show, setShow] = useState(false);
-  const [singleStudent, setSingleStudent]=useState(false)
-  const {id}=useParams()
-  // const [studentData, setStudentData] = useState([])
-  const token = sessionStorage.getItem('token')
-  console.log(token)
+  const [singleStudent, setSingleStudent]=useState(null)
 
-  let config = {
-  headers:{
-    Authorization:`Bearer ${token}`
-    }
-  }
-
-  const getStudentData=async()=>{
-    console.log("Student data is called.......")
-    // let res = await fetch(`${url}/student/${id}`,config)//API Call
-    // let data = await res.json() //responding in string so we can not use string, converting to json format
-    // console.log(`studentData:`,studentData[0])
-    // //setSingleStudent(data[0])
-
-     let res = await axios.get(`${url}/allstudent`,config)
-    console.log(res.data.studentData[0])
-    if (res.data.studentData) {
-      // // Extract YYYY-MM-DD from the date string
-      // const formattedDate = res.data.studentData.birthdate
-      // //if data.userData.birthdate exist, >> convert into ISOString
-      //     ? new Date(data.studentData.birthdate).toISOString().split('T')[0]  //split method,
-      //     //otherwise make it empty
-      //     : "";
-      // //spreading operator, we are updating only birthdate. the rest is remaing the same
-      // getStudentData({ ...data.studentData, birthdate: formattedDate });
-    }setSingleStudent(res.data.studentData[0]) 
-    }
-   
-  console.log(singleStudent)
-
-  useEffect(()=>{
-    getStudentData()
-  },[])
+const handleEditClick = (student)=>{
+  setShow(true)
+  console.log(student)
+  setSingleStudent(student)
+}
 
     return(
         <>
@@ -113,7 +82,7 @@ export default function CustomizedTables({studentData}){
                 <StyledTableRow >
                 <StyledTableCell>
                 {/* EDIT */}
-                 <FaEdit onClick={()=>setShow(true)}   className='text-danger fs-3'/></StyledTableCell>
+                 <FaEdit onClick={()=>handleEditClick(element)}   className='text-danger fs-3'/></StyledTableCell>
 
                   {/* DELETE */}
                 <StyledTableCell><MdDelete  className='text-secondary fs-3 p-0 m-0 border border-white'/></StyledTableCell>
@@ -124,7 +93,8 @@ export default function CustomizedTables({studentData}){
                 <StyledTableCell >{element.phoneNumber}</StyledTableCell>
                 <StyledTableCell >{element.gender}</StyledTableCell>
                 <StyledTableCell  >{formaStyledTableCellate(element.birthdate)}</StyledTableCell>
-              </StyledTableRow>   
+              </StyledTableRow> 
+                
         ))}
      </TableBody>
     </Table>
@@ -132,7 +102,7 @@ export default function CustomizedTables({studentData}){
     {
         show && 
     <EditStudentData 
-    show={show} setShow={setShow} singleStudent={singleStudent} id={id} />
+    show={show} setShow={setShow} singleStudent={singleStudent} setSingleStudent={setSingleStudent} />
   
   }
 

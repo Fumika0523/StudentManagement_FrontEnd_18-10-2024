@@ -9,14 +9,12 @@ import { url } from "../../utils/constant";
 
 function birthdateForm() {
     const [userData, setUserData] = useState([])
-
     const navigate = useNavigate()
-
     const formSchema = Yup.object().shape({
     birthdate :Yup.date().required()       
 })
 console.log(userData?.birthdate) // checking if the data is stored to userData or not
-
+console.log(userData)
 const formik=useFormik({
     initialValues:{
         birthdate:userData.birthdate || ""
@@ -34,8 +32,7 @@ console.log('token')
 let config = {
     headers:{
         Authorization:`Bearer ${token}`
-    }
-}
+    }}
 
     const updateProfile = async(updatedProfile)=>{
         console.log("birthdate posted to the DB")
@@ -52,6 +49,7 @@ let config = {
         let res = await fetch(`${url}/users/profile`,config)
         let data = await res.json()
         console.log(data.userData)
+
         if (data.userData) {
             // Extract YYYY-MM-DD from the date string
             const formattedDate = data.userData.birthdate
@@ -60,6 +58,7 @@ let config = {
                 //otherwise make it empty
                 : "";
             //spreading operator, we are updating only birthdate. the rest is remaing the same
+            //userData was empty so updated into SetUserData
             setUserData({ ...data.userData, birthdate: formattedDate });
         }
         // date is ISOSstring >> convert >> toISOString()
@@ -67,9 +66,7 @@ let config = {
         //['2024-10-29', '15:07:54.366Z']
         console.log("2024-10-29T15:07:54.366Z".split('T')[0])
         //2024-10-29
-        
-    
-        //we want a date and its a array,
+    //we want a date and its a array,
         console.log(data.userData)
        // setUserData(data?.userData)
     }

@@ -5,11 +5,14 @@ import { Formik, useFormik } from 'formik';
 import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { url } from '../../utils/constant';
+import axios from 'axios';
 
 
-function EditStudentData({show,setShow,singleStudent,id,}){
+function EditStudentData({show,setShow,setSingleStudent,singleStudent}){
+  console.log(singleStudent._id)
+  console.log(singleStudent)
+
     const navigate = useNavigate()
      const [studentData,setStudentData] = useState([])
     // const [show, setShow] = useState(false);
@@ -27,7 +30,14 @@ function EditStudentData({show,setShow,singleStudent,id,}){
     gender:Yup.string().required(),
     birthdate:Yup.date().required()
 })
+//updating in a single data
+const formattedDate = singleStudent.birthdate
+? new Date(singleStudent.birthdate).toISOString().split('T')[0]
+:"";
 
+
+console.log("update birthdate",formattedDate)
+// 1 data need to update
 const formik = useFormik({
     initialValues: {
         username: singleStudent?.username,
@@ -35,9 +45,8 @@ const formik = useFormik({
         email: singleStudent?.email,
         phoneNumber: singleStudent?.phoneNumber,
         gender:singleStudent?.gender,
-        birthdate:singleStudent?.birthdate,
+        birthdate:formattedDate,
     },
-
     // enableReinitialize: true, //if there is any update in my initial value, please make it update >> enable > true
     onSubmit:(values)=>{
         console.log(values)
@@ -46,7 +55,24 @@ const formik = useFormik({
  console.log(singleStudent)
   
 
-
+ const token = sessionStorage.getItem('token')
+ console.log('token')
+ 
+ let config = {
+     headers:{
+         Authorization:`Bearer ${token}`
+     }
+ }
+ 
+     const updateStudent = async(updatedStudent)=>{
+         console.log("student posted to the DB")
+         console.log("update student:",updatedStudent)
+     
+     let res = await axios.put(`${url}/updatestudent${id}`,updatedStudent,config)
+     console.log(res)
+     if(res){
+         console.log("updatedStudent:",updatedStudent)
+     }} 
 
     return(
     <>
@@ -65,7 +91,7 @@ const formik = useFormik({
                             <Form.Label className='m-0'>username</Form.Label>
                             <Form.Control type="username" placeholder='Type your username' name="username"
                                 value={formik.values.username}
-                                // onChange={formik.handleChange}
+                                onChange={formik.handleChange}
                                  />
                         </Form.Group>
                         {/* Gender */}
