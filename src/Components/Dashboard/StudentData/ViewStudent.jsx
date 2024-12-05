@@ -38,17 +38,17 @@ function ViewStudent(){
         <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
         <NavBar/>
         {/* create a table */}
-        <div className="mx-4 mt-3 d-flex gap-4">
-        <div className="fs-3">View Student Data</div>
-        <div className="btn  py-auto px-3" onClick={()=>setShow(true)} style={{backgroundColor:"#4e73df",color:"white"}}>Add Student</div>
-           </div>
+    
+        {/* <div className="fs-3">View Student Data</div> */}
+        <div className="btn  py-auto px-auto mt-3"  onClick={()=>setShow(true)} style={{backgroundColor:"#4e73df",color:"white",width:"10%",marginLeft:"88%"}}>Add Student</div>
+        
                {/* <p>
             {studentData.map((element)=>(
                 <div>{element.username}</div>
             ))}
         </p> */}
         <div className="m-4" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
-            <div className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>DataTables Example
+            <div className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Student
             </div>
             {<CustomizedTables studentData = {studentData}/>}
         </div>

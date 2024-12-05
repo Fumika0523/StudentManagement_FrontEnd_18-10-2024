@@ -17,23 +17,24 @@ function SideBar() {
     const [open, setOpen] = useState(false);
 
     const iconStyle={
-        marginRight:"7%"
+        marginRight:"7%",
+        color: "#bfbfbf",
     }
 
     const sideBarStyle = {
         width: "20%",
         height: "150vh",
         backgroundColor: "#4e73df",
-        padding:"1% 1%",
+        // padding:"1% 0%",
         textAlign:"start"
     }
 
     const sideBarFont = {
         textAlign:"start",
-        color: "#f8f9fc",
+        color: "rgba(255, 255, 255, .8",
         width:"100%",
         height:"50px,",
-        padding:"5% 0",
+        padding:"10% 0",
         border:"0px solid",
         backgroundColor:"transparent",
     }
@@ -51,8 +52,9 @@ function SideBar() {
         <>
             <div style={sideBarStyle} >
                 <Container >
-                <div className="text-white border-bottom fw-bold"><PiStudentBold className="fs-2" /> SB ADMIN</div>
-                <div className="text-white border-bottom" onClick={() => { navigate('/') }} style={sideBarFont}><AiOutlineDashboard style={iconStyle} />Dashboard</div>
+                <div className="text-white fw-bold py-3 text-center" style={{borderBottom:"1px solid #bfbfbf"}}><PiStudentBold className="fs-1" /> SB ADMIN</div>
+                <div className="text-white fw-bold" onClick={() => { navigate('/') }} style={{borderBottom:"1px solid #bfbfbf",  
+        padding:"10% 0"}}><AiOutlineDashboard style={iconStyle} />Dashboard</div>
                 <div style={titleStyle}>INTERFACE</div>
                 {/* Component */}
                 {/* <Dropdown defaultActiveKey="0" >
@@ -88,7 +90,7 @@ function SideBar() {
             </div>
       </Collapse>
 
-                <div style={sideBarFont} className="border-bottom"><FiTool style={iconStyle} />Utilities</div>
+                <div style={sideBarFont} ><FiTool style={iconStyle} />Utilities</div>
                 <div style={titleStyle} >ADDONS</div>
                 <div style={sideBarFont}><FaFolder style={iconStyle}  />Pages</div>
                 <div style={sideBarFont}><FaChartArea style={iconStyle}  />Charts</div>

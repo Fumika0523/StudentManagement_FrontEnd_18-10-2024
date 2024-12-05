@@ -21,20 +21,24 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.grey,
       // color: theme.palette.common.grey,
-      fontSize:"15px",
+      fontSize:"16px",
       color:"#5a5c69",
       margin:"0%",
       fontWeight:"bold",
+      textAlign:"Center",
+      padding:"1% 0%",
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize:"16.5px",
-      padding:"1%"
+      fontSize:"16px",
+      padding:"0.5% 0%",
+      textAlign:"center",
     },
   }));
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
+      
     },
     // hide last border
     '&:last-child StyledTableCell, &:last-child th': {
@@ -42,14 +46,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
   }));
   
-
   const formaStyledTableCellate = (dateString) => {
     const date = new Date(dateString); 
     const options = { year: 'numeric', month: 'long', day: 'numeric' }; // showing only year, month, day in number
     console.log(date.toLocaleDateString('en-US', options))
     return date.toLocaleDateString('en-US', options); // show in US date style
     };
-
+  
 export default function CustomizedTables({studentData}){
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent]=useState(null)
@@ -62,8 +65,7 @@ export default function CustomizedTables({studentData}){
   let config = {
       headers:{
           Authorization:`Bearer ${token}`
-      }
-  }
+      }}
 
 const handleEditClick = (student)=>{
   setShow(true)
@@ -88,15 +90,15 @@ const deleteStudent = async(id)=>{
  }
 
     return(
-        <>
+    <>
   <TableContainer component={Paper}>
    <Table >
     {/* textAlignment center */}
-   <TableHead  style={{borderBottom:"4px solid #e3e6f0", }}>
+   <TableHead  style={{borderBottom:"4px solid #e3e6f0"}}>
         <TableRow >
-          <StyledTableCell ></StyledTableCell>
+          <StyledTableCell></StyledTableCell>
           <StyledTableCell  >Student ID</StyledTableCell>
-          <StyledTableCell >Studentname</StyledTableCell>
+          <StyledTableCell >Student Name</StyledTableCell>
           <StyledTableCell >Username</StyledTableCell>
           <StyledTableCell >Email</StyledTableCell>
           <StyledTableCell >Phone Number</StyledTableCell>
@@ -108,28 +110,26 @@ const deleteStudent = async(id)=>{
       {studentData?.map((element)=>(
         
                 <StyledTableRow >
-
-               <div>
                 {/* Remove the underline */}
-               <div className='text-decoration-none' >                
+                          
                 {/* EDIT */}
-                <StyledTableCell className='text-decoration-none'><FaEdit  onClick={()=>handleEditClick(element)}   className='text-success p-0 m-0 fs-6 text-decoration-none'/></StyledTableCell>
+                <StyledTableCell className='text-decoration-none ps-2 m-0'>
+                <div className='d-flex p-0 m-0 fs-6'><FaEdit  onClick={()=>handleEditClick(element)}  className='text-success p-0 m-0 fs-6 text-decoration-none'/>
 
                   {/* DELETE */}
-                <StyledTableCell><MdDelete  className='text-danger fs-6 p-0 m-0 border border-white' onClick={()=>handleDeleteClick(element._id)}/></StyledTableCell>
-               </div>
+                <MdDelete  className='text-danger fs-6 p-0 m-0 border border-white' onClick={()=>handleDeleteClick(element._id)}/></div>                
+               
                 {/* Eye */}
-                <StyledTableCell> <IoEyeSharp className='text-primary fs-6 m-0 p-0' onClick={()=>handlePasswordClick(element.password)}/></StyledTableCell>
-                </div> 
-       
+                <div><IoEyeSharp className='text-primary fs-6 m-0 p-0' onClick={()=>handlePasswordClick(element.password)}/></div></StyledTableCell>
+                
                 <StyledTableCell > {element._id}</StyledTableCell>
                 {/* Student name, initial letter should be capital */}
                 {/* .toUpperCase().slice(1) */}
-                <StyledTableCell  >{element.studentName}</StyledTableCell>
+                <StyledTableCell  >{element.studentName.split(" ").map((element)=>element.charAt(0).toUpperCase()+element.slice(1)).join(" ")}</StyledTableCell>
                 <StyledTableCell  >{element.username}</StyledTableCell>
                 <StyledTableCell  >{element.email}</StyledTableCell>
                 <StyledTableCell >{element.phoneNumber}</StyledTableCell>
-                <StyledTableCell >{element.gender}</StyledTableCell>
+                <StyledTableCell >{element.gender.charAt().toUpperCase()+element.gender.slice(1)}</StyledTableCell>
                 <StyledTableCell  >{formaStyledTableCellate(element.birthdate)}</StyledTableCell>
               </StyledTableRow> 
                 
