@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { url } from "../../utils/constant";
 
-
 function birthdateForm() {
     const [userData, setUserData] = useState([])
     const navigate = useNavigate()

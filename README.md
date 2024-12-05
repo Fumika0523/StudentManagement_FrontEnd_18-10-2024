@@ -32,8 +32,5 @@ background-color: #4e73df;
 
 <!-- WHen  -->
 
-//TEST from POST , add the admissionFee
-
-//Components > Button : View all student >
-
+//create 10 students
 

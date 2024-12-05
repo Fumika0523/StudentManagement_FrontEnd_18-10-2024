@@ -7,22 +7,21 @@ import { Table } from 'react-bootstrap';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useState } from "react"
-import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import { url } from '../../utils/constant';
 import EditStudentData from './EditStudentData';
 import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import { TableBody } from '@mui/material';
 import axios from 'axios';
-
+import { url } from '../../utils/constant';
+import { IoEyeSharp } from "react-icons/io5";
+import ModalShowPassword from './ModalShowPassword';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.grey,
       // color: theme.palette.common.grey,
-      fontSize:"18px",
+      fontSize:"15px",
       color:"#5a5c69",
       margin:"0%",
       fontWeight:"bold",
@@ -54,6 +53,17 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 export default function CustomizedTables({studentData}){
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent]=useState(null)
+  const [viewPassword, setViewPassword] = useState(false)
+  const [password,setPassword]=useState(null)
+
+ const token = sessionStorage.getItem('token')
+ console.log('token')
+ 
+  let config = {
+      headers:{
+          Authorization:`Bearer ${token}`
+      }
+  }
 
 const handleEditClick = (student)=>{
   setShow(true)
@@ -61,15 +71,32 @@ const handleEditClick = (student)=>{
   setSingleStudent(student)
 }
 
+const handleDeleteClick = (id)=>{
+  deleteStudent(id)
+}
+
+const deleteStudent = async(id)=>{
+  console.log("Student deleted from the DB...")
+  let res = await axios.delete(`${url}/deletestudent/${id}`,config)
+  console.log(res)
+ }
+
+ const handlePasswordClick=(password)=>{
+ console.log(password)
+ setViewPassword(true)
+ setPassword(password)
+ }
+
     return(
         <>
   <TableContainer component={Paper}>
    <Table >
-   <TableHead  style={{borderBottom:"4px solid #e3e6f0"}}>
+    {/* textAlignment center */}
+   <TableHead  style={{borderBottom:"4px solid #e3e6f0", }}>
         <TableRow >
-          <StyledTableCell style={{width:"3%"}}></StyledTableCell>
-          <StyledTableCell style={{width:"3%"}}></StyledTableCell>
+          <StyledTableCell ></StyledTableCell>
           <StyledTableCell  >Student ID</StyledTableCell>
+          <StyledTableCell >Studentname</StyledTableCell>
           <StyledTableCell >Username</StyledTableCell>
           <StyledTableCell >Email</StyledTableCell>
           <StyledTableCell >Phone Number</StyledTableCell>
@@ -79,15 +106,26 @@ const handleEditClick = (student)=>{
       </TableHead>
      <TableBody>
       {studentData?.map((element)=>(
+        
                 <StyledTableRow >
-                <StyledTableCell>
+
+               <div>
+                {/* Remove the underline */}
+               <div className='text-decoration-none' >                
                 {/* EDIT */}
-                 <FaEdit onClick={()=>handleEditClick(element)}   className='text-danger fs-3'/></StyledTableCell>
+                <StyledTableCell className='text-decoration-none'><FaEdit  onClick={()=>handleEditClick(element)}   className='text-success p-0 m-0 fs-6 text-decoration-none'/></StyledTableCell>
 
                   {/* DELETE */}
-                <StyledTableCell><MdDelete  className='text-secondary fs-3 p-0 m-0 border border-white'/></StyledTableCell>
-            
+                <StyledTableCell><MdDelete  className='text-danger fs-6 p-0 m-0 border border-white' onClick={()=>handleDeleteClick(element._id)}/></StyledTableCell>
+               </div>
+                {/* Eye */}
+                <StyledTableCell> <IoEyeSharp className='text-primary fs-6 m-0 p-0' onClick={()=>handlePasswordClick(element.password)}/></StyledTableCell>
+                </div> 
+       
                 <StyledTableCell > {element._id}</StyledTableCell>
+                {/* Student name, initial letter should be capital */}
+                {/* .toUpperCase().slice(1) */}
+                <StyledTableCell  >{element.studentName}</StyledTableCell>
                 <StyledTableCell  >{element.username}</StyledTableCell>
                 <StyledTableCell  >{element.email}</StyledTableCell>
                 <StyledTableCell >{element.phoneNumber}</StyledTableCell>
@@ -103,7 +141,10 @@ const handleEditClick = (student)=>{
         show && 
     <EditStudentData 
     show={show} setShow={setShow} singleStudent={singleStudent} setSingleStudent={setSingleStudent} />
-  
+  }
+  {
+       viewPassword &&
+       <ModalShowPassword viewPassword={viewPassword} setViewPassword={setViewPassword} password={password} setPassword={setPassword} />
   }
 
 

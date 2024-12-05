@@ -53,7 +53,6 @@ const formik = useFormik({
         updateStudent(values)
  }})
  console.log(singleStudent)
-  
 
  const token = sessionStorage.getItem('token')
  console.log('token')
@@ -68,11 +67,14 @@ const formik = useFormik({
          console.log("student posted to the DB")
          console.log("update student:",updatedStudent)
      
-     let res = await axios.put(`${url}/updatestudent${id}`,updatedStudent,config)
+     let res = await axios.put(`${url}/updatestudent/${singleStudent._id}`,updatedStudent,config)
      console.log(res)
      if(res){
          console.log("updatedStudent:",updatedStudent)
      }} 
+     
+
+
 
     return(
     <>
