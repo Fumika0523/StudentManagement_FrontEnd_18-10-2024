@@ -40,10 +40,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       backgroundColor: theme.palette.action.hover,
       
     },
-    // hide last border
+    //hide last border
     '&:last-child StyledTableCell, &:last-child th': {
-      border: 0,
+      color:"yellow"
     },
+
   }));
   
   const formaStyledTableCellate = (dateString) => {
@@ -106,14 +107,14 @@ const deleteStudent = async(id)=>{
           <StyledTableCell >Birthdate</StyledTableCell>
         </TableRow>
       </TableHead>
-     <TableBody>
+     <TableBody >
       {studentData?.map((element)=>(
         
-                <StyledTableRow >
+                <StyledTableRow className='styleTableRowHover' >
                 {/* Remove the underline */}
                           
                 {/* EDIT */}
-                <StyledTableCell className='text-decoration-none ps-2 m-0'>
+                <StyledTableCell className='text-decoration-none ps-2 m-0 '>
                 <div className='d-flex p-0 m-0 fs-6'><FaEdit  onClick={()=>handleEditClick(element)}  className='text-success p-0 m-0 fs-6 text-decoration-none'/>
 
                   {/* DELETE */}
