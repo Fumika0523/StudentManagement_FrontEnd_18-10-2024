@@ -52,11 +52,12 @@ function ViewStudent(){
             <div className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Student
             </div>
             {<CustomizedTables studentData = {studentData}/>}
-            {/* {< HoverCustomisedTable/>} */}
+            {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}
+            
+            {/* {< HoverCustomisedTable />} */}
         </div>
         </Box>
-        
-                {show && <ModalAddStudent show={show} setShow={setShow}/>}
+            {show && <ModalAddStudent show={show} setShow={setShow}/>}
            
         </div>
         </>

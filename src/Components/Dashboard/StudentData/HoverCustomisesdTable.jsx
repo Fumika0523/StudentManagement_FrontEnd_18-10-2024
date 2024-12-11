@@ -24,6 +24,7 @@ const columns = [
   },
 ];
 
+
 const rows = [
   { id: 1, studentName: 'Snow', firstName: 'Jon', age: 35 },
   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
@@ -40,6 +41,10 @@ const paginationModel = { page: 0, pageSize: 5 };
 
 
 function HoverCustomisedTable(){
+
+// const rows = studentData
+
+
     return (
         <>
     <Paper sx={{ height: 400, width: '100%' }}>
@@ -50,6 +55,7 @@ function HoverCustomisedTable(){
         pageSizeOptions={[5, 10]}
          sx={{ border: 0 }}
       />
+
     </Paper>
 
         </>
