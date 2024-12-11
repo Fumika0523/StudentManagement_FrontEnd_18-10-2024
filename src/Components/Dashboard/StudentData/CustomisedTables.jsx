@@ -32,21 +32,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       fontSize:"16px",
       padding:"0.5% 0%",
       textAlign:"center",
-    },
+        },
   }));
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
-      
     },
-    //hide last border
-    '&:last-child StyledTableCell, &:last-child th': {
-      color:"yellow"
+    '&:hover': {
+      backgroundColor: '#e0f7fa',
+      cursor: 'pointer',
     },
-
   }));
-  
+
   const formaStyledTableCellate = (dateString) => {
     const date = new Date(dateString); 
     const options = { year: 'numeric', month: 'long', day: 'numeric' }; // showing only year, month, day in number
@@ -108,11 +106,9 @@ const deleteStudent = async(id)=>{
         </TableRow>
       </TableHead>
      <TableBody >
-      {studentData?.map((element)=>(
-        
-                <StyledTableRow className='styleTableRowHover' >
-                {/* Remove the underline */}
-                          
+      {studentData?.map((element)=>(  
+                <StyledTableRow  >
+                {/* Remove the underline */}                 
                 {/* EDIT */}
                 <StyledTableCell className='text-decoration-none ps-2 m-0 '>
                 <div className='d-flex p-0 m-0 fs-6'><FaEdit  onClick={()=>handleEditClick(element)}  className='text-success p-0 m-0 fs-6 text-decoration-none'/>

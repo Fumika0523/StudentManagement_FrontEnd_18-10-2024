@@ -7,6 +7,7 @@ import SideBar from "../../../HomePage/SideBar"
 import { Box } from "@mui/material"
 import NavBar from "../../../HomePage/NavBar"
 import ModalAddStudent from "../StudentData/ModalAddStudent"
+import HoverCustomisedTable from "./HoverCustomisesdTable"
 
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])
@@ -51,6 +52,7 @@ function ViewStudent(){
             <div className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Student
             </div>
             {<CustomizedTables studentData = {studentData}/>}
+            {/* {< HoverCustomisedTable/>} */}
         </div>
         </Box>
         
