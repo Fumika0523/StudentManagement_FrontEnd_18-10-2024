@@ -10,12 +10,11 @@ import Paper from '@mui/material/Paper';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoEyeSharp } from "react-icons/io5";
+import ModalEditBatch from './ModalEditBatch';
 // import axios from 'axios';
 // import EditbatchData from './EditbatchData';
 // import ModalShowPassword from './ModalShowPassword';
 // import { url } from '../../utils/constant';
-
-
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -43,8 +42,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   }));
 
 function CustomisedBatchTables({batchData}){
-    console.log(batchData)
+    const [show,setShow] = useState(false)
     const [singleBatch,setSingleBatch] = useState(null)
+    console.log(batchData)
     
     const token = sessionStorage.getItem('token');
     const config = {
@@ -52,6 +52,11 @@ function CustomisedBatchTables({batchData}){
         Authorization: `Bearer ${token}`,
       },
     };
+
+  const handleEditClick = (batch)=>{
+    setShow(true);
+    setSingleBatch(batch)
+  }
 
     return(
     <>
@@ -84,12 +89,6 @@ function CustomisedBatchTables({batchData}){
                     <MdDelete
                       className="text-danger"
                       style={{ cursor: 'pointer' }}
-                      onClick={() => handleDeleteClick(batch._id)}
-                    />
-                    <IoEyeSharp
-                      className="text-primary"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => handlePasswordClick(batch.password)}
                     />
                   </div>
                 </StyledTableCell>
@@ -110,6 +109,17 @@ function CustomisedBatchTables({batchData}){
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Edit Part */}
+      {
+        show && (
+          <ModalEditBatch
+          show={show}
+          setShow={setShow}
+          singleBatch={singleBatch}
+          setSingleBatch={setSingleBatch} />
+        )}
+
     </>
     )
 }

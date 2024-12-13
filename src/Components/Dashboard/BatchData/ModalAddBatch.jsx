@@ -77,7 +77,7 @@ function ModalAddBatch({show,setShow}){
         {/* Batch Number*/}
         <Form.Group className='my-3'>
           <Form.Label className='m-0'>Batch No.</Form.Label>
-            <Form.Control type="batchNumber" 
+            <Form.Control type="text" 
             placeholder='Type your Batch No.' 
             name="batchNumber" 
             value={formik.values.batchNumber}
@@ -86,7 +86,7 @@ function ModalAddBatch({show,setShow}){
         {/* Session Type */}
         <Form.Group className='my-3'>
         <Form.Label className='m-0'>Session Type</Form.Label>
-                    <Form.Control type="sessionType" placeholder='Type your Session Type' name="sessionType"
+                    <Form.Control type="text" placeholder='Type your Session Type' name="sessionType"
                     value={formik.values.sessionType}
                     onChange={formik.handleChange} />
         </Form.Group>
@@ -94,7 +94,7 @@ function ModalAddBatch({show,setShow}){
         {/* Course Name */}
         <Form.Group className='my-3'>
         <Form.Label className='m-0'>Course Name</Form.Label>
-            <Form.Control type="courseName" placeholder='Type your Course Name' name="courseName"
+            <Form.Control type="text" placeholder='Type your Course Name' name="courseName"
             value={formik.values.courseName}
             onChange={formik.handleChange} />
         </Form.Group>
@@ -102,22 +102,31 @@ function ModalAddBatch({show,setShow}){
         {/* Session Day */}
         <Form.Group className='my-3'>
         <Form.Label className='m-0'>Session Day</Form.Label>
-        <Form.Control type="sessionDay" placeholder='Type your Session Day' name="sessionDay"                        value={formik.values.sessionDay}
+        <Form.Control type="text" placeholder='Type your Session Day' name="sessionDay"                       
+        value={formik.values.sessionDay}
         onChange={formik.handleChange} />
         </Form.Group>
 
         {/* Target Student */}
         <Form.Group className='my-3'>
         <Form.Label className='m-0'>Target Student</Form.Label>
-        <Form.Control type="targetStudent" placeholder='Type your Target Student' name="targetStudent"
+        <Form.Control type="text" placeholder='Type your Target Student' name="targetStudent"
         value={formik.values.targetStudent}
         onChange={formik.handleChange} />
         </Form.Group>
 
+        {/* Location */}
+        <Form.Group className='my-3'>
+          <Form.Label className='m-0'>Location</Form.Label>
+          <Form.Control type="text" placeholder='Type your Location' name='location'
+          value={formik.values.location}
+          onChange={formik.handleChange}/>
+          </Form.Group>
+
         {/* Session Time */}
         <Form.Group className='my-3'>
         <Form.Label className='m-0'>Session Time</Form.Label>
-        <Form.Control type="sessionTime" placeholder='Type your Session Time' name="sessionTime"
+        <Form.Control type="text" placeholder='Type your Session Time' name="sessionTime"
         value={formik.values.sessionTime}
         onChange={formik.handleChange} />
         </Form.Group>
@@ -125,7 +134,7 @@ function ModalAddBatch({show,setShow}){
         {/* Fees */}
         <Form.Group className='my-3'>
         <Form.Label className='m-0'>Fees</Form.Label>
-        <Form.Control type="fees" placeholder='Type your Fees' name="fees"
+        <Form.Control type="number" placeholder='Type your Fees' name="fees"
         value={formik.values.fees}
         onChange={formik.handleChange} />
         </Form.Group>
@@ -145,3 +154,5 @@ function ModalAddBatch({show,setShow}){
    )
 }
 export default ModalAddBatch
+
+///Batch No. cannot b eddited.

@@ -73,9 +73,6 @@ const formik = useFormik({
          console.log("updatedStudent:",updatedStudent)
      }} 
      
-
-
-
     return(
     <>
     <div>
