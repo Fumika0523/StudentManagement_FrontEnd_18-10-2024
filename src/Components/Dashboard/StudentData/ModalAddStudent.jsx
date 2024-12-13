@@ -11,7 +11,7 @@ import { url } from '../../utils/constant';
 
 
 function ModalAddStudent({show,setShow}){
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleClose = () => {
     setShow(false)
@@ -66,24 +66,25 @@ const addStudent = async (newStudent) => {
     <>
       <Modal     
          show={show} onHide={handleClose}
-          size="xl"
-          >
+          size="xl" >
         <Modal.Header closeButton>
           <Modal.Title  >Add Student</Modal.Title>
         </Modal.Header>
         <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}}>
         <Modal.Body>
 
-            {/* Studentname*/}
-            <Form.Group className='my-3'>
-                            <Form.Label className='m-0'>Student Name</Form.Label>
-                            <Form.Control type="studentName" placeholder='Type your Full Name' name="studentName"
-                                value={formik.values.studentName}
-                                onChange={formik.handleChange} />
-                        </Form.Group>
-                        {/* Username */}
-                        <Form.Group className='my-3'>
-                            <Form.Label className='m-0'>Username</Form.Label>
+        {/* Studentname*/}
+        <Form.Group className='my-3'>
+          <Form.Label className='m-0'>Student Name</Form.Label>
+            <Form.Control type="studentName" 
+            placeholder='Type your Full Name' 
+            name="studentName" 
+            value={formik.values.studentName}
+            onChange={formik.handleChange} /></Form.Group>
+        
+        {/* Username */}
+        <Form.Group className='my-3'>
+        <Form.Label className='m-0'>Username</Form.Label>
                             <Form.Control type="username" placeholder='Type your Username' name="username"
                                 value={formik.values.username}
                                 onChange={formik.handleChange} />
@@ -141,7 +142,6 @@ const addStudent = async (newStudent) => {
         </Modal.Footer>
         </Form>
       </Modal>
-
     </>
     )
 }

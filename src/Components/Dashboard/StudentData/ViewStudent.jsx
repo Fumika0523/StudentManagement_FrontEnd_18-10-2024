@@ -18,8 +18,7 @@ function ViewStudent(){
     let config = {
         headers:{
             Authorization:`Bearer ${token}`
-        }
-    }
+        }}
 
     const getStudentData = async()=>{
         console.log("Student data is called........")
@@ -39,13 +38,12 @@ function ViewStudent(){
         <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
         <NavBar/>
         {/* create a table */}
-    
         {/* <div className="fs-3">View Student Data</div> */}
         <div className="btn  py-auto px-auto mt-3"  onClick={()=>setShow(true)} style={{backgroundColor:"#4e73df",color:"white",width:"10%",marginLeft:"88%"}}>Add Student</div>
         
-               {/* <p>
+        {/* <p>
             {studentData.map((element)=>(
-                <div>{element.username}</div>
+            <div>{element.username}</div>
             ))}
         </p> */}
         <div className="m-4" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
@@ -53,7 +51,7 @@ function ViewStudent(){
             </div>
             {<CustomizedTables studentData = {studentData}/>}
             {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}
-            
+
             {/* {< HoverCustomisedTable />} */}
         </div>
         </Box>

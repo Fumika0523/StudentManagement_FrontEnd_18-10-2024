@@ -46,10 +46,12 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
 
     return(
         <>
-        <div className='signInStyle py-5' style={{height:"100vh"}}>
-        <div className='container py-5' style={{width:"30%",border:"1px solid black", borderRadius:"10px",backgroundColor:"white"}}>
-            <h2  className="text-center" style={{fontWeight:"bold"}}>Sign in</h2>
-            <Form onSubmit={formik.handleSubmit} className='px-5'>
+        <div className='signInStyle' style={{height:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <div className='container py-5' style={{width:"35%",border:"1px solid black", borderRadius:"50px",backgroundColor:"white"}}>
+
+            {/* TITLE */}
+            <h1 className="text-center" style={{fontWeight:"bold"}}>Sign in</h1>
+            <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"100%"}}>
                 {/* Username */}
                 <Form.Group className='my-3'>
                     <Form.Label>Username</Form.Label>
@@ -64,11 +66,11 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     value={formik.values.password}
                     onChange={formik.handleChange} />
                 </Form.Group>
-                <div className='text-end my-1 mb-4' style={{fontSize:"80%"}}></div>
-                <Button type="submit" className="mb-3 signInStyle" style={{width:"100%",borderRadius:"20px"}}>SIGN IN</Button>
+                <div className='my-1 mb-4' style={{fontSize:"80%"}}></div>
+                <Button type="submit" className="mb-3 me-auto signInStyle" style={{width:"20%",borderRadius:"20px"}}>SIGN IN</Button>
             </Form>
             <div className='text-center'>
-                <div style={{fontSize:"90%"}}>Or Sign Up Using</div>
+                <div style={{fontSize:"110%"}}>Or Sign Up Using</div>
                 <div className='gap-1 fs-3 mt-3 d-flex' style={{justifyContent:"center"}}>
                     {/* Facebook */}
                     <FacebookIcon sx={{color:"navy",fontSize:"35px"}} />
@@ -79,8 +81,8 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     {/* Google */}
                     <GoogleIcon sx={{color:"#ea4335",fontSize:"35px"}} />
                     </div>
-                    <div style={{marginTop:"4%",fontSize:"90%"}}>Or</div>
-                    <div className="btn btn-link" style={{marginTop:"4%",fontSize:"90%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
+                    <div style={{marginTop:"4%",fontSize:"110%"}}>Or</div>
+                    <div className="btn btn-link" style={{marginTop:"4%",fontSize:"110%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
                     </div>
         </div>
         </div>

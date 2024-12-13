@@ -17,6 +17,8 @@ import PasswordForm from './Components/Profile/Edit/passwordForm'
 import DashboardCard from './Components/Dashboard/dashboardCard'
 import ViewStudent from './Components/Dashboard/StudentData/ViewStudent'
 import HomePage from './HomePage/HomePage'
+import ViewBatch from './Components/Dashboard/BatchData/viewBatch'
+
 
 function App() {
   const [userData,setUserData] = useState([])
@@ -74,6 +76,7 @@ const getUserData = async()=>{
         <Route path="/phonenumberform" element={<PhoneNumberForm/>}/>
         <Route path="/passwordform" element={<PasswordForm/>}/>
         <Route path="/studentdata" element={<ViewStudent isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+        <Route path="/batchdata" element={<ViewBatch />}/>
       </Routes>
 
       </Box>

@@ -49,10 +49,12 @@ function SignUp() {
 
     return (
         <>
-            <div className='signInStyle py-5' style={{ height: "100vh", }}>
-                <div className='container py-4' style={{ width: "40%", border: "1px solid black", borderRadius: "10px", backgroundColor: "white" }}>
-                    <h3 className="text-center" style={{ fontWeight: "bold" }}>Sign Up</h3>
-                    <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}}>
+            <div className='signInStyle py-5' style={{ height: "100vh",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                <div className='container py-5' style={{ width: "35%", border: "1px solid black", borderRadius: "50px", backgroundColor: "white" }}>
+
+                    {/* TITLE */}
+                    <h1 className="text-center" style={{ fontWeight: "bold" }}>Sign Up</h1>
+                    <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"100%"}}>
                         {/* Username */}
                         <Form.Group className='my-3'>
                             <Form.Label className='m-0'>Username</Form.Label>
@@ -120,7 +122,7 @@ function SignUp() {
                                 <GoogleIcon sx={{ color: "#ea4335", fontSize: "35px" }} />
                             </div>
                             <div style={{ marginTop: "3%", fontSize: "110%" }}>Or Already Have Account?</div>
-                            <div className='btn btn-link' style={{ marginTop: "3%", fontSize: "110%" }} onClick={()=>{navigate('/')}}>SIGN IN</div>
+                            <div className='btn btn-link' style={{ marginTop: "3%", fontSize: "110%",width:"10%" }} onClick={()=>{navigate('/')}}>SIGN IN</div>
                         </div>
                    
                 </div>
