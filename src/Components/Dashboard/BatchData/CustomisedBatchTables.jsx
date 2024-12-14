@@ -43,7 +43,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 function CustomisedBatchTables({batchData}){
     const [show,setShow] = useState(false)
-    const [singleBatch,setSingleBatch] = useState(null)
+    const [singleBatch,setSingleBatch] = useState(null) //?
     console.log(batchData)
     
     const token = sessionStorage.getItem('token');

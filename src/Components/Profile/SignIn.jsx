@@ -47,30 +47,29 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
     return(
         <>
         <div className='signInStyle' style={{height:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
-        <div className='container py-5' style={{width:"35%",border:"1px solid black", borderRadius:"50px",backgroundColor:"white"}}>
+        <div className='container py-5 text-center' style={{width:"35%",border:"1px solid black", borderRadius:"50px",backgroundColor:"white"}}>
 
             {/* TITLE */}
             <h1 className="text-center" style={{fontWeight:"bold"}}>Sign in</h1>
             <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"100%"}}>
                 {/* Username */}
-                <Form.Group className='my-3'>
+                <Form.Group className='mt-3 text-start'>
                     <Form.Label>Username</Form.Label>
                     <Form.Control type="username" placeholder='Type your Username' name="username" 
                     value={formik.values.username}
                     onChange={formik.handleChange} />
                 </Form.Group>
                     {/* Password*/}
-                    <Form.Group className='mt-3'>
-                    <Form.Label>Password</Form.Label>
+                    <Form.Group className='mt-3 text-start'>
+                    <Form.Label >Password</Form.Label>
                     <Form.Control type="password" placeholder="Type your Password" name="password" 
                     value={formik.values.password}
                     onChange={formik.handleChange} />
                 </Form.Group>
-                <div className='my-1 mb-4' style={{fontSize:"80%"}}></div>
-                <Button type="submit" className="mb-3 me-auto signInStyle" style={{width:"20%",borderRadius:"20px"}}>SIGN IN</Button>
+              <Button type="submit" className="my-3 px-4 me-auto signInStyle" style={{borderRadius:"20px"}}>SIGN IN</Button>
             </Form>
             <div className='text-center'>
-                <div style={{fontSize:"110%"}}>Or Sign Up Using</div>
+                <div style={{fontSize:"100%"}}>Or Sign Up Using</div>
                 <div className='gap-1 fs-3 mt-3 d-flex' style={{justifyContent:"center"}}>
                     {/* Facebook */}
                     <FacebookIcon sx={{color:"navy",fontSize:"35px"}} />
@@ -81,8 +80,8 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     {/* Google */}
                     <GoogleIcon sx={{color:"#ea4335",fontSize:"35px"}} />
                     </div>
-                    <div style={{marginTop:"4%",fontSize:"110%"}}>Or</div>
-                    <div className="btn btn-link" style={{marginTop:"4%",fontSize:"110%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
+                    <div style={{marginTop:"3%",fontSize:"100%"}}>Or</div>
+                    <div className="btn btn-link" style={{marginTop:"3%",fontSize:"110%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
                     </div>
         </div>
         </div>

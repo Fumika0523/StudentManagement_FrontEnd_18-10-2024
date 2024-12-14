@@ -49,11 +49,10 @@ function SignUp() {
 
     return (
         <>
-            <div className='signInStyle py-5' style={{ height: "100vh",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                <div className='container py-5' style={{ width: "35%", border: "1px solid black", borderRadius: "50px", backgroundColor: "white" }}>
-
+            <div className='signInStyle' style={{height:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                <div className='container py-3 my-5' style={{ width: "35%", border: "1px solid black", borderRadius: "50px", backgroundColor: "white" }}>
                     {/* TITLE */}
-                    <h1 className="text-center" style={{ fontWeight: "bold" }}>Sign Up</h1>
+                    <h2 className="text-center" style={{ fontWeight: "bold" }}>Sign Up</h2>
                     <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"100%"}}>
                         {/* Username */}
                         <Form.Group className='my-3'>
@@ -105,12 +104,11 @@ function SignUp() {
                                 value={formik.values.password}
                                 onChange={formik.handleChange} />
                         </Form.Group>
-                        <div className='text-end my-1 mb-4' style={{ fontSize: "80%" }}></div>
-
-                        <Button type="subumit" className="mb-4 signInStyle py-2" style={{ width: "100%", borderRadius: "20px" }}>SIGN UP</Button>
+                        <div className='text-center my-3' style={{ fontSize: "80%" }}>
+                        <Button type="subumit" className="signInStyle py-2" style={{ width: "35%", borderRadius: "20px" }}>SIGN UP</Button></div>
                         </Form>
                         <div className='text-center'>
-                            <div style={{ fontSize: "120%" }}>Or Sign Up Using</div>
+                            <div style={{ fontSize: "100%" }}>Or Sign Up Using</div>
                             <div className='gap-1 mt-3 d-flex' style={{ justifyContent: "center" }}>
                                 {/* Facebook */}
                                 <FacebookIcon sx={{ color: "navy", fontSize: "35px" }} />
@@ -121,8 +119,8 @@ function SignUp() {
                                 {/* Google */}
                                 <GoogleIcon sx={{ color: "#ea4335", fontSize: "35px" }} />
                             </div>
-                            <div style={{ marginTop: "3%", fontSize: "110%" }}>Or Already Have Account?</div>
-                            <div className='btn btn-link' style={{ marginTop: "3%", fontSize: "110%",width:"10%" }} onClick={()=>{navigate('/')}}>SIGN IN</div>
+                            <div style={{ marginTop: "2%", fontSize: "100%" }}>Or Already Have Account?</div>
+                            <div className='btn btn-link' style={{ marginTop: "2%", fontSize: "110%",width:"50%" }} onClick={()=>{navigate('/')}}>SIGN IN</div>
                         </div>
                    
                 </div>

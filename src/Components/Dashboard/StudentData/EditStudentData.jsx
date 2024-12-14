@@ -52,6 +52,7 @@ const formik = useFormik({
         console.log(values)
         updateStudent(values)
  }})
+ 
  console.log(singleStudent)
 
  const token = sessionStorage.getItem('token')
@@ -77,11 +78,9 @@ const formik = useFormik({
     <>
     <div>
       <Modal     
-         show={show} onHide={handleClose}
-          size="xl"
-          >
+         show={show} onHide={handleClose} size="xl" >
         <Modal.Header closeButton>
-          <Modal.Title  >Edit Student Info</Modal.Title>
+          <Modal.Title>Edit Student Info</Modal.Title>
         </Modal.Header>
         <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}}>
         <Modal.Body>
