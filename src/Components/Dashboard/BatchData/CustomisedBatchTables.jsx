@@ -11,6 +11,8 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoEyeSharp } from "react-icons/io5";
 import ModalEditBatch from './ModalEditBatch';
+import ModalDeleteWarning from './ModalDeleteWaning';
+
 // import axios from 'axios';
 // import EditbatchData from './EditbatchData';
 // import ModalShowPassword from './ModalShowPassword';
@@ -45,7 +47,7 @@ function CustomisedBatchTables({batchData}){
     const [show,setShow] = useState(false)
     const [singleBatch,setSingleBatch] = useState(null) //?
     console.log(batchData)
-    
+    const [viewWarning,setViewWarning] =useState(false)
     const token = sessionStorage.getItem('token');
     const config = {
       headers: {
@@ -57,6 +59,7 @@ function CustomisedBatchTables({batchData}){
     setShow(true);
     setSingleBatch(batch)
   }
+
 
     return(
     <>
@@ -89,6 +92,12 @@ function CustomisedBatchTables({batchData}){
                     <MdDelete
                       className="text-danger"
                       style={{ cursor: 'pointer' }}
+                      onClick={()=>{
+                        setViewWarning(true)
+                        console.log(batch)
+                        setSingleBatch(batch)
+                      }
+                      }
                     />
                   </div>
                 </StyledTableCell>
@@ -119,6 +128,18 @@ function CustomisedBatchTables({batchData}){
           singleBatch={singleBatch}
           setSingleBatch={setSingleBatch} />
         )}
+
+      {/* Delete */}
+      {
+        viewWarning && (
+          <ModalDeleteWarning
+          viewWarning = {viewWarning} 
+          singleBatch={singleBatch}
+          
+          setViewWarning = {setViewWarning}
+          />
+        )
+      }
 
     </>
     )

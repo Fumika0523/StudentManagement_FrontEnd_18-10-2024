@@ -67,8 +67,8 @@ if(res){
     console.log("successfully updatedBatch",updatedBatch)
 }}
 
-    return(
-    <>
+return(
+ <>
     <Modal
     show={show} onHide={handleClose} size="xl" >
         {/* <h1>Edit Batch</h1> */}
@@ -156,7 +156,7 @@ if(res){
             </Modal.Footer>
         </Form>
     </Modal>
-    </>
+</>
 )
 }
 export default ModalEditBatch
