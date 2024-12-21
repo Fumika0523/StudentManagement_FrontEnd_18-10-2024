@@ -83,7 +83,7 @@ function CustomisedBatchTables({batchData}){
             {batchData?.map((batch) => (
               <StyledTableRow key={batch._id}>
                 <StyledTableCell>
-                  <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                  <div style={{ display: 'flex', gap: '10px' }}>
                     <FaEdit
                       className="text-success"
                       style={{ cursor: 'pointer' }}

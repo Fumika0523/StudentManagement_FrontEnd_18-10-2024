@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -12,11 +12,13 @@ import { url } from '../../utils/constant';
 
 function ModalAddBatch({show,setShow}){
     const navigate = useNavigate()
+    const [batchData,setBatchData] = useState([])
 
     const handleClose = () => {
-        setShow(false)
-        navigate('/batchdata')
-        }
+      setShow(false)
+      navigate('/batchdata')
+      getBatchData()
+    }
       
       const formSchema = Yup.object().shape({
         batchNumber: Yup.string().required(),
@@ -56,19 +58,34 @@ function ModalAddBatch({show,setShow}){
             Authorization:`Bearer ${token}`
         }}
 
-    const addBatch = async (newBatch)=>{
-        console.log(newBatch)
-        const res = await axios.post(`${url}/addbatch`,newBatch,config)
-        console.log(res)
+    const getBatchData = async()=>{
+      console.log("Batch data is called...")
+      let res = await axios.get(`${url}/allbatch`,config)
+      console.log("BatchData",res.data.batchData)
+      setBatchData(res.data.batchData)
     }
-    // When you click the save.>> update
+       useEffect(()=>{
+       getBatchData()
+    },[])
+    console.log(batchData) 
+
+ const addBatch = async (newBatch)=>{
+    console.log("New Batch is added to the DB")
+    console.log("New Batch:",newBatch)
+    const res = await axios.post(`${url}/addbatch`,newBatch,config)
+    console.log(res)
+    // if(res.status == 200){
+    //   handleClose()
+    getBatchData()
+  }
+//}
     
    return(
     <>
-        <Modal     
-         show={show} onHide={handleClose}
-          size="xl" >
-        <Modal.Header closeButton>
+      <Modal     
+       show={show} onHide={handleClose}
+       size="xl" >
+       <Modal.Header closeButton>
           <Modal.Title  >Add Batch</Modal.Title>
         </Modal.Header>
         <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}}>
@@ -144,7 +161,9 @@ function ModalAddBatch({show,setShow}){
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button style={{backgroundColor:"#4e73df"}} type="submit">
+          <Button style={{backgroundColor:"#4e73df"}} 
+          type="submit"
+          >
             Save Changes
           </Button>
         </Modal.Footer>

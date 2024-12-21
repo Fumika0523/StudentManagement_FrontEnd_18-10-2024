@@ -67,6 +67,14 @@ if(res){
     console.log("successfully updatedBatch",updatedBatch)
 }}
 
+const getBatchData = async()=>{
+    console.log("Batch data is called..")
+   let res = await fetch(`${url}/allbatch`,config)
+   let data = await res.json()
+   console.log(data)
+   getBatchData(data)
+}
+
 return(
  <>
     <Modal
@@ -150,7 +158,9 @@ return(
                 <Button variant="secondary" onClick={handleClose} >
                     Close
                 </Button>
-                <Button style={{backgroundColor:"#4e73df"}} type="submit">
+                <Button style={{backgroundColor:"#4e73df"}} 
+            
+                type="submit">
                     Save Changes
                 </Button>
             </Modal.Footer>
