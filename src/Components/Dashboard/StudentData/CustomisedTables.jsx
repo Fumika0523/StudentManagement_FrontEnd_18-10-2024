@@ -72,8 +72,14 @@ const CustomizedTables = ({ studentData,setStudentData }) => {
 
   const handleDeleteClick = async (id) => {
     try {
-      await axios.delete(`${url}/deletestudent/${id}`, config);
-      alert('Student deleted successfully!');
+      let res =await axios.delete(`${url}/deletestudent/${id}`, config);
+      console.log(res)
+      if(res){
+        let res = await axios.get(`${url}/allstudent`,config)
+        console.log("StudentData",res.data.studentData)
+        setStudentData(res.data.studentData)
+      }
+      // alert('Student deleted successfully!');
     } catch (error) {
       console.error('Error deleting student:', error);
     }
