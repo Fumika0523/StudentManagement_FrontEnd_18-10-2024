@@ -9,13 +9,11 @@ import { url } from '../../utils/constant';
 import axios from 'axios';
 
 
-function EditStudentData({show,setShow,setSingleStudent,singleStudent}){
+function EditStudentData({show,setShow,setSingleStudent,singleStudent,setStudentData}){
   console.log(singleStudent._id)
   console.log(singleStudent)
 
     const navigate = useNavigate()
-     const [studentData,setStudentData] = useState([])
-    // const [show, setShow] = useState(false);
 
     const handleClose = () => {
     setShow(false)
@@ -34,7 +32,6 @@ function EditStudentData({show,setShow,setSingleStudent,singleStudent}){
 const formattedDate = singleStudent.birthdate
 ? new Date(singleStudent.birthdate).toISOString().split('T')[0]
 :"";
-
 
 console.log("update birthdate",formattedDate)
 // 1 data need to update
@@ -64,15 +61,21 @@ const formik = useFormik({
      }
  }
  
-     const updateStudent = async(updatedStudent)=>{
-         console.log("student posted to the DB")
-         console.log("update student:",updatedStudent)
-     
-     let res = await axios.put(`${url}/updatestudent/${singleStudent._id}`,updatedStudent,config)
-     console.log(res)
-     if(res){
-         console.log("updatedStudent:",updatedStudent)
-     }} 
+ //update
+  const updateStudent = async(updatedStudent)=>{
+    console.log("student posted to the DB")
+    try{
+      let res = await axios.put(`${url}/updatestudent/${singleStudent._id}`,updatedStudent,config)
+      console.log(res)
+      if(res){
+        let res = await axios.get(`${url}/allstudent`,config)
+          console.log("updatedStudent:",updatedStudent)
+          setStudentData(res.data.studentData)
+          handleClose()
+      }
+    }catch(e){
+      console.error('Error Editing Student:',error)
+    }} 
      
     return(
     <>

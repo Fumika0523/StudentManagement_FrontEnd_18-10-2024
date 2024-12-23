@@ -5,9 +5,10 @@ import { url } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-const ModalDeleteWarning=({viewWarning,setViewWarning,singleBatch})=>{
+const ModalDeleteWarning=({viewWarning,setViewWarning,singleBatch,setBatchData})=>{
 const navigate = useNavigate()
-const [batchData,setBatchData] = useState([])
+//no need
+// const [batchData,setBatchData] = useState([])
 
 const handleClose = ()=>{
     setViewWarning(false)
@@ -19,16 +20,6 @@ const config = {
         headers:{
             Authorization:`Bearer ${token}`}}
 
-const getBatchData = async()=>{
-console.log("Batch data is called..")
-let res = await axios.get(`${url}/allbatch`,config)
-console.log("BatchData",res.data.batchData)
-setBatchData(res.data.batchData)
-}
-useEffect(()=>{
-    getBatchData()
-},[])
-console.log(batchData)
 
 // Delete
 const handleDeleteClick = async(id) =>{
@@ -36,7 +27,9 @@ try{
     let res = await axios.delete(`${url}/deletesbatch/${id}`,config);
     console.log(res)
     if(res){
-    getBatchData()
+    let res = await axios.get(`${url}/allbatch`,config)
+    console.log("BatchData",res.data.batchData)
+    setBatchData(res.data.batchData) // updating the original Main batch data
     handleClose()}   
 }catch(error){
     console.error('Error Deleting Batch:', error);

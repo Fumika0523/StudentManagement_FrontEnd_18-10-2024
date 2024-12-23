@@ -10,10 +10,8 @@ import axios from 'axios';
 import { url } from '../../utils/constant';
 
 
-function ModalAddBatch({show,setShow}){
+function ModalAddBatch({show,setShow,setBatchData}){
     const navigate = useNavigate()
-    const [batchData,setBatchData] = useState([])
-
     const handleClose = () => {
       setShow(false)
       navigate('/batchdata')
@@ -58,25 +56,19 @@ function ModalAddBatch({show,setShow}){
             Authorization:`Bearer ${token}`
         }}
 
-    const getBatchData = async()=>{
-      console.log("Batch data is called...")
-      let res = await axios.get(`${url}/allbatch`,config)
-      console.log("BatchData",res.data.batchData)
-      setBatchData(res.data.batchData)
-    }
-       useEffect(()=>{
-       getBatchData()
-    },[])
-    console.log(batchData) 
-
  const addBatch = async (newBatch)=>{
-    console.log("New Batch is added to the DB")
-    console.log("New Batch:",newBatch)
-    const res = await axios.post(`${url}/addbatch`,newBatch,config)
+      try{
+     const res = await axios.post(`${url}/addbatch`,newBatch,config)
     console.log(res)
-    // if(res.status == 200){
-    //   handleClose()
-    getBatchData()
+      if(res){
+        let res = await axios.get(`${url}/allbatch`,config)
+        console.log("Successfully a new batch added to the DB",newBatch)
+        setBatchData(res.data.batchData)
+        handleClose()
+      }
+    }catch(e){
+      console.error('Error Adding Batch:',error)
+    }
   }
 //}
     

@@ -43,7 +43,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
   }));
 
-function CustomisedBatchTables({batchData}){
+function CustomisedBatchTables({batchData,setBatchData}){
     const [show,setShow] = useState(false)
     const [singleBatch,setSingleBatch] = useState(null) //?
     console.log(batchData)
@@ -126,7 +126,8 @@ function CustomisedBatchTables({batchData}){
           show={show}
           setShow={setShow}
           singleBatch={singleBatch}
-          setSingleBatch={setSingleBatch} />
+          setSingleBatch={setSingleBatch}
+          setBatchData={setBatchData} />
         )}
 
       {/* Delete */}
@@ -135,7 +136,8 @@ function CustomisedBatchTables({batchData}){
           <ModalDeleteWarning
           viewWarning = {viewWarning} 
           singleBatch={singleBatch}
-          
+          //passing from vieBatchData
+          setBatchData={setBatchData}
           setViewWarning = {setViewWarning}
           />
         )

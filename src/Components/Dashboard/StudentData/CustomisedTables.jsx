@@ -51,7 +51,7 @@ const formatDate = (dateString) => {
 };
 
 // Main component
-const CustomizedTables = ({ studentData }) => {
+const CustomizedTables = ({ studentData,setStudentData }) => {
   console.log(studentData)
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent] = useState(null);
@@ -148,6 +148,7 @@ const CustomizedTables = ({ studentData }) => {
           setShow={setShow}
           singleStudent={singleStudent}
           setSingleStudent={setSingleStudent}
+          setStudentData={setStudentData}
         />
       )}
 

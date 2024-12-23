@@ -10,9 +10,8 @@ import axios from 'axios';
 import { url } from '../../utils/constant';
 
 
-function ModalAddStudent({show,setShow}){
+function ModalAddStudent({show,setShow,setStudentData}){
   const navigate = useNavigate()
-
   const handleClose = () => {
     setShow(false)
     navigate('/studentdata')
@@ -53,12 +52,19 @@ let config = {
 
 const addStudent = async (newStudent) => {
     console.log(newStudent)
+    try{
     const res = await axios.post(`${url}/registerstudent`, newStudent,config)
     console.log(res)
-    // if (res.status == 200) {
-    //     //navigate to signin page
-    //     navigate('/studentdata')
-    // }
+    if(res){
+      let res = await axios.get(`${url}/allstudent`,config)
+      console.log("Successfully a new student to the DB",newStudent)
+      setStudentData(res.data.studentData)
+      handleClose()
+    }
+    }catch(e){
+    console.error('Error Adding Student:',error)
+    }
+    
 }
 // When you click the save.>> update
 

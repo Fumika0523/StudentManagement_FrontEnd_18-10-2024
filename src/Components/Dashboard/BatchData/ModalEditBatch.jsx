@@ -8,13 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import { url } from '../../utils/constant';
 import axios from 'axios';
 
-const ModalEditBatch = ({show,setShow,singleBatch})=>{
+const ModalEditBatch = ({show,setShow,singleBatch,setBatchData})=>{
 console.log(singleBatch)
 console.log(singleBatch._id)
 
 const navigate = useNavigate()
-const [batchData,setBatchData]=useState([])
-
 const handleClose =()=>{
     setShow(false)
     navigate('/batchdata')
@@ -57,23 +55,22 @@ let config ={
         Authorization:`Bearer ${token}`
     }}
 
+//Update
 const updateBatch = async(updatedBatch)=>{
     console.log("Batch posted to the DB")
-    console.log("Update Batch:",updatedBatch)
-
-let res = await axios.put(`${url}/updatebatch/${singleBatch._id}`,updatedBatch,config)
+try{
+    let res = await axios.put(`${url}/updatebatch/${singleBatch._id}`,updatedBatch,config)
 console.log(res)
 if(res){
-    console.log("successfully updatedBatch",updatedBatch)
+    let res = await axios.get(`${url}/allbatch`,config)
+    console.log("successfully updated the Batch",updatedBatch)
+    setBatchData(res.data.batchData)
+    handleClose()}
+}catch(e){
+    console.error('Error Editing Batch:',error);
 }}
 
-const getBatchData = async()=>{
-    console.log("Batch data is called..")
-   let res = await fetch(`${url}/allbatch`,config)
-   let data = await res.json()
-   console.log(data)
-   getBatchData(data)
-}
+
 
 return(
  <>
@@ -155,14 +152,15 @@ return(
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
+            <Button style={{backgroundColor:"#4e73df"}} 
+            type="submit"
+            >
+                Save Changes
+            </Button>
                 <Button variant="secondary" onClick={handleClose} >
                     Close
                 </Button>
-                <Button style={{backgroundColor:"#4e73df"}} 
             
-                type="submit">
-                    Save Changes
-                </Button>
             </Modal.Footer>
         </Form>
     </Modal>
