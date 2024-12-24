@@ -78,10 +78,13 @@ function SideBar() {
       <Collapse in={open}>
        <div id="example-collapse-text" style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"white",padding:"1% 0", marginBottom:"2%"}}>
         <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={() => { navigate('/studentdata') }} >
-        View All Student
+            View All Student
         </div>
-          <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={()=>{navigate('/batchdata')}}>
+        <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={()=>{navigate('/batchdata')}}>
             View All Batch
+        </div>
+        <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={()=>{navigate('/coursedata')}}>
+            View All Course
         </div>
         </div>
       </Collapse>

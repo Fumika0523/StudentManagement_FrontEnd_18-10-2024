@@ -16,9 +16,8 @@ import PhoneNumberForm from './Components/Profile/Edit/phoneNumberForm'
 import PasswordForm from './Components/Profile/Edit/passwordForm'
 import DashboardCard from './Components/Dashboard/dashboardCard'
 import ViewStudent from './Components/Dashboard/StudentData/ViewStudent'
-import HomePage from './HomePage/HomePage'
 import ViewBatch from './Components/Dashboard/BatchData/viewBatch'
-
+import ViewCourse from './Components/Dashboard/CourseData/ViewCourse'
 
 function App() {
   const [userData,setUserData] = useState([])
@@ -54,7 +53,6 @@ const getUserData = async()=>{
 //console.log(userData)
 
 
-
   return (
     <>
     <div className='d-flex'>
@@ -79,6 +77,7 @@ const getUserData = async()=>{
         <Route path="/passwordform" element={<PasswordForm/>}/>
         <Route path="/studentdata" element={<ViewStudent isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
         <Route path="/batchdata" element={<ViewBatch />}/>
+        <Route path="/coursedata" element={<ViewCourse/>}/>
       </Routes>
 
       </Box>
