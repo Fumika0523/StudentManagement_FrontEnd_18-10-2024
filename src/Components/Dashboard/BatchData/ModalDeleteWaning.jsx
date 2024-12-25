@@ -49,4 +49,4 @@ return(
 </Modal>
 </>
 )}
-export default ModalDeleteWarninggit
+export default ModalDeleteWarning
