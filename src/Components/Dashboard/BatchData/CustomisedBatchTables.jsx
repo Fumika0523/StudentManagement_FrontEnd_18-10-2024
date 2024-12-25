@@ -9,14 +9,9 @@ import TableBody from '@mui/material/TableBody';
 import Paper from '@mui/material/Paper';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { IoEyeSharp } from "react-icons/io5";
 import ModalEditBatch from './ModalEditBatch';
 import ModalDeleteWarning from './ModalDeleteWaning';
 
-// import axios from 'axios';
-// import EditbatchData from './EditbatchData';
-// import ModalShowPassword from './ModalShowPassword';
-// import { url } from '../../utils/constant';
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

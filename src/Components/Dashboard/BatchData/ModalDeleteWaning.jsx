@@ -3,13 +3,9 @@ import { Button } from 'react-bootstrap';
 import axios from 'axios';
 import { url } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 
-const ModalDeleteWarning=({viewWarning,setViewWarning,singleBatch,setBatchData})=>{
+const ModalDeleteWarning = ({viewWarning,setViewWarning,singleBatch,setBatchData})=>{
 const navigate = useNavigate()
-//no need
-// const [batchData,setBatchData] = useState([])
-
 const handleClose = ()=>{
     setViewWarning(false)
     navigate('/batchdata')}
@@ -19,7 +15,6 @@ const token = sessionStorage.getItem('token');
 const config = {
         headers:{
             Authorization:`Bearer ${token}`}}
-
 
 // Delete
 const handleDeleteClick = async(id) =>{
@@ -39,7 +34,7 @@ return(
 <>
 {/* Boolean value : show={true}, s */}
 <Modal show={viewWarning} onHide = {handleClose} >
-  <Modal.Body>
+  <Modal.Body className='text-center'>
     Are you sure you want to delete?
   </Modal.Body>
   <Modal.Footer>
@@ -54,4 +49,4 @@ return(
 </Modal>
 </>
 )}
-export default ModalDeleteWarning
+export default ModalDeleteWarninggit

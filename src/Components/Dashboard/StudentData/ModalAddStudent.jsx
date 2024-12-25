@@ -139,11 +139,11 @@ const addStudent = async (newStudent) => {
                         </Form.Group>         
         </Modal.Body>
         <Modal.Footer>
+        <Button style={{backgroundColor:"#4e73df"}} type="submit">
+            Add Student
+          </Button>
           <Button variant="secondary" onClick={handleClose}>
             Close
-          </Button>
-          <Button style={{backgroundColor:"#4e73df"}} type="submit">
-            Save Changes
           </Button>
         </Modal.Footer>
         </Form>

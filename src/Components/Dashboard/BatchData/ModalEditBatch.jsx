@@ -3,7 +3,6 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Formik, useFormik } from 'formik';
 import * as Yup from "yup";
-import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { url } from '../../utils/constant';
 import axios from 'axios';
@@ -30,16 +29,16 @@ const formSchema = Yup.object().shape({
 })
 
 const formik=useFormik({
-    initialValues:{
-        batchNumber:singleBatch?.batchNumber,
-        courseName:singleBatch?.courseName,
-        sessionType:singleBatch?.sessionType,
-        sessionDay:singleBatch?.sessionDay,
-        targetStudent:singleBatch?.targetStudent,
-        location:singleBatch?.location,
-        sessionTime:singleBatch?.sessionTime,
-        fees:singleBatch?.fees
-    },
+ initialValues:{
+    batchNumber:singleBatch?.batchNumber,
+    courseName:singleBatch?.courseName,
+    sessionType:singleBatch?.sessionType,
+    sessionDay:singleBatch?.sessionDay,
+    targetStudent:singleBatch?.targetStudent,
+    location:singleBatch?.location,
+    sessionTime:singleBatch?.sessionTime,
+    fees:singleBatch?.fees
+},
     onSubmit:(values)=>{
         console.log(values)
         updateBatch(values)
@@ -53,7 +52,7 @@ console.log('token')
 let config ={
     headers:{
         Authorization:`Bearer ${token}`
-    }}
+}}
 
 //Update
 const updateBatch = async(updatedBatch)=>{
@@ -70,17 +69,13 @@ if(res){
     console.error('Error Editing Batch:',error);
 }}
 
-
-
 return(
- <>
-    <Modal
-    show={show} onHide={handleClose} size="xl" >
-        {/* <h1>Edit Batch</h1> */}
-        <Modal.Header>
-            <Modal.Title>Edit Batch</Modal.Title>
-        </Modal.Header>
-        <Form onSubmit={formik.handleSubmit} className='px-5' >
+<>
+<Modal show={show} onHide={handleClose} size="xl">
+ <Modal.Header>
+   <Modal.Title>Edit Batch</Modal.Title>
+     </Modal.Header>
+        <Form onSubmit={formik.handleSubmit}  className='px-5' >
             <Modal.Body>
                 {/* Batch No. */}
                 <Form.Group>
@@ -152,22 +147,20 @@ return(
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
+
             <Button style={{backgroundColor:"#4e73df"}} 
-            type="submit"
-            >
-                Save Changes
+            type="submit">
+            Save Changes
             </Button>
-                <Button variant="secondary" onClick={handleClose} >
-                    Close
-                </Button>
+
+            <Button variant="secondary" onClick={handleClose} >
+            Close
+            </Button>
             
-            </Modal.Footer>
-        </Form>
-    </Modal>
+        </Modal.Footer>
+    </Form>
+</Modal>
 </>
 )
 }
 export default ModalEditBatch
-
-
-//Pop up message should come up

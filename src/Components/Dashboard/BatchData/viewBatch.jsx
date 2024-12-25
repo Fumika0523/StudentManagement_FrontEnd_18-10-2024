@@ -9,7 +9,6 @@ import ModalAddBatch from "./ModalAddBatch"
 
 function viewBatch(){
     const [batchData,setBatchData] = useState([])
-    const [isAuthenticated,setIsAuthenticated]=useState(false)
     const [show,setShow] = useState(false)
     
     const token = sessionStorage.getItem('token')
