@@ -34,15 +34,15 @@ return(
 <>
 {/* Boolean value : show={true}, s */}
 <Modal show={viewWarning} onHide = {handleClose} >
-  <Modal.Body className='text-center'>
+  <Modal.Body style={{padding:"5%"}}  className='d-flex justify-content-center border boder-warning mb-2 gap-5 border-none'>
     Are you sure you want to delete?
   </Modal.Body>
   <Modal.Footer>
-    <Button style={{backgroundColor:"#4e73df"}} onClick={()=>{handleDeleteClick(singleBatch._id)}}>
+    <Button className='px-4 fs-5' style={{backgroundColor:"#4e73df"}} onClick={()=>{handleDeleteClick(singleBatch._id)}}>
         Yes
     </Button>
 
-    <Button variant="secondary" onClick={handleClose} >
+    <Button className='px-4 fs-5' variant="secondary" onClick={handleClose} >
         No
     </Button>
   </Modal.Footer>

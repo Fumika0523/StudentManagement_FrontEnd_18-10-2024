@@ -55,8 +55,8 @@ function CustomisedCourseTables({courseData,setCourseData}){
 
   return(
   <>
-   <TableContainer component={Paper}>
-      <Table>
+   <TableContainer component={Paper} >
+      <Table >
         <TableHead>
           <TableRow>
             <StyledTableCell>Action</StyledTableCell>
@@ -73,7 +73,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
           { courseData?.map((course)=>(
             <StyledTableRow key={course._id}>
                 <StyledTableCell>
-                     <div style={{ display: 'flex', gap: '10px' }}>
+                     <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly", textAlign:"center"}}>
                      <FaEdit
                         className="text-success"
                         style={{ cursor: 'pointer' }}

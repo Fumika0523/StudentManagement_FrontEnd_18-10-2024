@@ -40,9 +40,9 @@ return(
     <div className="btn py-auto px-auto mt-3" onClick={()=>setShow(true)}
     style={{backgroundColor:"#4e73df",color:"white",width:"10%",marginLeft:"88%"}}>Add Course</div>
 
-    <div className="m-4" tyle={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
-    <div className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>
-        All Course</div>
+<div className="m-4" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
+            <div className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Course
+            </div>
     <CustomisedCourseTables setCourseData={setCourseData} courseData={courseData} />
     </div>
     </Box>

@@ -35,7 +35,7 @@ try{
 return(
 <>
 {/* Boolean value : show={true}, s */}
- <Modal style={{marginTop:"20%", border:"none !important",}} show={viewWarning} onHide = {handleClose} >
+ <Modal style={{marginTop:"15%", border:"none !important",}} show={viewWarning} onHide = {handleClose} >
   <Modal.Title style={{padding:"10% 0%"}} className='text-center fs-3 border-none'>
     Are you sure you want to delete?
   </Modal.Title >
