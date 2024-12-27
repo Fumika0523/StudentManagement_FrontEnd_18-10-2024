@@ -3,8 +3,16 @@ import { Button } from 'react-bootstrap';
 import axios from 'axios';
 import { url } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 const ModalDeleteCourse=({viewWarning, setViewWarning, singleCourse, setCourseData})=>{
+
+const notify = () =>{
+    console.log("Toast Notification Added")
+    toast("Course is Deleted!")
+    }
+
 const navigate = useNavigate()
 console.log(viewWarning   
 )
@@ -25,8 +33,12 @@ try{
     console.log(res)
     if(res){
     let res = await axios.get(`${url}/allcourse`,config)
-    console.log("courseData",res.data.courseData)
+    console.log("Successfully a course is deleted from DB",res.data.courseData)
     setCourseData(res.data.courseData) // updating the original Main course data
+    notify()
+    setTimeout(()=>{
+        handleClose()
+    },4001)
     handleClose()}   
 }catch(error){
     console.error('Error Deleting Course:', error);    

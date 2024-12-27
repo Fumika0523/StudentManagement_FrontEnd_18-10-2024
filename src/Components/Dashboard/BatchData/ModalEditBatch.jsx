@@ -66,7 +66,7 @@ if(res){
     setBatchData(res.data.batchData)
     handleClose()}
 }catch(e){
-    console.error('Error Editing Batch:',error);
+    console.error('Error Editing Batch:',e);
 }}
 
 return(

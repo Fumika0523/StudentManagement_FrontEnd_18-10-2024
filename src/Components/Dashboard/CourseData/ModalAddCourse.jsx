@@ -8,14 +8,19 @@ import React from "react";
 import axios from 'axios';
 import { url } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 function ModalAddCourse({show,setShow,setCourseData}){
+    const notify = ()=>{
+        console.log("Toast Notification Added")
+        toast("Course Added is !")
+    }
+
     const navigate = useNavigate()
     const handleClose=()=>{
         setShow(false)
         navigate('/coursedata')
-        // getCourseData()
     }
 
 const formSchema = Yup.object().shape(
@@ -59,10 +64,14 @@ if(res){
     let res = await axios.get(`${url}/allcourse`,config)
     console.log("Successfully a new course to the DB",newCourse)
     setCourseData(res.data.courseData)
-    handleClose()
+    notify()
+    setTimeout(()=>{
+        handleClose()
+    },4001)
+
 }
 }catch(e){
-    console.error('Error Adding Course:',error)
+    console.error('Error Adding Course:',e)
 }}
 
 return(

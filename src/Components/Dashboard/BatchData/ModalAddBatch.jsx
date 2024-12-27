@@ -67,7 +67,7 @@ function ModalAddBatch({show,setShow,setBatchData}){
         handleClose()
       }
     }catch(e){
-      console.error('Error Adding Batch:',error)
+      console.error('Error Adding Batch:',e)
     }
   }
 //}

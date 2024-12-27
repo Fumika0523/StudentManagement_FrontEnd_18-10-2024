@@ -6,11 +6,17 @@ import * as Yup from "yup";
 import { useNavigate } from 'react-router-dom';
 import { url } from '../../utils/constant';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
     console.log(singleCourse)
     console.log(singleCourse._id)
+
+    const notify=()=>{
+        console.log("Toast Notification Added")
+        toast("Course is Edited!")
+    }
 
     const navigate = useNavigate()
     const handleClose = ()=>{
@@ -59,9 +65,12 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
         let res = await axios.get(`${url}/allcourse`,config)
         console.log(`successfully updated the Course`, updatedCourse)
         setCourseData(res.data.courseData)
-        handleClose()}
+        notify()
+        setTimeout(()=>{
+            handleClose()
+        },4001)}
     }catch(e){
-        console.error('Error Editing Course:',error);
+        console.error('Error Editing Course:',e);
     }}
 
     return(

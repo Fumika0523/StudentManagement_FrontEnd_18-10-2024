@@ -18,6 +18,7 @@ import DashboardCard from './Components/Dashboard/dashboardCard'
 import ViewStudent from './Components/Dashboard/StudentData/ViewStudent'
 import ViewBatch from './Components/Dashboard/BatchData/viewBatch'
 import ViewCourse from './Components/Dashboard/CourseData/ViewCourse'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   const [userData,setUserData] = useState([])
@@ -79,8 +80,8 @@ const getUserData = async()=>{
         <Route path="/batchdata" element={<ViewBatch />}/>
         <Route path="/coursedata" element={<ViewCourse/>}/>
       </Routes>
-
       </Box>
+      <ToastContainer/>
       </div>
     </>
   )

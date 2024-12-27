@@ -74,7 +74,7 @@ const formik = useFormik({
           handleClose()
       }
     }catch(e){
-      console.error('Error Editing Student:',error)
+      console.error('Error Editing Student:',e)
     }} 
      
     return(

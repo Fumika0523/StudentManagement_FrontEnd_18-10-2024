@@ -5,16 +5,19 @@ import { FiTool } from "react-icons/fi";
 import { AiFillDashboard } from "react-icons/ai";
 import { PiStudentBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import Dropdown from 'react-bootstrap/Dropdown';
 import { Container } from "react-bootstrap";
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import { IoSettings } from "react-icons/io5";
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
 function SideBar() {
     const [open, setOpen] = useState(false);
+    const [expanded, setExpanded] = React.useState(false);
 
     const iconStyle={
         marginLeft:"3%",
@@ -31,36 +34,22 @@ function SideBar() {
         textAlign:"start"
     }
 
-    const sideBarFont = {
-        textAlign:"start",
-        color: "rgba(255, 255, 255, .8",
-        width:"100%",
-        height:"50px,",
-        padding:"10% 0",
-        border:"0px solid",
-        backgroundColor:"transparent",
-        fontSize:"17px"
-    }
 
-    const sideBarFontBorder = {
-        textAlign:"start",
-        color: "rgba(255, 255, 255, .8",
-        width:"100%",
-        height:"50px,",
-        padding:"10% 0",
-        border:"0px solid",
-        fontSize:"17px",
-        backgroundColor:"transparent",
-        borderBottom:"1px solid #bfbfbf",
-    }
+    const ExpandMore = styled((props) => {
+        const { expand, ...other } = props;
+        return <IconButton {...other} />;
+      })(({ theme, expand }) => ({
+        transform: !expand ? 'rotate(-90deg)':'rotate(0deg)',
+        marginLeft: 'auto',
+        transition: theme.transitions.create('transform', {
+          duration: theme.transitions.duration.shortest,
+        }),
+      }));
 
-    // const titleStyle={
-    //   fontSize: "100%",
-    //    fontWeight: "bold",
-    //     color: "#bfbfbf",
-    //     paddingTop:"6%",
-    // }
-    // when you hover the options, the color changes to #fff
+      const handleExpandClick = () => {
+        setExpanded(!expanded);
+      };
+
 
     const navigate = useNavigate()
     return (
@@ -72,9 +61,14 @@ function SideBar() {
                 <div className="text-white fw-bold" onClick={() => { navigate('/') }} style={{borderBottom:"1px solid #bfbfbf", padding:"10% 0",fontSize:"17px",cursor: "pointer"}} ><AiFillDashboard className="ms-2 me-3" />Dashboard</div>
 
         {/* COMPONENT */}
-        <div className="sideBarHover1">   
-        <div onClick={() => setOpen(!open)} aria-controls="example-collapse-text" aria-expanded={open}>
-        <IoSettings className="ms-2 me-3" />Component</div></div>
+
+        <div className="sideBarHover1 mb-2 text-start  d-flex ">   
+        <div onClick={() => setOpen(!open)}  aria-controls="example-collapse-text"  aria-expanded={open}>
+      <IoSettings className="ms-2 me-3" />Component<ExpandMore className="ms-5" expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
+        <ExpandMoreIcon className="text-white " style={{textAlign:"right"}}/>
+    
+         </ExpandMore></div></div>
+   
       <Collapse in={open}>
        <div id="example-collapse-text" style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"white",padding:"1% 0", marginBottom:"2%"}}>
         <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={() => { navigate('/studentdata') }} >

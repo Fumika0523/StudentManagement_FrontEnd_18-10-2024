@@ -62,7 +62,7 @@ const addStudent = async (newStudent) => {
       handleClose()
     }
     }catch(e){
-    console.error('Error Adding Student:',error)
+    console.error('Error Adding Student:',e)
     }
     
 }
