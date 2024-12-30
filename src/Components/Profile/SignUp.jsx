@@ -49,21 +49,22 @@ function SignUp() {
 
     return (
         <>
-            <div className='signInStyle' style={{height:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                <div className='container py-3 my-5' style={{ width: "35%", border: "1px solid black", borderRadius: "50px", backgroundColor: "white" }}>
+            <div className='signInStyle'>
+                <div  className='signupCard'>
                     {/* TITLE */}
-                    <h2 className="text-center" style={{ fontWeight: "bold" }}>Sign Up</h2>
-                    <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"100%"}}>
+                    <h2 className="text-center fw-bold" >Sign Up</h2>
+
+                    <Form onSubmit={formik.handleSubmit} >
                         {/* Username */}
-                        <Form.Group className='my-3'>
-                            <Form.Label className='m-0'>Username</Form.Label>
+                        <Form.Group >
+                            <Form.Label className='formLabel m-0'>Username</Form.Label>
                             <Form.Control type="username" placeholder='Type your Username' name="username"
                                 value={formik.values.username}
                                 onChange={formik.handleChange} />
                         </Form.Group>
 
                         {/* Gender */}
-                        <div>Gender</div>
+                        <div className='formLabel m-0'>Gender</div>
                         <div className='form-check form-check-inline'>                 
                         <Form.Check type="radio" name="gender" label={`Male`}
                             value="male"
@@ -74,42 +75,42 @@ function SignUp() {
                             onChange={formik.handleChange} /></div>
 
                         {/* Email */}
-                        <Form.Group className='my-3'>
-                            <Form.Label className='m-0'>Email Address</Form.Label>
+                        <Form.Group >
+                            <Form.Label className='formLabel m-0'>Email Address</Form.Label>
                             <Form.Control type="email" placeholder='Type your Email Address' name="email"
                                 value={formik.values.email}
                                 onChange={formik.handleChange} />
                         </Form.Group>
 
                         {/* B-Date*/}
-                        <Form.Group className='mt-3'>
-                            <Form.Label className='m-0'>Birthdate</Form.Label>
+                        <Form.Group>
+                            <Form.Label className='formLabel m-0'>Birthdate</Form.Label>
                             <Form.Control type="date" placeholder="Type your Birthdate" name="birthdate"
                                 value={formik.values.birthdate}
                                 onChange={formik.handleChange} />
                         </Form.Group>
 
                         {/* Phone No.*/}
-                        <Form.Group className='mt-3'>
-                            <Form.Label className='m-0'>Phone No.</Form.Label>
+                        <Form.Group>
+                            <Form.Label className='formLabel m-0'>Phone No.</Form.Label>
                             <Form.Control type="phoneNumber" placeholder="Type your Phone No." name="phoneNumber"
                                 value={formik.values.phoneNumber}
                                 onChange={formik.handleChange} />
                         </Form.Group>
 
                         {/* Password*/}
-                        <Form.Group className='mt-3'>
-                            <Form.Label className='m-0'>Password</Form.Label>
+                        <Form.Group>
+                            <Form.Label className='formLabel m-0'>Password</Form.Label>
                             <Form.Control type="password" placeholder="Type your Password" name="password"
                                 value={formik.values.password}
                                 onChange={formik.handleChange} />
                         </Form.Group>
                         <div className='text-center my-3' style={{ fontSize: "80%" }}>
-                        <Button type="subumit" className="signInStyle py-2" style={{ width: "35%", borderRadius: "20px" }}>SIGN UP</Button></div>
+                        <Button type="submit" variant="outline-*" className="signupBtn fw-bold" style={{borderRadius:"15px",color:"white"}}>SIGN UP</Button></div>
                         </Form>
                         <div className='text-center'>
-                            <div style={{ fontSize: "100%" }}>Or Sign Up Using</div>
-                            <div className='gap-1 mt-3 d-flex' style={{ justifyContent: "center" }}>
+                            <div style={{fontSize:"15px"}}>Or Sign Up Using</div>
+                            <div className='gap-1 mt-2 d-flex' style={{ justifyContent: "center" }}>
                                 {/* Facebook */}
                                 <FacebookIcon sx={{ color: "navy", fontSize: "35px" }} />
                                 {/* LinkedIn */}
@@ -119,8 +120,8 @@ function SignUp() {
                                 {/* Google */}
                                 <GoogleIcon sx={{ color: "#ea4335", fontSize: "35px" }} />
                             </div>
-                            <div style={{ marginTop: "2%", fontSize: "100%" }}>Or Already Have Account?</div>
-                            <div className='btn btn-link' style={{ marginTop: "2%", fontSize: "110%",width:"50%" }} onClick={()=>{navigate('/')}}>SIGN IN</div>
+                            <div style={{ marginTop: "7%", fontSize:"15px"}}>Or Already Have Account?</div>
+                            <div className='btn btn-link' style={{ fontSize: "110%"}} onClick={()=>{navigate('/')}}>SIGN IN</div>
                         </div>
                    
                 </div>

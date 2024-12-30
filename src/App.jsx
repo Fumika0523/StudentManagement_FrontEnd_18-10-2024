@@ -19,6 +19,7 @@ import ViewStudent from './Components/Dashboard/StudentData/ViewStudent'
 import ViewBatch from './Components/Dashboard/BatchData/viewBatch'
 import ViewCourse from './Components/Dashboard/CourseData/ViewCourse'
 import { ToastContainer } from 'react-toastify'
+import { Zoom } from 'react-toastify'
 
 function App() {
   const [userData,setUserData] = useState([])
@@ -81,7 +82,12 @@ const getUserData = async()=>{
         <Route path="/coursedata" element={<ViewCourse/>}/>
       </Routes>
       </Box>
-      <ToastContainer/>
+      <ToastContainer
+      transition={Zoom}
+      autoClose={2000}
+      theme="light"
+      draggable
+      />
       </div>
     </>
   )

@@ -10,7 +10,7 @@ const ModalDeleteCourse=({viewWarning, setViewWarning, singleCourse, setCourseDa
 
 const notify = () =>{
     console.log("Toast Notification Added")
-    toast("Course is Deleted!")
+    toast.error("Course Deleted Successfully!")
     }
 
 const navigate = useNavigate()
@@ -38,7 +38,7 @@ try{
     notify()
     setTimeout(()=>{
         handleClose()
-    },4001)
+    },3001)
     handleClose()}   
 }catch(error){
     console.error('Error Deleting Course:', error);    

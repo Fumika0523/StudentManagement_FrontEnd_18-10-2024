@@ -15,7 +15,7 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
 
     const notify=()=>{
         console.log("Toast Notification Added")
-        toast("Course is Edited!")
+        toast.warning("Course Updated Successfully!")
     }
 
     const navigate = useNavigate()
@@ -68,7 +68,7 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
         notify()
         setTimeout(()=>{
             handleClose()
-        },4001)}
+        },3001)}
     }catch(e){
         console.error('Error Editing Course:',e);
     }}

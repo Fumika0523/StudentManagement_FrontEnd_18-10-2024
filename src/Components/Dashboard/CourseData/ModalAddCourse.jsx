@@ -14,7 +14,16 @@ import { toast } from 'react-toastify';
 function ModalAddCourse({show,setShow,setCourseData}){
     const notify = ()=>{
         console.log("Toast Notification Added")
-        toast("Course Added is !")
+        toast.success("Course Added Successfully !",{
+            style:{
+                color:"white",
+                backgroundColor:"green",
+                textTransform:"uppercase",
+                textWrap:"nowrap",
+                padding:"0.5% 3%"
+                // fontStyle:"italic"
+            }
+        })
     }
 
     const navigate = useNavigate()
@@ -67,7 +76,7 @@ if(res){
     notify()
     setTimeout(()=>{
         handleClose()
-    },4001)
+    },3001)
 
 }
 }catch(e){
