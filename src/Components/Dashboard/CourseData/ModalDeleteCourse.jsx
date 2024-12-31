@@ -10,8 +10,31 @@ const ModalDeleteCourse=({viewWarning, setViewWarning, singleCourse, setCourseDa
 
 const notify = () =>{
     console.log("Toast Notification Added")
-    toast.error("Course Deleted Successfully!")
-    }
+        toast.error("Course is deleted successfully !",{
+            style:{
+                // backgroundColor:"green",
+                // textTransform:"uppercase",
+                textWrap:"nowrap",
+                textAlign:"center",
+                padding:"0.5% 0% 0.5% 4%",
+                color:"black",
+                // autoClose: "10000",
+                // fontStyle:"italic"
+            }
+        })
+    //     toast.error(
+            
+    //     <div style={{margin:"0%",padding:"5px 8px"}}>
+    //     {/* <h4 style={{color:"red"}}> Deleted !</h4> */}
+    //     <p style={{color:"black"}}>  Course is deleted successfully !</p>
+    //    </div>
+    //     //     "Course is deleted successfully !", {
+    //     //    style:{
+    //     //     padding:"0.5% 3%"
+    //     //    }
+    //     //   }
+    //     );
+         }
 
 const navigate = useNavigate()
 console.log(viewWarning   

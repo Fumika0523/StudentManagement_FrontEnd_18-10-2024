@@ -14,13 +14,15 @@ import { toast } from 'react-toastify';
 function ModalAddCourse({show,setShow,setCourseData}){
     const notify = ()=>{
         console.log("Toast Notification Added")
-        toast.success("Course Added Successfully !",{
+        toast.success("Course added successfully !",{
             style:{
-                color:"white",
-                backgroundColor:"green",
-                textTransform:"uppercase",
+                // backgroundColor:"green",
+                // textTransform:"uppercase",
                 textWrap:"nowrap",
-                padding:"0.5% 3%"
+                textAlign:"center",
+                padding:"0.5% 0% 0.5% 4%",
+                color:"black",
+                // autoClose: "10000",
                 // fontStyle:"italic"
             }
         })
@@ -35,19 +37,21 @@ function ModalAddCourse({show,setShow,setCourseData}){
 const formSchema = Yup.object().shape(
     {
         courseName:Yup.string().required(),
-        sessionType:Yup.string().required(),
-        sessionTime:Yup.string().required(),
-        sessionAvailability:Yup.string().required(),
-        sessionDuration:Yup.string().required(),
+        courseType:Yup.string().required(),
+        courseTime:Yup.string().required(),
+        courseAvailability:Yup.string().required(),
+        courseDuration:Yup.string().required(),
+        courseFee:Yup.number().required(),
     })
 
 const formik = useFormik({
          initialValues:{
             courseName:"",
-            sessionType:"",
-            sessionTime:"",
-            sessionAvailability:"",
-            sessionDuration:"",
+            courseType:"",
+            courseTime:"",
+            courseAvailability:"",
+            courseDuration:"",
+            courseFee:"",
     },
     validationSchema:formSchema,
     onSubmit:(values)=>{
@@ -92,42 +96,52 @@ return(
         <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}} >
             <Modal.Body>
 
-            {/* COurseName */}
+            {/* CourseName */}
             <Form.Group className='my-3'>
                 <Form.Label className='m-0'>Course Name</Form.Label>
                 <Form.Control type="courseName"
                 name="courseName" value={formik.values.courseName} onChange={formik.handleChange}/>
             </Form.Group>
 
-            {/* SessionType */}
+            {/* courseType */}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Session Type</Form.Label>
-                <Form.Control type="sessionType"
-                name="sessionType" value={formik.values.sessionType}
+                <Form.Label className='m-0'>Course Type</Form.Label>
+                <Form.Control type="courseType"
+                name="courseType" value={formik.values.courseType}
                 onChange={formik.handleChange}/>
             </Form.Group>
 
-            {/* SessionTime */}
+            {/* courseFime */}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Session Time</Form.Label>
-                <Form.Control type="sessionTime" 
-                name="sessionTime" value={formik.values.sessionTime}
+            <Form.Label className='m-0'>Course Fee</Form.Label>
+            <Form.Control type="courseFee" 
+            name="courseFee" value={formik.values.courseFee}
+            onChange={formik.handleChange}/>
+            </Form.Group>
+
+            {/* courseTime */}
+            <Form.Group className='my-3'>
+                <Form.Label className='m-0'>Course Time</Form.Label>
+                <Form.Control type="courseTime" 
+                name="courseTime" value={formik.values.courseTime}
                 onChange={formik.handleChange}/>
             </Form.Group>
 
-            {/* SessionAvailability*/}
+
+
+            {/* courseAvailability*/}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Session Availability</Form.Label>
-                <Form.Control type="sessionAvailability"
-                name="sessionAvailability" value={formik.values.sessionAvailability}
+                <Form.Label className='m-0'>Course Availability</Form.Label>
+                <Form.Control type="courseAvailability"
+                name="courseAvailability" value={formik.values.courseAvailability}
                 onChange={formik.handleChange}/>
             </Form.Group>
 
-            {/* SessionDuration */}
+            {/* courseDuration */}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Session Duration</Form.Label>
-                <Form.Control type="sessionDuration" 
-                name="sessionDuration" value={formik.values.sessionDuration}
+                <Form.Label className='m-0'>Course Duration</Form.Label>
+                <Form.Control type="courseDuration" 
+                name="courseDuration" value={formik.values.courseDuration}
                 onChange={formik.handleChange}/>
             </Form.Group>
             </Modal.Body>

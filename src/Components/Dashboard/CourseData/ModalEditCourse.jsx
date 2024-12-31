@@ -15,7 +15,17 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
 
     const notify=()=>{
         console.log("Toast Notification Added")
-        toast.warning("Course Updated Successfully!")
+        toast.warning("Course is updated successfully !"
+            ,{
+                style:{
+                    textWrap:"nowrap",
+                    textAlign:"center",
+                    padding:"0.5% 0% 0.5% 4%",
+                    color:"black",
+                }
+            }
+        );
+        
     }
 
     const navigate = useNavigate()
@@ -27,19 +37,19 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
     const formSchema = Yup.object().shape(
         {
             courseName:Yup.string().required(),
-            sessionType:Yup.string().required(),
-            sessionTime:Yup.string().required(),
-            sessionAvailability:Yup.string().required(),
-            sessionDuration:Yup.string().required(),
+            courseType:Yup.string().required(),
+            courseTime:Yup.string().required(),
+            courseAvailability:Yup.string().required(),
+            courseDuration:Yup.string().required(),
         })
     
     const formik = useFormik({
              initialValues:{
                 courseName:singleCourse?.courseName,
-                sessionType:singleCourse?.sessionType,
-                sessionTime:singleCourse?.sessionTime,
-                sessionAvailability:singleCourse?.sessionAvailability,
-                sessionDuration:singleCourse?.sessionDuration,
+                courseType:singleCourse?.courseType,
+                courseTime:singleCourse?.courseTime,
+                courseAvailability:singleCourse?.courseAvailability,
+                courseDuration:singleCourse?.courseDuration,
         },
         // validationSchema:formSchema,
         onSubmit:(values)=>{
@@ -89,35 +99,35 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                 name="courseName" value={formik.values.courseName} onChange={formik.handleChange}/>
             </Form.Group>
 
-            {/* SessionType */}
+            {/* courseType */}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Session Type</Form.Label>
-                <Form.Control type="sessionType"
-                name="sessionType" value={formik.values.sessionType}
+                <Form.Label className='m-0'>course Type</Form.Label>
+                <Form.Control type="courseType"
+                name="courseType" value={formik.values.courseType}
                 onChange={formik.handleChange}/>
             </Form.Group>
 
-            {/* SessionTime */}
+            {/* courseTime */}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Session Time</Form.Label>
-                <Form.Control type="sessionTime" 
-                name="sessionTime" value={formik.values.sessionTime}
+                <Form.Label className='m-0'>course Time</Form.Label>
+                <Form.Control type="courseTime" 
+                name="courseTime" value={formik.values.courseTime}
                 onChange={formik.handleChange}/>
             </Form.Group>
 
-            {/* SessionAvailability*/}
+            {/* courseAvailability*/}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Session Availability</Form.Label>
-                <Form.Control type="sessionAvailability"
-                name="sessionAvailability" value={formik.values.sessionAvailability}
+                <Form.Label className='m-0'>course Availability</Form.Label>
+                <Form.Control type="courseAvailability"
+                name="courseAvailability" value={formik.values.courseAvailability}
                 onChange={formik.handleChange}/>
             </Form.Group>
 
-            {/* SessionDuration */}
+            {/* courseDuration */}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Session Duration</Form.Label>
-                <Form.Control type="sessionDuration" 
-                name="sessionDuration" value={formik.values.sessionDuration}
+                <Form.Label className='m-0'>course Duration</Form.Label>
+                <Form.Control type="courseDuration" 
+                name="courseDuration" value={formik.values.courseDuration}
                 onChange={formik.handleChange}/>
             </Form.Group>
             </Modal.Body>
@@ -131,7 +141,6 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                 </Button>
             </Modal.Footer>
         </Form>
-
     </Modal>
         </>
     )

@@ -61,10 +61,11 @@ function CustomisedCourseTables({courseData,setCourseData}){
           <TableRow>
             <StyledTableCell>Action</StyledTableCell>
               <StyledTableCell>Course Name</StyledTableCell>
-              <StyledTableCell>Session Type</StyledTableCell>
-              <StyledTableCell>Session Time</StyledTableCell>
-              <StyledTableCell>Session Availability</StyledTableCell>
-              <StyledTableCell>Session Duration</StyledTableCell>
+              <StyledTableCell>Course Fee</StyledTableCell>
+              <StyledTableCell>Course Type</StyledTableCell>
+              <StyledTableCell>Course Time</StyledTableCell>
+              <StyledTableCell>Course Availability</StyledTableCell>
+              <StyledTableCell>Course Duration</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -89,11 +90,11 @@ function CustomisedCourseTables({courseData,setCourseData}){
                         
                     </StyledTableCell>
                     <StyledTableCell>{course.courseName}</StyledTableCell>
-                    <StyledTableCell>{course.sessionType}</StyledTableCell>
-                    <StyledTableCell>{course.sessionTime}</StyledTableCell>
-                    <StyledTableCell>{course.sessionAvailability}</StyledTableCell>
-                    <StyledTableCell>{course.sessionDuration}</StyledTableCell>
-                
+                    <StyledTableCell>{course.courseFee}</StyledTableCell>
+                    <StyledTableCell>{course.courseType}</StyledTableCell>
+                    <StyledTableCell>{course.courseTime}</StyledTableCell>
+                    <StyledTableCell>{course.courseAvailability}</StyledTableCell>
+                    <StyledTableCell>{course.courseDuration}</StyledTableCell>
                 </StyledTableRow> 
              ))
            }
