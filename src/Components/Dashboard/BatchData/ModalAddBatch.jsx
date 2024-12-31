@@ -15,7 +15,6 @@ function ModalAddBatch({show,setShow,setBatchData}){
     const handleClose = () => {
       setShow(false)
       navigate('/batchdata')
-      getBatchData()
     }
       
       const formSchema = Yup.object().shape({

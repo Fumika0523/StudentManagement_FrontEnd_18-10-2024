@@ -80,6 +80,12 @@ function SideBar() {
         <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={()=>{navigate('/coursedata')}}>
             View All Course
         </div>
+        
+        <div className="btn btn-no-outline border-white"
+        style={{fontSize:"90%", padding:"5% 10%"}}
+        onClick={()=>{navigate('/admissiondata')}}>
+          View All Admission
+        </div>
         </div>
       </Collapse>
                 {/* UTILITIES */}

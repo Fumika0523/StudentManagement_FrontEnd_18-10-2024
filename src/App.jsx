@@ -20,6 +20,9 @@ import ViewBatch from './Components/Dashboard/BatchData/viewBatch'
 import ViewCourse from './Components/Dashboard/CourseData/ViewCourse'
 import { ToastContainer } from 'react-toastify'
 import { Zoom } from 'react-toastify'
+import ViewAdmission from './Components/Dashboard/AdmissionData/viewAdmission'
+
+
 
 function App() {
   const [userData,setUserData] = useState([])
@@ -80,6 +83,8 @@ const getUserData = async()=>{
         <Route path="/studentdata" element={<ViewStudent isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
         <Route path="/batchdata" element={<ViewBatch />}/>
         <Route path="/coursedata" element={<ViewCourse/>}/>
+        <Route path="/admissiondata" element={<ViewAdmission/>}/>
+
       </Routes>
       </Box>
       <ToastContainer
