@@ -30,6 +30,7 @@ const viewAdmission = () => {
         getAdmissionData()
     },[])
     console.log(admissionData)
+    
   return (
     <>
     <div className='d-flex'>
@@ -41,8 +42,8 @@ const viewAdmission = () => {
     onClick={()=>setShow(true)}
     style={{backgroundColor:"#4e73df",color:"white",width:"13%",marginLeft:"84%"}}>Add Admission</div>
 
-    <div>
-        <div>All Admission</div>
+    <div div className="m-4" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
+        <div iv className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Admission</div>
         {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} />  }
     </div>
     </Box>

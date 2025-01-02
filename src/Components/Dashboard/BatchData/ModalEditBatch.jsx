@@ -47,7 +47,7 @@ const formik=useFormik({
 console.log(singleBatch)
 
 const token = sessionStorage.getItem('token')
-console.log('token')
+console.log(token)
 
 let config ={
     headers:{
@@ -147,12 +147,14 @@ return(
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-
+                
+            {/* SAVE */}
             <Button style={{backgroundColor:"#4e73df"}} 
             type="submit">
             Save Changes
             </Button>
 
+            {/* CLOSE */}
             <Button variant="secondary" onClick={handleClose} >
             Close
             </Button>

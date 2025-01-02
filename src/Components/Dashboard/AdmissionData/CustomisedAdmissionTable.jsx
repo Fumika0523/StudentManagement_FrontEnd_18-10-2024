@@ -9,8 +9,8 @@ import TableBody from '@mui/material/TableBody';
 import Paper from '@mui/material/Paper';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-// import ModalEditCourse from './ModalEditCourse';
-// import ModalDeleteCourse from './ModalDeleteCourse'
+import ModalDeleteAdmission from './ModalDeleteAdmission';
+import ModalEditAdmission from './ModalEditAdmission';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,24 +36,27 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
-
 const CustomisedAdmissionTable = ({admissionData,setAdmissionData}) => {
   const [show,setShow]=useState(false)
   const [singleAdmission,setSingleAdmission] = useState(null)
   console.log(admissionData)
-  
+  const [viewWarning, setViewWarning] = useState(false)
+
   const token = sessionStorage.getItem('token')
   const config = {
       headers:{
           Authorization: `Bearer ${token}`
   }}
 
-
+  
+  const handleEditClick = (admission)=>{
+    setShow(true);
+    setSingleAdmission(admission)
+}
 
   return (
     <>
-    <TableContainer>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
@@ -67,12 +70,23 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData}) => {
         </TableHead>
         <TableBody>
           {admissionData?.map((admission)=>(
-          <StyledTableRow key={admin._id}>
+          <StyledTableRow key={admission._id}>
             <StyledTableCell>
-            <div>
-              <FaEdit/>
-              <MdDelete/>
+            <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly",textAlign:"center"}}>
+              <FaEdit 
+              className="text-success"
+              style={{ cursor: 'pointer' }}
+              onClick={() => handleEditClick(admission)}/>
+
+              <MdDelete
+              className="text-danger"
+              style={{ cursor: 'pointer' }}
+              onClick={()=>{
+              setViewWarning(true)
+              console.log(admission)
+              setSingleAdmission(admission)}}/>
             </div>
+
             </StyledTableCell>
             <StyledTableCell>{admission.admissionSource}</StyledTableCell>
             <StyledTableCell>{admission.admissionFee}</StyledTableCell>
@@ -85,6 +99,29 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData}) => {
         </TableBody>
       </Table>
     </TableContainer>
+
+    {/* Edit */}
+    {
+        show && (
+            <ModalEditAdmission
+            show = {show}
+            setShow = {setShow}
+            singleAdmission={singleAdmission}
+            setSingleAdmission={setSingleAdmission}
+            setAdmissionData={setAdmissionData}
+            />
+    )}
+
+      {/* Delete */}
+    {
+        viewWarning && (
+            <ModalDeleteAdmission
+            viewWarning={viewWarning}
+            singleAdmission={singleAdmission}
+            setAdmissionData={setAdmissionData}
+            setViewWarning={setViewWarning}/>
+        )
+    }
     </>
   )
 }

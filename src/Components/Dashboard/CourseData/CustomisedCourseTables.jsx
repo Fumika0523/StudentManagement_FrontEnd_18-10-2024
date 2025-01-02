@@ -12,6 +12,7 @@ import { MdDelete } from "react-icons/md";
 import ModalEditCourse from './ModalEditCourse';
 import ModalDeleteCourse from './ModalDeleteCourse'
 
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: '#f3f4f6',
@@ -41,6 +42,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
     const [singleCourse,setSingleCourse] = useState(null) //?
     console.log(courseData)
     const [viewWarning, setViewWarning] = useState(false)
+   
 
     const token = sessionStorage.getItem('token')
     const config = {
@@ -101,7 +103,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
           </TableBody>
         </Table>
       </TableContainer>
-
+ 
       {/* Edit */}
     {
         show && (

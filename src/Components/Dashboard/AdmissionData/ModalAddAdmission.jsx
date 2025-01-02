@@ -35,7 +35,7 @@ const ModalAddAdmission = ({show,setShow,setAdmissionData}) => {
         validationSchema:formSchema,
         onSubmit:(values)=>{
             console.log(values)
-            ddAdmission(values)
+            addAdmission(values)
         }
     })
 
@@ -117,8 +117,12 @@ const ModalAddAdmission = ({show,setShow,setAdmissionData}) => {
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-                <Button>Close</Button>
-                <Button type="submit">Add Admission</Button>
+         
+                {/* ADD BUTTON */}
+                <Button type="submit" style={{backgroundColor:"#4e73df"}}>Add Admission</Button>
+
+                       {/* CLOSE BUTTON*/}
+                       <Button variant="secondary" onClick={handleClose}>Close</Button>
             </Modal.Footer>
         </Form>
     </Modal>

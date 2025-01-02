@@ -149,14 +149,17 @@ function ModalAddBatch({show,setShow,setBatchData}){
     
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button style={{backgroundColor:"#4e73df"}} 
+          {/* ADD */}
+        <Button style={{backgroundColor:"#4e73df"}} 
           type="submit"
           >
             Save Changes
           </Button>
+          {/* CLOSE */}
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+ 
         </Modal.Footer>
         </Form>
       </Modal>

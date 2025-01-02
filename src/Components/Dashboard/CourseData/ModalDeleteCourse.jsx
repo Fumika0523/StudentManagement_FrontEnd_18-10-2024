@@ -85,7 +85,5 @@ return(
     </Modal.Body>
  </Modal>
     </>
-)
-
-}
+)}
 export default ModalDeleteCourse
