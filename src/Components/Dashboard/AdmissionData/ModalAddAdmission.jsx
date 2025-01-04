@@ -35,6 +35,7 @@ const ModalAddAdmission = ({show,setShow,setAdmissionData}) => {
         validationSchema:formSchema,
         onSubmit:(values)=>{
             console.log(values)
+
             addAdmission(values)
         }
     })
@@ -47,6 +48,32 @@ const ModalAddAdmission = ({show,setShow,setAdmissionData}) => {
             Authorization:`Bearer ${token}`
         }
     }
+
+    const formatDate = (dateString)=>{
+        console.log(dateString)
+        const date = new Date(dateString);
+        console.log(date)
+        return date.toLocaleDateString('en-US',{
+          year:"numeric",
+          month:'long',
+          day:'numeric'
+        })
+      }
+      console.log(new Date("03-01-2025"))
+      
+const dateFun=()=>{
+    const date = new Date('Sat Mar 01 2025 00:00:00 GMT+0900 (Japan Standard Time)');
+    // Get the full month name
+    const month = date.toLocaleString('default', { month: 'long' });
+    // Get the full year
+    const year = date.getFullYear();
+    console.log(`${month} ${year}`);
+    return [month,year]
+}
+    const month = dateFun
+
+
+
 
     const addAdmission = async(newAdmission)=>{
         try{
@@ -63,29 +90,47 @@ const ModalAddAdmission = ({show,setShow,setAdmissionData}) => {
         }
     }
   return (
-    <Modal show={show} onHide={handleClose} >
+    <Modal show={show} onHide={handleClose}
+    size="lg" >
         <Modal.Header>
-            <Modal.Title>Add Admission</Modal.Title>
+            <Modal.Title style={{padding:"0% 5%"}}>Add Admission</Modal.Title>
         </Modal.Header>
-        <Form>
+        <Form  style={{padding:"1.5% 5%"}}>
             <Modal.Body>
-                {/* Admission Source */}
-                <Form.Group>
-                    <Form.Label>Admission Source</Form.Label>
+
+                {/* Course Name */}
+                <Form.Group >
+                    <Form.Label className='mb-1'>Course Name</Form.Label>
                     {/* <Form.Control
                     type= placeholder='Type your Admission Source'
                     name="admissionSource" value={formik.values.admissionSource}
                     onChange={formik.handleChange}/> */}
-                    <select name="admissionSource" id="">
-                        <option value={formik.values.admissionSource}>Social</option>
+                    <select name="admissionSource" id="" className="form-select form-select">
+                    {/* <option selected>- Please choose a source -</option> */}
+                        <option value={formik.values.admissionSource} selected>Course Name1</option>
+                        <option value={formik.values.admissionSource}>Course Name2</option>
+                        <option value={formik.values.admissionSource}>Course Name3</option>
+                    </select>
+                </Form.Group>
+
+                {/* Admission Source */}
+                <Form.Group >
+                    <Form.Label className='mb-1'>Source</Form.Label>
+                    {/* <Form.Control
+                    type= placeholder='Type your Admission Source'
+                    name="admissionSource" value={formik.values.admissionSource}
+                    onChange={formik.handleChange}/> */}
+                    <select name="admissionSource" id="" className="form-select form-select">
+                    {/* <option selected>- Please choose a source -</option> */}
+                        <option value={formik.values.admissionSource} selected>Social</option>
                         <option value={formik.values.admissionSource}>Referral</option>
                         <option value={formik.values.admissionSource}>Direct</option>
                     </select>
                 </Form.Group>
 
                 {/* Admission Fee */}
-                <Form.Group>
-                    <Form.Label>Admission Fee</Form.Label>
+                <Form.Group  className='mt-3'>
+                    <Form.Label className='mb-0'>Fee</Form.Label>
                     <Form.Control
                     type="text" placeholder='Type your Admission Fee'
                     name="admissionFee" value={formik.values.admissionFee} 
@@ -93,25 +138,28 @@ const ModalAddAdmission = ({show,setShow,setAdmissionData}) => {
                 </Form.Group>
 
                 {/* Admission Date */}
-                <Form.Group>
-                    <Form.Label>Admission Date</Form.Label>
+                <Form.Group  className='mt-3'>
+                    <Form.Label className='mb-0'>Date</Form.Label>
                     <Form.Control
-                    type="text" placeholder='Type your Admission Date'
-                    name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange}/>
+                    type="date" placeholder='Type your Admission Date'
+                    name='admissionDate' value={dateFun(formik.values.admissionDate)} onChange={formik.handleChange
+                    }
+                    
+                    />
                 </Form.Group>
 
                 {/* Admission Year */}
-                <Form.Group>
-                    <Form.Label>Admission Year</Form.Label>
-                    <Form.Control
+                <Form.Group  className='mt-3'>
+                    <Form.Label className='mb-0'>Year</Form.Label>
+                    <Form.Control disabled
                     type="text" placeholder='Type your Admission Year'
                     name='admissionYear' value={formik.values.admissionYear} onChange={formik.handleChange}/>
                 </Form.Group>
 
                 {/* Admission Month */}
-                <Form.Group>
-                    <Form.Label>Admission Month</Form.Label>
-                    <Form.Control
+                <Form.Group className='mt-3'>
+                    <Form.Label className='mb-0'>Month</Form.Label>
+                    <Form.Control disabled
                     type="text" placeholder='Type your Admission Month'
                     name="admissionMonth" value={formik.values.admissionMonth} onChange={formik.handleChange}/>
                 </Form.Group>

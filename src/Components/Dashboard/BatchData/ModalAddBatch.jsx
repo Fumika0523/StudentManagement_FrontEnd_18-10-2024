@@ -75,7 +75,7 @@ function ModalAddBatch({show,setShow,setBatchData}){
     <>
       <Modal     
        show={show} onHide={handleClose}
-       size="xl" >
+       size="lg" >
        <Modal.Header closeButton>
           <Modal.Title  >Add Batch</Modal.Title>
         </Modal.Header>

@@ -71,7 +71,7 @@ if(res){
 
 return(
 <>
-<Modal show={show} onHide={handleClose} size="xl">
+<Modal show={show} onHide={handleClose} size="lg">
  <Modal.Header>
    <Modal.Title>Edit Batch</Modal.Title>
      </Modal.Header>

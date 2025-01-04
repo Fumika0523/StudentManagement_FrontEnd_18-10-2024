@@ -54,9 +54,21 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData}) => {
     setSingleAdmission(admission)
 }
 
+const formatDate = (dateString)=>{
+  console.log(dateString)
+  const date = new Date(dateString);
+  console.log(date)
+  return date.toLocaleDateString('en-US',{
+    year:"numeric",
+    month:'long',
+    day:'numeric'
+  })
+}
+console.log(new Date("03-01-2025"))
+
   return (
     <>
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} >
       <Table>
         <TableHead>
           <TableRow>
@@ -90,9 +102,9 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData}) => {
             </StyledTableCell>
             <StyledTableCell>{admission.admissionSource}</StyledTableCell>
             <StyledTableCell>{admission.admissionFee}</StyledTableCell>
-            <StyledTableCell>{admission.admissionDate}</StyledTableCell>
-            <StyledTableCell>{admission.admissionMonth}</StyledTableCell>
-            <StyledTableCell>{admission.admissionYear}</StyledTableCell>
+            <StyledTableCell>{formatDate(admission.admissionDate)}</StyledTableCell>
+            <StyledTableCell>{formatDate(admission.admissionMonth)}</StyledTableCell>
+            <StyledTableCell>{formatDate(admission.admissionYear)}</StyledTableCell>
           </StyledTableRow>
           ))
         }

@@ -64,10 +64,13 @@ function SideBar() {
 
         <div className="sideBarHover1 mb-2 text-start  d-flex ">   
         <div onClick={() => setOpen(!open)}  aria-controls="example-collapse-text"  aria-expanded={open}>
-      <IoSettings className="ms-2 me-3" />Component<ExpandMore className="ms-5" expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
-        <ExpandMoreIcon className="text-white " style={{textAlign:"right"}}/>
+      <IoSettings className="ms-2 me-3"/>
+      Component
+      <ExpandMore  onClick={handleExpandClick} className="ms-5" >
+        <ExpandMoreIcon className="text-white " aria-expanded={expanded} aria-label="show more" expand={expanded} style={{textAlign:"right"}}/>
     
-         </ExpandMore></div></div>
+          </ExpandMore>
+         </div></div>
    
       <Collapse in={open}>
        <div id="example-collapse-text" style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"white",padding:"1% 0", marginBottom:"2%"}}>
