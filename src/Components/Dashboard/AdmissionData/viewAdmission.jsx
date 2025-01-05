@@ -11,8 +11,9 @@ import ModalAddAdmission from './ModalAddAdmission'
 
 const viewAdmission = () => {
     const [admissionData,setAdmissionData] = useState([])
+    const [courseData,setCourseData]=useState([])
     const [show,setShow] = useState(false)
-
+    
     const token = sessionStorage.getItem('token')
     let config = {
         headers:{
@@ -31,6 +32,8 @@ const viewAdmission = () => {
     },[])
     console.log(admissionData)
     
+
+
   return (
     <>
     <div className='d-flex'>
@@ -48,7 +51,8 @@ const viewAdmission = () => {
     </div>
     </Box>
     {show && <ModalAddAdmission show={show} setShow={setShow}
-    setAdmissionData={setAdmissionData} />}
+    setAdmissionData={setAdmissionData}
+     />}
     </div>
    </>
   )

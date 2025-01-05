@@ -16,7 +16,25 @@ const ModalAddAdmission = ({show,setShow,setAdmissionData}) => {
         setShow(false)
         navigate('/admissiondata')
     }
+    const [courseData,setCourseData] = useState([])
+
+
+        //Original Course Data
+        const getCourseData=async()=>{
+            console.log("Console data is called....")
+            let res = await axios.get(`${url}/allcourse`,config)
+            console.log("Course Data",res.data.courseData)
+            setCourseData(res.data.courseData)
+        }
+        useEffect(()=>{
+            getCourseData()
+        },[])
+        console.log(courseData)
+        courseData?.map((element)=>console.log(element.courseName))
+
+
     const formSchema = Yup.object().shape({
+        courseName:Yup.string().required(),
         admissionSource:Yup.string().required(),
         admissionFee:Yup.number().required(),
         admissionDate:Yup.date().required(),
@@ -26,16 +44,16 @@ const ModalAddAdmission = ({show,setShow,setAdmissionData}) => {
 
     const formik = useFormik({
         initialValues:{
+            courseName:"",
             admissionSource:"",
             admissionFee:"",
             admissionDate:"",
-            admissionYear:"",
-            admissionMonth:""
+            admissionYear:2020,
+            admissionMonth:"Jan",
         },
         validationSchema:formSchema,
         onSubmit:(values)=>{
             console.log(values)
-
             addAdmission(values)
         }
     })
@@ -70,12 +88,10 @@ const dateFun=()=>{
     console.log(`${month} ${year}`);
     return [month,year]
 }
-    const month = dateFun
-
-
 
 
     const addAdmission = async(newAdmission)=>{
+        console.log(newAdmission)
         try{
             const res = await axios.post(`${url}/addadmission`,newAdmission,config)
             console.log(res)
@@ -83,14 +99,17 @@ const dateFun=()=>{
                 let res = await axios.get(`${url}/alladmission`,config)
                 console.log("Successfully a new admission added to the DB!", newAdmission)
                 setAdmissionData(res.data.admissionData)
-                handleClose()
+                // handleClose()
             }
         }catch(e){
             console.error("Error adding Admission:",e)
         }
     }
+
+
   return (
-    <Modal show={show} onHide={handleClose}
+    <Modal show={show} 
+    onHide={handleClose}
     size="lg" >
         <Modal.Header>
             <Modal.Title style={{padding:"0% 5%"}}>Add Admission</Modal.Title>
@@ -101,30 +120,25 @@ const dateFun=()=>{
                 {/* Course Name */}
                 <Form.Group >
                     <Form.Label className='mb-1'>Course Name</Form.Label>
-                    {/* <Form.Control
-                    type= placeholder='Type your Admission Source'
-                    name="admissionSource" value={formik.values.admissionSource}
-                    onChange={formik.handleChange}/> */}
-                    <select name="admissionSource" id="" className="form-select form-select">
-                    {/* <option selected>- Please choose a source -</option> */}
-                        <option value={formik.values.admissionSource} selected>Course Name1</option>
-                        <option value={formik.values.admissionSource}>Course Name2</option>
-                        <option value={formik.values.admissionSource}>Course Name3</option>
+                  
+                    <select name="courseName" id="" className="form-select" value={formik.values.courseName} onChange={formik.handleChange}>
+
+                    {courseData?.map((element)=>
+                    <option key={element.courseName} value={element.courseName} selected>{element.courseName}</option>
+                    )}
+                        
                     </select>
                 </Form.Group>
 
                 {/* Admission Source */}
                 <Form.Group >
                     <Form.Label className='mb-1'>Source</Form.Label>
-                    {/* <Form.Control
-                    type= placeholder='Type your Admission Source'
-                    name="admissionSource" value={formik.values.admissionSource}
-                    onChange={formik.handleChange}/> */}
-                    <select name="admissionSource" id="" className="form-select form-select">
-                    {/* <option selected>- Please choose a source -</option> */}
-                        <option value={formik.values.admissionSource} selected>Social</option>
-                        <option value={formik.values.admissionSource}>Referral</option>
-                        <option value={formik.values.admissionSource}>Direct</option>
+                  
+                    <select onChange={formik.onChange} value={formik.values.admissionSource} name="admissionSource" id="" className="form-select">
+
+                        <option value={"Social"} selected>Social</option>
+                        <option value={"Referral"}>Referral</option>
+                        <option value={"Direct"}>Direct</option>
                     </select>
                 </Form.Group>
 
@@ -132,9 +146,10 @@ const dateFun=()=>{
                 <Form.Group  className='mt-3'>
                     <Form.Label className='mb-0'>Fee</Form.Label>
                     <Form.Control
-                    type="text" placeholder='Type your Admission Fee'
-                    name="admissionFee" value={formik.values.admissionFee} 
-                    onChange={formik.handleChange}/>
+                    type="number" placeholder='Type your Admission Fee'
+                    name='admissionFee' value={formik.values.admissionFee} onChange={formik.handleChange}
+                    />
+               
                 </Form.Group>
 
                 {/* Admission Date */}
@@ -142,10 +157,8 @@ const dateFun=()=>{
                     <Form.Label className='mb-0'>Date</Form.Label>
                     <Form.Control
                     type="date" placeholder='Type your Admission Date'
-                    name='admissionDate' value={dateFun(formik.values.admissionDate)} onChange={formik.handleChange
-                    }
-                    
-                    />
+                    name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange
+                    } />
                 </Form.Group>
 
                 {/* Admission Year */}
@@ -169,8 +182,8 @@ const dateFun=()=>{
                 {/* ADD BUTTON */}
                 <Button type="submit" style={{backgroundColor:"#4e73df"}}>Add Admission</Button>
 
-                       {/* CLOSE BUTTON*/}
-                       <Button variant="secondary" onClick={handleClose}>Close</Button>
+                {/* CLOSE BUTTON*/}
+                <Button variant="secondary" onClick={handleClose}>Close</Button>
             </Modal.Footer>
         </Form>
     </Modal>

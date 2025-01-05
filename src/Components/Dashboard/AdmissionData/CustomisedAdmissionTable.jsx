@@ -36,10 +36,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const CustomisedAdmissionTable = ({admissionData,setAdmissionData}) => {
+const CustomisedAdmissionTable = ({admissionData,setAdmissionData,courseData,setCourseData}) => {
   const [show,setShow]=useState(false)
   const [singleAdmission,setSingleAdmission] = useState(null)
   console.log(admissionData)
+  const [singleCourse,setSingleCourse] = useState(null)
   const [viewWarning, setViewWarning] = useState(false)
 
   const token = sessionStorage.getItem('token')
@@ -73,6 +74,7 @@ console.log(new Date("03-01-2025"))
         <TableHead>
           <TableRow>
             <StyledTableCell>Action</StyledTableCell>
+            <StyledTableCell>Course Name</StyledTableCell>
             <StyledTableCell>Admission Source</StyledTableCell>
             <StyledTableCell>Admission Fee</StyledTableCell>
             <StyledTableCell>Admission Date</StyledTableCell>
@@ -100,6 +102,7 @@ console.log(new Date("03-01-2025"))
             </div>
 
             </StyledTableCell>
+            <StyledTableCell>{admission.courseName}</StyledTableCell>
             <StyledTableCell>{admission.admissionSource}</StyledTableCell>
             <StyledTableCell>{admission.admissionFee}</StyledTableCell>
             <StyledTableCell>{formatDate(admission.admissionDate)}</StyledTableCell>
