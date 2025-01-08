@@ -62,6 +62,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
         <TableHead>
           <TableRow>
             <StyledTableCell>Action</StyledTableCell>
+            <StyledTableCell>Course ID</StyledTableCell>
               <StyledTableCell>Course Name</StyledTableCell>
               <StyledTableCell>Course Fee</StyledTableCell>
               <StyledTableCell>Course Type</StyledTableCell>
@@ -91,6 +92,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
                         setSingleCourse(course)}}/></div>
                         
                     </StyledTableCell>
+                    <StyledTableCell>{course._id}</StyledTableCell>
                     <StyledTableCell>{course.courseName}</StyledTableCell>
                     <StyledTableCell>{course.courseFee}</StyledTableCell>
                     <StyledTableCell>{course.courseType}</StyledTableCell>

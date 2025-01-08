@@ -19,7 +19,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         navigate('/admissiondata')
     }
     const [courseData, setCourseData] = useState([])
-
+    const [studentData,setStudentData] = useState([])
 
     //Original Course Data
     const getCourseData = async () => {
@@ -30,13 +30,26 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     }
     useEffect(() => {
         getCourseData()
+        getStudentData()
     }, [])
     console.log(courseData)
-    courseData?.map((element) => console.log(element.courseName))
 
+    // courseData?.map((element) => console.log(element.courseName))
+    // courseData?.map((element)=>console.log(element._id))
 
+    //student Data
+    const getStudentData = async()=>{
+    console.log("Student data is called.")
+    let res = await axios.get(`${url}/allstudent`,config)
+    console.log("Student Data",res.data.studentData)
+    setStudentData(res.data.studentData)
+    }
+   
     const formSchema = Yup.object().shape({
+        courseId:Yup.string().required("Mandatory field!"),
+        studentId:Yup.string().required(),
         courseName: Yup.string().required(),
+        studentName:Yup.string().required(),
         admissionSource: Yup.string().required(),
         admissionFee: Yup.number().required(),
         admissionDate: Yup.date().required(),
@@ -46,6 +59,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
 
     const formik = useFormik({
         initialValues: {
+            courseId:"",
+            studentId:"",
+            studentName:"",
             courseName: "",
             admissionSource: "",
             admissionFee: "",
@@ -53,8 +69,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             admissionYear: 2020,
             admissionMonth: "Jan",
         },
-        // validationSchema:formSchema,
+        validationSchema:formSchema,
         onSubmit: (values) => {
+            console.log(formik)
             console.log(values)
             addAdmission(values)
         }
@@ -114,6 +131,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             console.error("Error adding Admission:", e)
         }
     }
+    console.log(formik)
 
 
     return (
@@ -126,32 +144,38 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             <Form onSubmit={formik.handleSubmit} style={{ padding: "1.5% 5%" }}>
                 <Modal.Body>
                     <Row>
+                    <Col>
+                        {/* Course ID */}
+                        <Form.Group className='mt-3'>
+                                <Form.Label className='mb-0'>Course ID</Form.Label>
+                                <select name="courseId" id="" className="form-select" value={formik.values.courseId} onChange={formik.handleChange}>
+                                <option value="">Select Course ID</option>
+                                    {courseData?.map((element) =>
+                                        <option key={element._id} value={element._id} >{element._id}</option>
+                                    )}
+                                    {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option> */}
+                                </select>
+                                {/* Error Message */}
+                                {formik.errors.courseId && <div className="text-danger text-center">{formik.errors.courseId}</div>}
+                            </Form.Group>
+                        </Col>
                         <Col>
                             {/* Course Name */}
                             <Form.Group className='mt-3' >
                                 <Form.Label className='mb-0'>Course Name</Form.Label>
 
                                 <select name="courseName" id="" className="form-select" value={formik.values.courseName} onChange={formik.handleChange}>
-
-                                    {courseData?.map((element) =>
+                                <option value="">Select Course Name</option>
+                                    {courseData?.map((element) =>(
+                                        <>
                                         <option key={element.courseName} value={element.courseName} selected>{element.courseName}</option>
+                                        </>
+                                    )
                                     )}
                                 </select>
                             </Form.Group>
                         </Col>
-                        <Col>
-                            {/* Course ID */}
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Course ID</Form.Label>
-                                <select name="courseId" id="" className="form-select" value={formik.values.courseId} onChange={formik.handleChange}>
-                                    {courseData?.map((element) =>
-                                        <option key={element.courseId} value={element.courseId} >{element.courseId}</option>
-                                    )}
-
-                                </select>
-                            </Form.Group>
-                        </Col>
-                    </Row>
+                     </Row>
                     <Row>
 
                         {/* Student ID */}
@@ -159,9 +183,11 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Student ID</Form.Label>
                                 <select name="studentId" id="" className="form-select" value={formik.values.studentId} onChange={formik.handleChange}>
-                                    {/* {studentData?.map((element)=>
-                         <option key={element.studentId} value={element.studentId} >{element.studentId}</option>
-                        )}                        */}
+                                <option value="">Select Student ID</option>
+                                    {studentData?.map((element)=>
+                         <option key={element._id} value={element._id} >{element._id}</option>
+                        )}                       
+                        {/* <option  value="674f9d1a62c9d9c5ca9df624" >674f9d1a62c9d9c5ca9df624</option> */}
                                 </select>
                             </Form.Group>
                         </Col>
@@ -171,9 +197,11 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Student Name</Form.Label>
                                 <select name="studentName" id="" className="form-select" value={formik.values.studentName} onChange={formik.handleChange}>
+                                <option value="">Select Student Name</option>
                                     {/* {studentData?.map((element)=>
                          <option key={element.studentName} value={element.studentName} >{element.studentName}</option>
                         )}                        */}
+                        <option  value="Fumika">Fumika</option>
                                 </select>
                             </Form.Group>
                         </Col>
@@ -231,6 +259,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     className="form-select"
                                     value={formik.values.admissionSource}
                                     onChange={formik.handleChange}>
+                                    <option value="">Select Admission Source</option>
                                     <option value={"Social"}>Social</option>
                                     <option value={"Referral"}>Referral</option>
                                     <option value={"Direct"}>Direct</option>
