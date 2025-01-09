@@ -251,7 +251,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Month</Form.Label>
                                 <Form.Control disabled
-                                type="text" placeholder='Type your Admission Month'
+                                type="text" placeholder='Month'
                                 name="admissionMonth" value={formik.values.admissionMonth} onChange={formik.handleChange} />
                                 {/* Error Message */}
                                 {formik.errors.admissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
@@ -263,8 +263,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Year</Form.Label>
                                 <Form.Control disabled
-                                type="text" placeholder='Type your Admission Year'
-                                name='admissionYear' value={dateFun(formik.values.year)} onChange={formik.handleChange} />
+                                type="number" placeholder='Year'
+                                name='admissionYear' value={formik.values.year} onChange={formik.handleChange} />
                                 {/* Error Message */}
                                 {formik.errors.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
                             </Form.Group>
