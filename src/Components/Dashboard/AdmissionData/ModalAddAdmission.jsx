@@ -97,7 +97,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             day: 'numeric'
         })
     }
-    console.log(new Date("03-01-2025"))
+    // console.log(new Date("03-01-2025"))
 
     const dateFun = () => {
         const date = new Date('Sat Mar 01 2025 00:00:00 GMT+0900 (Japan Standard Time)');
@@ -109,12 +109,10 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         return [month, year]
     }
 
-
     const addAdmission = async (newAdmission) => {
         console.log(newAdmission)
         const admission = {
             ...newAdmission,
-
             // Shoudld select from a dropdown
             studentId: "674f9d1a62c9d9c5ca9df624",
             courseId: "677a1998ed75982c18d258fb"
@@ -154,11 +152,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             //find()
             const selectedStudent = studentData.find((element)=>element._id ==selectedStudentId)
             console.log(selectedStudent.studentName)
-
             formik.setFieldValue("studentId",selectedStudentId)
             formik.setFieldValue("studentName",(selectedStudent.studentName))
         }
-
 
     return (
         <Modal show={show}
@@ -242,8 +238,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Label className='mb-0'>Date</Form.Label>
                                 <Form.Control
                                     type="date" placeholder='Type your Admission Date'
-                                    name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange
+                                    name='admissionDate' value={formatDate (formik.values.admissionDate)} onChange={formik.handleChange
                                     } />
+                                        {/* console.log(new Date("03-01-2025")) */}
                                      {/* Error Message */}
                                 {formik.errors.admissionDate && <div className="text-danger text-center">{formik.errors.admissionDate}</div>}
                             </Form.Group>
@@ -254,9 +251,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Month</Form.Label>
                                 <Form.Control disabled
-                                    type="text" placeholder='Type your Admission Month'
-                                    name="admissionMonth" value={formik.values.admissionMonth} onChange={formik.handleChange} />
-                                     {/* Error Message */}
+                                type="text" placeholder='Type your Admission Month'
+                                name="admissionMonth" value={formik.values.admissionMonth} onChange={formik.handleChange} />
+                                {/* Error Message */}
                                 {formik.errors.admissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
                             </Form.Group>
                         </Col>
@@ -266,9 +263,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Year</Form.Label>
                                 <Form.Control disabled
-                                    type="text" placeholder='Type your Admission Year'
-                                    name='admissionYear' value={formik.values.admissionYear} onChange={formik.handleChange} />
-                                     {/* Error Message */}
+                                type="text" placeholder='Type your Admission Year'
+                                name='admissionYear' value={dateFun(formik.values.year)} onChange={formik.handleChange} />
+                                {/* Error Message */}
                                 {formik.errors.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
                             </Form.Group>
                         </Col>
