@@ -66,10 +66,11 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             admissionSource: "",
             admissionFee: "",
             admissionDate: "",
-            admissionYear: 2020,
-            admissionMonth: "Jan",
+            admissionYear: "",
+            admissionMonth: "",
         },
-        validationSchema:formSchema,
+        //validationSchema:formSchema,
+        enableReinitialize:true,
         onSubmit: (values) => {
             console.log(formik)
             console.log(values)
@@ -133,6 +134,31 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     }
     console.log(formik)
 
+    const handleCourseIdChange=(e)=>{
+        // formik.handleChange === e.target.value
+        console.log(e.target.value) 
+        const selectedCourseId=e.target.value
+        //find() >> Array Method
+        const selectedCourse = courseData.find((element)=>element._id==selectedCourseId)
+        console.log(selectedCourse.courseName)
+        console.log(selectedCourse.courseFee)
+
+        formik.setFieldValue("courseId",selectedCourseId)
+        formik.setFieldValue("courseName",selectedCourse.courseName)
+        formik.setFieldValue("admissionFee",selectedCourse.courseFee)
+    }
+    
+        const handleStudentIdChange=(e)=>{
+            console.log(e.target.value)
+            const selectedStudentId=e.target.value
+            //find()
+            const selectedStudent = studentData.find((element)=>element._id ==selectedStudentId)
+            console.log(selectedStudent.studentName)
+
+            formik.setFieldValue("studentId",selectedStudentId)
+            formik.setFieldValue("studentName",(selectedStudent.studentName))
+        }
+
 
     return (
         <Modal show={show}
@@ -148,10 +174,14 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         {/* Course ID */}
                         <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Course ID</Form.Label>
-                                <select name="courseId" id="" className="form-select" value={formik.values.courseId} onChange={formik.handleChange}>
+                                <select name="courseId" id="" className="form-select" value={formik.values.courseId} 
+                                // onChange={formik.handleChange} //e.target.value
+                                onChange={handleCourseIdChange}
+                                >
                                 <option value="">Select Course ID</option>
                                     {courseData?.map((element) =>
-                                        <option key={element._id} value={element._id} >{element._id}</option>
+                                        <option key={element._id} 
+                                        value={element._id} >{element._id}</option>
                                     )}
                                     {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option> */}
                                 </select>
@@ -163,16 +193,10 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             {/* Course Name */}
                             <Form.Group className='mt-3' >
                                 <Form.Label className='mb-0'>Course Name</Form.Label>
-
-                                <select name="courseName" id="" className="form-select" value={formik.values.courseName} onChange={formik.handleChange}>
-                                <option value="">Select Course Name</option>
-                                    {courseData?.map((element) =>(
-                                        <>
-                                        <option key={element.courseName} value={element.courseName} selected>{element.courseName}</option>
-                                        </>
-                                    )
-                                    )}
-                                </select>
+                                <Form.Control disabled
+                                type="text" placeholder='Course Name'
+                                name='courseName' value={formik.values.courseName}>
+                                </Form.Control>
                                 {/* Error Message */}
                                 {formik.errors.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
                             </Form.Group>
@@ -184,12 +208,14 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         <Col>
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Student ID</Form.Label>
-                                <select name="studentId" id="" className="form-select" value={formik.values.studentId} onChange={formik.handleChange}>
+                                <select name="studentId" id="" className="form-select" value={formik.values.studentId} 
+                                // onChange={formik.handleChange}
+                                onChange={handleStudentIdChange}
+                                >
                                 <option value="">Select Student ID</option>
                                     {studentData?.map((element)=>
                          <option key={element._id} value={element._id} >{element._id}</option>
                         )}                       
-                        {/* <option  value="674f9d1a62c9d9c5ca9df624" >674f9d1a62c9d9c5ca9df624</option> */}
                             </select>
                             {/* Error Message */}
                             {formik.errors.studentId && <div className="text-danger text-center">{formik.errors.studentId}</div>}
@@ -200,13 +226,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         <Col>
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Student Name</Form.Label>
-                                <select name="studentName" id="" className="form-select" value={formik.values.studentName} onChange={formik.handleChange}>
-                                <option value="">Select Student Name</option>
-                                    {/* {studentData?.map((element)=>
-                         <option key={element.studentName} value={element.studentName} >{element.studentName}</option>
-                        )}                        */}
-                        <option  value="Fumika">Fumika</option>
-                                </select>
+                            <Form.Control disabled
+                            type='text' placeholder='Enter Student Name' name='studentName' value={formik.values.studentName}>
+                            </Form.Control>       
                                 {/* Error Message */}
                                 {formik.errors.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
                             </Form.Group>
@@ -235,7 +257,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     type="text" placeholder='Type your Admission Month'
                                     name="admissionMonth" value={formik.values.admissionMonth} onChange={formik.handleChange} />
                                      {/* Error Message */}
-                                {formik.errors.cadmissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
+                                {formik.errors.admissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
                             </Form.Group>
                         </Col>
 
@@ -257,9 +279,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             {/* Admission Fee */}
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Fee</Form.Label>
-                                <Form.Control
-                                    type="number" placeholder='Type your Admission Fee'
-                                    name='admissionFee' value={formik.values.admissionFee} onChange={formik.handleChange} />
+                                <Form.Control disabled
+                                    type="text" placeholder='Type your Admission Fee'
+                                    name='admissionFee' value={formik.values.admissionFee}  />
                                      {/* Error Message */}
                                 {formik.errors.admissionFee && <div className="text-danger text-center">{formik.errors.admissionFee}</div>}
                             </Form.Group>
