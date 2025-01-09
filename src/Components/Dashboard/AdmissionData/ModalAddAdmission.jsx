@@ -47,14 +47,14 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
    
     const formSchema = Yup.object().shape({
         courseId:Yup.string().required("Mandatory field!"),
-        studentId:Yup.string().required(),
-        courseName: Yup.string().required(),
-        studentName:Yup.string().required(),
-        admissionSource: Yup.string().required(),
-        admissionFee: Yup.number().required(),
-        admissionDate: Yup.date().required(),
-        admissionYear: Yup.number().required(),
-        admissionMonth: Yup.number().required(),
+        studentId:Yup.string().required(("Mandatory field!")),
+        courseName: Yup.string().required(("Mandatory field!")),
+        studentName:Yup.string().required(("Mandatory field!")),
+        admissionSource: Yup.string().required(("Mandatory field!")),
+        admissionFee: Yup.number().required(("Mandatory field!")),
+        admissionDate: Yup.date().required(("Mandatory field!")),
+        admissionYear: Yup.number().required(("Mandatory field!")),
+        admissionMonth: Yup.number().required(("Mandatory field!")),
     })
 
     const formik = useFormik({
@@ -173,6 +173,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     )
                                     )}
                                 </select>
+                                {/* Error Message */}
+                                {formik.errors.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
                             </Form.Group>
                         </Col>
                      </Row>
@@ -188,7 +190,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                          <option key={element._id} value={element._id} >{element._id}</option>
                         )}                       
                         {/* <option  value="674f9d1a62c9d9c5ca9df624" >674f9d1a62c9d9c5ca9df624</option> */}
-                                </select>
+                            </select>
+                            {/* Error Message */}
+                            {formik.errors.studentId && <div className="text-danger text-center">{formik.errors.studentId}</div>}
                             </Form.Group>
                         </Col>
 
@@ -203,6 +207,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         )}                        */}
                         <option  value="Fumika">Fumika</option>
                                 </select>
+                                {/* Error Message */}
+                                {formik.errors.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
                             </Form.Group>
                         </Col>
                     </Row>
@@ -216,6 +222,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     type="date" placeholder='Type your Admission Date'
                                     name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange
                                     } />
+                                     {/* Error Message */}
+                                {formik.errors.admissionDate && <div className="text-danger text-center">{formik.errors.admissionDate}</div>}
                             </Form.Group>
                         </Col>
 
@@ -226,6 +234,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Control disabled
                                     type="text" placeholder='Type your Admission Month'
                                     name="admissionMonth" value={formik.values.admissionMonth} onChange={formik.handleChange} />
+                                     {/* Error Message */}
+                                {formik.errors.cadmissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
                             </Form.Group>
                         </Col>
 
@@ -236,6 +246,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Control disabled
                                     type="text" placeholder='Type your Admission Year'
                                     name='admissionYear' value={formik.values.admissionYear} onChange={formik.handleChange} />
+                                     {/* Error Message */}
+                                {formik.errors.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
                             </Form.Group>
                         </Col>
                     </Row>
@@ -248,6 +260,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Control
                                     type="number" placeholder='Type your Admission Fee'
                                     name='admissionFee' value={formik.values.admissionFee} onChange={formik.handleChange} />
+                                     {/* Error Message */}
+                                {formik.errors.admissionFee && <div className="text-danger text-center">{formik.errors.admissionFee}</div>}
                             </Form.Group>
                         </Col>
                         <Col>
@@ -264,6 +278,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     <option value={"Referral"}>Referral</option>
                                     <option value={"Direct"}>Direct</option>
                                 </select>
+                                 {/* Error Message */}
+                                 {formik.errors.admissionSource && <div className="text-danger text-center">{formik.errors.admissionSource}</div>}
                             </Form.Group>
                         </Col>
                     </Row>
