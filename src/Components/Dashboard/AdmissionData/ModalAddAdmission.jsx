@@ -10,9 +10,22 @@ import axios from 'axios';
 import { url } from '../../utils/constant';
 import { Col } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
-
+import { toast } from 'react-toastify';
 
 const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
+    const notify=()=>{
+        console.log("Toast Notification Added!")
+        toast.success("Admission is added successfully !",{
+            style:{
+                textWrap:"nowrap",
+                textAlign:"center",
+                padding:"0.5% 0% 0.5% 4%",
+                color:"black",
+            }
+        })
+    }
+
+
     const navigate = useNavigate()
     const handleClose = () => {
         setShow(false)
@@ -48,13 +61,13 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     const formSchema = Yup.object().shape({
         courseId:Yup.string().required("Mandatory field!"),
         studentId:Yup.string().required(("Mandatory field!")),
-        courseName: Yup.string().required(("Mandatory field!")),
-        studentName:Yup.string().required(("Mandatory field!")),
+        courseName: Yup.string().required(("Please select Course ID!")),
+        studentName:Yup.string().required(("Please select Student ID!")),
         admissionSource: Yup.string().required(("Mandatory field!")),
-        admissionFee: Yup.number().required(("Mandatory field!")),
+        admissionFee: Yup.number().required(("Please select Course ID!")),
         admissionDate: Yup.date().required(("Mandatory field!")),
-        admissionYear: Yup.number().required(("Mandatory field!")),
-        admissionMonth: Yup.number().required(("Mandatory field!")),
+        admissionYear: Yup.number().required(("Please select Date!")),
+        admissionMonth: Yup.number().required(("Please select Date!")),
     })
 
     const formik = useFormik({
@@ -69,7 +82,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             admissionYear: "",
             admissionMonth: "",
         },
-        //validationSchema:formSchema,
+        validationSchema:formSchema,
         enableReinitialize:true,
         onSubmit: (values) => {
             console.log(formik)
@@ -100,18 +113,23 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     // console.log(new Date("03-01-2025"))
 
     const dateFun = (dateString) => {
+        if(!dateString){
+            return{month:"",year:""}
+        }
         const date = new Date(dateString)
         // Get the full month name
         const month = date.toLocaleString('default', { month: 'long' });
         // Get the full year
         const year = date.getFullYear();
         console.log(`${month} ${year}`);
+        // console.log(`${month}`)
         return {month, year}
     }
 
     const a = dateFun(formik.values.admissionDate)
     console.log(a.month) //['january' '2025']
     console.log(a.year)
+
 
     const addAdmission = async (newAdmission) => {
         console.log(newAdmission)
@@ -128,7 +146,11 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                 let res = await axios.get(`${url}/alladmission`, config)
                 console.log("Successfully a new admission added to the DB!", admission)
                 setAdmissionData(res.data.admissionData)
-                // handleClose()
+                notify()
+                setTimeout(()=>{
+                    handleClose()
+                },3001)
+                handleClose()
             }
         } catch (e) {
             console.error("Error adding Admission:", e)
@@ -167,6 +189,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             <Modal.Header>
                 <Modal.Title style={{ padding: "0% 5%" }}>Add Admission</Modal.Title>
             </Modal.Header>
+            
             <Form onSubmit={formik.handleSubmit} style={{ padding: "1.5% 5%" }}>
                 <Modal.Body>
                     <Row>
@@ -186,6 +209,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option> */}
                                 </select>
                                 {/* Error Message */}
+
                                 {formik.errors.courseId && <div className="text-danger text-center">{formik.errors.courseId}</div>}
                             </Form.Group>
                         </Col>
@@ -198,6 +222,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 name='courseName' value={formik.values.courseName}>
                                 </Form.Control>
                                 {/* Error Message */}
+
                                 {formik.errors.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
                             </Form.Group>
                         </Col>
@@ -245,7 +270,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange
                                     } />
                                         {/* console.log(new Date("03-01-2025")) */}
-                                     {/* Error Message */}
+                                {/* Error Message */}
                                 {formik.errors.admissionDate && <div className="text-danger text-center">{formik.errors.admissionDate}</div>}
                             </Form.Group>
                         </Col>
@@ -255,11 +280,16 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Month</Form.Label>
                                 <Form.Control disabled
-                                type="text" placeholder='Month'
+                                type="text" 
+                                placeholder='Month'
                                 //check
-                                name="admissionMonth" value={(dateFun(formik.values.admissionDate)).month} onChange={formik.handleChange} />
+                                name="admissionMonth"
+                                value={(dateFun(formik.values.admissionDate)).month} 
+                                
+                                onChange={formik.handleChange} />
                                 {/* Error Message */}
-                                {formik.errors.admissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
+                                
+                                {formik.errors.admissionMonth && (<div role="alert" className="text-danger text-center">{formik.errors.admissionMonth}</div>)}
                             </Form.Group>
                         </Col>
 
@@ -269,7 +299,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Label className='mb-0'>Year</Form.Label>
                                 <Form.Control disabled
                                 type="text" placeholder='Year'
-                                name='admissionYear' value={(dateFun(formik.values.admissionDate)).year} 
+                                name='admissionYear' 
+                                value={(dateFun(formik.values.admissionDate)).year} 
                                 onChange={formik.handleChange} />
                                 {/* Error Message */}
                                 {formik.errors.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
