@@ -99,15 +99,19 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     }
     // console.log(new Date("03-01-2025"))
 
-    const dateFun = () => {
-        const date = new Date('Sat Mar 01 2025 00:00:00 GMT+0900 (Japan Standard Time)');
+    const dateFun = (dateString) => {
+        const date = new Date(dateString)
         // Get the full month name
         const month = date.toLocaleString('default', { month: 'long' });
         // Get the full year
         const year = date.getFullYear();
         console.log(`${month} ${year}`);
-        return [month, year]
+        return {month, year}
     }
+
+    const a = dateFun(formik.values.admissionDate)
+    console.log(a.month) //['january' '2025']
+    console.log(a.year)
 
     const addAdmission = async (newAdmission) => {
         console.log(newAdmission)
@@ -238,7 +242,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Label className='mb-0'>Date</Form.Label>
                                 <Form.Control
                                     type="date" placeholder='Type your Admission Date'
-                                    name='admissionDate' value={formatDate (formik.values.admissionDate)} onChange={formik.handleChange
+                                    name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange
                                     } />
                                         {/* console.log(new Date("03-01-2025")) */}
                                      {/* Error Message */}
@@ -252,7 +256,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Label className='mb-0'>Month</Form.Label>
                                 <Form.Control disabled
                                 type="text" placeholder='Month'
-                                name="admissionMonth" value={formik.values.admissionMonth} onChange={formik.handleChange} />
+                                //check
+                                name="admissionMonth" value={(dateFun(formik.values.admissionDate)).month} onChange={formik.handleChange} />
                                 {/* Error Message */}
                                 {formik.errors.admissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
                             </Form.Group>
@@ -263,8 +268,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Year</Form.Label>
                                 <Form.Control disabled
-                                type="number" placeholder='Year'
-                                name='admissionYear' value={formik.values.year} onChange={formik.handleChange} />
+                                type="text" placeholder='Year'
+                                name='admissionYear' value={(dateFun(formik.values.admissionDate)).year} 
+                                onChange={formik.handleChange} />
                                 {/* Error Message */}
                                 {formik.errors.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
                             </Form.Group>

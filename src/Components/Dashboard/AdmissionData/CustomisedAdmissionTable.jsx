@@ -11,6 +11,8 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import ModalDeleteAdmission from './ModalDeleteAdmission';
 import ModalEditAdmission from './ModalEditAdmission';
+import { useEffect } from 'react';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,6 +51,17 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData,courseData,set
           Authorization: `Bearer ${token}`
   }}
 
+      const [studentData,setStudentData] = useState([])
+      const getStudentData = async()=>{
+        console.log("Student data is called.")
+        let res = await axios.get(`${url}/allstudent`,config)
+        console.log("Student Data",res.data.studentData)
+        setStudentData(res.data.studentData)
+        }
+          useEffect(() => {
+                getStudentData()
+            }, [])
+            console.log(courseData)
   
   const handleEditClick = (admission)=>{
     setShow(true);
@@ -75,11 +88,13 @@ console.log(new Date("03-01-2025"))
           <TableRow>
             <StyledTableCell>Action</StyledTableCell>
             <StyledTableCell>Course Name</StyledTableCell>
-            <StyledTableCell>Admission Source</StyledTableCell>
-            <StyledTableCell>Admission Fee</StyledTableCell>
-            <StyledTableCell>Admission Date</StyledTableCell>
-            <StyledTableCell>Admission Month</StyledTableCell>
-            <StyledTableCell>Admission Year</StyledTableCell>
+            <StyledTableCell>Student ID</StyledTableCell>
+            <StyledTableCell>Student Name</StyledTableCell>
+            <StyledTableCell>Source</StyledTableCell>
+            <StyledTableCell>Fee</StyledTableCell>
+            <StyledTableCell>Date</StyledTableCell>
+            <StyledTableCell>Month</StyledTableCell>
+            <StyledTableCell>Year</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -103,11 +118,13 @@ console.log(new Date("03-01-2025"))
 
             </StyledTableCell>
             <StyledTableCell>{admission.courseName}</StyledTableCell>
+            <StyledTableCell>{admission.studentId}</StyledTableCell>
+            <StyledTableCell>{admission.studentName}</StyledTableCell>
             <StyledTableCell>{admission.admissionSource}</StyledTableCell>
             <StyledTableCell>{admission.admissionFee}</StyledTableCell>
             <StyledTableCell>{formatDate(admission.admissionDate)}</StyledTableCell>
-            <StyledTableCell>{formatDate(admission.admissionMonth)}</StyledTableCell>
-            <StyledTableCell>{formatDate(admission.admissionYear)}</StyledTableCell>
+            <StyledTableCell>{admission.admissionMonth}</StyledTableCell>
+            <StyledTableCell>{admission.admissionYear}</StyledTableCell>
           </StyledTableRow>
           ))
         }
