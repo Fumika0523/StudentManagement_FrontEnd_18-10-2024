@@ -67,7 +67,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         admissionFee: Yup.number().required(("Please select Course ID!")),
         admissionDate: Yup.date().required(("Mandatory field!")),
         admissionYear: Yup.number().required(("Please select Date!")),
-        admissionMonth: Yup.number().required(("Please select Date!")),
+        admissionMonth: Yup.string().required(("Please select Date!")),
     })
 
     const formik = useFormik({
@@ -182,6 +182,19 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             formik.setFieldValue("studentName",(selectedStudent.studentName))
         }
 
+        const handleAdmissionDateChange = (e)=>{
+        let res = dateFun(e.target.value)
+        console.log(res)
+        let month = res.month
+        let year = res.year
+        console.log(month,year)
+        formik.setFieldValue("admissionDate",e.target.value)
+        formik.setFieldValue("admissionMonth",month)
+        formik.setFieldValue("admissionYear",year)
+        }
+
+
+
     return (
         <Modal show={show}
             onHide={handleClose}
@@ -197,7 +210,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         {/* Course ID */}
                         <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Course ID</Form.Label>
-                                <select name="courseId" id="" className="form-select" value={formik.values.courseId} 
+                                <select name="courseId" id="" className="form-select" 
+                                value={formik.values.courseId} 
                                 // onChange={formik.handleChange} //e.target.value
                                 onChange={handleCourseIdChange}
                                 onBlur={formik.handleBlur}
@@ -272,8 +286,10 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Label className='mb-0'>Date</Form.Label>
                                 <Form.Control
                                     type="date" placeholder='Type your Admission Date'
-                                    name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange
-                                    } 
+                                    name='admissionDate' 
+                                    //value={formik.values.admissionDate} 
+                                    //onChange={formik.handleChange}
+                                    onChange={handleAdmissionDateChange} 
                                     onBlur={formik.handleBlur}/>
                                         {/* console.log(new Date("03-01-2025")) */}
                                 {/* Error Message */}
@@ -291,11 +307,12 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 //check
                                 name="admissionMonth"
                                 value={((dateFun(formik.values.admissionDate)).month) || "" } 
-                                onChange={formik.handleChange} 
+                      
                                 onBlur={formik.handleBlur}
-                                />
+                                >
+                                </Form.Control>
+
                                 {/* Error Message */}
-                                
                                 {formik.errors.admissionMonth && formik.touched.admissionMonth && (<div role="alert" className="text-danger text-center">{formik.errors.admissionMonth}</div>)}
                             </Form.Group>
                         </Col>
@@ -308,8 +325,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 type="text" placeholder='Year'
                                 name='admissionYear' 
                                 value={(dateFun(formik.values.admissionDate)).year} 
-                                onChange={formik.handleChange} 
-                                onBlur={formik.handleBlur}/>
+                                onBlur={formik.handleBlur}>
+                                </Form.Control>
+
                                 {/* Error Message */}
                                 {formik.errors.admissionYear && formik.touched.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
                             </Form.Group>

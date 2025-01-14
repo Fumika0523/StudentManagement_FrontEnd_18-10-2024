@@ -162,7 +162,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                 <Modal.Body>
                     <Row>
                         <Col>
-                            {/* Course ID */}
+                            {/* Course ID << Editable*/}
                             <Form.Group>
                                 <Form.Label>Course ID</Form.Label>
                                 <select name="courseId" id="" className="form-select" value={formik.values.courseId}
@@ -194,11 +194,11 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                         </Col>
                     </Row>
                     <Row>
-                        {/* Student ID */}
+                        {/* Student ID <<< NOT Editable but pre-filled*/}
                         <Col>
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Student ID</Form.Label>
-                                <select name="studentId" id="" className="form-select" value={formik.values.studentId}
+                                <select disabled name="studentId" id="" className="form-select" value={formik.values.studentId}
                                     // onChange={formik.handleChange}
                                     onChange={handleStudentIdChange}
                                 >
@@ -225,7 +225,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                         </Col>
                     </Row>
                     <Row>
-                        {/* Admission Date */}
+                        {/* Admission Date << Editable */}
                         <Col>
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Date</Form.Label>
@@ -279,7 +279,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                             </Form.Group>
                         </Col>
                         <Col>
-                            {/* Admission Source */}
+                            {/* Admission Source << Editable */}
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Source</Form.Label>
                                 <select
