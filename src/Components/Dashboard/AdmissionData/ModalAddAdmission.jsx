@@ -200,6 +200,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <select name="courseId" id="" className="form-select" value={formik.values.courseId} 
                                 // onChange={formik.handleChange} //e.target.value
                                 onChange={handleCourseIdChange}
+                                onBlur={formik.handleBlur}
                                 >
                                 <option value="">Select Course ID</option>
                                     {courseData?.map((element) =>
@@ -209,8 +210,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option> */}
                                 </select>
                                 {/* Error Message */}
-
-                                {formik.errors.courseId && <div className="text-danger text-center">{formik.errors.courseId}</div>}
+                                {formik.errors.courseId && formik.touched.courseId && <div className="text-danger text-center">{formik.errors.courseId}</div>}
                             </Form.Group>
                         </Col>
                         <Col>
@@ -219,11 +219,14 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Label className='mb-0'>Course Name</Form.Label>
                                 <Form.Control disabled
                                 type="text" placeholder='Course Name'
-                                name='courseName' value={formik.values.courseName}>
+                                name='courseName' value={formik.values.courseName}
+                                onBlur={formik.handleBlur}
+                                >
+                               
                                 </Form.Control>
                                 {/* Error Message */}
 
-                                {formik.errors.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
+                                {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
                             </Form.Group>
                         </Col>
                      </Row>
@@ -236,6 +239,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <select name="studentId" id="" className="form-select" value={formik.values.studentId} 
                                 // onChange={formik.handleChange}
                                 onChange={handleStudentIdChange}
+                                onBlur={formik.handleBlur}
                                 >
                                 <option value="">Select Student ID</option>
                                     {studentData?.map((element)=>
@@ -243,7 +247,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         )}                       
                             </select>
                             {/* Error Message */}
-                            {formik.errors.studentId && <div className="text-danger text-center">{formik.errors.studentId}</div>}
+                            {formik.errors.studentId && formik.touched.studentId && <div className="text-danger text-center">{formik.errors.studentId}</div>}
                             </Form.Group>
                         </Col>
 
@@ -252,10 +256,11 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Student Name</Form.Label>
                             <Form.Control disabled
-                            type='text' placeholder='Enter Student Name' name='studentName' value={formik.values.studentName}>
+                            type='text' placeholder='Enter Student Name' name='studentName' value={formik.values.studentName}
+                            onBlur={formik.handleBlur}>
                             </Form.Control>       
                                 {/* Error Message */}
-                                {formik.errors.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
+                                {formik.errors.studentName && formik.touched.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
                             </Form.Group>
                         </Col>
                     </Row>
@@ -268,10 +273,11 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Control
                                     type="date" placeholder='Type your Admission Date'
                                     name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange
-                                    } />
+                                    } 
+                                    onBlur={formik.handleBlur}/>
                                         {/* console.log(new Date("03-01-2025")) */}
                                 {/* Error Message */}
-                                {formik.errors.admissionDate && <div className="text-danger text-center">{formik.errors.admissionDate}</div>}
+                                {formik.errors.admissionDate && formik.touched.admissionDate && <div className="text-danger text-center">{formik.errors.admissionDate}</div>}
                             </Form.Group>
                         </Col>
 
@@ -284,12 +290,13 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 placeholder='Month'
                                 //check
                                 name="admissionMonth"
-                                value={(dateFun(formik.values.admissionDate)).month} 
-                                
-                                onChange={formik.handleChange} />
+                                value={((dateFun(formik.values.admissionDate)).month) || "" } 
+                                onChange={formik.handleChange} 
+                                onBlur={formik.handleBlur}
+                                />
                                 {/* Error Message */}
                                 
-                                {formik.errors.admissionMonth && (<div role="alert" className="text-danger text-center">{formik.errors.admissionMonth}</div>)}
+                                {formik.errors.admissionMonth && formik.touched.admissionMonth && (<div role="alert" className="text-danger text-center">{formik.errors.admissionMonth}</div>)}
                             </Form.Group>
                         </Col>
 
@@ -301,9 +308,10 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 type="text" placeholder='Year'
                                 name='admissionYear' 
                                 value={(dateFun(formik.values.admissionDate)).year} 
-                                onChange={formik.handleChange} />
+                                onChange={formik.handleChange} 
+                                onBlur={formik.handleBlur}/>
                                 {/* Error Message */}
-                                {formik.errors.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
+                                {formik.errors.admissionYear && formik.touched.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
                             </Form.Group>
                         </Col>
                     </Row>
@@ -315,9 +323,10 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 <Form.Label className='mb-0'>Fee</Form.Label>
                                 <Form.Control disabled
                                     type="text" placeholder='Type your Admission Fee'
-                                    name='admissionFee' value={formik.values.admissionFee}  />
+                                    name='admissionFee' value={formik.values.admissionFee} 
+                                    onBlur={formik.handleBlur} />
                                      {/* Error Message */}
-                                {formik.errors.admissionFee && <div className="text-danger text-center">{formik.errors.admissionFee}</div>}
+                                {formik.errors.admissionFee && formik.touched.admissionFee && <div className="text-danger text-center">{formik.errors.admissionFee}</div>}
                             </Form.Group>
                         </Col>
                         <Col>
@@ -328,14 +337,15 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     name="admissionSource"
                                     className="form-select"
                                     value={formik.values.admissionSource}
-                                    onChange={formik.handleChange}>
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}>
                                     <option value="">Select Admission Source</option>
                                     <option value={"Social"}>Social</option>
                                     <option value={"Referral"}>Referral</option>
                                     <option value={"Direct"}>Direct</option>
                                 </select>
                                  {/* Error Message */}
-                                 {formik.errors.admissionSource && <div className="text-danger text-center">{formik.errors.admissionSource}</div>}
+                                 {formik.errors.admissionSource && formik.touched.admissionSource && <div className="text-danger text-center">{formik.errors.admissionSource}</div>}
                             </Form.Group>
                         </Col>
                     </Row>
