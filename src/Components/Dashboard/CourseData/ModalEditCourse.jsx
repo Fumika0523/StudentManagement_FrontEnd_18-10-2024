@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { url } from '../../utils/constant';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Col, Row } from 'react-bootstrap';
 
 
 const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
@@ -23,9 +24,7 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                     padding:"0.5% 0% 0.5% 4%",
                     color:"black",
                 }
-            }
-        );
-        
+            });
     }
 
     const navigate = useNavigate()
@@ -36,11 +35,12 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
 
     const formSchema = Yup.object().shape(
         {
-            courseName:Yup.string().required(),
-            courseType:Yup.string().required(),
-            courseTime:Yup.string().required(),
-            courseAvailability:Yup.string().required(),
-            courseDuration:Yup.string().required(),
+               courseName:Yup.string().required("Mandatory field !"),
+                  courseType:Yup.string().required("Mandatory field !"),
+                  courseTime:Yup.string().required("Mandatory field !"),
+                  courseAvailability:Yup.string().required("Mandatory field !"),
+                  courseDuration:Yup.string().required("Mandatory field !"),
+                  courseFee:Yup.number().required("Mandatory field !"),
         })
     
     const formik = useFormik({
@@ -50,8 +50,9 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                 courseTime:singleCourse?.courseTime,
                 courseAvailability:singleCourse?.courseAvailability,
                 courseDuration:singleCourse?.courseDuration,
+                courseFee:singleCourse?.courseFee,
         },
-        // validationSchema:formSchema,
+        validationSchema:formSchema,
         onSubmit:(values)=>{
             console.log(values)
             updateCourse(values)
@@ -90,48 +91,85 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
           <Modal.Title  >Edit Course</Modal.Title>
         </Modal.Header>
         <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}} >
-            <Modal.Body>
-
-            {/* COurseName */}
-            <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Course Name</Form.Label>
-                <Form.Control type="courseName"
-                name="courseName" value={formik.values.courseName} onChange={formik.handleChange}/>
-            </Form.Group>
-
-            {/* courseType */}
-            <Form.Group className='my-3'>
-                <Form.Label className='m-0'>course Type</Form.Label>
-                <Form.Control type="courseType"
+        <Modal.Body>
+            <Row>
+                <Col>
+                {/* CourseName */}
+                <Form.Group className='my-3'>
+                <Form.Label className='m-0'>Name</Form.Label>
+                <Form.Control type="text"
+                name="courseName" value={formik.values.courseName} onChange={formik.handleChange}
+                onBlur={formik.handleBlur}/>
+                {/* Error Message */}
+                {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
+                 </Form.Group>
+                </Col>
+                <Col>
+                {/* courseType */}
+                <Form.Group className='my-3'>
+                <Form.Label className='m-0'>Type</Form.Label>
+                <Form.Control type="text"
                 name="courseType" value={formik.values.courseType}
-                onChange={formik.handleChange}/>
-            </Form.Group>
-
-            {/* courseTime */}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}/>
+                {/* Error Message */}
+                {formik.errors.courseType && formik.touched.courseType && <div className="text-danger text-center">{formik.errors.courseType}</div>}
+                </Form.Group>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+            {/* courseFime */}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>course Time</Form.Label>
-                <Form.Control type="courseTime" 
+            <Form.Label className='m-0'>Fee</Form.Label>
+            <Form.Control type="number" 
+            name="courseFee" value={formik.values.courseFee}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}/>
+             {/* Error Message */}
+             {formik.errors.courseFee && formik.touched.courseFee && <div className="text-danger text-center">{formik.errors.courseFee}</div>}
+            </Form.Group>
+                </Col>
+                <Col>
+                    {/* courseTime */}
+            <Form.Group className='my-3'>
+                <Form.Label className='m-0'>Time</Form.Label>
+                <Form.Control type="text" 
                 name="courseTime" value={formik.values.courseTime}
-                onChange={formik.handleChange}/>
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}/>
+                 {/* Error Message */}
+             {formik.errors.courseTime && formik.touched.courseTime && <div className="text-danger text-center">{formik.errors.courseTime}</div>}
             </Form.Group>
-
-            {/* courseAvailability*/}
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                       {/* courseAvailability*/}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>course Availability</Form.Label>
+                <Form.Label className='m-0'>Availability</Form.Label>
                 <Form.Control type="courseAvailability"
                 name="courseAvailability" value={formik.values.courseAvailability}
-                onChange={formik.handleChange}/>
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}/>
+                {/* Error Message */}
+                {formik.errors.courseAvailability && formik.touched.courseAvailability && <div className="text-danger text-center">{formik.errors.courseAvailability}</div>}
             </Form.Group>
-
+                </Col>
+                <Col>
             {/* courseDuration */}
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>course Duration</Form.Label>
+                <Form.Label className='m-0'>Duration</Form.Label>
                 <Form.Control type="courseDuration" 
                 name="courseDuration" value={formik.values.courseDuration}
-                onChange={formik.handleChange}/>
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}/>
+                {/* Error Message */}
+             {formik.errors.courseDuration && formik.touched.courseDuration && <div className="text-danger text-center">{formik.errors.courseDuration}</div>}
             </Form.Group>
+                </Col>
+            </Row>
             </Modal.Body>
-
             <Modal.Footer>
                 <Button type='submit' style={{backgroundColor:"#4e73df"}}>
                     Save changes

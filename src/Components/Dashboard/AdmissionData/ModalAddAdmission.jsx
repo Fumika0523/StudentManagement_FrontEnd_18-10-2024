@@ -25,7 +25,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         })
     }
 
-
     const navigate = useNavigate()
     const handleClose = () => {
         setShow(false)
@@ -192,8 +191,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         formik.setFieldValue("admissionMonth",month)
         formik.setFieldValue("admissionYear",year)
         }
-
-
 
     return (
         <Modal show={show}

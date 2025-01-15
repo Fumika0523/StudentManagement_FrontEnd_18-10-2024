@@ -251,7 +251,6 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                                 {formik.errors.admissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
                             </Form.Group>
                         </Col>
-
                         {/* Admission Year */}
                         <Col>
                             <Form.Group className='mt-3'>
@@ -265,7 +264,6 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                             </Form.Group>
                         </Col>
                     </Row>
-
                     <Row>
                         <Col>
                             {/* Admission Fee */}
@@ -297,8 +295,6 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                             </Form.Group>
                         </Col>
                     </Row>
-
-
                 </Modal.Body>
                 <Modal.Footer>
                     {/* ADD BUTTON */}

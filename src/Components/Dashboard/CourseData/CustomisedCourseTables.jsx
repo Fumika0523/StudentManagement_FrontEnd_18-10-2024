@@ -62,13 +62,13 @@ function CustomisedCourseTables({courseData,setCourseData}){
         <TableHead>
           <TableRow>
             <StyledTableCell>Action</StyledTableCell>
-            <StyledTableCell>Course ID</StyledTableCell>
-              <StyledTableCell>Course Name</StyledTableCell>
-              <StyledTableCell>Course Fee</StyledTableCell>
-              <StyledTableCell>Course Type</StyledTableCell>
-              <StyledTableCell>Course Time</StyledTableCell>
-              <StyledTableCell>Course Availability</StyledTableCell>
-              <StyledTableCell>Course Duration</StyledTableCell>
+            <StyledTableCell>ID</StyledTableCell>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Fee</StyledTableCell>
+              <StyledTableCell>Type</StyledTableCell>
+              <StyledTableCell>Time</StyledTableCell>
+              <StyledTableCell>Availability</StyledTableCell>
+              <StyledTableCell>Duration</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
