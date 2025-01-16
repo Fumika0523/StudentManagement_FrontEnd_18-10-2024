@@ -13,6 +13,7 @@ import Row from 'react-bootstrap/Row';
 
 
 const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }) => {
+
     console.log(singleAdmission)
     console.log(singleAdmission._id)
     const [courseData, setCourseData] = useState([])
@@ -40,12 +41,12 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
     const formik = useFormik({
         initialValues: {
             courseId: singleAdmission?.courseId,
-            studentID: singleAdmission?.studentId,
+            studentId: singleAdmission?.studentId,
             studentName: singleAdmission?.studentName,
             courseName: singleAdmission?.courseName,
             admissionSource: singleAdmission?.admissionSource,
             admissionFee: singleAdmission?.admissionFee,
-            admissionDate: singleAdmission?.admissionDate,
+            admissionDate: "",
             admissionYear: singleAdmission?.admissionYear,
             admissionMonth: singleAdmission?.admissionMonth
         },
@@ -55,7 +56,16 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             updateAdmission(values)
         }
     })
-    console.log(singleAdmission)
+    console.log(singleAdmission.admissionDate)
+
+    if(singleAdmission){
+        const formattedDate = singleAdmission.admissionDate
+        ? new Date(singleAdmission.admissionDate).toISOString().split('T')[0]
+        : "";
+        console.log(formattedDate)
+        singleAdmission.admissionDate = formattedDate
+    }
+
 
     const token = sessionStorage.getItem('token')
     console.log(token)
@@ -94,6 +104,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
 
     const updateAdmission = async (updatedAdmission) => {
         console.log("Admission posted to the DB")
+        
         try {
             let res = await axios.put(`${url}/updateadmission/${singleAdmission._id}`, updatedAdmission, config)
             console.log(res)
@@ -107,6 +118,9 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             console.error("Error in Editting Admission:", e)
         }
     }
+
+
+
     //student Data
     const getStudentData = async () => {
         console.log("Student data is called.")
@@ -127,6 +141,9 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             getStudentData()
         }, [])
         console.log(courseData)
+
+
+   
 
     const handleCourseIdChange = (e) => {
         // formik.handleChange === e.target.value
@@ -151,6 +168,9 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
         formik.setFieldValue("studentId", selectedStudentId)
         formik.setFieldValue("studentName", (selectedStudent.studentName))
     }
+
+
+
     return (
         <Modal show={show} onHide={handleClose}
             size="lg">
