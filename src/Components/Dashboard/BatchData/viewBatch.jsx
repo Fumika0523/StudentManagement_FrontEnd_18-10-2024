@@ -33,8 +33,8 @@ function viewBatch(){
         {/* <h1>View Batch</h1> */}
         <div className="d-flex">
         <SideBar/>
-        <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
-        <NavBar/>
+        <Box style={{width:"80%"}} sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
+        <NavBar style={{ positon:"sticky",top:"0"}}/>
 
         <div className="btn py-auto px-auto mt-3"  onClick={()=>setShow(true)} style={{backgroundColor:"#4e73df",color:"white",width:"10%",marginLeft:"88%"}}>Add Batch</div>
 

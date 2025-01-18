@@ -26,10 +26,10 @@ export default function NavBar() {
       palette.info.light),
     },
     marginLeft: 0,
-    width: '20%',
+    width: '50%',
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(1),
-      width: '80%',
+      width: '50%',
     },
   }));
 
@@ -73,8 +73,8 @@ let username = sessionStorage.getItem('username')
 
   return (
     <>
-    <div>
-    <Box sx={{ flexGrow: 1 }}>
+    <div  style={{positon:"absolute",position:"sticky",top:"0px"}}>
+    <Box  >
       <AppBar position="static" style={{backgroundColor:"white"}} >
       <Toolbar>
       <Search style={{border:"1px solid grey", width:"80%"}}>

@@ -1,5 +1,11 @@
 .signInStyle{
-    background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);
+    /* background-image: linear-gradient(to right #b8cbb8 0%, #b8cbb8 0%,   100% ); */
+    /*
+* Created with https://www.css-gradient.com
+* Gradient link: https://www.css-gradient.com/?c1=4f74df&c2=69c879&gt=l&gd=dtl
+*/
+background: #4F74DF;
+background: linear-gradient(135deg, #4F74DF, #69C879);
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -8,13 +14,15 @@
 }
 
 .signinBtn{
-    background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);
+    background: #4F74DF;
+    background: linear-gradient(135deg, #4F74DF, #69C879);
     width: 70%;
     margin: 10% 15%;
 }
 
 .signupBtn{
-    background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);
+    background: #4F74DF;
+    background: linear-gradient(135deg, #4F74DF, #69C879);
     width: 70%;
     margin: 5% 15%;
 }

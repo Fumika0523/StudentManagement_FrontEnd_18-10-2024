@@ -46,7 +46,9 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             courseName: singleAdmission?.courseName,
             admissionSource: singleAdmission?.admissionSource,
             admissionFee: singleAdmission?.admissionFee,
-            admissionDate: "",
+            admissionDate: singleAdmission.admissionDate
+            ? new Date(singleAdmission.admissionDate).toISOString().split('T')[0]
+        : "",
             admissionYear: singleAdmission?.admissionYear,
             admissionMonth: singleAdmission?.admissionMonth
         },
@@ -58,13 +60,11 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
     })
     console.log(singleAdmission.admissionDate)
 
-    if(singleAdmission){
-        const formattedDate = singleAdmission.admissionDate
-        ? new Date(singleAdmission.admissionDate).toISOString().split('T')[0]
-        : "";
-        console.log(formattedDate)
-        singleAdmission.admissionDate = formattedDate
-    }
+    // if(singleAdmission){
+    //     const formattedDate = ;
+    //     console.log(formattedDate)
+    //     singleAdmission.admissionDate = formattedDate
+    // }
 
 
     const token = sessionStorage.getItem('token')

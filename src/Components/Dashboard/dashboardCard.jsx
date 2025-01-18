@@ -15,7 +15,7 @@ return(
     <>
     <div className="d-flex">
         <SideBar/>
-        <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
+        <Box style={{width:"80%"}} sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
         <NavBar/>
         <div style={backgroundDesign}>
         <div className="d-flex justify-content-between py-2">

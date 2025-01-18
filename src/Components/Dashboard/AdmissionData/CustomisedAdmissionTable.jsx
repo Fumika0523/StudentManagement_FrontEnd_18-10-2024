@@ -20,12 +20,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: '#5a5c69',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: '16px',
-    padding: '10px',
+    fontSize: '14px',
+     padding: '0px 5px',
+
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: '14px',
+    fontSize: '13.5px',
     textAlign: 'center',
+    padding:"1.5px 2px",
+    margin:"0"
   },
 }));
 
@@ -80,13 +83,27 @@ const formatDate = (dateString)=>{
 }
 console.log(new Date("03-01-2025"))
 
+const formatDateTime = (isoString) => {
+  const date = new Date(isoString);
+  return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+  }).replace("at","");
+};
+
   return (
     <>
-    <TableContainer component={Paper} >
+    <TableContainer  component={Paper} >
       <Table>
         <TableHead>
           <TableRow>
             <StyledTableCell>Action</StyledTableCell>
+            <StyledTableCell>Course ID</StyledTableCell>
             <StyledTableCell>Course Name</StyledTableCell>
             <StyledTableCell>Student ID</StyledTableCell>
             <StyledTableCell>Student Name</StyledTableCell>
@@ -95,6 +112,8 @@ console.log(new Date("03-01-2025"))
             <StyledTableCell>Date</StyledTableCell>
             <StyledTableCell>Month</StyledTableCell>
             <StyledTableCell>Year</StyledTableCell>
+            <StyledTableCell>CreatedAt</StyledTableCell>
+            <StyledTableCell>UpdatedAt</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -117,6 +136,7 @@ console.log(new Date("03-01-2025"))
             </div>
 
             </StyledTableCell>
+            <StyledTableCell>{admission.courseId}</StyledTableCell>
             <StyledTableCell>{admission.courseName}</StyledTableCell>
             <StyledTableCell>{admission.studentId}</StyledTableCell>
             <StyledTableCell>{admission.studentName}</StyledTableCell>
@@ -125,6 +145,8 @@ console.log(new Date("03-01-2025"))
             <StyledTableCell>{formatDate(admission.admissionDate)}</StyledTableCell>
             <StyledTableCell>{admission.admissionMonth}</StyledTableCell>
             <StyledTableCell>{admission.admissionYear}</StyledTableCell>
+            <StyledTableCell>{formatDateTime(admission.createdAt)}</StyledTableCell>
+            <StyledTableCell>{formatDateTime(admission.updatedAt)}</StyledTableCell>
           </StyledTableRow>
           ))
         }

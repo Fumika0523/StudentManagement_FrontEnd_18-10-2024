@@ -34,4 +34,10 @@ background-color: #4e73df;
 
 //create a drop down icon
 
-
+<!-- Breakpoint -->
+Extra Small   >>    None   >>       <576px
+Small         >>    sm     >>       >576px
+Medium        >>    md      >>      >768px
+Large         >>    lg      >>      >992px
+Extra Large         >> lg     >>    >1200px
+Extra extra large   >> xxl      >>   >1400px

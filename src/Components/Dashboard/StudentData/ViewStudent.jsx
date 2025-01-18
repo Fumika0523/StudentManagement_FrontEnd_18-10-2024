@@ -35,7 +35,7 @@ function ViewStudent(){
         <>
 <div className="d-flex">
     <SideBar/>
-        <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
+        <Box style={{width:"80%"}} sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
         <NavBar/>
         {/* create a table */}
         {/* <div className="fs-3">View Student Data</div> */}

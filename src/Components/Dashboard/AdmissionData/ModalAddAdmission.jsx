@@ -117,7 +117,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         }
         const date = new Date(dateString)
         // Get the full month name
-        const month = date.toLocaleString('default', { month: 'long' });
+        const month = date.toLocaleString('default', { month: 'short' });
         // Get the full year
         const year = date.getFullYear();
         console.log(`${month} ${year}`);

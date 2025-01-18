@@ -7,7 +7,7 @@ function HomePage(){
     return(
         <>
         <div className='d-flex'>
-        <SideBar/>
+        <SideBar />
         <NavBar/>
         <DashboardCard/>
         </div>

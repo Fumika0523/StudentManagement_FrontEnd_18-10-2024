@@ -27,11 +27,14 @@ function SideBar() {
     }
 
     const sideBarStyle = {
-        width: "23%",
-        height: "150vh",
+        width: "19% ",
+        height: "100vh",
         backgroundColor: "#4e73df",
         // padding:"1% 0%",
-        textAlign:"start"
+        textAlign:"start",
+        position:"sticky",
+        top:"0",
+        overFlow: "hidden",
     }
 
 
@@ -58,7 +61,7 @@ function SideBar() {
                 <Container >
                 <div className="text-white fw-bold py-3 ps-4" style={{borderBottom:"1px solid #bfbfbf",fontSize:"18px"}}><PiStudentBold className="me-1" style={{fontSize:"40px"
                 }}/>STUDENT ADMIN</div>
-                <div className="text-white fw-bold" onClick={() => { navigate('/') }} style={{borderBottom:"1px solid #bfbfbf", padding:"10% 0",fontSize:"17px",cursor: "pointer"}} ><AiFillDashboard className="ms-2 me-3" />Dashboard</div>
+                <div className="text-white fw-bold" onClick={() => { navigate('/dashboard') }} style={{borderBottom:"1px solid #bfbfbf", padding:"10% 0",fontSize:"17px",cursor: "pointer"}} ><AiFillDashboard className="ms-2 me-3" />Dashboard</div>
 
         {/* COMPONENT */}
 
@@ -73,19 +76,19 @@ function SideBar() {
          </div></div>
    
       <Collapse in={open}>
-       <div id="example-collapse-text" style={{border:"1px solid white", borderRadius:"10px", backgroundColor:"white",padding:"1% 0", marginBottom:"2%"}}>
-        <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={() => { navigate('/studentdata') }} >
+       <div id="example-collapse-text" style={{borderRadius:"10px", backgroundColor:"white",padding:"0", marginBottom:"2%",width:"250px"}}>
+        <div className="btn btn-no-outline "  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={() => { navigate('/studentdata') }} >
             View All Student
         </div>
-        <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={()=>{navigate('/batchdata')}}>
+        <div className="btn btn-no-outline "  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={()=>{navigate('/batchdata')}}>
             View All Batch
         </div>
-        <div className="btn btn-no-outline border-white"  style={{ fontSize: "90%", padding: "5% 10%" }} onClick={()=>{navigate('/coursedata')}}>
+        <div className="btn btn-no-outline "  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={()=>{navigate('/coursedata')}}>
             View All Course
         </div>
         
-        <div className="btn btn-no-outline border-white"
-        style={{fontSize:"90%", padding:"5% 10%"}}
+        <div className="btn btn-no-outline"
+        style={{fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%"}}
         onClick={()=>{navigate('/admissiondata')}}>
           View All Admission
         </div>
