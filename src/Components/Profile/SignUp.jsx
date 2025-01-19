@@ -50,80 +50,96 @@ function SignUp() {
     return (
         <>
             <div className='signInStyle'>
-                <div  className='signupCard'>
-                    {/* TITLE */}
-                    <h2 className="text-center fw-bold" >Sign Up</h2>
-
-                    <Form onSubmit={formik.handleSubmit} >
+                <div className='container d-flex justify-content-center min-vh-100 align-items-center'>
+               
+                <Form className='signupCard' onSubmit={formik.handleSubmit} >
+                    <div className="row">
+                    <h2 className="text-center fw-bold py-1" >Sign Up</h2>
+                    </div>
+                    <div className="row mb-2" >             
                         {/* Username */}
-                        <Form.Group >
+                        <Form.Group className='col-lg-6 col-sm-12 col-md-6' >
                             <Form.Label className='formLabel m-0'>Username</Form.Label>
                             <Form.Control type="username" placeholder='Type your Username' name="username"
                                 value={formik.values.username}
                                 onChange={formik.handleChange} />
                         </Form.Group>
-
-                        {/* Gender */}
-                        <div className='formLabel m-0'>Gender</div>
-                        <div className='form-check form-check-inline'>                 
-                        <Form.Check type="radio" name="gender" label={`Male`}
-                            value="male"
-                            onChange={formik.handleChange} /></div>
-                         <div className='form-check form-check-inline'>
-                            <Form.Check type="radio" name="gender" label={`Female`}
-                            value="female"
-                            onChange={formik.handleChange} /></div>
-
-                        {/* Email */}
-                        <Form.Group >
+                         {/* Email */}
+                         <Form.Group className='col-md-6 col-lg-6 col-sm-12'>
                             <Form.Label className='formLabel m-0'>Email Address</Form.Label>
                             <Form.Control type="email" placeholder='Type your Email Address' name="email"
                                 value={formik.values.email}
                                 onChange={formik.handleChange} />
                         </Form.Group>
-
-                        {/* B-Date*/}
-                        <Form.Group>
+                        </div> 
+                        {/* 2ND ROW */}
+                        <div className="row d-flex align-items-center mb-2"  >  
+                        <div className='col-lg-6 col-md-6 col-sm-12d-flex row-direction' style={{height:"25%"}} >
+                        {/* Gender */}
+                        <div className='formLabel ms-1'>Gender</div>
+                        <div className='form-check mt-2'>                 
+                        <Form.Check  type="radio" name="gender" label={`Male`}
+                            value="male"
+                            onChange={formik.handleChange} /></div>
+                         <div className='form-check mt-2'>
+                            <Form.Check type="radio" name="gender" label={`Female`}
+                            value="female"
+                            onChange={formik.handleChange} /></div>
+                        </div>
+                               {/* B-Date*/}
+                        <Form.Group className='col-lg-6 col-sm-12 col-md-6'  >
                             <Form.Label className='formLabel m-0'>Birthdate</Form.Label>
                             <Form.Control type="date" placeholder="Type your Birthdate" name="birthdate"
                                 value={formik.values.birthdate}
                                 onChange={formik.handleChange} />
                         </Form.Group>
+                         </div> 
 
+                        {/* 3rd ROW */}
+                        <div className="row mb-2">  
                         {/* Phone No.*/}
-                        <Form.Group>
+                        <Form.Group className='col-lg-6 col-sm-12 col-md-6'>
                             <Form.Label className='formLabel m-0'>Phone No.</Form.Label>
                             <Form.Control type="phoneNumber" placeholder="Type your Phone No." name="phoneNumber"
                                 value={formik.values.phoneNumber}
                                 onChange={formik.handleChange} />
-                        </Form.Group>
-
+                        </Form.Group> 
                         {/* Password*/}
-                        <Form.Group>
+                        <Form.Group className='col-lg-6 col-sm-12 col-md-6'>
                             <Form.Label className='formLabel m-0'>Password</Form.Label>
                             <Form.Control type="password" placeholder="Type your Password" name="password"
                                 value={formik.values.password}
                                 onChange={formik.handleChange} />
                         </Form.Group>
-                        <div className='text-center my-3' style={{ fontSize: "80%" }}>
-                        <Button type="submit" variant="outline-*" className="signupBtn fw-bold" style={{borderRadius:"15px",color:"white"}}>SIGN UP</Button></div>
-                        </Form>
+                        </div> 
+                        <div className="row p-1">  
                         <div className='text-center'>
-                            <div style={{fontSize:"15px"}}>Or Sign Up Using</div>
-                            <div className='gap-1 mt-2 d-flex' style={{ justifyContent: "center" }}>
-                                {/* Facebook */}
-                                <FacebookIcon sx={{ color: "navy", fontSize: "35px" }} />
-                                {/* LinkedIn */}
-                                <LinkedInIcon sx={{ color: "#0077B5", fontSize: "35px" }} />
-                                {/* GitHub */}
-                                <GitHubIcon sx={{ fontSize: "35px" }} />
-                                {/* Google */}
-                                <GoogleIcon sx={{ color: "#ea4335", fontSize: "35px" }} />
-                            </div>
-                            <div style={{ marginTop: "7%", fontSize:"15px"}}>Or Already Have Account?</div>
-                            <div className='btn btn-link' style={{ fontSize: "110%"}} onClick={()=>{navigate('/')}}>SIGN IN</div>
+                        <Button type="submit" variant="outline-*" className="sign-Btn my-3 fw-bold text-white" style={{textAlign:"center",justifyContent:"center",alignItems:"center", borderRadius:"15px"}}>SIGN UP</Button></div>
+                        </div> 
+                        <div className="row text-center mb-1">  
+                        <div className='message' >Or Sign Up Using</div>
                         </div>
-                   
+                            <div className="row ">  
+                            <div className='gap-2 mt-2 d-flex' style={{ justifyContent: "center" }}>
+                                {/* Facebook */}
+                                <FacebookIcon className="socialIcons" sx={{ color: "navy" }} />
+                                {/* LinkedIn */}
+                                <LinkedInIcon className="socialIcons" sx={{ color: "#0077B5" }} />
+                                {/* GitHub */}
+                                <GitHubIcon className="socialIcons"  />
+                                {/* Google */}
+                                <GoogleIcon sx={{ color: "#ea4335"}} className='socialIcons'/>
+                            </div>
+                            </div> 
+                            <div className="row text-center ">  
+                            <div className='message' style={{ marginTop: "4%"}}>Or Already Have Account?</div>
+                            </div> 
+                            <div className="row d-flex justify-content-center">  
+                            <div className="signupinBtn my-3 fw-bold" style={{width:"26%",textAlign:"center",justifyContent:"center",width:"30%",alignItems:"center"}}  onClick={()=>{navigate('/')}}>SIGN IN</div>
+                            </div>
+                       
+                        </Form>
+              
                 </div>
             </div>
         </>

@@ -46,45 +46,63 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
 
     return(
         <>
-        <div></div>
-        <div className='signInStyle'>
-        <div className='signinCard'>
-
+        <div className='signInStyle '>
+        <div className='container d-flex justify-content-center min-vh-100 align-items-center'>
+            {/* <div > */}
             {/* TITLE */}
+            <Form onSubmit={formik.handleSubmit} className='signinCard'>
+            <div className="row ">
             <h2 className="text-center fw-bold" >Sign in</h2>
-            <Form onSubmit={formik.handleSubmit}>
-                {/* Username */}
-                <Form.Group className='mt-3 text-start'>
+            </div>  
+               {/* Username */}
+            <div className='row  p-1'>
+                <Form.Group className='col-12 p-1 text-start'>
                     <Form.Label  className='formLabel m-0'>Username</Form.Label>
                     <Form.Control type="username" placeholder='Type your Username' name="username" 
                     value={formik.values.username}
                     onChange={formik.handleChange} />
-                </Form.Group>
-                    {/* Password*/}
-                    <Form.Group className='mt-3 text-start'>
+               </Form.Group>
+            </div>
+                {/* Password*/}
+            <div className='row   '>
+               
+                    <Form.Group className='col-12 text-start'>
                     <Form.Label  className='formLabel m-0'>Password</Form.Label>
                     <Form.Control type="password" placeholder="Type your Password" name="password" 
                     value={formik.values.password}
                     onChange={formik.handleChange} />
                 </Form.Group>
-              <Button type="submit" variant="outline-*" className="signinBtn fw-bold" style={{borderRadius:"15px",color:"white"}}>SIGN IN</Button>
-            </Form>
-            <div className='text-center fs-6'>
-                <div>Or Sign Up Using</div>
-                <div className='gap-1 fs-3 mt-3 d-flex' style={{justifyContent:"center"}}>
+            </div>
+                {/* Sign In Button */}
+              <div className="row  p-1">
+              <Button type="submit" variant="outline-*" className="sign-Btn my-3 fw-bold text-white" style={{width:"30%",textAlign:"center",justifyContent:"center",alignItems:"center",margin:"0 35%", borderRadius:"15px"}}>SIGN IN</Button>
+              </div>
+              {/* or sign up */}
+              <div className='row  p-1'>
+                <div className='text-center message'>Or Sign Up Using</div>
+            </div>
+            {/* Icons */}
+            <div className="row  p-1">
+                <div className='gap-2 fs-5 mt-3 d-flex' style={{justifyContent:"center"}}>
+              
                     {/* Facebook */}
-                    <FacebookIcon sx={{color:"navy",fontSize:"35px"}} />
+                    <FacebookIcon className="socialIcons" sx={{color:"navy"}} />
                     {/* LinkedIn */}
-                    <LinkedInIcon sx={{color:"#0077B5",fontSize:"35px"}}/>
+                    <LinkedInIcon className="socialIcons" sx={{color:"#0077B5"}}/>
                     {/* GitHub */}
-                    <GitHubIcon sx={{fontSize:"35px"}} />
+                    <GitHubIcon className="socialIcons" />
                     {/* Google */}
-                    <GoogleIcon sx={{color:"#ea4335",fontSize:"35px"}} />
+                    <GoogleIcon sx={{color:"#ea4335"}} className="socialIcons" />
                     </div>
-                    <div style={{marginTop:"15%"}}>Or</div>
-                    <div className="btn btn-link" style={{fontSize:"110%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
+                     </div>
+                    <div className="row  p-1">
+                    <div className='text-center my-2 message'>Don't have an account?</div>
                     </div>
-        </div>
+                    <div className='row d-flex justify-content-center'>
+                    <div  variant="outline-*" className="signupinBtn fw-bold" style={{textAlign:"center",justifyContent:"center",alignItems:"center",width:"30%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
+                    </div>
+                  </Form>
+            </div>
         </div>
         </>
     )

@@ -6,26 +6,29 @@
 */
 background: #4F74DF;
 background: linear-gradient(135deg, #4F74DF, #69C879);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
 }
 
 .signinBtn{
     background: #4F74DF;
     background: linear-gradient(135deg, #4F74DF, #69C879);
-    width: 70%;
-    margin: 10% 15%;
 }
 
-.signupBtn{
+.signinBtn:hover{
+    transform: scale(1.07);
+    transition: 0.3s;
+ }
+ 
+
+.sign-Btn{
     background: #4F74DF;
     background: linear-gradient(135deg, #4F74DF, #69C879);
-    width: 70%;
-    margin: 5% 15%;
 }
+
+.ssign-Btn:hover{
+    transform: scale(1.07);
+    transition: 0.3s;
+ }
 
 .formLabel{
     font-size: 15px;
@@ -33,27 +36,117 @@ background: linear-gradient(135deg, #4F74DF, #69C879);
 }
 
 .signinCard{
-    width: 28%;
     background-color: white;
     display: flex;
-    height: 70%;
     flex-direction: column;
-    margin: 15% 36%;
+    justify-content: center;
     border-radius: 15px;
-    padding:2%;
-    display: flex;    
+}
+
+
+.signupinBtn:hover{
+    border-color: #5fc270;
+    transform: scale(1.07);
+    transition: 0.3s;
+ }
+ 
+ .signupinBtn{
+    border-radius: 50px;
+    padding: 7px 0;
+    border:2px solid  #4F74DF;
+    cursor:pointer;
+    border-radius: 18px;
+ }
+.message{
+    font-size: 15px;
+}
+
+@media(min-width:993px){
+    .signupCard{
+        width: 50%;
+        padding: 2% 5%;
+    }
+    .signinCard{
+        width: 50%;
+        padding: 2% 5%;
+    }
+}
+
+@media(max-width:992px){
+    .signupCard{
+        width: 75%;
+        padding: 2% 5%;
+    }
+    .signinCard{
+        width: 70%;
+        padding: 2% 5%;
+    }
+}
+
+@media(max-width:768px){
+    .signupCard{
+        width: 85%;
+        padding:2% 5%
+    }
+    .signinCard{
+        width: 80%;
+        padding: 2% 5%;
+    }
+}
+
+@media(max-width:576px){
+    .signupCard{
+        width: 75%;
+        padding:2% 5%;
+        margin: 5% 0;
+    }
+    .formLabel{
+        font-size: 14px;
+    }
+    
+    .message{
+        font-size: 12px;
+    }
+    .signupCard h2{
+        font-size: 20px;
+    }
+    .signupinBtn{
+        font-size: 8px;
+        
+    }   
+    .signupCard Button{
+        font-size: 10px
+    }
+
+    .signinCard Button{
+        font-size: 9px
+    }
+
+    .signinCard{
+        width: 80%;
+        padding: 4% 5%;
+    }
+
+    .signinCard h2{
+        font-size: 18px;
+    }
+}
+
+.socialIcons{
+    font-size: 100px;
 }
 
 .signupCard{
-    width: 30%;
     background-color: white;
     display: flex;
-    height: 92%;
     flex-direction: column;
-    margin: 0% 35%;
-    border-radius: 15px;
-    padding:1.5% 2%;
-    display: flex;    
+    justify-content: center;
+    border-radius: 18px; 
+}
+
+.socialIcon:hover{
+    transform: scale(1.1);
+    transition: 0.3s;
 }
 
 *{
