@@ -52,7 +52,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
             {/* TITLE */}
             <Form onSubmit={formik.handleSubmit} className='signinCard'>
             <div className="row ">
-            <h2 className="text-center fw-bold" >Sign in</h2>
+            <h2 className="text-center fw-bold" >Sign In</h2>
             </div>  
                {/* Username */}
             <div className='row  p-1'>
@@ -99,7 +99,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     <div className='text-center my-2 message'>Don't have an account?</div>
                     </div>
                     <div className='row d-flex justify-content-center'>
-                    <div  variant="outline-*" className="signupinBtn fw-bold" style={{textAlign:"center",justifyContent:"center",alignItems:"center",width:"30%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
+                    <div  variant="outline-*" className="signupinBtn fw-bold" style={{textAlign:"center",justifyContent:"center",alignItems:"center",width:"33%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
                     </div>
                   </Form>
             </div>

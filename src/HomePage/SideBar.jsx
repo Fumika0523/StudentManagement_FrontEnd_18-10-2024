@@ -26,18 +26,6 @@ function SideBar() {
         color: "#bfbfbf",
     }
 
-    const sideBarStyle = {
-        width: "19% ",
-        height: "100vh",
-        backgroundColor: "#4e73df",
-        // padding:"1% 0%",
-        textAlign:"start",
-        position:"sticky",
-        top:"0",
-        overFlow: "hidden",
-    }
-
-
     const ExpandMore = styled((props) => {
         const { expand, ...other } = props;
         return <IconButton {...other} />;
@@ -57,26 +45,28 @@ function SideBar() {
     const navigate = useNavigate()
     return (
         <>
-            <div style={sideBarStyle} >
+            <div className="sideBarStyle" >
                 <Container >
-                <div className="text-white fw-bold py-3 ps-4" style={{borderBottom:"1px solid #bfbfbf",fontSize:"18px"}}><PiStudentBold className="me-1" style={{fontSize:"40px"
-                }}/>STUDENT ADMIN</div>
-                <div className="text-white fw-bold" onClick={() => { navigate('/dashboard') }} style={{borderBottom:"1px solid #bfbfbf", padding:"10% 0",fontSize:"17px",cursor: "pointer"}} ><AiFillDashboard className="ms-2 me-3" />Dashboard</div>
+                <div className="dashRow row text-white "
+                >
+               <PiStudentBold className="col-md-3 studentTitleIcon text-right" style={{textAlign:"right"}}/> <div className="col-md-9 dashTitle p-0 " >STUDENT ADMIN</div>
+                </div>
+                <div className="row dashRow row align-items-center text-white">
+                <AiFillDashboard className="col-3 fs-5" /><div className="col-9 fw-bold" onClick={() => { navigate('/dashboard') }} style={{fontSize:"18px",cursor: "pointer"}} >Dashboard</div>
+                </div>
 
         {/* COMPONENT */}
-
-        <div className="sideBarHover1 mb-2 text-start  d-flex ">   
-        <div onClick={() => setOpen(!open)}  aria-controls="example-collapse-text"  aria-expanded={open}>
-      <IoSettings className="ms-2 me-3"/>
-      Component
-      <ExpandMore  onClick={handleExpandClick} className="ms-5" >
-        <ExpandMoreIcon className="text-white " aria-expanded={expanded} aria-label="show more" expand={expanded} style={{textAlign:"right"}}/>
+        <div
+        className="row dashRow Component"
+         onClick={() => setOpen(!open)}  aria-controls="example-collapse-text"  aria-expanded={open}>
+      <IoSettings className="col-3 p-0"/>
+      <div className="col-7 ps-2">
+      Component</div>
+      <ExpandMore  onClick={handleExpandClick} className="col-2 p-0" >    <ExpandMoreIcon className="text-white " aria-expanded={expanded} aria-label="show more" expand={expanded} style={{textAlign:"right"}}/>
     
-          </ExpandMore>
-         </div></div>
-   
-      <Collapse in={open}>
-       <div id="example-collapse-text" style={{borderRadius:"10px", backgroundColor:"white",padding:"0", marginBottom:"2%",width:"250px"}}>
+    </ExpandMore>
+       <Collapse in={open}>
+       <div id="example-collapse-text" style={{borderRadius:"10px", backgroundColor:"white",padding:"3%", margin:"2% 10% 0% 10%",width:"220px"}}>
         <div className="btn btn-no-outline "  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={() => { navigate('/studentdata') }} >
             View All Student
         </div>
@@ -94,28 +84,33 @@ function SideBar() {
         </div>
         </div>
       </Collapse>
-                {/* UTILITIES */}
-                <div className="sideBarHover1">
-                    <div  className="sideBarHover" ><FiTool className="ms-2 me-3" />Utilities</div>
-                    </div>
-                <div style={{ borderBottom:"1px solid #bfbfbf",paddingTop:"10%"}}></div>
-                {/* <div style={titleStyle} >ADDONS</div> */}
-                   
-                {/* PAGES */}
-                <div className="sideBarHover1">
-                <div  className="sideBarHover"><FaFolder className="ms-2 me-3"  />Pages</div></div>
+      </div>
 
-                {/* CHART */}
-                <div className="sideBarHover1">
-                <div  className="sideBarHover"><FaChartArea className="ms-2 me-3"  />Charts</div></div>
-
-                {/* Tables */}
-                <div className="sideBarHover1">
-                <div  className="sideBarHover"><FaTable className="ms-2 me-3"  />Tables</div></div>
-                <div style={{ borderBottom:"1px solid #bfbfbf",paddingTop:"10%"}}></div>
-                </Container>
+      <div className="row dashRow ">
+            {/* UTILITIES */}
+         <FiTool className="col-3" />
+         <div className="col-9">Utilities</div>
+      </div>
+      <div className="row dashRow ">
+             {/* PAGES */}
+               <FaFolder className="col-3"/>
+               <div className="col-9">Page</div>
+      </div>
+      <div className="row dashRow">
+            {/* CHART */}
+                <FaChartArea className="col-3"  />
+                <div  className="col-9">Charts</div>
+      </div>
+      
+          <div className="row dashRow">
+              {/* Tables */}
+                <FaTable className="col-3"/>
+                <div className="col-9">Tables</div>
+          </div>
+          </Container>
             </div>
-
+              
+            
         </>
     )
 }
