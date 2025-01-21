@@ -7,9 +7,10 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
-import {useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios';
 import { url } from '../utils/constant';
+import { FcReading } from "react-icons/fc";
 
 function SignIn({isAuthenticated,setIsAuthenticated}){
 
@@ -46,19 +47,19 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
 
     return(
         <>
-        <div className='signInStyle '>
-        <div className='container d-flex justify-content-center min-vh-100 align-items-center'>
-            {/* <div > */}
+        <div className='signInStyle container-fluid '>
+        <div className='row justify-content-center flex-column align-items-center d-flex gap-4' style={{margin:"6% 0"}}>
+         
             {/* TITLE */}
-            <Form onSubmit={formik.handleSubmit} className='signinCard'>
-            <div className="row ">
-            <h2 className="text-center fw-bold" >Sign In</h2>
+            <Form onSubmit={formik.handleSubmit} className='signinCard  col-12 col-sm-7 col-md-6 col-lg-4  px-4'>
+            <div className="row  ">
+            <h2 style={{fontSize:"30px"}} className="text-center" ><FcReading className='mb-1' style={{fontSize:"55px"}}/> Sign In</h2>
             </div>  
                {/* Username */}
-            <div className='row  p-1'>
-                <Form.Group className='col-12 p-1 text-start'>
+            <div className='row '>
+                <Form.Group className=' text-start'> 
                     <Form.Label  className='formLabel m-0'>Username</Form.Label>
-                    <Form.Control type="username" placeholder='Type your Username' name="username" 
+                    <Form.Control type="username"  name="username" 
                     value={formik.values.username}
                     onChange={formik.handleChange} />
                </Form.Group>
@@ -68,14 +69,14 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                
                     <Form.Group className='col-12 text-start'>
                     <Form.Label  className='formLabel m-0'>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Type your Password" name="password" 
+                    <Form.Control type="password"  name="password" 
                     value={formik.values.password}
                     onChange={formik.handleChange} />
                 </Form.Group>
             </div>
                 {/* Sign In Button */}
-              <div className="row  p-1">
-              <Button type="submit" variant="outline-*" className="sign-Btn my-3 fw-bold text-white" style={{width:"30%",textAlign:"center",justifyContent:"center",alignItems:"center",margin:"0 35%", borderRadius:"15px"}}>SIGN IN</Button>
+              <div className="row d-flex justify-content-center">
+              <div  type="submit" className="sign-Btn fw-bold my-4" style={{fontSize:"18px",width:"94%"}}>SIGN IN</div >
               </div>
               {/* or sign up */}
               <div className='row  p-1'>
@@ -95,14 +96,18 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                     <GoogleIcon sx={{color:"#ea4335"}} className="socialIcons" />
                     </div>
                      </div>
-                    <div className="row  p-1">
-                    <div className='text-center my-2 message'>Don't have an account?</div>
-                    </div>
-                    <div className='row d-flex justify-content-center'>
-                    <div  variant="outline-*" className="signupinBtn fw-bold" style={{textAlign:"center",justifyContent:"center",alignItems:"center",width:"33%"}} onClick={()=>{navigate('/signup')}}>SIGN UP</div>
-                    </div>
-                  </Form>
+            </Form>
+            
+            <div className='signinCard2 col-12 col-sm-7 col-md-6 col-lg-4 d-flex  justify-content flex-row'>
+                   
+            <div className='text-center message' >Don't have account? &nbsp;</div>
+
+            <div>
+            <Link className='link-underline link-underline-opacity-0 text-center' 
+            to='/signup' >Create an account</Link>
             </div>
+            </div>
+        </div>
         </div>
         </>
     )

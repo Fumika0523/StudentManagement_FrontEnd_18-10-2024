@@ -6,7 +6,7 @@
 */
 background: #4F74DF;
 background: linear-gradient(135deg, #4F74DF, #69C879);
-
+height: 100vh;
 }
 
 .signinBtn{
@@ -23,9 +23,22 @@ background: linear-gradient(135deg, #4F74DF, #69C879);
 .sign-Btn{
     background: #4F74DF;
     background: linear-gradient(135deg, #4F74DF, #69C879);
+    text-align:center;
+    align-items: center;
+    justify-content:center;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    padding: 3% 0;
 }
 
-.ssign-Btn:hover{
+
+.signup-Btn{
+    transform: scale(1.07);
+    transition: 0.3s;
+ }
+
+ .sign-Btn:hover{
     transform: scale(1.07);
     transition: 0.3s;
  }
@@ -40,7 +53,17 @@ background: linear-gradient(135deg, #4F74DF, #69C879);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-radius: 15px;
+   padding: 2% 5%;
+   border-radius: 10px;
+}
+
+.signinCard2{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5% 0%;
+    border-radius: 10px;
 }
 
 .signupinBtn:hover{
@@ -54,10 +77,10 @@ background: linear-gradient(135deg, #4F74DF, #69C879);
     padding: 7px 0;
     border:2px solid  #4F74DF;
     cursor:pointer;
-    border-radius: 18px;
+    border-radius: 10px;
  }
 .message{
-    font-size: 15px;
+    font-size: 17px;
 }
 
 .sideBarStyle {
@@ -83,111 +106,16 @@ background: linear-gradient(135deg, #4F74DF, #69C879);
     border-bottom: 1px solid #bfbfbf;
   }
 
+.sign-Btn{
+    font-size: 10px;
+    border-radius: 8px;
+}
  
 
   .sidebarIcons{
     color:white;
   }
 
-@media(min-width:993px){
-    .signupCard{
-        width: 50%;
-        padding: 2% 5%;
-    }
-    .signinCard{
-        width: 40%;
-        padding: 3% 5%;
-    }
-}
-
-@media(max-width:992px){
-    .signupCard{
-        width: 75%;
-        padding: 2% 5%;
-    }
-    .signinCard{
-        width: 60%;
-        padding: 2% 5%;
-    }
-    .signupinBtn{
-        font-size: 13px;
-    }
-}
-
-
-@media(max-width:768px){
-    .signupCard{
-        width: 85%;
-        padding:2% 5%;
-        margin: 5% 0;
-    }
-    .signinCard{
-        width: 80%;
-        padding: 2% 5%;
-    }
-    .sidebar{
-        width:15%
-    }
-    .studentAdmin{
-        display: none;
-    }
-    .sidebarIcon{
-        display: block;
-    }
-    /* .sidebar-container{
-            position: fixed;
-            flex-direction: column;
-            align-items: start;
-            top: 0;
-            gap: 30px;
-            background-color:#4F74DF;;
-            width: 350px;
-            height: 100%;
-            /* z-index: 2;
-            transition: right 0.5s; 
-            left: 350px;*/
-
-    } 
-  
-}
-
-@media(max-width:576px){
-    .signupCard{
-        width: 75%;
-        padding:2% 5%;
-        margin: 5% 0;
-    }
-    .formLabel{
-        font-size: 14px;
-    }
-    
-    .message{
-        font-size: 12px;
-    }
-    .signupCard h2{
-        font-size: 20px;
-    }
-    .signupinBtn{
-        font-size: 8px;
-        
-    }   
-    .signupCard Button{
-        font-size: 10px
-    }
-
-    .signinCard Button{
-        font-size: 9px
-    }
-
-    .signinCard{
-        width: 80%;
-        padding: 4% 5%;
-    }
-
-    .signinCard h2{
-        font-size: 18px;
-    }
-}
 
 .socialIcons{
     font-size: 100px;
@@ -198,7 +126,8 @@ background: linear-gradient(135deg, #4F74DF, #69C879);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-radius: 18px; 
+    padding: 2% 5%;
+    border-radius: 10px;
 }
 
 .socialIcon:hover{
@@ -206,10 +135,10 @@ background: linear-gradient(135deg, #4F74DF, #69C879);
     transition: 0.3s;
 }
 
-*{
+/* *{
     font-family: Nunito, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
     font-weight: 400;
-}
+} */
 
 /* .iconStyle:hover{
     color:white;
