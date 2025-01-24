@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 
 const columns = [
@@ -13,14 +12,13 @@ const columns = [
   },
   {
     field: 'phoneNumber',
-    headerName:'Phone No.',
+    headerName: 'Phone No.',
     width: 200,
   },
   {
     field: 'gender',
     headerName: 'Gender',
     width: 200,
-    // valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
   },
 ];
 
@@ -40,25 +38,21 @@ const rows = [
 const paginationModel = { page: 0, pageSize: 5 };
 
 
-function HoverCustomisedTable(){
+function HoverCustomisedTable() {
 
-// const rows = studentData
+  return (
+    <>
+      <Paper sx={{ height: 400, width: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{ pagination: { paginationModel } }}
+          pageSizeOptions={[5, 10]}
+          sx={{ border: 0 }}
+        />
 
-
-    return (
-        <>
-    <Paper sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
-         sx={{ border: 0 }}
-      />
-
-    </Paper>
-
-        </>
-    )
+      </Paper>
+    </>
+  )
 }
 export default HoverCustomisedTable

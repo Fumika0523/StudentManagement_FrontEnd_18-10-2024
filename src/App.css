@@ -6,7 +6,9 @@
 */
 background: #4F74DF;
 background: linear-gradient(135deg, #4F74DF, #69C879);
-height: 100vh;
+/* height: 100vh; */
+/* border:5px solid red; */
+justify-content: center;
 }
 
 .signinBtn{
@@ -87,19 +89,21 @@ height: 100vh;
     width: 20%;
     height: 100vh;
     background-color: #4e73df;
-    padding:1% 1.5%;
+    padding:0% 1.5%;
     text-align: start;
     position: sticky;
     top: 0;
     overflow: hidden;
   }
   .studentTitleIcon{
-    font-size: 40px;
+    font-size: 45px;
   }
 
   .dashTitle{
     font-weight: bold;
-    font-size: 20px;
+    font-size: 22px;
+
+    
   }
 
   .dashRow{
@@ -178,5 +182,17 @@ height: 100vh;
     background-color: grey  !important;
     cursor: pointer;
     color:"red" !important;
+}
+
+.sidebarItem:hover{
+    color: #4e73df;
+    font-weight: bold;
+}
+
+.sidebarItem{
+font-size: 90%;
+width:100%;
+text-align:start;
+padding:3% 10%;
 }
 

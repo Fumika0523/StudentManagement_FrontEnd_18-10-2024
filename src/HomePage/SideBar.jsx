@@ -13,6 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { GiHamburgerMenu } from "react-icons/gi";
 
 
 function SideBar() {
@@ -41,18 +42,37 @@ function SideBar() {
         setExpanded(!expanded);
       };
 
+      const sideBarFun = ()=>{
+        document.getElementById("sideWidth").style.maxWidth = "15%";
+        document.getElementById("sideTitle").style.display="none";
+        document.getElementById("sideTitleIcon").style.fontSize="200px";
+        document.getElementById("dashboard").style.display="none";
+        document.getElementById("component").style.display="none";
+        document.getElementById("expandIcon").style.display="none";
+        document.getElementById("utilities").style.display="none"
+        document.getElementById("page").style.display="none";
+        document.getElementById("chart").style.display="none";
+        document.getElementById("tables").style.display="none";
+        console.log("Function is called")
+      }
 
     const navigate = useNavigate()
     return (
         <>
-            <div className="sideBarStyle" >
-                <Container >
-                <div className="dashRow row text-white "
+            <div className="sideBarStyle" id="sideWidth">
+              <div className="row">
+              <GiHamburgerMenu className="text-end fs-1 my-2" onClick={()=>sideBarFun()}/>
+              </div>
+              <div className="row ">
+          <Container >
+               
+                <div className="dashRow row text-white" id="sideTitleIcon"
                 >
-               <PiStudentBold className="col-md-3 studentTitleIcon text-right" style={{textAlign:"right"}}/> <div className="col-md-9 dashTitle p-0 " >STUDENT ADMIN</div>
+               <PiStudentBold className="text-end col-md-3 studentTitleIcon" /> 
+               <div className="col-md-9 tex-start dashTitle p-0" id="sideTitle" >STUDENT ADMIN</div>
                 </div>
-                <div className="row dashRow row align-items-center text-white">
-                <AiFillDashboard className="col-3 fs-5" /><div className="col-9 fw-bold" onClick={() => { navigate('/dashboard') }} style={{fontSize:"18px",cursor: "pointer"}} >Dashboard</div>
+                <div className="row dashRow row align-items-center text-white" >
+                <AiFillDashboard className="col-3 fs-5" /><div className="col-9 fw-bold" onClick={() => { navigate('/dashboard') }} style={{fontSize:"18px",cursor: "pointer"}} id="dashboard" >Dashboard</div>
                 </div>
 
         {/* COMPONENT */}
@@ -60,24 +80,27 @@ function SideBar() {
         className="row dashRow Component"
          onClick={() => setOpen(!open)}  aria-controls="example-collapse-text"  aria-expanded={open}>
       <IoSettings className="col-3 p-0"/>
-      <div className="col-7 ps-2">
+      <div id="component" className="col-7 ps-2">
       Component</div>
-      <ExpandMore  onClick={handleExpandClick} className="col-2 p-0" >    <ExpandMoreIcon className="text-white " aria-expanded={expanded} aria-label="show more" expand={expanded} style={{textAlign:"right"}}/>
+      <ExpandMore id="expandIcon" onClick={handleExpandClick} className="col-2 p-0" >    <ExpandMoreIcon className="text-white " aria-expanded={expanded} aria-label="show more" expand={expanded} style={{textAlign:"right"}}/>
     
     </ExpandMore>
        <Collapse in={open}>
-       <div id="example-collapse-text" style={{borderRadius:"10px", backgroundColor:"white",padding:"3%", margin:"2% 10% 0% 10%",width:"220px"}}>
-        <div className="btn btn-no-outline "  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={() => { navigate('/studentdata') }} >
+       <div id="example-collapse-text" 
+       style={{borderRadius:"10px", backgroundColor:"white",color:"black",padding:"3%", margin:"2% 10% 0% 10%",width:"220px"
+       }
+       }       >
+        <div className="sidebarItem"   onClick={() => { navigate('/studentdata') }} >
             View All Student
         </div>
-        <div className="btn btn-no-outline "  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={()=>{navigate('/batchdata')}}>
+        <div className="sidebarItem"  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={()=>{navigate('/batchdata')}}>
             View All Batch
         </div>
-        <div className="btn btn-no-outline "  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={()=>{navigate('/coursedata')}}>
+        <div className="sidebarItem"  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={()=>{navigate('/coursedata')}}>
             View All Course
         </div>
         
-        <div className="btn btn-no-outline"
+        <div className="sidebarItem"
         style={{fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%"}}
         onClick={()=>{navigate('/admissiondata')}}>
           View All Admission
@@ -89,25 +112,26 @@ function SideBar() {
       <div className="row dashRow ">
             {/* UTILITIES */}
          <FiTool className="col-3" />
-         <div className="col-9">Utilities</div>
+         <div className="col-9" id="utilities">Utilities</div>
       </div>
       <div className="row dashRow ">
              {/* PAGES */}
                <FaFolder className="col-3"/>
-               <div className="col-9">Page</div>
+               <div className="col-9" id="page">Page</div>
       </div>
       <div className="row dashRow">
             {/* CHART */}
                 <FaChartArea className="col-3"  />
-                <div  className="col-9">Charts</div>
+                <div  className="col-9" id="chart">Charts</div>
       </div>
       
           <div className="row dashRow">
               {/* Tables */}
                 <FaTable className="col-3"/>
-                <div className="col-9">Tables</div>
+                <div className="col-9" id="tables">Tables</div>
           </div>
           </Container>
+          </div>
             </div>
               
             

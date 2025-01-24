@@ -47,8 +47,9 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
 
     return(
         <>
-        <div className='signInStyle container-fluid '>
-        <div className='row justify-content-center flex-column align-items-center d-flex gap-4' style={{margin:"6% 0"}}>
+        <div className='signInStyle  justify-content-center d-flex container-fluid min-vh-100 align-items-center'>
+        <div className='row justify-content-center flex-column align-items-center w-100 gap-4'
+        >
          
             {/* TITLE */}
             <Form onSubmit={formik.handleSubmit} className='signinCard  col-12 col-sm-7 col-md-6 col-lg-4  px-4'>
@@ -76,7 +77,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
             </div>
                 {/* Sign In Button */}
               <div className="row d-flex justify-content-center">
-              <div  type="submit" className="sign-Btn fw-bold my-4" style={{fontSize:"18px",width:"94%"}}>SIGN IN</div >
+              <Button  type="submit" className="sign-Btn fw-bold my-4" style={{fontSize:"18px",width:"94%",outline:"none",border:"none"}}>SIGN IN</Button >
               </div>
               {/* or sign up */}
               <div className='row  p-1'>

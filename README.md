@@ -41,3 +41,6 @@ Medium        >>    md      >>      >768px
 Large         >>    lg      >>      >992px
 Extra Large         >> lg     >>    >1200px
 Extra extra large   >> xxl      >>   >1400px
+
+useRef is a React Hook that lets you reference a value that's not needed for rendering. const ref = useRef(initialValue)
+https://react.dev/reference/react/useRef
