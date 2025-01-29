@@ -91,28 +91,32 @@ function SideBar() {
               <AiFillDashboard  />
               </div>      
               </div>
-
-              <div
-        onClick={() => setOpen(!open)}
-        aria-controls="example-collapse-text"
-        aria-expanded={open}
-      
+      <div className="row"  
+      id="expandIcon" 
+      onClick={handleExpandClick}
       >
-        
-        <MdGridView 
-          id="expandIcon" 
-          onClick={handleExpandClick}
-        className="border border-black col-8" style={{fontSize:"50px",color:"white"}} />
+          <div
+            onClick={() => setOpen(!open)}
+            aria-controls="example-collapse-text"
+            aria-expanded={open}
+            className="d-flex align-items-center justify-content-end gap-0 p-0"
+            style={{flexDirection:"row"}}
+          >
+            
+            <MdGridView 
+             
+            className=" smallSidebarIcon" style={{fontSize:"50px",color:"white",paddingLeft:"5px",}} />
 
-          { expanded?
-              
-              <IoIosArrowForward/>
-                 :
-              <IoIosArrowDown/>
-              }
+              { expanded?
+                  
+                  <IoIosArrowDown  className="text-white fs-4"/>
+                    :
+                  <IoIosArrowForward className="text-white fs-4"/>
+                  }
+          </div>
       </div>
       <Collapse in={open}>
-        <div id="example-collapse-text" style={{border:"1px solid red"}}>
+        <div id="example-collapse-text">
        
              {/* StudentData */}
       <div className="component-icon" onClick={() => { navigate('/studentdata')}}
@@ -141,7 +145,8 @@ function SideBar() {
 
               {/* Chart */}
               <div className="row smallSideRow">
-              <div className="smallSidebarIcon" onClick={()=>navigate("/chartdata")}>
+              <div className="smallSidebarIcon" onClick={()=>navigate("/chartdata")}
+                style={{marginTop:"20pxgit"}}>
               <FaChartArea />
               </div>
               </div>
