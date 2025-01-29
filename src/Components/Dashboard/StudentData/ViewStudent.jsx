@@ -24,12 +24,13 @@ function ViewStudent(){
         console.log("Student data is called........")
         let res = await axios.get(`${url}/allstudent`,config)
         console.log("StudentData",res.data.studentData)
+        console.log("StudentData",res)
         setStudentData(res.data.studentData)
         }
         useEffect(()=>{
          getStudentData()
         },[])
-    //console.log(studentData)
+    console.log(studentData)
 
     return(
         <>

@@ -22,12 +22,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: '#5a5c69',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: '16px',
-    padding: '10px',
+    fontSize: '17px',
+    // padding: '10px',
+    
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: '14px',
+    fontSize: '15px',
     textAlign: 'center',
+    // padding: '10px',
   },
 }));
 
@@ -36,7 +38,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
   '&:hover': {
-    backgroundColor: '#b3e5fc',
+    backgroundColor: '#daf1fc'
+    //'#b3e5fc',
   },
 }));
 
@@ -96,6 +99,7 @@ const CustomizedTables = ({ studentData,setStudentData }) => {
         <Table>
           <TableHead>
             <TableRow>
+            <StyledTableCell >No.</StyledTableCell>
               <StyledTableCell>Actions</StyledTableCell>
               <StyledTableCell>Student ID</StyledTableCell>
               <StyledTableCell>Student Name</StyledTableCell>
@@ -107,8 +111,10 @@ const CustomizedTables = ({ studentData,setStudentData }) => {
             </TableRow>
           </TableHead>
           <TableBody>
+
             {studentData?.map((student) => (
               <StyledTableRow key={student._id}>
+              <StyledTableCell className='p-0'>1</StyledTableCell>
                 <StyledTableCell>
                   <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                     <FaEdit

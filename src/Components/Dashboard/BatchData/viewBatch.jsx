@@ -31,7 +31,7 @@ function viewBatch(){
     return(
         <>
         {/* <h1>View Batch</h1> */}
-        <div className="d-flex">
+        <div className="d-flex" >
         <SideBar/>
         <Box style={{width:"80%"}} sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
         <NavBar style={{ positon:"sticky",top:"0"}}/>

@@ -77,7 +77,7 @@ let username = sessionStorage.getItem('username')
     <Box  >
       <AppBar position="static" style={{backgroundColor:"white"}} >
       <Toolbar>
-      <Search style={{border:"1px solid grey", width:"80%"}}>
+      <Search style={{border:"1px solid grey", width:"40%"}}>
             <SearchIconWrapper style={{borderColor:"black", color:"grey"}}>
               <SearchIcon />
             </SearchIconWrapper>
