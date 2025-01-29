@@ -24,8 +24,7 @@ import { MdGridView } from "react-icons/md";
 import { FaSchool } from "react-icons/fa6";
 import { FaSchoolFlag } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
-import { IoIosArrowUp } from "react-icons/io";
-import { MdKeyboardArrowRight } from "react-icons/md";
+import { IoIosArrowForward } from "react-icons/io";
 
 function SideBar() {
     const [open, setOpen] = useState(false); //Toggling our second icon to get sub icon
@@ -33,12 +32,6 @@ function SideBar() {
     const [isSidebarOpen, setIsSidebarOpen] = useState (true); // State to toggle the sidebar
 
 
-    const iconStyle={
-        marginLeft:"3%",
-        marginRight:"7%",
-        fontSize:"20px",
-        color: "#bfbfbf",
-    }
 
     const ExpandMore = styled((props) => {
         const { expand, ...other } = props;
@@ -98,38 +91,30 @@ function SideBar() {
               <AiFillDashboard  />
               </div>      
               </div>
-              {/* COMPONENT  */}
-              <div className="row border mt-3"
-                style={{rowGap:"0px",padding:"0px 0px 0px 15px"}} 
-              onClick={() => setOpen(!open)}  aria-controls="example-collapse-text"  
-              aria-expanded={open}
-              >
-              
-              <div className="d-flex border border-danger flex-row justify-content-end"
-              style={{rowGap:"0px",padding:"0px"}} 
-              aria-expanded={expanded} aria-label="show more" expand={expanded} 
-               id="expandIcon" 
-               onClick={handleExpandClick}
-               >
-               <MdGridView className="border border-black col-8" style={{fontSize:"50px",color:"white"}} />
-               <ExpandMore id="expandIcon" 
-               className="border border-primary text-white">    
 
-              { expanded?
+              <div
+        onClick={() => setOpen(!open)}
+        aria-controls="example-collapse-text"
+        aria-expanded={open}
+      
+      >
+        
+        <MdGridView 
+          id="expandIcon" 
+          onClick={handleExpandClick}
+        className="border border-black col-8" style={{fontSize:"50px",color:"white"}} />
+
+          { expanded?
               
-              <MdKeyboardArrowRight  className="col-4 border" style={{fontSize:"100px"}}/>
+              <IoIosArrowForward/>
                  :
-                  <IoIosArrowDown className="fs-3 p-0" />}
-                 
-
-              </ExpandMore>
-              </div>  
-              </div>
-
-          <Collapse in={open} >
-       <div id="example-collapse-text " className="
-        align-items-center d-flex flex-column">
-      {/* StudentData */}
+              <IoIosArrowDown/>
+              }
+      </div>
+      <Collapse in={open}>
+        <div id="example-collapse-text" style={{border:"1px solid red"}}>
+       
+             {/* StudentData */}
       <div className="component-icon" onClick={() => { navigate('/studentdata')}}
         style={{cursor:"pointer"}}>
       <PiStudent />
@@ -149,7 +134,9 @@ function SideBar() {
       <GiEntryDoor />
       </div>
       </div>
-          </Collapse>
+    
+      </Collapse>
+
         
 
               {/* Chart */}
