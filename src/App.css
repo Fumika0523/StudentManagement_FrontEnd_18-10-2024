@@ -199,6 +199,21 @@ text-align:start;
 padding:3% 10%;
 }
 
+.arrowIcon{
+    display:none;
+    /* display: flex;
+    justify-content: end; */
+    border:1px solid red;
+}
+
+.MdGridViewIcon:hover + .arrowIcon{
+    display: block;    
+}
+
+.MdGridViewIcon:hover + .conponentDiv{
+    padding: 0px;
+}
+
 .smallSidebarIcon{
     /* border: 1px solid greenyellow; */
     color: white;

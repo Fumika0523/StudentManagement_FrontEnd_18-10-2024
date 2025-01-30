@@ -30,8 +30,7 @@ function SideBar() {
     const [open, setOpen] = useState(false); //Toggling our second icon to get sub icon
     const [expanded, setExpanded] = React.useState(false); //to open component, when its open the down-arrow should show
     const [isSidebarOpen, setIsSidebarOpen] = useState (true); // State to toggle the sidebar
-
-
+   
 
     const ExpandMore = styled((props) => {
         const { expand, ...other } = props;
@@ -59,14 +58,12 @@ function SideBar() {
              id="sideWidth">
             <Container >
                 <div className="row smallSideRow mb-4 ">
-                <div className="hamburger-icon text-white"
+                <div className="hamburger-icon text-white d-flex"
                   style={{position:"absolute",zIndex:1000,cursor:"pointer",
                     textAlign: isSidebarOpen ? "left" : "center",
-                    display: isSidebarOpen ? "flex" : "flex",
                     justifyContent: isSidebarOpen ? "end" : "center",
                     alignContent:"center",
                     right:isSidebarOpen ? "10px" : "0px",
-                    // bottom:isSidebarOpen ? "0px" : "5%",
                   }}
                     onClick={()=>setIsSidebarOpen(!isSidebarOpen)}>
                     <MdKeyboardDoubleArrowRight style={{fontSize:"40px"}}/>
@@ -91,27 +88,28 @@ function SideBar() {
               <AiFillDashboard  />
               </div>      
               </div>
-      <div className="row"  
-      id="expandIcon" 
-      onClick={handleExpandClick}
-      >
+          <div className="row border border-black"
+           
+            id="expandIcon" 
+            onClick={handleExpandClick}
+              >
           <div
             onClick={() => setOpen(!open)}
             aria-controls="example-collapse-text"
             aria-expanded={open}
-            className="d-flex align-items-center justify-content-end gap-0 p-0"
-            style={{flexDirection:"row"}}
-          >
+            className="d-flex align-items-center border justify-content-end border-warning 
+          componentDiv" 
+           >
             
             <MdGridView 
              
-            className=" smallSidebarIcon" style={{fontSize:"50px",color:"white",paddingLeft:"5px",}} />
-
+            className="MdGridViewIcon smallSidebarIcon border " style={{fontSize:"50px",color:"white"}} />
+              
               { expanded?
-                  
-                  <IoIosArrowDown  className="text-white fs-4"/>
-                    :
-                  <IoIosArrowForward className="text-white fs-4"/>
+              <IoIosArrowDown  className="text-white  border"/>
+              :
+              <IoIosArrowForward className="arrowIcon text-white"
+              />
                   }
           </div>
       </div>
@@ -140,9 +138,6 @@ function SideBar() {
       </div>
     
       </Collapse>
-
-        
-
               {/* Chart */}
               <div className="row smallSideRow">
               <div className="smallSidebarIcon" onClick={()=>navigate("/chartdata")}
