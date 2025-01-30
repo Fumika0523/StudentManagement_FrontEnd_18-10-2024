@@ -90,11 +90,9 @@ justify-content: center;
 }
 
 .sideBarStyle {
-    /* width: 20%; */
     transition: width 0.3s ease;
     min-height: 100vh;
     background-color: #4e73df;
-    /* padding:0% 1.5%; */
     text-align: start;
     position: sticky;
     top: 0;
