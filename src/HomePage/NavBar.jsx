@@ -7,12 +7,16 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import InputBase from '@mui/material/InputBase';
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { IoMdNotifications } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
+import Paper from '@mui/material/Paper';
+
 
 export default function NavBar() {
+  
   const navigate = useNavigate()
+  
   const token = sessionStorage.getItem('token')
   console.log("token", token)
 
@@ -48,22 +52,22 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'info',
-  // width: '100%',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
-}));
+// const StyledInputBase = styled(InputBase)(({ theme }) => ({
+//   color: 'info',
+//   // width: '100%',
+//   '& .MuiInputBase-input': {
+//     padding: theme.spacing(1, 1, 1, 0),
+//     // vertical padding + font size from searchIcon
+//     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+//     transition: theme.transitions.create('width'),
+//     [theme.breakpoints.up('sm')]: {
+//       width: '12ch',
+//       '&:focus': {
+//         width: '200ch',
+//       },
+//     },
+//   },
+// }));
 
 const handleLogOut = ()=>{
   sessionStorage.removeItem('token')
@@ -77,15 +81,20 @@ let username = sessionStorage.getItem('username')
     <Box  >
       <AppBar position="static" style={{backgroundColor:"white"}} >
       <Toolbar>
-      <Search style={{border:"1px solid grey", width:"40%"}}>
-            <SearchIconWrapper style={{borderColor:"black", color:"grey"}}>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+      <Paper
+      component="form"
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 450 }}
+    >
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Search"
+        inputProps={{ 'aria-label': 'search' }}
+      />
+      <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+      
+      </Paper>
 
         {/* ICONS */}
         <Dropdown className='d-flex justify-content-end ' >

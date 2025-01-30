@@ -198,7 +198,7 @@ padding:3% 10%;
 }
 
 .arrowIcon{
-    display:none;
+    display:block;
     /* display: flex;
     justify-content: end; */
     border:1px solid red;
@@ -217,7 +217,7 @@ padding:3% 10%;
     color: white;
     font-size: 45px;
     cursor: pointer;
-    justify-content: center;
+    justify-content: start;
     display: flex;
 }
 

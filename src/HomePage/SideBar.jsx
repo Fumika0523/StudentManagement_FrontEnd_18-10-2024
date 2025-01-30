@@ -52,7 +52,7 @@ function SideBar() {
         <>
           <div className="sideBarStyle"
             style={{
-              width: isSidebarOpen ? "20%" : "6%",
+              width: isSidebarOpen ? "20%" : "8%",
               padding:isSidebarOpen ? "0.5% 1.5%":"0.5% 0%",
             }}
              id="sideWidth">
@@ -81,15 +81,16 @@ function SideBar() {
               </div>
           
               {/* Dashboard */}
-              <div className="row smallSideRow mt-3 "
+              <div className="row smallSideRow mt-3 border border-danger "
               >
               <div className="smallSidebarIcon"
               onClick={()=> navigate("/dashboard")} >
-              <AiFillDashboard  />
+              <AiFillDashboard className="border border-danger" />
               </div>      
               </div>
-          <div className="row border border-black"
-           
+          
+          {/* Componrnt */}
+          <div className="row border border-danger"
             id="expandIcon" 
             onClick={handleExpandClick}
               >
@@ -97,22 +98,29 @@ function SideBar() {
             onClick={() => setOpen(!open)}
             aria-controls="example-collapse-text"
             aria-expanded={open}
-            className="d-flex align-items-center border justify-content-center border-warning 
-          componentDiv" 
+            // className="d-flex justify-content-center"
+          //   align-items-center border justify-content-center border-warning 
+          // // componentDiv" 
            >
-            
-            <MdGridView 
-             
-            className="MdGridViewIcon smallSidebarIcon border " style={{fontSize:"50px",color:"white"}} />
-              
-              { expanded?
-             
-              <IoIosArrowForward className="arrowIcon text-white"
+            <div className="border border-black d-flex align-items-center justify-content-start
+          componentDiv">
+            <MdGridView className="MdGridViewIcon smallSidebarIcon  " style={{fontSize:"50px",color:"white"}} />
+
+            <span>
+              ABC
+            </span>
+            </div>
+
+            <span className="border border-danger" >
+              { !expanded?
+         
+              <IoIosArrowForward className="arrowIcon text-white r"
               />
               :
-              <IoIosArrowDown  className="text-white  border"/>
-             
-                  }
+              <IoIosArrowDown  className="text-white arrowIcon  border"/>
+              }
+             </span>
+
           </div>
       </div>
       <Collapse in={open}>
