@@ -204,18 +204,21 @@ function SideBar() {
               :
                 
               <>
-              <div className="dashRow row text-white" id="sideTitleIcon"
+              <div className="dashRow d-flex flex-row justify-content-center align-items-end text-white gap-1 pb-2 pt-0" id="sideTitleIcon"
                 >
-                <FaSchoolFlag className="text-end col-lg-2 col-md-2 col-sm-4 studentTitleIcon  fs-1 p-0"/>
-               <div className="col-lg-10 col-md-10 col-sm-8 tex-start dashTitle  fs-3">Student Portal</div>
+                  <div style={{fontSize:"55px"}}><FaSchoolFlag /></div>
+               <div className="fw-bold"
+               style={{fontSize:"33px"}}>Student Portal</div>
                 </div>
+
+                {/* Dashboard */}
                 <div className="row dashRow row text-white" >
-                <AiFillDashboard className="col-3  fs-5" /><div className="col-9 fw-bold" onClick={() => { navigate('/dashboard') }} style={{fontSize:"18px",cursor: "pointer"}} id="dashboard" >Dashboard</div>
+                <AiFillDashboard className="col-3  fs-4" /><div className="col-9 fw-bold" onClick={() => { navigate('/dashboard') }} style={{fontSize:"18px",cursor: "pointer"}} id="dashboard" >Dashboard</div>
                 </div>
 
             {/* COMPONENT */}
             <div 
-            className="dashRow row"
+            className="dashRow"
             onClick={handleExpandClick}
              >
           
@@ -224,13 +227,13 @@ function SideBar() {
             onClick={() => setOpen(!open)}
             aria-controls="example-collapse-text"
             aria-expanded={open}
-            className="d-flex  align-items-center">
+            className="d-flex row align-items-center">
             
-            <IoSettings className="col-2 "/>
-           <div id="component" className="ps-4 col-8 ">
+            <IoSettings className="col-3 fs-4"/>
+           <div id="component" className="col-7 ">
             Component</div>
               
-              {expanded?
+              {!expanded?
              
               <IoIosArrowForward className="col-2 fs-4 text-white"
               />
@@ -265,22 +268,23 @@ function SideBar() {
       
        {/* UTILITIES */}
         <div className="row dashRow">
-        <FiTool className="col-3" />
+        <FiTool className="col-3 fs-3" />
          <div className="col-9" id="utilities">Utilities</div>
-            </div>
+          </div>
+
              {/* PAGES */}
-            <div className="row dashRow ">               <FaFolder className="col-3"/>
+            <div className="row dashRow ">               <FaFolder className="col-3 fs-3"/>
                <div className="col-9" id="page">Page</div>
             </div>
             <div className="row dashRow">
             {/* CHART */}
-                <FaChartArea className="col-3"  />
+                <FaChartArea className="col-3 fs-3"  />
                 <div  className="col-9" id="chart">Charts</div>
             </div>
       
             <div className="row dashRow">
               {/* Tables */}
-                <FaTable className="col-3"/>
+                <FaTable className="col-3 fs-3"/>
                 <div className="col-9" id="tables">Tables</div>
             </div>
             </>
