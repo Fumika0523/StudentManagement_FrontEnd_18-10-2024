@@ -222,32 +222,20 @@ padding:3% 10%;
 .portalIcon{
     text-align: center;
     color: white;
-    font-size: 50px;
+    font-size: 45px;
     cursor: pointer;
     justify-content: center;
     display: flex;
-    background-color:darkblue !important;
+    background-color:darkblue ;
     border-radius:5px;
 }
 
 .bgColor{
     color: white;
-    font-size: 45px !important;
+    font-size: 40px !important;
     background:none !important;
 }
 
-
-
-.portalIcon{
-    text-align: center;
-    color: white;
-    font-size: 50px;
-    cursor: pointer;    
-    justify-content: center;
-    display: flex;
-    background-color:darkblue;
-    border-radius:5px;
-}
  
  
 .bgColor:hover{

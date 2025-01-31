@@ -76,9 +76,8 @@ function SideBar() {
 
               {/* Logo Icon */}
               <div className="border border-black my-1"
-              // style={{paddingTop:isSidebarOpen ? "0%" : "35%"}}
               >
-              <div className="border border-black portalIcon mx-3" >
+              <div className="border border-black portalIcon mx-2" >
               <FaSchoolFlag/>
               </div>
               </div>
@@ -136,7 +135,7 @@ function SideBar() {
       {/* StudentData */}
       <div className="border border-danger my-1">
       <div className="component-icon mx-3" onClick={() => { navigate('/studentdata')}}
-        style={{cursor:"pointer"}}>
+      style={{cursor:"pointer"}}>
       <PiStudent />
       </div>
       </div>
