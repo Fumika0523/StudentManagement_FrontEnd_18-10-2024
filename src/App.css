@@ -217,8 +217,6 @@ padding:3% 10%;
     color: white;
     font-size: 45px;
     cursor: pointer;
-    justify-content: start;
-    display: flex;
 }
 
 .portalIcon{
@@ -228,10 +226,39 @@ padding:3% 10%;
     cursor: pointer;
     justify-content: center;
     display: flex;
-    background-color:darkblue;
+    background-color:darkblue !important;
     border-radius:5px;
 }
 
+.bgColor{
+    color: white;
+    font-size: 45px !important;
+    background:none !important;
+}
+
+
+
+.portalIcon{
+    text-align: center;
+    color: white;
+    font-size: 50px;
+    cursor: pointer;    
+    justify-content: center;
+    display: flex;
+    background-color:darkblue;
+    border-radius:5px;
+}
+ 
+ 
+.bgColor:hover{
+    transform: scale(1.09);
+    transition: 0.3s;
+    background-color:#809ae7 !important;
+    border-radius: 5px;
+    color:#2c51c1;
+}
+
+ 
 
 .smallSidebarIcon:hover{
     transform: scale(1.09);
@@ -242,16 +269,14 @@ padding:3% 10%;
 }
 
 .component-icon{
-    font-size: 33px;
+    font-size: 35px;
     color: white;
     /* border: 1px solid; */
     /* width: 100%; */
     align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 5px 10px;
-    margin-top: 7%;   
+    justify-content: center;      
 }
 
 .component-icon:hover{

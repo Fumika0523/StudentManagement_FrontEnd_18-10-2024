@@ -52,66 +52,73 @@ function SideBar() {
         <>
           <div className="sideBarStyle"
             style={{
-              width: isSidebarOpen ? "20%" : "8%",
-              padding:isSidebarOpen ? "0.5% 1.5%":"0.5% 0%",
+              width: isSidebarOpen ? "20%" : "6%",
+              padding:isSidebarOpen ? "0.5% 0%":"0.5% 0%",
             }}
              id="sideWidth">
-            <Container >
-                <div className="row smallSideRow mb-4 ">
+            <div  className="">
+
+                <div className="row border border-warning position-relative" style={{height:"50px",width:"125px"}}>
                 <div className="hamburger-icon text-white d-flex"
-                  style={{position:"absolute",zIndex:1000,cursor:"pointer",
-                    textAlign: isSidebarOpen ? "left" : "center",
-                    justifyContent: isSidebarOpen ? "end" : "center",
-                    alignContent:"center",
-                    right:isSidebarOpen ? "10px" : "0px",
-                  }}
+                 tyle={{position:"absolute",zIndex:1000,cursor:"pointer",
+                  textAlign: isSidebarOpen ? "left" : "center",
+                  justifyContent: isSidebarOpen ? "end" : "center",
+                  alignContent:"center",
+                  right:isSidebarOpen ? "10px" : "0px",
+                }}
                     onClick={()=>setIsSidebarOpen(!isSidebarOpen)}>
                     <MdKeyboardDoubleArrowRight style={{fontSize:"45px"}}/>
             </div>
               </div>
+               {/* Arrow icon ends here */}
                {!isSidebarOpen ?
               <>
 
-              {/* Student Icon */}
-              <div className="row smallSideRow"
-              style={{paddingTop:isSidebarOpen ? "0%" : "35%"}}>
-              <div className="portalIcon mt-1" >
+              {/* Logo Icon */}
+              <div className="border border-black my-1"
+              // style={{paddingTop:isSidebarOpen ? "0%" : "35%"}}
+              >
+              <div className="border border-black portalIcon mx-3" >
               <FaSchoolFlag/>
               </div>
               </div>
-          
+              {/* Logo Icon ends*/}
+
               {/* Dashboard */}
-              <div className="row smallSideRow mt-3 border border-danger "
+              <div className="border border-danger my-1 "
               >
-              <div className="smallSidebarIcon"
+              <div className=" mx-3 bgColor portalIcon"
               onClick={()=> navigate("/dashboard")} >
-              <AiFillDashboard className="border border-danger" />
+              <AiFillDashboard/>
               </div>      
               </div>
           
+              <div className="border border-danger my-1"
+              >
+              <div className=" mx-3 bgColor portalIcon"
+              onClick={handleExpandClick}
+              >
+              <MdGridView/>
+              </div>      
+              </div>
+
+
           {/* Componrnt */}
           <div className="row border border-danger"
             id="expandIcon" 
-            onClick={handleExpandClick}
-              >
+            onClick={handleExpandClick}>
           <div
             onClick={() => setOpen(!open)}
             aria-controls="example-collapse-text"
             aria-expanded={open}
-            // className="d-flex justify-content-center"
-          //   align-items-center border justify-content-center border-warning 
-          // // componentDiv" 
+           className="d-flex justify-content-end align-items-center border "
            >
-            <div className="border border-black d-flex align-items-center justify-content-start
+            <div className="border border-black d-flex flex-row align-items-center justify-content-center
           componentDiv">
-            <MdGridView className="MdGridViewIcon smallSidebarIcon  " style={{fontSize:"50px",color:"white"}} />
-
-            <span>
-              ABC
-            </span>
+            <MdGridView className="MdGridViewIcon smallSidebarIcon " style={{fontSize:"50px",color:"white"}} />
             </div>
 
-            <span className="border border-danger" >
+            <div className="border border-danger" >
               { !expanded?
          
               <IoIosArrowForward className="arrowIcon text-white r"
@@ -119,7 +126,7 @@ function SideBar() {
               :
               <IoIosArrowDown  className="text-white arrowIcon  border"/>
               }
-             </span>
+             </div>
 
           </div>
       </div>
@@ -127,55 +134,68 @@ function SideBar() {
         <div id="example-collapse-text">
        
       {/* StudentData */}
-      <div className="component-icon" onClick={() => { navigate('/studentdata')}}
+      <div className="border border-danger my-1">
+      <div className="component-icon mx-3" onClick={() => { navigate('/studentdata')}}
         style={{cursor:"pointer"}}>
       <PiStudent />
       </div>
+      </div>
+
       {/* Batch Data*/}
-      <div className="component-icon" onClick={()=>{navigate('/batchdata')}}>
+      <div className="border border-danger my-1">
+      <div className="component-icon mx-3" onClick={()=>{navigate('/batchdata')}}>
       <FaUsersViewfinder  />
       </div>
+      </div>
+
+
       {/* Course Data */}
-      <div className="component-icon" onClick={()=>{navigate('/coursedata')}}>
+      <div className="border border-danger my-1">
+      <div className="component-icon mx-3" onClick={()=>{navigate('/coursedata')}}>
       <MdMenuBook/>         
       </div>
+      </div>
+
       {/* Admission Data */}
-      <div className="component-icon" onClick={()=>{navigate('/admissiondata')}}
+      <div className="border border-danger my-1">
+      <div className="component-icon mx-3" onClick={()=>{navigate('/admissiondata')}}
         style={{fontSize:"40px"}}
         >
       <GiEntryDoor />
       </div>
       </div>
-    
+      </div>
       </Collapse>
+
               {/* Chart */}
-              <div className="row smallSideRow"
-              style={{marginTop:"20px"}}>
-              <div className="smallSidebarIcon" onClick={()=>navigate("/chartdata")}
-                style={{marginTop:"20pxgit"}}>
+              <div className="border border-danger my-1 ">
+              <div className=" mx-3 bgColor portalIcon"
+               onClick={()=>navigate("/chartdata")}
+              >
               <FaChartArea />
               </div>
               </div>
 
               {/* Utilities */}
-              <div className="row smallSideRow">
-              <div className="smallSidebarIcon"
+              <div className="border border-danger my-1 ">
+              <div className="mx-3 bgColor portalIcon"
               onClick={()=>navigate("/utilitiesdata")}>
               <FiTool/>
               </div>
               </div>
 
               {/* Page */}
-              <div className="row smallSideRow">
-              <div className="smallSidebarIcon"
+              <div className="border border-danger my-1 ">
+              <div className="mx-3 bgColor portalIcon"
                 onClick={()=>navigate("/pagedata")}>
                 <FaFolder/>
               </div>
               </div>
 
               {/* Table */}
-              <div className="row smallSideRow">
-              <div className="smallSidebarIcon" onClick={()=> navigate("/tabledata")}>
+              <div className="border border-danger my-1 ">
+              <div className="mx-3 bgColor portalIcon" 
+              onClick={()=> navigate("/tabledata")}>
               <FaTable />
               </div>
               </div>
@@ -265,8 +285,8 @@ function SideBar() {
             </div>
             </>
             }
-          </Container>
-              {/* </div> */}
+          {/* </Container> */}
+              </div>
             </div>
               
             
