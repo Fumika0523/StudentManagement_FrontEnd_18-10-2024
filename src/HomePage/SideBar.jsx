@@ -102,12 +102,12 @@ function SideBar() {
             aria-expanded={open}
            className="mx-3 d-flex align-items-center justify-content-center"
            >
-            <div className="border bgColor portalIcon border-black  ">
+            <div className="smallSidebarIcon border bgColor portalIcon border-black  ">
             <MdGridView />
             </div>
           
 
-            <div className="border border-danger arrow" >
+            <div className="border border-danger arrowIcon" >
               { !expanded?
          
               <IoIosArrowForward className="text-white"

@@ -245,13 +245,14 @@ padding:3% 10%;
     color:#2c51c1;
 }
 
-/* .smallSidebarIcon:hover + .arrow {
+.smallSidebarIcon:hover + .arrowIcon {
 display: block !important;
-} */
+justify-content: end !important;
+}
 
-/* .arrow{
+.arrowIcon{
     display: none;
-} */
+}
 
 .component-icon{
     font-size: 35px;
