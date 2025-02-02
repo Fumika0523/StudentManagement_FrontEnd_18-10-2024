@@ -92,42 +92,32 @@ function SideBar() {
               </div>      
               </div>
           
-              <div className="border border-danger my-1"
-              >
-              <div className=" mx-3 bgColor portalIcon"
-              onClick={handleExpandClick}
-              >
-              <MdGridView/>
-              </div>      
-              </div>
-
-
-          {/* Componrnt */}
-          <div className="row border border-danger"
+           {/* Componrnt */}
+          <div className="border border-danger"
             id="expandIcon" 
             onClick={handleExpandClick}>
           <div
             onClick={() => setOpen(!open)}
             aria-controls="example-collapse-text"
             aria-expanded={open}
-           className="d-flex justify-content-end align-items-center border "
+           className="mx-3 d-flex align-items-center justify-content-center"
            >
-            <div className="border border-black d-flex flex-row align-items-center justify-content-center
-          componentDiv">
-            <MdGridView className="MdGridViewIcon smallSidebarIcon " style={{fontSize:"50px",color:"white"}} />
+            <div className="border bgColor portalIcon border-black  ">
+            <MdGridView />
             </div>
+          
 
-            <div className="border border-danger" >
+            <div className="border border-danger arrow" >
               { !expanded?
          
-              <IoIosArrowForward className="arrowIcon text-white r"
+              <IoIosArrowForward className="text-white"
               />
               :
-              <IoIosArrowDown  className="text-white arrowIcon  border"/>
+              <IoIosArrowDown  className="text-white aborder"/>
               }
              </div>
-
-          </div>
+             </div>
+          
       </div>
       <Collapse in={open}>
         <div id="example-collapse-text">
@@ -146,7 +136,6 @@ function SideBar() {
       <FaUsersViewfinder  />
       </div>
       </div>
-
 
       {/* Course Data */}
       <div className="border border-danger my-1">
@@ -205,9 +194,9 @@ function SideBar() {
               <>
               <div className="dashRow d-flex flex-row justify-content-center align-items-end text-white gap-1 pb-2 pt-0" id="sideTitleIcon"
                 >
-                  <div style={{fontSize:"55px"}}><FaSchoolFlag /></div>
+                  <div style={{fontSize:"45px"}}><FaSchoolFlag /></div>
                <div className="fw-bold"
-               style={{fontSize:"33px"}}>Student Portal</div>
+               style={{fontSize:"30px"}}>Student Portal</div>
                 </div>
 
                 {/* Dashboard */}
@@ -241,29 +230,31 @@ function SideBar() {
                </div>
                 <Collapse in={open}>
                 <div id="example-collapse-text" 
-              style={{borderRadius:"10px", backgroundColor:"white",color:"black", marginTop:"5%",width:"230px",padding:"3% 0",
+              style={{borderRadius:"10px", backgroundColor:"white",color:"black", margin:"5% 5% 0% 5%",width:"230px",padding:"3% 0",
                }}>
 
               <div className="sidebarItem"   onClick={() => { navigate('/studentdata') }} >
-            View All Student
-             </div>
-             {/* Batch */}
-            <div className="sidebarItem"  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={()=>{navigate('/batchdata')}}>
+              View All Student
+              </div>
+
+              {/* Batch */}
+              <div className="sidebarItem"   onClick={()=>{navigate('/batchdata')}}>
             View All Batch
-             </div>
-             {/* Course */}
-              <div className="sidebarItem"  style={{ fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%" }} onClick={()=>{navigate('/coursedata')}}>
+              </div>
+
+              {/* Course */}
+              <div className="sidebarItem"  onClick={()=>{navigate('/coursedata')}}>
                   View All Course
               </div>
+
               {/* Admission */}
               <div className="sidebarItem"
-              style={{fontSize: "90%",width:"100%",textAlign:"start",padding:"3% 10%"}}
-              onClick={()=>{navigate('/admissiondata')}}>
-                View All Admission
+               onClick={()=>{navigate('/admissiondata')}}>
+              View All Admission
               </div>
-                </div>
-                </Collapse>
-            </div>
+              </div>
+            </Collapse>
+          </div>
       
        {/* UTILITIES */}
         <div className="row dashRow">

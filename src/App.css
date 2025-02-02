@@ -197,20 +197,8 @@ text-align:start;
 padding:3% 10%;
 }
 
-.arrowIcon{
-    display:block;
-    /* display: flex;
-    justify-content: end; */
-    border:1px solid red;
-}
 
-.MdGridViewIcon:hover + .arrowIcon{
-    display: block;    
-}
 
-.MdGridViewIcon:hover + .conponentDiv{
-    padding: 0px;
-}
 
 .smallSidebarIcon{
     /* border: 1px solid greenyellow; */
@@ -236,6 +224,7 @@ padding:3% 10%;
     background:none !important;
 }
 
+
  
  
 .bgColor:hover{
@@ -255,6 +244,14 @@ padding:3% 10%;
     border-radius: 5px;
     color:#2c51c1;
 }
+
+/* .smallSidebarIcon:hover + .arrow {
+display: block !important;
+} */
+
+/* .arrow{
+    display: none;
+} */
 
 .component-icon{
     font-size: 35px;
