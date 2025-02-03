@@ -25,8 +25,8 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
     return (
         <>
             <div >
-                <div className="rounded ms-4 p-3" style={borderStyle}>
-                    <div className="d-flex justify-content-between py-1">
+                <div className="rounded p-3" style={borderStyle}>
+                    <div className="d-flex justify-content-between gap-3 py-1">
                         <div>
                             <div style={{ fontSize: "100%",color:color }}>{title}</div>
                             <div className="fw-bold fs-4">$ {totalRevenue}</div>

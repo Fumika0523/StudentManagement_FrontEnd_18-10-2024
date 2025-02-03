@@ -19,7 +19,7 @@ function EarningCardDisplay(){
 
     return(
         <>
-        <div className="d-flex">
+        <div className="d-flex px-5 gap-5">
             {
                 // earningCardList.map((element,index)=> <EarningCard {...element} key={index}/>
                 // )

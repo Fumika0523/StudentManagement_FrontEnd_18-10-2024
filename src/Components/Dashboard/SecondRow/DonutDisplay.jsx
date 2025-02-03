@@ -39,7 +39,8 @@ const options = {
 
 function DonutDisplay() {
   return (
-    <Card style={{ width:"30%",margin:"1.6% 1.6% 1.6% 0.2%",height:"440px"}}>
+    <Card 
+    style={{ width:"30%",height:"440px"}}>
     <Card.Body>
       <Card.Title style={{color:"#4e73df"}} className="pb-3 border-bottom">Revenue Sources</Card.Title>
       <div style={{position:"relative",height:"300px",margin:"10%"}}>

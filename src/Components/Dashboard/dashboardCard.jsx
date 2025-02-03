@@ -6,24 +6,23 @@ import NavBar from "../../HomePage/NavBar"
 import { Box } from "@mui/material"
 
 function DashboardCard(){
-    const backgroundDesign= {
-        backgroundColor:"#efeff5",
-        // backgroundColor:"green",
-        height:"100vh"
-    }
+
 return(
     <>
     <div className="d-flex">
         <SideBar/>
-        <Box style={{width:"80%"}} sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
+        <Box  sx={{ display:"flex", flexDirection:"column" }} >
         <NavBar/>
-        <div style={backgroundDesign}>
-        <div className="d-flex justify-content-between py-2">
-            <div className="p-3 fs-4 text-secondary">Dashboard</div>
-            <div className="btn my-3 text-white rounded px-2" style={{backgroundColor:"#4e73df", marginRight:"2.1%",fontSize:"90%"}}>Generate Report</div>
+        <div className="backgroundDesign" >
+        <div className="d-flex mt-3 align-items-center px-5 justify-content-between ">
+            <div className="fs-2 text-secondary">Dashboard</div>
+            <div className="btn text-white rounded px-2" style={{backgroundColor:"#4e73df",fontSize:"90%"}}>Generate Report</div>
         </div>
-        <EarningCardDisplay />
-            <div className="d-flex">
+   
+        <EarningCardDisplay  />
+   
+     
+            <div className=" d-flex  px-5 justify-content-between">
                 <ChartDisplay/>
                 <DonutDisplay/>
             </div>
