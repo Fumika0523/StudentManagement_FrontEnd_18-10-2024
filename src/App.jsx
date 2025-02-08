@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import SignIn from './Components/Profile/SignIn'
 import SignUp from './Components/Profile/SignUp'
@@ -57,19 +57,20 @@ const getUserData = async()=>{
 }
 //console.log(userData)
 
-
   return (
     <>
     <div className='d-flex'>
       {/* <SideBar/> */}
-    <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
-
+      <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
       <Routes>
-      <Route path="/signup" element={<SignUp/>}/>
       <Route path="/" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/dashboard" element={<DashboardCard />}></Route>
+      <Route path="/signup" element={<SignUp/>}/>
+      
+      {/* Protected Routes: Redirect if Not Authenticated */}
 
-
+      {isAuthenticated ? (
+        <>
+      <Route path="/dashboard" element={<DashboardCard />}/>
         <Route path="/profile" element={<ProfileForm />}/>
         {/* <Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/usernameform" element={<UserNameForm/>}/>
@@ -81,7 +82,11 @@ const getUserData = async()=>{
         <Route path="/batchdata" element={<ViewBatch />}/>
         <Route path="/coursedata" element={<ViewCourse/>}/>
         <Route path="/admissiondata" element={<ViewAdmission/>}/>
-
+        </>
+      ) : (
+        // Any Path >>> Redirect  >> Home Page
+        <Route path="*" element={<Navigate to = "/" />} />
+      )}
       </Routes>
       </Box>
       <ToastContainer

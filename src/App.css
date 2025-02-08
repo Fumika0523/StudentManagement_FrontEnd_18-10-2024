@@ -97,7 +97,7 @@ justify-content: center;
     position: relative;
     top: 0;
     overflow: hidden;
-    border:2px solid red;
+    /* border:2px solid red; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -204,7 +204,7 @@ padding:3% 10%;
 
 .bgColor{
     color: white;
-    font-size: 40px !important;
+    font-size: 35px !important;
     background:none !important;
 }
  
@@ -272,8 +272,10 @@ transition-delay: 250ms;
 }
 
 .signOut{
- position:absolute;
- font-size: 30px;
- color: white;
- color: darkred !important;
+ font-size: 30px !important;
+ color: rgb(127, 4, 4) !important;
+}
+
+.signOut:hover{
+    background-color: darkblue  !important;
 }

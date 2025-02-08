@@ -48,9 +48,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
     return(
         <>
         <div className='signInStyle  justify-content-center d-flex container-fluid min-vh-100 align-items-center'>
-        <div className='row justify-content-center flex-column align-items-center w-100 gap-4'
-        >
-         
+        <div className='row justify-content-center flex-column align-items-center w-100 gap-4'>
             {/* TITLE */}
             <Form onSubmit={formik.handleSubmit} className='signinCard  col-12 col-sm-7 col-md-6 col-lg-4  px-4'>
             <div className="row  ">
@@ -67,7 +65,6 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
             </div>
                 {/* Password*/}
             <div className='row   '>
-               
                     <Form.Group className='col-12 text-start'>
                     <Form.Label  className='formLabel m-0'>Password</Form.Label>
                     <Form.Control type="password"  name="password" 
@@ -99,10 +96,8 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
                      </div>
             </Form>
             
-            <div className='signinCard2 col-12 col-sm-7 col-md-6 col-lg-4 d-flex  justify-content flex-row'>
-                   
+            <div className='signinCard2 col-12 col-sm-7 col-md-6 col-lg-4 d-flex  justify-content flex-row'>            
             <div className='text-center message' >Don't have account? &nbsp;</div>
-
             <div>
             <Link className='link-underline link-underline-opacity-0 text-center' 
             to='/signup' >Create an account</Link>

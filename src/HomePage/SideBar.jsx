@@ -11,7 +11,6 @@ import { IoSettings } from "react-icons/io5";
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FaPowerOff } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
@@ -183,7 +182,7 @@ function SideBar() {
 
               {/* Sign Out */}
 
-              <div className="mx-3 portalIcon bgColor signout" 
+              <div className="mx-3 portalIcon bgColor signOut" 
               onClick={() => handleSignOut()}>
               <FaPowerOff />
               </div>
@@ -291,7 +290,8 @@ function SideBar() {
             </div>
               
                  {/* Sign Out */}
-            <div className="row dashRow signout"
+            <div className="row dashRow"
+            style={{color: "rgb(127, 4, 4)" }}
             onClick={() => handleSignOut()}>
            
                 <FaPowerOff  className="col-3 fs-3"/>
