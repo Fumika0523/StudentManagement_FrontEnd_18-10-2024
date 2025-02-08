@@ -101,7 +101,6 @@ justify-content: center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
   }
 
   .studentTitleIcon{
@@ -153,17 +152,12 @@ justify-content: center;
    /* background-color: black; */
    /* color:"purple" */
    cursor: pointer;
-   text-align:start;
    border-bottom: 1px solid #bfbfbf;
    color: #bfbfbf;
-   padding: 10.5% 0%;
+   padding: 10.5% 2%;
    background-color:transparent;
-   font-size:17px
+   font-size:18px
 }
-
-.signout{
-    color: darkred !important;
- }
 
 
 .dashRowComponent{
@@ -279,7 +273,7 @@ transition-delay: 250ms;
 
 .signOut{
  position:absolute;
- 
  font-size: 30px;
-color: white;
+ color: white;
+ color: darkred !important;
 }

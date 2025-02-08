@@ -63,10 +63,7 @@ const getUserData = async()=>{
     <div className='d-flex'>
       {/* <SideBar/> */}
     <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
-      {/* <div>Welcome to new App</div> */}
-      {/* We always wannt present Homepagenav bar */}
-      {/* <HomePage/>  */}
-      {/* <NavBar/> */}
+
       <Routes>
       <Route path="/signup" element={<SignUp/>}/>
       <Route path="/" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>

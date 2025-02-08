@@ -3,7 +3,6 @@ import { FaChartArea } from "react-icons/fa";
 import { FaTable } from "react-icons/fa6";
 import { FiTool } from "react-icons/fi";
 import { AiFillDashboard } from "react-icons/ai";
-import { PiStudentBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { useState } from 'react';
@@ -31,6 +30,9 @@ function SideBar() {
     const [expanded, setExpanded] = React.useState(false); //to open component, when its open the down-arrow should show
     const [isSidebarOpen, setIsSidebarOpen] = useState (true); // State to toggle the sidebar
 
+    const token = sessionStorage.getItem('token')
+    console.log("token", token)
+    
     const handleSignOut = () => {
       sessionStorage.removeItem('token')
       navigate('/')
@@ -190,21 +192,23 @@ function SideBar() {
               :
                 
               <>
-              <div className=" d-flex flex-row border text-white gap-1  mx-3 pt-0" id="sideTitleIcon"
-              style={{height:"60px"}}
+              <div className="d-flex portalIcon text-white align-items-end   mx-3 " id="sideTitleIcon"
+              style={{ padding:"11px 0px"}}
                 >
                   {/* School LOgo */}
-                <div className="border border-danger" style={{fontSize:"50px"}}>
-                  <FaSchoolFlag className="border border-danger"/>
-                </div>
+                {/* <div className="border border-danger col-3"
+                style={{fontSize:"45px"}}
+                 > */}
+                  <FaSchoolFlag className="  d-flex  col-3"
+                  style={{fontSize:"45px"}} />
+                {/* </div> */}
 
-                <div className="border border-danger d-flex align-items-end fw-bold" style={{fontSize:"25px",padding:"0px"}}>
+                <div className="col-9 fw-bold" 
+                style={{fontSize:"25px"}}
+                >
                   Student Portal
                 </div>
-
-               {/* <div className="fw-bold d-flex align-items-center p-0 border border-warning "
-               style={{fontSize:"10px"}}>Student Portal</div> */}
-                </div>
+              </div>
 
                 {/* Dashboard */}
                 <div className="row dashRow row text-white" >
