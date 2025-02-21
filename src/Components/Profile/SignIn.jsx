@@ -36,9 +36,9 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
     const postSignInUser=async(loginUser)=>{
         console.log(loginUser)
         const res = await axios.post(`${url}/signin`,loginUser)
-        console.log(res.data)
+        console.log(res.data) 
         sessionStorage.setItem('token',res.data.token)
-        sessionStorage.setItem('username',res.data.user.name)
+        sessionStorage.setItem('username',res.data.user.username)
         if(res.data.token){
             setIsAuthenticated(true) // signed in >> true
         }
@@ -48,7 +48,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
     return(
         <>
         <div className='signInStyle  justify-content-center d-flex container-fluid min-vh-100 align-items-center'>
-        <div className='row justify-content-center flex-column align-items-center w-100 gap-4'>
+        <div className='row justify-content-center  flex-column align-items-center w-100 gap-4'>
             {/* TITLE */}
             <Form onSubmit={formik.handleSubmit} className='signinCard  col-12 col-sm-7 col-md-6 col-lg-4  px-4'>
             <div className="row  ">

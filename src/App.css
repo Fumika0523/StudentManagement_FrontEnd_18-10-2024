@@ -93,14 +93,14 @@ justify-content: center;
     transition: width 0.3s ease;
     background-color: #4e73df;
     text-align: start;
-    height: 100vh !important;
-    position: relative;
-    top: 0;
+    min-height: 100vh !important;
     overflow: hidden;
     /* border:2px solid red; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
+    
   }
 
   .studentTitleIcon{
@@ -263,8 +263,10 @@ transition-delay: 250ms;
 }
 
 .backgroundDesign{
+    /* border:2px solid red; */
+    /* width:70%; */
     background-color:#efeff5;
-    min-height: 92.5vh;
+    /* min-height: 92.5vh; */
     /* border: 3px solid red; */
     display: flex;
     flex-direction: column;
@@ -278,4 +280,16 @@ transition-delay: 250ms;
 
 .signOut:hover{
     background-color: darkblue  !important;
+}
+
+.commonButton{
+    background-color:#4e73df !important;
+}
+
+.tableTitle{
+color:#4e73df;
+border-bottom: 2px solid #e3e6f0;
+font-weight: bold;
+font-size: 20px;
+padding: 5px 10px;
 }

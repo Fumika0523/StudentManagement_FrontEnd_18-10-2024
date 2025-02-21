@@ -71,19 +71,21 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 const handleLogOut = ()=>{
   sessionStorage.removeItem('token')
+  sessionStorage.removeItem('username')
   navigate('/')
 }
-let username = sessionStorage.getItem('username')
+
+// let username = sessionStorage.getItem('username')
 
   return (
     <>
-    <div  style={{positon:"absolute",position:"sticky",top:"0px"}}>
-    <Box  >
+    {/* <div > */}
+    {/* <Box className="border border-3 d-flex flex-column" style={{position:"sticky",top:"0px"}} > */}
       <AppBar position="static" style={{backgroundColor:"white"}} >
       <Toolbar>
       <Paper
       component="form"
-      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 450 }}
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center',  }}
     >
       <InputBase
         sx={{ ml: 1, flex: 1 }}
@@ -117,8 +119,8 @@ let username = sessionStorage.getItem('username')
       </Dropdown>
       </Toolbar>
       </AppBar>
-      </Box>
-    </div>
+      {/* </Box> */}
+    {/* </div> */}
     </>
   );
 }

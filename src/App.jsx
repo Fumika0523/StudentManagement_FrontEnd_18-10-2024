@@ -59,9 +59,8 @@ const getUserData = async()=>{
 
   return (
     <>
-    <div className='d-flex'>
-      {/* <SideBar/> */}
-      <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
+    {/* <div className='d-flex border border-4 border-warning'> */}
+      <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
       <Route path="/" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
       <Route path="/signup" element={<SignUp/>}/>
@@ -95,7 +94,7 @@ const getUserData = async()=>{
       theme="light"
       draggable
       />
-      </div>
+      {/* </div> */}
     </>
   )
 }

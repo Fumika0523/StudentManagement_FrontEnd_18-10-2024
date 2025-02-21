@@ -19,12 +19,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       color: '#5a5c69',
       fontWeight: 'bold',
       textAlign: 'center',
-      fontSize: '16px',
-      padding: '10px',
+      fontSize: '17px',
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: '14px',
-      textAlign: 'center',
+      fontSize: '15px',
+    textAlign: 'center',
     },
   }));
   
@@ -77,7 +76,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
           { courseData?.map((course)=>(
             <StyledTableRow key={course._id}>
                 <StyledTableCell>
-                     <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly", textAlign:"center"}}>
+                     <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                      <FaEdit
                         className="text-success"
                         style={{ cursor: 'pointer' }}

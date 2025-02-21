@@ -26,29 +26,37 @@ function DashboardCard(){
     
 return(
     <>
-    <div className="d-flex">
-        <SideBar/>
-        <Box  sx={{ display:"flex", flexDirection:"column" }} >
-        <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
-        <div className="backgroundDesign" >
-        <div className="d-flex mt-3 align-items-center px-5 justify-content-between ">
-            <div className="fs-2 text-secondary">
-            Dashboard
+    <div className="d-flex flex-row ">
+    
+<SideBar />
+
+  
+        {/* <div > */}
+
+            {/* <div> */}
+            <div className="backgroundDesign " sx={{ display:"flex", flexDirection:"column", }} >
+            {/* <div> */}
+            <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
+            {/* </div> */}
+            {/* <div className="" > */}
+            <div className="d-flex mt-3 align-items-center px-5 justify-content-between ">
+                <div className="fs-2 text-secondary">
+                Dashboard
+                </div>
+                <div className="btn text-white rounded px-2" style={{backgroundColor:"#4e73df",fontSize:"90%"}}>
+                Generate Report
+                </div>
             </div>
-            <div className="btn text-white rounded px-2" style={{backgroundColor:"#4e73df",fontSize:"90%"}}>
-            Generate Report
+    
+            <EarningCardDisplay  />     
+                <div className=" d-flex px-5 justify-content-between">
+                    <ChartDisplay/>
+                    <DonutDisplay/>
+                </div>
+            {/* </div> */}
             </div>
-        </div>
-   
-        <EarningCardDisplay  />
-   
-     
-            <div className=" d-flex px-5 justify-content-between">
-                <ChartDisplay/>
-                <DonutDisplay/>
-            </div>
-         </div>
-        </Box>
+            
+        {/* </div> */}
     </div>
     </>
 )

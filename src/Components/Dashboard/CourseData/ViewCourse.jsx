@@ -6,6 +6,7 @@ import { Box } from "@mui/material"
 import ModalAddCourse from "./ModalAddCourse"
 import { url } from "../../utils/constant"
 import axios from "axios"
+import { Button } from "react-bootstrap"
 
 
 function ViewCourse(){
@@ -34,16 +35,21 @@ return(
     <>
     <div className="d-flex">
     <SideBar/>
-    <Box style={{width:"80%"}} sx={{flexGrow:1,display:"flex",flexDirection:"column"}}>
+    <Box  sx={{flexGrow:1,display:"flex",flexDirection:"column"}}>
     <NavBar/>
+    {/* Button */}
+    <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
+    <Button className="fs-5 commonButton" 
+    onClick={()=>setShow(true)}> Add Course</Button>
+    </div>
 
-    <div className="btn py-auto px-auto mt-3" onClick={()=>setShow(true)}
-    style={{backgroundColor:"#4e73df",color:"white",width:"10%",marginLeft:"88%"}}>Add Course</div>
-
-<div className="m-4" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
-            <div className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Course
-            </div>
+   {/* Buttom Table */}
+   <div className="d-flex  border-black border-4 justify-content-center">
+        {/* Table */}
+        <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px", minWidth:"95%"}}>
+    <div className="tableTitle" >All Course</div>
     <CustomisedCourseTables setCourseData={setCourseData} courseData={courseData} />
+    </div>
     </div>
     </Box>
     {

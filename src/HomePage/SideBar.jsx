@@ -42,7 +42,7 @@ function SideBar() {
         return <IconButton {...other} />;
       })(({ theme, expand }) => ({
         // transform: !expand ? 'rotate(-90deg)':'rotate(0deg)',
-        marginLeft: 'auto',
+        // marginLeft: 'auto',
         transition: theme.transitions.create('transform', {
           duration: theme.transitions.duration.shortest,
         }),
@@ -55,9 +55,10 @@ function SideBar() {
     const navigate = useNavigate()
     return (
         <>
-          <div className="sideBarStyle"
+        {/* <div className="row"> */}
+          <div className="sideBarStyle m-0"
             style={{
-              width: isSidebarOpen ? "28%" : "8%",
+              width: isSidebarOpen ? "30%" : "8%",
               padding:isSidebarOpen ? "0.5% 0%":"0.5% 0%",
               transition:"0.8s"
             }}
@@ -101,7 +102,7 @@ function SideBar() {
             id="expandIcon" 
            >
             <div className="bgColor portalIcon smallSidebarIcon"
-            style={{margin:"0px 17.5px 0px 17.5px"}}
+            // style={{margin:"0px 17.5px 0px 17.5px"}}
             >
             <MdGridView  />
         
@@ -301,6 +302,7 @@ function SideBar() {
 
             </>
             }
+          {/* </div> */}
           </div>
         </>
     )

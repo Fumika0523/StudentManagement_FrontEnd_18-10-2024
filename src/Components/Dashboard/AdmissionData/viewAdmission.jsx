@@ -38,7 +38,7 @@ const viewAdmission = () => {
     <>
     <div className='d-flex'>
     <SideBar/>
-    <Box style={{width:"80%"}} sx={{flexGrow:1, display:"flex", flexDirection:"column"}}>
+    <Box  sx={{flexGrow:1, display:"flex", flexDirection:"column"}}>
     <NavBar/>
 
     <div className='btn py-auto px-auto mt-3'

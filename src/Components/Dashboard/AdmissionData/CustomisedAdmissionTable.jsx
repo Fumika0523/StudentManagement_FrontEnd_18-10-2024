@@ -95,7 +95,7 @@ const formatDateTime = (isoString) => {
       hour12: true
   }).replace("at","");
 };
-
+//WHen you add a new admission data, automatically coursename should be added against the student name on student table.
   return (
     <>
     <TableContainer  component={Paper} >
@@ -114,6 +114,7 @@ const formatDateTime = (isoString) => {
             <StyledTableCell>Year</StyledTableCell>
             <StyledTableCell>CreatedAt</StyledTableCell>
             <StyledTableCell>UpdatedAt</StyledTableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>

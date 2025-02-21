@@ -79,7 +79,7 @@ export const ChartDisplay =()=>{
 };
     return(
 
-      <Card style={{ width: '55rem',height:"440px"}}>
+      <Card style={{ width: '65%',height:"440px"}}>
       <Card.Body>
         <Card.Title style={{color:"#4e73df"}} className="pb-3 border-bottom">Earnings Overview</Card.Title>
         <div  >

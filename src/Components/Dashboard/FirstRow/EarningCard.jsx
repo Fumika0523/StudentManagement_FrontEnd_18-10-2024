@@ -13,7 +13,7 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
  
     const borderStyle={
          backgroundColor: "white",
-         width:"350px",
+        //  width:"350px",
          height:"100px",
          borderLeft:"solid",
          borderLeftWidth:"thick",
@@ -24,8 +24,8 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
 
     return (
         <>
-            <div >
-                <div className="rounded p-3" style={borderStyle}>
+            <div className=" border-warning border-3 col-md-4 col-sm-5 col-3" >
+                <div className="rounded p-3 " style={borderStyle}>
                     <div className="d-flex justify-content-between gap-3 py-1">
                         <div>
                             <div style={{ fontSize: "100%",color:color }}>{title}</div>

@@ -54,8 +54,7 @@ const formatDate = (dateString) => {
 };
 
 // Main component
-const CustomizedTables = ({ studentData,setStudentData }) => {
-  console.log(studentData)
+const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData }) => {
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent] = useState(null);
   const [viewPassword, setViewPassword] = useState(false);
@@ -108,11 +107,12 @@ const CustomizedTables = ({ studentData,setStudentData }) => {
               <StyledTableCell>Phone Number</StyledTableCell>
               <StyledTableCell>Gender</StyledTableCell>
               <StyledTableCell>Birthdate</StyledTableCell>
+              <StyledTableCell>Course Name</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
 
-            {studentData?.map((student) => (
+            {courseData && studentData?.map((student,course) => (
               <StyledTableRow key={student._id}>
               <StyledTableCell className='p-0'>1</StyledTableCell>
                 <StyledTableCell>
@@ -148,6 +148,7 @@ const CustomizedTables = ({ studentData,setStudentData }) => {
                   {student.gender.charAt(0).toUpperCase() + student.gender.slice(1)}
                 </StyledTableCell>
                 <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
+                <StyledTableCell>{course.courseName}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

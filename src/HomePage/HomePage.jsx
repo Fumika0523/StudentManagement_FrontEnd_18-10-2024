@@ -6,7 +6,7 @@ import SideBar from './SideBar'
 function HomePage(){
     return(
         <>
-        <div className='d-flex'>
+        <div className='container'>
         <SideBar />
         <NavBar/>
         <DashboardCard/>

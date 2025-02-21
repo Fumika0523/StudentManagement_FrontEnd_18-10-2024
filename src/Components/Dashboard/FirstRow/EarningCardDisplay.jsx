@@ -3,7 +3,6 @@ import {earningCardList, url} from '../../utils/constant'
 import { useEffect, useState } from "react"
 import axios from "axios"
 
-
 function EarningCardDisplay(){
     //I can pass it to the next component (EarningCard), where is the usage.
     const [earnings,setEarnings] = useState([])
@@ -19,7 +18,7 @@ function EarningCardDisplay(){
 
     return(
         <>
-        <div className="d-flex px-5 gap-5">
+        <div className="d-flex flex-row px-5 gap-5">
             {
                 // earningCardList.map((element,index)=> <EarningCard {...element} key={index}/>
                 // )
