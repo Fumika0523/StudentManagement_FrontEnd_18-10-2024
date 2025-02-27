@@ -21,6 +21,7 @@ import ViewCourse from './Components/Dashboard/CourseData/ViewCourse'
 import { ToastContainer } from 'react-toastify'
 import { Zoom } from 'react-toastify'
 import ViewAdmission from './Components/Dashboard/AdmissionData/viewAdmission'
+import { Container } from 'react-bootstrap'
 
 
 
@@ -60,7 +61,8 @@ const getUserData = async()=>{
   return (
     <>
     {/* <div className='d-flex border border-4 border-warning'> */}
-      <Box sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
+
+      <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
       <Route path="/" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
       <Route path="/signup" element={<SignUp/>}/>
@@ -88,6 +90,7 @@ const getUserData = async()=>{
       )}
       </Routes>
       </Box>
+
       <ToastContainer
       transition={Zoom}
       autoClose={2000}

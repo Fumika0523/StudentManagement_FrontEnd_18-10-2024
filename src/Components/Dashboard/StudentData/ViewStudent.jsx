@@ -4,10 +4,8 @@ import { url } from "../../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./CustomisedTables"
 import SideBar from "../../../HomePage/SideBar"
-import { Box } from "@mui/material"
 import NavBar from "../../../HomePage/NavBar"
 import ModalAddStudent from "../StudentData/ModalAddStudent"
-import HoverCustomisedTable from "./HoverCustomisesdTable"
 import { Button } from "react-bootstrap"
 
 function ViewStudent(){
@@ -54,9 +52,8 @@ function ViewStudent(){
         <>
 <div className="d-flex">
     <SideBar/>
-        <Box className="border-danger border-4"
-        // style={{width:"80%"}}
-         sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
+    <div className="backgroundDesign d-flex flex-column" >
+
         <NavBar/>
         {/* create a table */}
         {/* <div className="fs-3">View Student Data</div> */}
@@ -88,7 +85,7 @@ function ViewStudent(){
         </div>
         </div>
         </div>
-        </Box>
+        </div>
             {show && <ModalAddStudent show={show} setShow={setShow}
             setStudentData={setStudentData}
             />}

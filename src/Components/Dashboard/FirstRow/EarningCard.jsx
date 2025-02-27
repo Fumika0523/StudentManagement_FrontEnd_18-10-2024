@@ -8,27 +8,30 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
     const Icons = {
         TfiBag: TfiBag, //if I have this icon, then map to the react icon
         FaDollarSign: FaDollarSign,
+        FaClipboardList:FaClipboardList,
+        IoIosChatbubbles:IoIosChatbubbles
       }; // key:value , key > response from the server , passed as a prop and used here. value: is your react icon.
     const IconComponent = Icons[icon]; //dynamically retrieving the icons and mapping to the UI
  
     const borderStyle={
-         backgroundColor: "white",
-        //  width:"350px",
-         height:"100px",
-         borderLeft:"solid",
-         borderLeftWidth:"thick",
-         borderColor:color,
+        position:"relative",
+        backgroundColor: "white",
+        minWidth:"0",
+        height:"100px",
+        borderLeft:"solid",
+        borderLeftWidth:"thick",
+        borderColor:color,
     }
   console.log(Icons[icon]) //[icon] >> prop, passing the icon[TfiBag],icon[FaDollarSign]...
   console.log(Icons.icon) //undefined, icon is not passed to ".icon"
 
     return (
         <>
-            <div className=" border-warning border-3 col-md-4 col-sm-5 col-3" >
-                <div className="rounded p-3 " style={borderStyle}>
-                    <div className="d-flex justify-content-between gap-3 py-1">
+         <div className=" border-danger col-lg-3 col-md-6  mb-4 d-flex align-items-center justify-content-center" >
+                <div className="rounded align-items-center justify-content-center py-2 px-4 d-flex" style={borderStyle}>
+                    <div className="d-flex border-danger justify-content-between  align-items-center" style={{width:"190px"}}>
                         <div>
-                            <div style={{ fontSize: "100%",color:color }}>{title}</div>
+                            <div style={{ fontSize: "16px",color:color }}>{title}</div>
                             <div className="fw-bold fs-4">$ {totalRevenue}</div>
                         </div>
                         <div className="my-2">

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import SideBar from '../../../HomePage/SideBar'
-import { Box } from '@mui/material'
 import NavBar from '../../../HomePage/NavBar'
 import CustomisedAdmissionTable from './CustomisedAdmissionTable'
 import { useEffect } from 'react'
@@ -38,7 +37,7 @@ const viewAdmission = () => {
     <>
     <div className='d-flex'>
     <SideBar/>
-    <Box  sx={{flexGrow:1, display:"flex", flexDirection:"column"}}>
+    <div className="backgroundDesign d-flex flex-column" >
     <NavBar/>
 
     <div className='btn py-auto px-auto mt-3'
@@ -49,7 +48,7 @@ const viewAdmission = () => {
         <div iv className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Admission</div>
         {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} />  }
     </div>
-    </Box>
+    </div>
     {show && <ModalAddAdmission show={show} setShow={setShow}
     setAdmissionData={setAdmissionData}
      />}

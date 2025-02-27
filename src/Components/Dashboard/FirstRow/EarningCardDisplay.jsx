@@ -1,5 +1,5 @@
 import EarningCard from "./EarningCard"
-import {earningCardList, url} from '../../utils/constant'
+import {earningCardList,url} from '../../utils/constant'
 import { useEffect, useState } from "react"
 import axios from "axios"
 
@@ -18,11 +18,11 @@ function EarningCardDisplay(){
 
     return(
         <>
-        <div className="d-flex flex-row px-5 gap-5">
+        <div className=" d-flex justify-content-center align-items-center  border-primary">
             {
-                // earningCardList.map((element,index)=> <EarningCard {...element} key={index}/>
-                // )
-                earnings.map((element,index)=><EarningCard {...element} key = {index}/>)
+                //earningCardList.map((element,index)=> <EarningCard {...element} key={index}/>
+                //)
+                 earnings.map((element,index)=><EarningCard {...element} key = {index}/>)
             }
        
     

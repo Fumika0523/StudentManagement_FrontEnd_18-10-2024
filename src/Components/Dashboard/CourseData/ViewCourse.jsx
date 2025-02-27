@@ -2,7 +2,6 @@ import SideBar from "../../../HomePage/SideBar"
 import { useEffect, useState } from "react"
 import NavBar from "../../../HomePage/NavBar"
 import CustomisedCourseTables from "./CustomisedCourseTables"
-import { Box } from "@mui/material"
 import ModalAddCourse from "./ModalAddCourse"
 import { url } from "../../utils/constant"
 import axios from "axios"
@@ -35,14 +34,13 @@ return(
     <>
     <div className="d-flex">
     <SideBar/>
-    <Box  sx={{flexGrow:1,display:"flex",flexDirection:"column"}}>
+    <div className="backgroundDesign d-flex flex-column" >
     <NavBar/>
     {/* Button */}
     <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
     <Button className="fs-5 commonButton" 
     onClick={()=>setShow(true)}> Add Course</Button>
     </div>
-
    {/* Buttom Table */}
    <div className="d-flex  border-black border-4 justify-content-center">
         {/* Table */}
@@ -51,7 +49,7 @@ return(
     <CustomisedCourseTables setCourseData={setCourseData} courseData={courseData} />
     </div>
     </div>
-    </Box>
+    </div>
     {
         show && <ModalAddCourse show={show} setShow={setShow} setCourseData = {setCourseData} />
     }

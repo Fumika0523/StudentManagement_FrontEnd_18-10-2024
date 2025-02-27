@@ -94,13 +94,11 @@ justify-content: center;
     background-color: #4e73df;
     text-align: start;
     min-height: 100vh !important;
-    overflow: hidden;
+    overflow: visible;
     /* border:2px solid red; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
-    
   }
 
   .studentTitleIcon{
@@ -231,7 +229,7 @@ padding:3% 10%;
 transition-duration: 3s !important;  */
 opacity: 1;
 transition: opacity 100ms;
-transition-delay: 250ms;
+transition-delay: 200ms;
 }
 
 .arrowIcon{
@@ -264,7 +262,7 @@ transition-delay: 250ms;
 
 .backgroundDesign{
     /* border:2px solid red; */
-    /* width:70%; */
+    width: 100%;
     background-color:#efeff5;
     /* min-height: 92.5vh; */
     /* border: 3px solid red; */
@@ -272,6 +270,11 @@ transition-delay: 250ms;
     flex-direction: column;
     gap: 30px;
 }
+
+.dropdown-toggle::after {
+    display: none !important; 
+  }
+
 
 .signOut{
  font-size: 30px !important;

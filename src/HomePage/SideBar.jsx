@@ -4,12 +4,9 @@ import { FaTable } from "react-icons/fa6";
 import { FiTool } from "react-icons/fi";
 import { AiFillDashboard } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { Container } from "react-bootstrap";
 import { useState } from 'react';
 import Collapse from 'react-bootstrap/Collapse';
 import { IoSettings } from "react-icons/io5";
-import IconButton from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { FaPowerOff } from "react-icons/fa";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
@@ -17,9 +14,7 @@ import { PiStudent } from "react-icons/pi";
 import { FaUsersViewfinder } from "react-icons/fa6";
 import { GiEntryDoor } from "react-icons/gi";
 import { MdMenuBook } from "react-icons/md";
-import { FcViewDetails } from "react-icons/fc";
 import { MdGridView } from "react-icons/md";
-import { FaSchool } from "react-icons/fa6";
 import { FaSchoolFlag } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
@@ -36,18 +31,6 @@ function SideBar() {
       sessionStorage.removeItem('token')
       navigate('/')
     }
-  
-    const ExpandMore = styled((props) => {
-        const { expand, ...other } = props;
-        return <IconButton {...other} />;
-      })(({ theme, expand }) => ({
-        // transform: !expand ? 'rotate(-90deg)':'rotate(0deg)',
-        // marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shortest,
-        }),
-      }));
-
       const handleExpandClick = () => {
         setExpanded(!expanded);
       };
@@ -56,19 +39,20 @@ function SideBar() {
     return (
         <>
         {/* <div className="row"> */}
-          <div className="sideBarStyle m-0"
+          <div className="sideBarStyle  border-4 border-danger "
             style={{
-              width: isSidebarOpen ? "30%" : "8%",
-              padding:isSidebarOpen ? "0.5% 0%":"0.5% 0%",
+               width: isSidebarOpen ? "28%" : "8%",
+              padding:isSidebarOpen ? "0.5% 0%":"1% 0% 3% 0%",
               transition:"0.8s"
             }}
              id="sideWidth">
      
                 {/* Arrow Icon */}
-                <div className="position-relative" style={{height:"50px"}}>
+                <div className="position-relative " style={{height:isSidebarOpen ?"45px":"5px"}}>
                 <div className="hamburger-icon text-white d-flex"
                  style={{zIndex:1000,cursor:"pointer",
-                  justifyContent: isSidebarOpen ? "end" : "center",
+                justifyContent: isSidebarOpen ? "end" : "center",
+                marginRight:isSidebarOpen ? "5px" : "0"
                }}
                     onClick={()=>setIsSidebarOpen(!isSidebarOpen)}>
                     <MdKeyboardDoubleArrowRight style={{fontSize:"45px"}}/>
@@ -79,18 +63,17 @@ function SideBar() {
               <>
 
               {/* Logo Icon */}
-              <div className="portalIcon mx-2 pb-1" >
+              <div className="portalIcon mx-2 py-1" >
               <FaSchoolFlag/>
               </div>
          
               {/* Logo Icon ends*/}
 
               {/* Dashboard */}
-              <div className=" mx-3 bgColor portalIcon boarder"
+              <div className="mx-3 bgColor portalIcon boarder"
               onClick={()=> navigate("/dashboard")} >
               <AiFillDashboard/>
               </div>      
-        
 
            {/* Component */}
           <div   
@@ -102,20 +85,20 @@ function SideBar() {
             id="expandIcon" 
            >
             <div className="bgColor portalIcon smallSidebarIcon"
-            // style={{margin:"0px 17.5px 0px 17.5px"}}
+             style={{margin:"0px 17.5px 0px 17.5px"}}
             >
             <MdGridView  />
         
             </div>
-    
+            {/* Component ARROW */}
             <div className="arrowIcon"
-            style={{  position: "relative",top: "-35px",left:"80%",height:"0px"}} >
+            style={{ position: "relative",top: "-32px",left:"70%",height:"0px"}} >
               { !expanded?
          
-              <IoIosArrowForward className="text-white fs-6"
+              <IoIosArrowForward className="text-white fs-5"
               />
               :
-              <IoIosArrowDown  className="text-white fs-6"/>
+              <IoIosArrowDown  className="text-white fs-5"/>
               }
              </div>
              </div>
@@ -192,16 +175,12 @@ function SideBar() {
               :
                 
               <>
-              <div className="d-flex portalIcon text-white align-items-end   mx-3 " id="sideTitleIcon"
+              <div className="d-flex portalIcon  border-danger text-white align-items-end justify-content-center mx-4 " id="sideTitleIcon"
               style={{ padding:"11px 0px"}}
                 >
-                  {/* School LOgo */}
-                {/* <div className="border border-danger col-3"
-                style={{fontSize:"45px"}}
-                 > */}
-                  <FaSchoolFlag className="  d-flex  col-3"
+            
+                <FaSchoolFlag className=" d-flex  col-3"
                   style={{fontSize:"45px"}} />
-                {/* </div> */}
 
                 <div className="col-9 fw-bold" 
                 style={{fontSize:"25px"}}
@@ -304,6 +283,7 @@ function SideBar() {
             }
           {/* </div> */}
           </div>
+        {/* </div> */}
         </>
     )
 }

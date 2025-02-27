@@ -3,8 +3,9 @@ import { ChartDisplay } from "./SecondRow/ChartDisplay"
 import DonutDisplay from "./SecondRow/DonutDisplay"
 import SideBar from "../../HomePage/SideBar"
 import NavBar from "../../HomePage/NavBar"
-import { Box } from "@mui/material"
 import { useEffect, useState } from "react"
+import { Button, Col, Container, Row } from "react-bootstrap"
+import { FaDownload } from "react-icons/fa";
 
 
 function DashboardCard(){
@@ -26,37 +27,26 @@ function DashboardCard(){
     
 return(
     <>
-    <div className="d-flex flex-row ">
-    
-<SideBar />
-
-  
-        {/* <div > */}
-
-            {/* <div> */}
-            <div className="backgroundDesign " sx={{ display:"flex", flexDirection:"column", }} >
-            {/* <div> */}
-            <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
-            {/* </div> */}
-            {/* <div className="" > */}
-            <div className="d-flex mt-3 align-items-center px-5 justify-content-between ">
+    <div className="border-warning border border-4 d-flex flex-row  ">
+        <SideBar />
+    <div className="backgroundDesign d-flex flex-column" >
+        <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
+            <div className="d-flex align-items-center px-5 justify-content-between border ">
                 <div className="fs-2 text-secondary">
                 Dashboard
                 </div>
-                <div className="btn text-white rounded px-2" style={{backgroundColor:"#4e73df",fontSize:"90%"}}>
+                <Button className="text-white d-flex align-items-center" style={{backgroundColor:"#4e73df",fontSize:"14px"}}>
+                <FaDownload className="text-white-50 me-1" />
                 Generate Report
-                </div>
+                </Button>
             </div>
     
             <EarningCardDisplay  />     
-                <div className=" d-flex px-5 justify-content-between">
+                <div className=" d-flex px-4 justify-content-between">
                     <ChartDisplay/>
                     <DonutDisplay/>
                 </div>
-            {/* </div> */}
-            </div>
-            
-        {/* </div> */}
+        </div>
     </div>
     </>
 )

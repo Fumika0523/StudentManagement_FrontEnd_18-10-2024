@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import SideBar from "../../../HomePage/SideBar"
-import { Box } from "@mui/material"
 import NavBar from "../../../HomePage/NavBar"
 import CustomisedBatchTables from "./CustomisedBatchTables"
 import { url } from "../../utils/constant"
@@ -31,13 +30,10 @@ function viewBatch(){
 
     return(
         <>
-        <div className="d-flex" >
+        <div className="d-flex flex-row" >
         <SideBar/>
-        <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }} >
-        <NavBar 
-        // style={{ positon:"sticky",top:"0"}}
-        />
-
+        <div className="backgroundDesign d-flex flex-column " >
+        <NavBar />
         <div className="d-flex justify-content-end border-warning border-3 pe-4 py-3">
         {/* ADD BUTTON  */}
         <Button className="fs-5 commonButton"
@@ -55,7 +51,7 @@ function viewBatch(){
             {/* {< HoverCustomisedTable />} */}
         </div>
         </div>
-        </Box>
+        </div>
         {show && <ModalAddBatch show={show} setShow={setShow}
         setBatchData={setBatchData}
         />}
