@@ -1,6 +1,5 @@
 import EarningCardDisplay from "./FirstRow/EarningCardDisplay"
-import { ChartDisplay } from "./SecondRow/ChartDisplay"
-import DonutDisplay from "./SecondRow/DonutDisplay"
+import ChartDisplay from "./SecondRow/ChartDisplay"
 import SideBar from "../../HomePage/SideBar"
 import NavBar from "../../HomePage/NavBar"
 import { useEffect, useState } from "react"
@@ -27,27 +26,38 @@ function DashboardCard(){
     
 return(
     <>
-    <div className="border-warning border border-4 d-flex flex-row  ">
+    <Container fluid className="  border-warning border-4 d-flex flex-row  ">
+    {/* <div > */}
         <SideBar />
-    <div className="backgroundDesign d-flex flex-column" >
+    <div className="backgroundDesign row justify-content-center  border-danger border-4 d-flex flex-column" >
         <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
-            <div className="d-flex align-items-center px-5 justify-content-between border ">
-                <div className="fs-2 text-secondary">
+            <div className="d-flex align-items-center col-11 mx-auto border-4  justify-content-between ">
+                <div className="fs-1 text-secondary  border-primary border-3 col-8">
                 Dashboard
                 </div>
-                <Button className="text-white d-flex align-items-center" style={{backgroundColor:"#4e73df",fontSize:"14px"}}>
-                <FaDownload className="text-white-50 me-1" />
+                <div className="col-4 d-flex justify-content-end">
+                <Button className="text-white d-flex  align-items-center" style={{backgroundColor:"#4e73df"}}>
+                <FaDownload className="text-white-50" />             
+                <div className="text-nowrap ps-1" style={{fontSize:"14px"}} >
                 Generate Report
-                </Button>
-            </div>
-    
-            <EarningCardDisplay  />     
-                <div className=" d-flex px-4 justify-content-between">
-                    <ChartDisplay/>
-                    <DonutDisplay/>
                 </div>
+                </Button>
+                </div>
+            </div>
+            {/* First Row */}
+            <div>
+            <EarningCardDisplay  />    
+            </div>
+            {/* Second Row */}
+            {/* <div className="row"> */}
+            <div>
+            <ChartDisplay/>
+            </div>
+            {/* </div> */}
+                
         </div>
-    </div>
+    {/* </div> */}
+    </Container>
     </>
 )
 }

@@ -16,7 +16,7 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
     const borderStyle={
         position:"relative",
         backgroundColor: "white",
-        minWidth:"0",
+        minWidth:"100%",
         height:"100px",
         borderLeft:"solid",
         borderLeftWidth:"thick",
@@ -27,9 +27,9 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
 
     return (
         <>
-         <div className=" border-danger col-lg-3 col-md-6  mb-4 d-flex align-items-center justify-content-center" >
+         <div className="  mb-4 col-lg-3 col-md-6 col-sm-10 d-flex align-items-center justify-content-center" >
                 <div className="rounded align-items-center justify-content-center py-2 px-4 d-flex" style={borderStyle}>
-                    <div className="d-flex border-danger justify-content-between  align-items-center" style={{width:"190px"}}>
+                    <div className="d-flex  justify-content-between  align-items-center w-100" >
                         <div>
                             <div style={{ fontSize: "16px",color:color }}>{title}</div>
                             <div className="fw-bold fs-4">$ {totalRevenue}</div>

@@ -18,7 +18,7 @@ function EarningCardDisplay(){
 
     return(
         <>
-        <div className=" d-flex justify-content-center align-items-center  border-primary">
+        <div className=" d-flex justify-content-center align-items-center px-3 row border-primary border-4">
             {
                 //earningCardList.map((element,index)=> <EarningCard {...element} key={index}/>
                 //)

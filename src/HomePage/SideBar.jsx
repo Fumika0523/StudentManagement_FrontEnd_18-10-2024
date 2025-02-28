@@ -38,14 +38,16 @@ function SideBar() {
     const navigate = useNavigate()
     return (
         <>
-        {/* <div className="row"> */}
-          <div className="sideBarStyle  border-4 border-danger "
-            style={{
-               width: isSidebarOpen ? "28%" : "8%",
-              padding:isSidebarOpen ? "0.5% 0%":"1% 0% 3% 0%",
-              transition:"0.8s"
-            }}
-             id="sideWidth">
+        <div className="row"
+         style={{
+          width: isSidebarOpen ? "30%" : "12%",
+         transition:"0.8s"
+       }}>
+          <div className="sideBarStyle  border-4 border-danger "        
+             id="sideWidth"
+             style={{padding:isSidebarOpen ? "0.5% 6% 0.5% 0%":"1% 18% 30% 0%",
+             }}
+>
      
                 {/* Arrow Icon */}
                 <div className="position-relative " style={{height:isSidebarOpen ?"45px":"5px"}}>
@@ -175,14 +177,14 @@ function SideBar() {
               :
                 
               <>
-              <div className="d-flex portalIcon  border-danger text-white align-items-end justify-content-center mx-4 " id="sideTitleIcon"
-              style={{ padding:"11px 0px"}}
+              <div className="d-flex portalIcon  border-danger text-white align-items-end justify-content-center mx-1  mx-3 " id="sideTitleIcon"
+              style={{ padding:"8px 2px 5px 2px"}}
                 >
             
-                <FaSchoolFlag className=" d-flex  col-3"
+                <FaSchoolFlag className=" d-flex  border-danger text-end  col-3"
                   style={{fontSize:"45px"}} />
 
-                <div className="col-9 fw-bold" 
+                <div className="col-9 border-danger fw-bold " 
                 style={{fontSize:"25px"}}
                 >
                   Student Portal
@@ -283,7 +285,7 @@ function SideBar() {
             }
           {/* </div> */}
           </div>
-        {/* </div> */}
+        </div>
         </>
     )
 }

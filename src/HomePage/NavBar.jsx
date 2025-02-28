@@ -68,7 +68,7 @@ const handleLogOut = ()=>{
 }
   return (
     <>
-    <Navbar  expand="lg" sticky="top"  bg="light" data-bs-theme="light" className='shadow bg-body'>
+    <Navbar  expand="lg" sticky="top"  bg="light" data-bs-theme="light" className='col-12 shadow bg-body'>
     <Container className=" border-danger mx-4">
       <Form className=' d-flex flex-row  border-2'>
         <Row className=''>
@@ -76,8 +76,8 @@ const handleLogOut = ()=>{
             <Form.Control
               type="text"
               placeholder="Search"
-              className="mr-sm-2 ms-3"
-              style={{borderTopRightRadius:"0",borderBottomRightRadius: "0",border:"0",backgroundColor:"#efeff5",width:"300px"}}
+              className=" ms-3"
+              style={{borderTopRightRadius:"0",borderBottomRightRadius: "0",border:"0",backgroundColor:"#efeff5"}}
             />
             <Button type="submit" style={{backgroundColor:"#4e73df",borderTopLeftRadius:"0",borderBottomLeftRadius: "0"}}><SearchIcon/></Button>
           </Col>

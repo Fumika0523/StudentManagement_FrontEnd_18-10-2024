@@ -18,7 +18,6 @@ const data = {
     ],
      borderWidth: 2,
     // radius: '100%',
-    
   }]
 };
 
@@ -37,18 +36,22 @@ const options = {
   },  
   }
 
-function DonutDisplay() {
+function DonutCard() {
   return (
-    <Card 
-    style={{ width:"34%",height:"440px"}}>
+  <>
+   <div className=' mb-4  border-warning border-4 col-lg-4 col-sm-12 col-md-12 col-12 d-flex justify-content-center '>
+    <Card className=''
+    style={{ height:"400px",width:"95%"}}>
     <Card.Body>
       <Card.Title style={{color:"#4e73df"}} className="pb-3 border-bottom">Revenue Sources</Card.Title>
       <div style={{position:"relative",height:"300px",margin:"10%"}}>
       <Doughnut data={data} options={options} />
       </div>
    </Card.Body>
-  </Card>   
+    </Card> 
+    </div>  
+   </>
   );
 }
 
-export default DonutDisplay;
+export default DonutCard;
