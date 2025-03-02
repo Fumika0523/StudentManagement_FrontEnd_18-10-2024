@@ -11,6 +11,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import ModalEditBatch from './ModalEditBatch';
 import ModalDeleteWarning from './ModalDeleteWaning';
+import { WrapText } from '@mui/icons-material';
 
 
 // Styled components
@@ -20,8 +21,9 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       color: '#5a5c69',
       fontWeight: 'bold',
       textAlign: 'center',
-      fontSize: '16px',
+      fontSize: '14px',
       padding: '10px',
+      WrapText:"no"
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: '14px',

@@ -22,14 +22,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: '#5a5c69',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: '17px',
-    // padding: '10px',
-    
+    fontSize: '13px',
+    padding: '10px 15px',
+    textWrap:"noWrap"
   },
+
   [`&.${tableCellClasses.body}`]: {
-    fontSize: '15px',
+    fontSize: '11.5px',
     textAlign: 'center',
-    // padding: '10px',
+    padding: '10px 15px',
   },
 }));
 
@@ -38,7 +39,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
   '&:hover': {
-    backgroundColor: '#daf1fc'
+    backgroundColor: '#daf1fc',
+    textWrap:'noWrap'
     //'#b3e5fc',
   },
 }));
@@ -48,8 +50,9 @@ const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
+    
   });
 };
 
@@ -94,7 +97,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} >
         <Table>
           <TableHead>
             <TableRow>

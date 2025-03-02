@@ -9,7 +9,7 @@ import Collapse from 'react-bootstrap/Collapse';
 import { IoSettings } from "react-icons/io5";
 import * as React from 'react';
 import { FaPowerOff } from "react-icons/fa";
-import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdKeyboardDoubleArrowDown, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { PiStudent } from "react-icons/pi";
 import { FaUsersViewfinder } from "react-icons/fa6";
 import { GiEntryDoor } from "react-icons/gi";
@@ -38,26 +38,31 @@ function SideBar() {
     const navigate = useNavigate()
     return (
         <>
-        <div className="row"
+        <div className=""
          style={{
-          width: isSidebarOpen ? "30%" : "12%",
+          width: isSidebarOpen ? "28%" : "12%",
          transition:"0.8s"
        }}>
           <div className="sideBarStyle  border-4 border-danger "        
              id="sideWidth"
-             style={{padding:isSidebarOpen ? "0.5% 6% 0.5% 0%":"1% 18% 30% 0%",
-             }}
->
-     
+             style={{padding:isSidebarOpen ? "1% 3% 0.5% 0%":"5% 13.5% 15% 10%",
+             }}>
                 {/* Arrow Icon */}
-                <div className="position-relative " style={{height:isSidebarOpen ?"45px":"5px"}}>
+                <div className="position-relative " style={{height:isSidebarOpen ?"45px":"15px"}}>
                 <div className="hamburger-icon text-white d-flex"
                  style={{zIndex:1000,cursor:"pointer",
                 justifyContent: isSidebarOpen ? "end" : "center",
-                marginRight:isSidebarOpen ? "5px" : "0"
+                marginRight:isSidebarOpen ? "10px" : "-10px"
+              
                }}
                     onClick={()=>setIsSidebarOpen(!isSidebarOpen)}>
-                    <MdKeyboardDoubleArrowRight style={{fontSize:"45px"}}/>
+              {!isSidebarOpen?
+             
+             <MdKeyboardDoubleArrowRight style={{fontSize:"45px"}}
+             />
+             :
+             <MdKeyboardDoubleArrowLeft  style={{fontSize:"45px"}}/> }
+   
             </div>
               </div>
                {/* Arrow icon ends here */}

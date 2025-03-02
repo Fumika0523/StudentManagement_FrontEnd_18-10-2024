@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import { url } from '../../utils/constant'
 import ModalAddAdmission from './ModalAddAdmission'
+import { Button } from 'react-bootstrap'
 
 
 const viewAdmission = () => {
@@ -30,23 +31,24 @@ const viewAdmission = () => {
         getAdmissionData()
     },[])
     console.log(admissionData)
-    
-
 
   return (
     <>
-    <div className='d-flex'>
+    <div className='d-flex  border border-danger border-4'>
     <SideBar/>
     <div className="backgroundDesign d-flex flex-column" >
     <NavBar/>
-
-    <div className='btn py-auto px-auto mt-3'
+    <div className='d-flex justify-content-end border-warning border-3 pe-4 py-3'>
+    <Button className='my-2 commonButton'
     onClick={()=>setShow(true)}
-    style={{backgroundColor:"#4e73df",color:"white",width:"13%",marginLeft:"84%"}}>Add Admission</div>
-
-    <div div className="m-4" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
+    style={{backgroundColor:"#4e73df",color:"white"}}>Add Admission</Button>
+    </div>
+    {/* Second Row */}
+    <div className='d-flex  border-black border-4  px-3 justify-content-center'>
+    <div className="px-2" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
         <div iv className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Admission</div>
         {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} />  }
+    </div>
     </div>
     </div>
     {show && <ModalAddAdmission show={show} setShow={setShow}

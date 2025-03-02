@@ -77,12 +77,12 @@ export const ChartCard=()=>{
 };
     return(
       <>
-      <div className="col-lg-8 mb-4 col-sm-12 col-12 d-flex justify-content-center border-warning border-4">
-      <Card className="" style={{ height:"400px",width:"95%"}}>
+      <div className="col-lg-8 mb-4 col-sm-12 col-10 d-flex justify-content-center border-warning border-4">
+      <Card className="" style={{ height:"380px",width:"97%"}}>
       <Card.Body>
         <Card.Title style={{color:"#4e73df"}} className="pb-3 border-bottom">Earnings Overview</Card.Title>
         <div  >
-        <Line data={data} options={options} style={{paddingBottom:"5%",width:"100%"}} />
+        <Line data={data} options={options} style={{width:"100%",height:"300px"}} />
         </div>
      </Card.Body>
       </Card> 

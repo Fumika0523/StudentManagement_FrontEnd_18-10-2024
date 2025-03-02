@@ -13,6 +13,7 @@ function ViewStudent(){
     const [courseData,setCourseData] = useState([])
     const [isAuthenticated,setIsAuthenticated]=useState(false)
     const [show, setShow] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState (true)
 
     const token = sessionStorage.getItem('token')
     let config = {
@@ -50,25 +51,23 @@ function ViewStudent(){
 
     return(
         <>
-<div className="d-flex">
+<div className="d-flex flex-row border border-warning border-4">
     <SideBar/>
-    <div className="backgroundDesign d-flex flex-column" >
-
+    <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
         <NavBar/>
         {/* create a table */}
-        {/* <div className="fs-3">View Student Data</div> */}
-        <div className="d-flex border-primary border-4 flex-column ">
+        {/* <div className="d-flex justify-content-end border-warning border-3 pe-4 py-3"> */}
         {/* ADD Button */}
         <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
-        <Button className="fs-5 commonButton"
+        <Button className="my-2 commonButton"
         onClick={()=>setShow(true)} 
         >Add Student</Button>
         </div>
 
         {/* Buttom Table */}
-        <div className="d-flex  border-black border-4 justify-content-center">
+        <div className="d-flex  border-black border-4   justify-content-center">
         {/* Table */}
-        <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px", maxWidth:"95%"}}>
+        <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px",width:"97%"}}>
             {/* <div 
            className="tableTitle"
             //  style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}
@@ -84,7 +83,7 @@ function ViewStudent(){
       
         </div>
         </div>
-        </div>
+        {/* </div> */}
         </div>
             {show && <ModalAddStudent show={show} setShow={setShow}
             setStudentData={setStudentData}

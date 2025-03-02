@@ -68,7 +68,7 @@ const handleLogOut = ()=>{
 }
   return (
     <>
-    <Navbar  expand="lg" sticky="top"  bg="light" data-bs-theme="light" className='col-12 shadow bg-body'>
+    <Navbar   expand="lg" sticky="top"  bg="light" data-bs-theme="light" className='sticky-top col-12 shadow bg-body'>
     <Container className=" border-danger mx-4">
       <Form className=' d-flex flex-row  border-2'>
         <Row className=''>

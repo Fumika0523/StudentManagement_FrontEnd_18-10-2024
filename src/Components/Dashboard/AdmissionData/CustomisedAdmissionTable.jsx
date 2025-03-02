@@ -12,6 +12,7 @@ import { MdDelete } from "react-icons/md";
 import ModalDeleteAdmission from './ModalDeleteAdmission';
 import ModalEditAdmission from './ModalEditAdmission';
 import { useEffect } from 'react';
+import { WrapText } from '@mui/icons-material';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -20,15 +21,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: '#5a5c69',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: '14px',
-     padding: '0px 5px',
-
+    fontSize: '13px',
+    padding: '10px 15px',
+    textWrap:"noWrap"
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: '13.5px',
     textAlign: 'center',
     padding:"1.5px 2px",
-    margin:"0"
+    margin:"0",
+    WrapText:'noWrap'
   },
 }));
 
@@ -77,8 +79,9 @@ const formatDate = (dateString)=>{
   console.log(date)
   return date.toLocaleDateString('en-US',{
     year:"numeric",
-    month:'long',
-    day:'numeric'
+    month:'short',
+    day:'numeric',
+    
   })
 }
 console.log(new Date("03-01-2025"))
