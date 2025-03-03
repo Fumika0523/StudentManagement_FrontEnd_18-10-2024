@@ -19,11 +19,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       color: '#5a5c69',
       fontWeight: 'bold',
       textAlign: 'center',
-      fontSize: '17px',
+      fontSize: '14.5px',
+      padding: '10px 15px',
+      textWrap:"noWrap"
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: '15px',
-    textAlign: 'center',
+      fontSize: '13px',
+      textAlign: 'center',
+      padding: '10px 15px',
+      textWrap:"noWrap"
     },
   }));
   
@@ -42,7 +46,6 @@ function CustomisedCourseTables({courseData,setCourseData}){
     console.log(courseData)
     const [viewWarning, setViewWarning] = useState(false)
    
-
     const token = sessionStorage.getItem('token')
     const config = {
         headers:{

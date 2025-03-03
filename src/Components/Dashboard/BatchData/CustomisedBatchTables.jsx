@@ -21,13 +21,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
       color: '#5a5c69',
       fontWeight: 'bold',
       textAlign: 'center',
-      fontSize: '14px',
-      padding: '10px',
-      WrapText:"no"
+      fontSize: '13px',
+      padding: '10px 15px',
+      textWrap:"noWrap"
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: '14px',
+      fontSize: '13.5px',
       textAlign: 'center',
+      padding:"1.5px 2px",
+      margin:"0",
+      WrapText:'noWrap'
     },
   }));
   
@@ -56,7 +59,6 @@ function CustomisedBatchTables({batchData,setBatchData}){
     setShow(true);
     setSingleBatch(batch)
   }
-
 
     return(
     <>

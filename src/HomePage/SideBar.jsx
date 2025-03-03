@@ -40,10 +40,10 @@ function SideBar() {
         <>
         <div className=""
          style={{
-          width: isSidebarOpen ? "28%" : "12%",
+          width: isSidebarOpen ? "30%" : "12%",
          transition:"0.8s"
        }}>
-          <div className="sideBarStyle  border-4 border-danger "        
+          <div className="sideBarStyle border-4 border-danger "        
              id="sideWidth"
              style={{padding:isSidebarOpen ? "1% 3% 0.5% 0%":"5% 13.5% 15% 10%",
              }}>
@@ -58,8 +58,7 @@ function SideBar() {
                     onClick={()=>setIsSidebarOpen(!isSidebarOpen)}>
               {!isSidebarOpen?
              
-             <MdKeyboardDoubleArrowRight style={{fontSize:"45px"}}
-             />
+             <MdKeyboardDoubleArrowRight style={{fontSize:"45px"}} />
              :
              <MdKeyboardDoubleArrowLeft  style={{fontSize:"45px"}}/> }
    
@@ -182,15 +181,15 @@ function SideBar() {
               :
                 
               <>
-              <div className="d-flex portalIcon  border-danger text-white align-items-end justify-content-center mx-1  mx-3 " id="sideTitleIcon"
-              style={{ padding:"8px 2px 5px 2px"}}
+              <div className="d-flex portalIcon col-11 border-danger text-white align-items-end justify-content-center mx-1  mx-3 " id="sideTitleIcon"
+              style={{ padding:"8px 4px 5px 4px"}}
                 >
             
                 <FaSchoolFlag className=" d-flex  border-danger text-end  col-3"
                   style={{fontSize:"45px"}} />
 
-                <div className="col-9 border-danger fw-bold " 
-                style={{fontSize:"25px"}}
+                <div className="col-9 p-0  border-danger text-start fw-bold " 
+                style={{fontSize:"23px",textWrap:"noWrap"}}
                 >
                   Student Portal
                 </div>

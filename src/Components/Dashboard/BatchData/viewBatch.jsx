@@ -36,7 +36,7 @@ function viewBatch(){
         <NavBar />
         <div className="d-flex justify-content-end border-warning border-3 pe-4 py-3">
         {/* ADD BUTTON  */}
-        <Button className="my-2 commonButton"
+        <Button className=" commonButton"
          onClick={()=>setShow(true)}>Add Batch</Button>
         </div>
 

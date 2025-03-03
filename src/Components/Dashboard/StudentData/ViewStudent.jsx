@@ -46,7 +46,6 @@ function ViewStudent(){
         console.log("Admission Data is called....")
         let res = await axios.get(`${url}/addadmission`,config)
         console.log("AdmissionData",res.data.getAdmissionData)
-
     }
 
     return(
@@ -59,7 +58,7 @@ function ViewStudent(){
         {/* <div className="d-flex justify-content-end border-warning border-3 pe-4 py-3"> */}
         {/* ADD Button */}
         <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
-        <Button className="my-2 commonButton"
+        <Button variant="outline-none" className="commonButton"
         onClick={()=>setShow(true)} 
         >Add Student</Button>
         </div>

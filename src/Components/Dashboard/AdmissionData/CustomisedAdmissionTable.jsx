@@ -21,16 +21,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: '#5a5c69',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: '13px',
+    fontSize: '14.5px',
     padding: '10px 15px',
     textWrap:"noWrap"
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: '13.5px',
+    fontSize: '13px',
     textAlign: 'center',
-    padding:"1.5px 2px",
-    margin:"0",
-    WrapText:'noWrap'
+    padding: '10px 15px',
+    textWrap:"noWrap"
   },
 }));
 
@@ -92,9 +91,9 @@ const formatDateTime = (isoString) => {
       year: 'numeric',
       month: 'short',
       day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      // hour: '2-digit',
+      // minute: '2-digit',
+      // second: '2-digit',
       hour12: true
   }).replace("at","");
 };

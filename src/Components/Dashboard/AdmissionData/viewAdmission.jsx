@@ -13,6 +13,8 @@ const viewAdmission = () => {
     const [admissionData,setAdmissionData] = useState([])
     const [courseData,setCourseData]=useState([])
     const [show,setShow] = useState(false)
+    const [isSidebarOpen, setIsSidebarOpen] = useState (true)
+
     
     const token = sessionStorage.getItem('token')
     let config = {
@@ -36,17 +38,19 @@ const viewAdmission = () => {
     <>
     <div className='d-flex  border border-danger border-4'>
     <SideBar/>
-    <div className="backgroundDesign d-flex flex-column" >
+    <div className="backgroundDesign d-flex flex-column" 
+    style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
     <NavBar/>
-    <div className='d-flex justify-content-end border-warning border-3 pe-4 py-3'>
-    <Button className='my-2 commonButton'
+    <div className=' d-flex justify-content-end border-warning border-3 pe-4 py-3'>
+    <Button variant="outline-none" className='commonButton'
     onClick={()=>setShow(true)}
-    style={{backgroundColor:"#4e73df",color:"white"}}>Add Admission</Button>
+    >Add Admission</Button>
     </div>
-    {/* Second Row */}
-    <div className='d-flex  border-black border-4  px-3 justify-content-center'>
-    <div className="px-2" style={{border:"2px solid #e3e6f0",borderRadius:"7px"}}>
-        <div iv className="px-2 py-2 fw-bold" style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}>All Admission</div>
+     {/* Buttom Table */}
+     <div className="d-flex  border-black border-4   justify-content-center">
+    {/* Table */}
+    <div style={{border:"2px solid #e3e6f0",borderRadius:"7px", width:"95%"}}>
+        {/* <div className="tableTitle">All Admission</div> */}
         {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} />  }
     </div>
     </div>

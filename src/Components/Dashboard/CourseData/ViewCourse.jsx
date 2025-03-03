@@ -38,14 +38,14 @@ return(
     <NavBar/>
     {/* Button */}
     <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
-    <Button className="fs-5 commonButton" 
+    <Button variant="outline-none" className=" commonButton" 
     onClick={()=>setShow(true)}> Add Course</Button>
     </div>
    {/* Buttom Table */}
    <div className="d-flex  border-black border-4 justify-content-center">
         {/* Table */}
         <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px", minWidth:"95%"}}>
-    <div className="tableTitle" >All Course</div>
+    {/* <div className="tableTitle" >All Course</div> */}
     <CustomisedCourseTables setCourseData={setCourseData} courseData={courseData} />
     </div>
     </div>

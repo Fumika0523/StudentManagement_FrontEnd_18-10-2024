@@ -27,7 +27,7 @@ function DashboardCard(){
 return(
     <>
     {/* <Container fluid className="border  border-warning border-4 d-flex flex-row " style={{width:"100%"}}> */}
-    <div className=" border-warning border-4 d-flex flex-row " >
+    <div className=" border-warning d-flex flex-row " >
         <SideBar />
     <div className="backgroundDesign d-flex flex-column  border-4" >
         <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>

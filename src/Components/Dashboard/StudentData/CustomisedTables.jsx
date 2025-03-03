@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -22,15 +23,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: '#5a5c69',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: '13px',
+    fontSize: '14.5px',
     padding: '10px 15px',
     textWrap:"noWrap"
   },
 
   [`&.${tableCellClasses.body}`]: {
-    fontSize: '11.5px',
+    fontSize: '13px',
     textAlign: 'center',
     padding: '10px 15px',
+    textWrap:"noWrap"
   },
 }));
 
@@ -40,8 +42,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
   '&:hover': {
     backgroundColor: '#daf1fc',
-    textWrap:'noWrap'
-    //'#b3e5fc',
   },
 }));
 
@@ -58,6 +58,7 @@ const formatDate = (dateString) => {
 
 // Main component
 const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData }) => {
+
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent] = useState(null);
   const [viewPassword, setViewPassword] = useState(false);
@@ -82,6 +83,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
       if(res){
         let res = await axios.get(`${url}/allstudent`,config)
         console.log("StudentData",res.data.studentData)
+        // console.log("index",res.data.studentData)
         setStudentData(res.data.studentData)
       }
       // alert('Student deleted successfully!');
@@ -94,6 +96,18 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
     setViewPassword(true);
     setPassword(password);
   };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   return (
     <>
@@ -115,7 +129,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
           </TableHead>
           <TableBody>
 
-            {courseData && studentData?.map((student,course) => (
+            {courseData && studentData?.map((student,course,index) => (
               <StyledTableRow key={student._id}>
               <StyledTableCell className='p-0'>1</StyledTableCell>
                 <StyledTableCell>
@@ -151,11 +165,20 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                   {student.gender.charAt(0).toUpperCase() + student.gender.slice(1)}
                 </StyledTableCell>
                 <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
-                <StyledTableCell>{course.courseName}</StyledTableCell>
+                <StyledTableCell>{student.courseName}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
+        {/* <TablePagination
+        rowsPerPageOptions={[10, 25, 100]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      /> */}
       </TableContainer>
 
       {show && (

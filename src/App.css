@@ -90,10 +90,12 @@ justify-content: center;
 }
 
 .sideBarStyle {
+    position:sticky;
+    top: 0;
     transition: width 0.3s ease;
     background-color: #4e73df;
     text-align: start;
-    min-height: 100vh !important;
+    min-height: 100vh;
     overflow: visible;
     /* border:2px solid red; */
     display: flex;
@@ -286,6 +288,8 @@ transition-delay: 200ms;
 
 .commonButton{
     background-color:#4e73df !important;
+    color: white!important;
+    margin:10px 0px
 }
 
 .tableTitle{
