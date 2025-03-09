@@ -50,7 +50,7 @@ function ViewStudent(){
 
     return(
         <>
-<div className="d-flex flex-row border border-warning border-4">
+<div className="d-flex flex-row ">
     <SideBar/>
     <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
         <NavBar/>

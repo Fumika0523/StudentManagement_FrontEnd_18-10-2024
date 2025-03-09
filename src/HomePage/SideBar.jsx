@@ -203,8 +203,7 @@ function SideBar() {
             {/* COMPONENT */}
             <div 
             className="dashRow"
-            onClick={handleExpandClick}
-             >
+            onClick={handleExpandClick} >
           
             <div
             id="expandIcon " 
@@ -217,16 +216,16 @@ function SideBar() {
            <div id="component" className="col-7 ">
             Component</div>
               
-              {!expanded?
+              {expanded?
              
-              <IoIosArrowForward className="col-2 fs-4 text-white"
+              <IoIosArrowDown className="col-2 fs-4 text-white"
               />
               :
-              <IoIosArrowDown  className="col-2 fs-4 text-white"/> }
-               </div>
+              <IoIosArrowForward  className="col-2 fs-4 text-white"/> }
+            
                 <Collapse in={open}>
-                <div id="example-collapse-text" 
-              style={{borderRadius:"10px", backgroundColor:"white",color:"black", margin:"5% 5% 0% 5%",width:"230px",padding:"3% 0",
+                <div id="example-collapse-text" className="mx-auto"
+              style={{borderRadius:"10px", backgroundColor:"white",color:"black", marginTop:"5%",padding:"3% 0",width:"80%"
                }}>
 
               <div className="sidebarItem"   onClick={() => { navigate('/studentdata') }} >
@@ -250,6 +249,7 @@ function SideBar() {
               </div>
               </div>
             </Collapse>
+          </div>
           </div>
       
        {/* UTILITIES */}

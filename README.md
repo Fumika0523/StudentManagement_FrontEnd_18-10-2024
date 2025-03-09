@@ -44,3 +44,12 @@ Extra extra large   >> xxl      >>   >1400px
 
 useRef is a React Hook that lets you reference a value that's not needed for rendering. const ref = useRef(initialValue)
 https://react.dev/reference/react/useRef
+-------------------------------------
+
+Two login for student & Staff
+
+student can  >>  register student,login, update the profile, later on - will be able to register student preference courses (Check boxes)
+
+Staff can >>  register staff, login (staff), add data for the student (admission,batches,add the task,attendance)
+
+Staff can add the number of courses, availability for the batches, create the task,

@@ -190,6 +190,16 @@ text-align:start;
 padding:3% 10%;
 }
 
+.staffLogin{
+    background-color: rgb(221, 231, 252);
+    border-radius: 3%;
+    /* border-bottom-right-radius: 3%; */
+}
+
+.studentLogin{
+    background-color: rgb(219, 235, 211);
+    border-radius: 3%;
+}
 
 .portalIcon{
     text-align: center;

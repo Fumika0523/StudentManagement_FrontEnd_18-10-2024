@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
-import SignIn from './Components/Profile/SignIn'
-import SignUp from './Components/Profile/SignUp'
+import SignIn from './Components/Student/SignIn'
+import SignUp from './Components/Student/SignUp'
 import { useEffect, useState } from 'react'
 import ProfileForm from './Components/Profile/ProfileForm'
 import { Box } from '@mui/material'
@@ -22,8 +22,7 @@ import { ToastContainer } from 'react-toastify'
 import { Zoom } from 'react-toastify'
 import ViewAdmission from './Components/Dashboard/AdmissionData/viewAdmission'
 import { Container } from 'react-bootstrap'
-
-
+import StudentOrStaff from './HomePage/StudentOrStaff'
 
 function App() {
   const [userData,setUserData] = useState([])
@@ -61,11 +60,11 @@ const getUserData = async()=>{
   return (
     <>
     {/* <div className='d-flex border border-4 border-warning'> */}
-
       <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
-      <Route path="/" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/signup" element={<SignUp/>}/>
+      <Route path="/" element={<StudentOrStaff/>}/>
+      {/* <Route path="/signin" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/signup" element={<SignUp/>}/> */}
       
       {/* Protected Routes: Redirect if Not Authenticated */}
 

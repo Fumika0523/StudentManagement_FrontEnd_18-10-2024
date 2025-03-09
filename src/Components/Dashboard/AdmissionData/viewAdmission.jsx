@@ -36,7 +36,7 @@ const viewAdmission = () => {
 
   return (
     <>
-    <div className='d-flex  border border-danger border-4'>
+    <div className='d-flex '>
     <SideBar/>
     <div className="backgroundDesign d-flex flex-column" 
     style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
