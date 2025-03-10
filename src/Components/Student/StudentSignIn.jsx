@@ -12,7 +12,7 @@ import axios from 'axios';
 import { url } from '../utils/constant';
 import { FcReading } from "react-icons/fc";
 
-function SignIn({isAuthenticated,setIsAuthenticated}){
+function StudentSignIn({isAuthenticated,setIsAuthenticated}){
 
     const formSchema = Yup.object().shape({
         password:Yup.string().required(),
@@ -52,7 +52,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
             {/* TITLE */}
             <Form onSubmit={formik.handleSubmit} className='signinCard  col-12 col-sm-7 col-md-6 col-lg-4  px-4'>
             <div className="row  ">
-            <h2 style={{fontSize:"30px"}} className="text-center" ><FcReading className='mb-1' style={{fontSize:"55px"}}/> Sign In</h2>
+            <h2 style={{fontSize:"30px"}}  className=" d-flex justify-content-center align-items-center"  ><FcReading className='mb-1' style={{fontSize:"55px"}}/>Student Sign In</h2>
             </div>  
                {/* Username */}
             <div className='row '>
@@ -100,7 +100,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
             <div className='text-center message' >Don't have account? &nbsp;</div>
             <div>
             <Link className='link-underline link-underline-opacity-0 text-center' 
-            to='/signup' >Create an account</Link>
+            to='/student-signup' >Create an account</Link>
             </div>
             </div>
         </div>
@@ -108,8 +108,7 @@ function SignIn({isAuthenticated,setIsAuthenticated}){
         </>
     )
 }
-
-export default SignIn
+export default StudentSignIn
 
 // Formik
 //https://colorlib.com/wp/wp-content/uploads/sites/2/free-html5-and-css3-login-forms.jpg

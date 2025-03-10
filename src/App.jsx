@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
-import SignIn from './Components/Student/SignIn'
-import SignUp from './Components/Student/SignUp'
+import SignIn from './Components/Student/StudentSignIn'
+import SignUp from './Components/Student/StudentSignUp'
 import { useEffect, useState } from 'react'
 import ProfileForm from './Components/Profile/ProfileForm'
 import { Box } from '@mui/material'
@@ -23,6 +23,12 @@ import { Zoom } from 'react-toastify'
 import ViewAdmission from './Components/Dashboard/AdmissionData/viewAdmission'
 import { Container } from 'react-bootstrap'
 import StudentOrStaff from './HomePage/StudentOrStaff'
+import StaffSignIn from './Components/Staff/StaffSignIn'
+import StudentSignIn from './Components/Student/StudentSignIn'
+import StudentSignUp from './Components/Student/StudentSignUp'
+import StaffSignUp from './Components/Staff/StaffSignUp'
+
+
 
 function App() {
   const [userData,setUserData] = useState([])
@@ -63,14 +69,16 @@ const getUserData = async()=>{
       <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
       <Route path="/" element={<StudentOrStaff/>}/>
-      {/* <Route path="/signin" element={<SignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/signup" element={<SignUp/>}/> */}
-      
+    
       {/* Protected Routes: Redirect if Not Authenticated */}
 
       {isAuthenticated ? (
         <>
       <Route path="/dashboard" element={<DashboardCard />}/>
+      <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/student-signup" element={<StudentSignUp/>}/>   
+      <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
         <Route path="/profile" element={<ProfileForm />}/>
         {/* <Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/usernameform" element={<UserNameForm/>}/>

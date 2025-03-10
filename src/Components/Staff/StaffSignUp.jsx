@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { url } from '../utils/constant';
 import axios from 'axios';
-import { FcReading } from "react-icons/fc";
+import { FcVoicePresentation } from "react-icons/fc";
 
 
 function SignUp() {
@@ -46,20 +46,18 @@ function SignUp() {
         console.log(res)
         if (res.status == 200) {
             //navigate to signin page
-            navigate('/')
+            navigate('/staff-signin')
         }
     }
 
     return (
         <>
             <div className='signInStyle container-fluid d-flex justify-content-center min-vh-100 align-items-center' >
-                <div className='row justify-content-center align-items-center d-flex flex-column gap-4 w-100' 
-        
-                >
+                <div className='row justify-content-center align-items-center d-flex flex-column gap-4 w-100' >
                {/* 1st Card */}
                 <Form className='signupCard col-10 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4' onSubmit={formik.handleSubmit} >
                     <div className="row">
-                    <h2 className="text-center pb-2 fs-2" ><FcReading style={{fontSize:"55px"}} /> Sign Up</h2>
+                    <h2 className="d-flex justify-content-center align-items-center pb-2 fs-2" ><FcVoicePresentation  style={{fontSize:"55px"}}/> Staff Sign Up</h2>
                     </div>
                     <div className="row" >             
                         {/* Username */}
@@ -155,17 +153,12 @@ function SignUp() {
                 </Form>
 
                 {/* Second Card */}
-                <div className='signinCard2   d-flex flex-row col-10 col-sm-10 col-md-6  justify-content col-lg-5 col-xxl-4 col-lg-4 gap-3 fs-5 text-center message'>
-                    <div className="row">
-                    <div>Or already have an account?</div>
-                    </div>
-                    <div className='row d-flex justify-content-center'>
-                    <Link className='link-underline link-underline-opacity-0 text-center' 
-                    to='/'
-                    // onClick={()=>{navigate('/')}}
-                    >Sign in</Link>
-            </div>
-                </div>
+            <div className='signinCard2 col-11 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4 d-flex  justify-content flex-row'>
+            <div className='text-center message'>Or already have an account? &nbsp;</div>
+            <Link className='link-underline link-underline-opacity-0 text-center' 
+                              to='/student-signin'
+            >Sign in</Link>                   
+             </div>
                 </div>
             </div>
         </>
