@@ -5,7 +5,6 @@ import Image from 'react-bootstrap/Image';
 import { FcReading } from "react-icons/fc";
 import { FcVoicePresentation } from "react-icons/fc";
 
-
 function StudentOrStaff() {
 
     const navigate = useNavigate()
@@ -41,20 +40,7 @@ function StudentOrStaff() {
               </div>
               </div>
           </div>
-            
-          {/* Right STaff */}           
-           {/* <div className='staffLogin col-lg-6  col-md-5 col-sm-8 py-lg-5 py-3'>
-              <div className='row mb-lg-5 mb-3 mx-auto'>
-                <Image className="object-fit-cover mx-auto"src="https://media.istockphoto.com/id/1231898401/vector/%C3%B0%C3%B1%C3%B0%C3%B0%C3%B0%C3%B0%C3%B1%C3%B0%C2%B5-rgb.jpg?s=612x612&w=0&k=20&c=OpAH1-b7qULawK00Kia-uB9Y8IjBdQ9SuZ_hMph4VS4=" style={{height:"180px",width:"200px",}}  roundedCircle />
-              </div>
-              <div className='row text-center mx-auto mb-md-4 mb-2'>
-                <Button className='col-10 mx-auto fs-5'>Sign in</Button>
-              </div>
-              <div className='text-center message ' style={{fontSize:"15px"}} >Don't have account? &nbsp;
-              <Link className='link-underline link-underline-opacity-0 text-center' to='/signup' >Create an account</Link>
-              </div>
-              </div> */}
-            </div>
+           </div>
        
         </div> 
     </>
