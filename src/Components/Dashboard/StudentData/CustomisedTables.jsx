@@ -124,7 +124,11 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
               <StyledTableCell>Phone Number</StyledTableCell>
               <StyledTableCell>Gender</StyledTableCell>
               <StyledTableCell>Birthdate</StyledTableCell>
-              <StyledTableCell>Course Name</StyledTableCell>
+              <StyledTableCell>Course ID</StyledTableCell>
+              {/* <StyledTableCell>Course Name</StyledTableCell> */}
+              <StyledTableCell>Preferred Course Name</StyledTableCell>
+              <StyledTableCell>Admission Fee</StyledTableCell>
+              <StyledTableCell>Admission Date</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -165,7 +169,11 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                   {student.gender.charAt(0).toUpperCase() + student.gender.slice(1)}
                 </StyledTableCell>
                 <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
-                <StyledTableCell>{student.courseName}</StyledTableCell>
+                <StyledTableCell>{student.courseId}</StyledTableCell>
+                {/* <StyledTableCell>{student.courseName}</StyledTableCell> */}
+                <StyledTableCell>{student.preferredCourseName}</StyledTableCell>
+                <StyledTableCell>{student.admissionFee}</StyledTableCell>
+                <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

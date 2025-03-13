@@ -39,9 +39,8 @@ function StudentOrStaff() {
               <Button variant="outline-primary" className='w-100 mx-auto d-flex text-nowrap justify-content-center align-items-center' to='/staff-signup' onClick={()=>{navigate('/staff-signup')}} ><FcVoicePresentation className='fs-2'/> Create Staff Account</Button>
               </div>
               </div>
-          </div>
+            </div>
            </div>
-       
         </div> 
     </>
   )

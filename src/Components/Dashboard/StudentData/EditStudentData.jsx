@@ -9,8 +9,6 @@ import { url } from '../../utils/constant';
 import axios from 'axios';
 import { Col, Row } from 'react-bootstrap';
 
-
-
 function EditStudentData({show,setShow,setSingleStudent,singleStudent,setStudentData}){
   console.log(singleStudent._id)
   console.log(singleStudent)

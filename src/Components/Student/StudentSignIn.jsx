@@ -12,8 +12,8 @@ import axios from 'axios';
 import { url } from '../utils/constant';
 import { FcReading } from "react-icons/fc";
 
-function StudentSignIn({isAuthenticated,setIsAuthenticated}){
 
+function StudentSignIn({isAuthenticated,setIsAuthenticated}){
     const formSchema = Yup.object().shape({
         password:Yup.string().required(),
         username:Yup.string().required()
