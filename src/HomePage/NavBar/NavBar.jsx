@@ -29,7 +29,10 @@ export default function NavBar() {
   const navigate = useNavigate()
   
 const token = localStorage.getItem('token')
-  console.log("token", token)
+const username = localStorage.getItem('username')
+const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
+
+  console.log("token", token,username)
 
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -50,6 +53,9 @@ const token = localStorage.getItem('token')
 
 
   const UserMenu = (
+    <>
+    <span className='d-flex flex-row align-items-center text-secondary'>
+      {username}
     <Image
       src={'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
       alt="UserName profile image"
@@ -57,6 +63,8 @@ const token = localStorage.getItem('token')
       style={{ width: '35px' }}
       className='ms-2 '
     />
+    </span>
+    </>
   )
   
 
@@ -65,50 +73,113 @@ const handleLogOut = ()=>{
   localStorage.removeItem('username')
   navigate('/')
 }
+
+
   return (
     <>
-    <Navbar   expand="lg" sticky="top"  bg="light" data-bs-theme="light" className=''>
-    <Container className=" border-danger mx-4">
-      <Form className=' d-flex flex-row  border-2'>
-        <Row className=''>
-          <Col  className='d-flex flex-row' >
-            <Form.Control
-              type="text"
-              placeholder="Search"
-              className=" ms-3"
-              style={{borderTopRightRadius:"0",borderBottomRightRadius: "0",border:"0",backgroundColor:"#efeff5"}}
-            />
-            <Button type="submit" style={{backgroundColor:"#4e73df",borderTopLeftRadius:"0",borderBottomLeftRadius: "0"}}><SearchIcon/></Button>
-          </Col>
-        </Row>
-      </Form>
-        {/* ICONS */}
-          <Nav className="ms-auto d-flex flex-row align-items-center justify-content-center gap-2">
-            {/* Notification */}
-          <Nav.Link href="#home"><IoMdNotifications className=' fs-3' /></Nav.Link>
-          {/* Email */}
-          <Nav.Link className='border-end pe-4' href="#home">
-            <FaEnvelope className='fs-4 '  /></Nav.Link>
-          {/*  */}
-        <NavDropdown
-          align="end"
-          id="basic-nav-dropdown"
-          title={UserMenu}
-          className='text-center user-dropdown'  // <- add this
->            {/* PROFILE */}
-              <NavDropdown.Item href="/profile" className='d-flex align-items-center gap-1' >
-              <FaUser className='fs-5 iconStyle'/>Profile
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item className='d-flex align-items-center gap-1' onClick={()=>handleLogOut()}>
-                <PiSignOutBold className='fs-5 iconStyle' />
-                Logout
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
+<Navbar expand="lg" sticky="top" bg="light" data-bs-theme="light">
+  <Container className="border-danger  d-flex align-items-center">
+    
+    {/* Desktop Search (on left for sm and up) */}
+    <Form className="d-none d-sm-flex align-items-center me-auto">
+      <Form.Control
+        type="text"
+        placeholder="Search"
+        className="ms-3"
+        style={{
+          borderTopRightRadius: "0",
+          borderBottomRightRadius: "0",
+          border: "0",
+          backgroundColor: "#efeff5"
+        }}
+      />
+      <Button
+        type="submit"
+        style={{
+          backgroundColor: "#4e73df",
+          borderTopLeftRadius: "0",
+          borderBottomLeftRadius: "0"
+        }}
+      >
+        <SearchIcon />
+      </Button>
+    </Form>
 
-      </Container>
-    </Navbar>
+    {/* Mobile Search Icon (on right) */}
+    <IconButton
+      className="d-flex d-sm-none ms-auto"
+      onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+    >
+      <SearchIcon />
+    </IconButton>
+
+    {/* Mobile popup search */}
+    {mobileSearchOpen && (
+      <div
+        className="d-flex flex-row position-absolute bg-white p-2 rounded shadow"
+        style={{ top: "50px", zIndex: 1000, width: "90%", left: "5%" }}
+      >
+        <Form.Control
+          type="text"
+          placeholder="Search"
+          style={{
+            borderTopRightRadius: "0",
+            borderBottomRightRadius: "0",
+            border: "0",
+            backgroundColor: "#efeff5"
+          }}
+          className="me-2"
+        />
+        <Button
+          type="submit"
+          style={{
+            backgroundColor: "#4e73df",
+            borderTopLeftRadius: "0",
+            borderBottomLeftRadius: "0"
+          }}
+        >
+          <SearchIcon />
+        </Button>
+      </div>
+    )}
+
+    {/* Icons section (right side) */}
+    <Nav className="d-flex flex-row align-items-center gap-3">
+      <Nav.Link href="#home">
+        <IoMdNotifications className="fs-3" />
+      </Nav.Link>
+      <Nav.Link href="#home">
+        <FaEnvelope className="fs-4" />
+      </Nav.Link>
+      <div
+        style={{ borderRight: "1px solid #a4a6adff", height: "30px" }}
+        className="topbar-divider d-none d-sm-block"
+      ></div>
+      <NavDropdown
+        align="end"
+        id="basic-nav-dropdown"
+        title={UserMenu}
+        className="text-center user-dropdown"
+      >
+        <NavDropdown.Item
+          href="/profile"
+          className="d-flex align-items-center gap-2"
+        >
+          <FaUser className="fs-5 iconStyle" /> Profile
+        </NavDropdown.Item>
+        <NavDropdown.Divider />
+        <NavDropdown.Item
+          className="d-flex align-items-center gap-2"
+          onClick={() => handleLogOut()}
+        >
+          <PiSignOutBold className="fs-5 iconStyle" />
+          Logout
+        </NavDropdown.Item>
+      </NavDropdown>
+    </Nav>
+  </Container>
+</Navbar>
+
     </>
   );
 }
