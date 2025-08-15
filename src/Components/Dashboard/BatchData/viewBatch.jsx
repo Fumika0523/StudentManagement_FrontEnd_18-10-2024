@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import SideBar from "../../../HomePage/SideBar"
-import NavBar from "../../../HomePage/NavBar"
+import NavBar from "../../../HomePage/NavBar/NavBar"
 import CustomisedBatchTables from "./CustomisedBatchTables"
 import { url } from "../../utils/constant"
 import axios from "axios"
@@ -11,7 +11,7 @@ function viewBatch(){
     const [batchData,setBatchData] = useState([])
     const [show,setShow] = useState(false)
     
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     let config = {
         headers:{
             Authorization:`Bearer ${token}`

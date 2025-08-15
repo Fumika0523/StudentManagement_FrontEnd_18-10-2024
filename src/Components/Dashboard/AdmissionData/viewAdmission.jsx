@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import SideBar from '../../../HomePage/SideBar'
-import NavBar from '../../../HomePage/NavBar'
+import NavBar from '../../../HomePage/NavBar/NavBar'
 import CustomisedAdmissionTable from './CustomisedAdmissionTable'
 import { useEffect } from 'react'
 import axios from 'axios'
@@ -16,7 +16,7 @@ const viewAdmission = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState (true)
 
     
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     let config = {
         headers:{
             Authorization:`Bearer ${token}`

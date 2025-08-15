@@ -48,15 +48,14 @@ const formik = useFormik({
         birthdate:formattedDate,
     },
     validationSchema:formSchema,
-    // enableReinitialize: true, //if there is any update in my initial value, please make it update >> enable > true
+    enableReinitialize: true, //if there is any update in my initial value, please make it update >> enable > true
     onSubmit:(values)=>{
         console.log(values)
         updateStudent(values)
  }})
-
  console.log(singleStudent)
 
- const token = sessionStorage.getItem('token')
+ const token = localStorage.getItem('token')
  console.log('token')
  
  let config = {
@@ -80,13 +79,12 @@ const formik = useFormik({
     }catch(e){
       console.error('Error Editing Student:',e)
     }} 
-     
     return(
     <>
     <div>
     <Modal
-        show={show} onHide={handleClose} size='lg'
-        style={{margin:"8% 0"}} >
+    show={show} onHide={handleClose} size='lg'
+    style={{margin:"8% 0"}} >
         <Modal.Header closeButton>
           <Modal.Title  >Add Student</Modal.Title>
         </Modal.Header>

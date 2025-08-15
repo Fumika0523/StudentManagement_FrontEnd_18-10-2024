@@ -1,311 +1,289 @@
-.signInStyle{
-    /* background-image: linear-gradient(to right #b8cbb8 0%, #b8cbb8 0%,   100% ); */
-    /*
-* Created with https://www.css-gradient.com
-* Gradient link: https://www.css-gradient.com/?c1=4f74df&c2=69c879&gt=l&gd=dtl
-*/
-background: #4F74DF;
-background: linear-gradient(135deg, #4F74DF, #69C879);
-/* height: 100vh; */
-/* border:5px solid red; */
-justify-content: center;
+/* ===== Sign In & Sign Up Styles ===== */
+.signInStyle {
+  background: linear-gradient(135deg, #4F74DF, #69C879);
+  justify-content: center;
 }
 
-.signinBtn{
-    background: #4F74DF;
-    background: linear-gradient(135deg, #4F74DF, #69C879);
+.signinBtn,
+.sign-Btn {
+  background: linear-gradient(135deg, #4F74DF, #69C879);
 }
 
-.signinBtn:hover{
-    transform: scale(1.07);
-    transition: 0.3s;
- }
- 
-
-.sign-Btn{
-    background: #4F74DF;
-    background: linear-gradient(135deg, #4F74DF, #69C879);
-    text-align:center;
-    align-items: center;
-    justify-content:center;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-    padding: 3% 0;
+.signinBtn:hover,
+.sign-Btn:hover,
+.signup-Btn:hover {
+  transform: scale(1.07);
+  transition: 0.3s;
 }
 
-
-.signup-Btn{
-    transform: scale(1.07);
-    transition: 0.3s;
- }
-
- .sign-Btn:hover{
-    transform: scale(1.07);
-    transition: 0.3s;
- }
-
-.formLabel{
-    font-size: 15px;
-    padding-top: 3%;
+.sign-Btn {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  padding: 3% 0;
+  font-size: 10px;
+  border-radius: 8px;
 }
 
-.signinCard{
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-   padding: 2% 5%;
-   border-radius: 10px;
+.formLabel {
+  font-size: 15px;
+  padding-top: 3%;
 }
 
-.signinCard2{
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1.5% 0%;
-    border-radius: 10px;
+.signinCard,
+.signupCard {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2% 5%;
+  border-radius: 10px;
 }
 
-.signupinBtn:hover{
-    border-color: #5fc270;
-    transform: scale(1.07);
-    transition: 0.3s;
- }
- 
- .signupinBtn{
-    border-radius: 50px;
-    padding: 7px 0;
-    border:2px solid  #4F74DF;
-    cursor:pointer;
-    border-radius: 10px;
- }
-.message{
-    font-size: 17px;
-}
-.smallSideRow{
-    padding:0px 15px;
-    margin-bottom: 20px;
+.signinCard2 {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5% 0%;
+  border-radius: 10px;
 }
 
+.signupinBtn {
+  border-radius: 10px;
+  padding: 7px 0;
+  border: 2px solid #4F74DF;
+  cursor: pointer;
+}
+
+.signupinBtn:hover {
+  border-color: #5fc270;
+  transform: scale(1.07);
+  transition: 0.3s;
+}
+
+.message {
+  font-size: 17px;
+}
+
+/* ===== Sidebar Styles ===== */
 .sideBarStyle {
-    position:sticky;
+  background-color: #4e73df;
+  text-align: start;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Desktop widths */
+.sideBarStyle.open {
+  width: 250px;
+}
+.sideBarStyle.closed {
+  width: 80px;
+}
+
+/* Mobile slide-in */
+@media (max-width: 768px) {
+  .sideBarStyle {
+    position: fixed;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100%;
     top: 0;
-    transition: width 0.3s ease;
-    background-color: #4e73df;
-    text-align: start;
-    min-height: 100vh;
-    overflow: visible;
-    /* border:2px solid red; */
+    transition: left 0.3s ease;
+  }
+  .sideBarStyle.open {
+    left: 0;
+  }
+}
+
+/* Toggle buttons */
+.toggle-btn {
+  display: none;
+  justify-content: flex-end;
+  padding: 5px;
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .toggle-btn {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
   }
+}
 
-  .studentTitleIcon{
-    font-size: 45px;
+.hamburger {
+  font-size: 2rem;
+  padding: 10px;
+  background: #4e73df;
+  color: white;
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .hamburger {
+    display: none;
   }
-
-  .dashTitle{
-    font-weight: bold;
-    text-wrap: none;
-  }
-
-
-
-.sign-Btn{
-    font-size: 10px;
-    border-radius: 8px;
-}
- 
-
-  .sidebarIcons{
-    color:white;
-  }
-
-
-.socialIcons{
-    font-size: 100px;
 }
 
-.signupCard{
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 2% 5%;
-    border-radius: 10px;
+.studentTitleIcon {
+  font-size: 45px;
+}
+.dashTitle {
+  font-weight: bold;
+  text-wrap: none;
 }
 
-.socialIcon:hover{
-    transform: scale(1.1);
-    transition: 1.5s;
+.sidebarIcons {
+  color: white;
 }
 
-
-.dashRow:hover{
-    color:white !important;
+.socialIcons {
+  font-size: 100px;
 }
 
-.dashRow{
-   /* background-color: black; */
-   /* color:"purple" */
-   cursor: pointer;
-   border-bottom: 1px solid #bfbfbf;
-   color: #bfbfbf;
-   padding: 10.5% 2%;
-   background-color:transparent;
-   font-size:18px
+.socialIcon:hover {
+  transform: scale(1.1);
+  transition: 1.5s;
 }
 
-
-.dashRowComponent{
-    /* background-color: black; */
-    /* color:"purple" */
-    cursor: pointer;
-    text-align:start;
-    border-bottom: 1px solid #bfbfbf;
-    color: #bfbfbf;
-    padding: 5% 0%;
-    background-color:transparent;
-    font-size:17px
- }
-
-.styleTableRowHover:hover{
-    background-color: grey  !important;
-    cursor: pointer;
-    color:"red" !important;
+.dashRow {
+  cursor: pointer;
+  border-bottom: 1px solid #bfbfbf;
+  color: #bfbfbf;
+  padding: 10.5% 2%;
+  background-color: transparent;
+  font-size: 18px;
+}
+.dashRow:hover {
+  color: white !important;
 }
 
-.sidebarItem:hover{
-    color: #4e73df;
-    font-weight: bold;
+.dashRowComponent {
+  cursor: pointer;
+  text-align: start;
+  border-bottom: 1px solid #bfbfbf;
+  color: #bfbfbf;
+  padding: 5% 0%;
+  background-color: transparent;
+  font-size: 17px;
 }
 
-.sidebarItem{
-font-size: 90%;
-width:100%;
-text-align:start;
-padding:3% 10%;
+.styleTableRowHover:hover {
+  background-color: grey !important;
+  cursor: pointer;
 }
 
-/* .staffLogin{
-    background-color: rgb(221, 231, 252);
-    border-radius: 3%;
-    /* border-bottom-right-radius: 3%; */
-
-
-.studentLogin{
-    background-color: rgb(233, 240, 253);
-    border-radius: 3%;
+.sidebarItem {
+  font-size: 90%;
+  width: 100%;
+  text-align: start;
+  padding: 3% 10%;
+}
+.sidebarItem:hover {
+  color: #4e73df;
+  font-weight: bold;
 }
 
-.portalIcon{
-    text-align: center;
-    color: white;
-    font-size: 45px;
-    cursor: pointer;
-    justify-content: center;
-    display: flex;
-    background-color:darkblue ;
-    border-radius:5px;
+.studentLogin {
+  background-color: rgb(233, 240, 253);
+  border-radius: 3%;
 }
 
-.bgColor{
-    color: white;
-    font-size: 35px !important;
-    background:none !important;
-}
- 
-.bgColor:hover{
-    transform: scale(1.1);
-    transition: 1.1s;
-    background-color:#809ae7 !important;
-    border-radius: 5px;
-    color:#2c51c1;
+.portalIcon {
+  text-align: center;
+  color: white;
+  font-size: 45px;
+  cursor: pointer;
+  justify-content: center;
+  display: flex;
+  background-color: darkblue;
+  border-radius: 5px;
 }
 
-
-.smallSidebarIcon:hover{
-    transform: scale(1.1);
-    transition-duration: 1.1s;
-    background-color:#809ae7;
-    border-radius: 5px;
-    color:#2c51c1;
+.bgColor {
+  color: white;
+  font-size: 35px !important;
+  background: none !important;
+}
+.bgColor:hover {
+  transform: scale(1.1);
+  transition: 1.1s;
+  background-color: #809ae7 !important;
+  border-radius: 5px;
+  color: #2c51c1;
 }
 
-.smallSidebarIcon:hover + .arrowIcon {
-/* display: block !important;
-    transition-delay: 100ms !important;
-transition-duration: 3s !important;  */
-opacity: 1;
-transition: opacity 100ms;
-transition-delay: 200ms;
+.smallSidebarIcon:hover {
+  transform: scale(1.1);
+  transition-duration: 1.1s;
+  background-color: #809ae7;
+  border-radius: 5px;
+  color: #2c51c1;
 }
 
-.arrowIcon{
-    /* display: none; */
-    /* height: 0px;
-    width: 10%;
-  padding: 0px; */
+.arrowIcon {
   opacity: 0;
   transition: opacity 250ms 300ms;
 }
-
-.component-icon{
-    font-size: 35px;
-    color: white;
-    /* border: 1px solid; */
-    /* width: 100%; */
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;      
+.smallSidebarIcon:hover + .arrowIcon {
+  opacity: 1;
+  transition-delay: 200ms;
 }
 
-.component-icon:hover{
-    background-color: #809ae7;
-    border-radius: 5px;
-    color:#2c51c1;
-    transition-duration: 1.1s  !important;
-    transform: scale(1.1);
+.component-icon {
+  font-size: 35px;
+  color: white;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.component-icon:hover {
+  background-color: #809ae7;
+  border-radius: 5px;
+  color: #2c51c1;
+  transition-duration: 1.1s !important;
+  transform: scale(1.1);
 }
 
-.backgroundDesign{
-    /* border:2px solid red; */
-    width: 100%;
-    background-color:#efeff5;
-    /* min-height: 92.5vh; */
-    /* border: 3px solid red; */
-    display: flex;
-    flex-direction: column;
+.backgroundDesign {
+  width: 100%;
+  background-color: #efeff5;
+  display: flex;
+  flex-direction: column;
 }
 
 .dropdown-toggle::after {
-    display: none !important; 
-  }
-
-
-.signOut{
- font-size: 30px !important;
- color: rgb(127, 4, 4) !important;
+  display: none !important;
 }
 
-.signOut:hover{
-    background-color: darkblue  !important;
+.signOut {
+  font-size: 30px !important;
+  color: rgb(127, 4, 4) !important;
+}
+.signOut:hover {
+  background-color: darkblue !important;
 }
 
-.commonButton{
-    background-color:#4e73df !important;
-    color: white!important;
-    margin:10px 0px
+.commonButton {
+  background-color: #4e73df !important;
+  color: white !important;
+  margin: 10px 0px;
 }
 
-.tableTitle{
-color:#4e73df;
-border-bottom: 2px solid #e3e6f0;
-font-weight: bold;
-font-size: 20px;
-padding: 5px 10px;
+.tableTitle {
+  color: #4e73df;
+  border-bottom: 2px solid #e3e6f0;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 5px 10px;
 }

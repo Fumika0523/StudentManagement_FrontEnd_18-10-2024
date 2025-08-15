@@ -58,7 +58,7 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
             updateCourse(values)
         }  
     })
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     console.log('token')
 
     let config = {

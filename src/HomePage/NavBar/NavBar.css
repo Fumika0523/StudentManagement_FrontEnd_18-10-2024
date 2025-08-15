@@ -1,0 +1,49 @@
+.iconStyle { 
+    color: #c7c9d3ff !important
+} 
+
+
+/* Change color on hover */
+.navbar a:hover {
+  background-color: #daddeaff;
+}
+
+
+.NavDropdown:hover {
+background-color:transparent !important
+}
+
+/* NavBar.css */
+
+/* Make dropdown overlay without affecting navbar height */
+.user-dropdown .dropdown-menu {
+    position: absolute !important;
+    top: 100%; /* right below the toggle */
+    right: 0;   /* align to right side */
+    left: auto; /* override bootstrap */
+    width: 200px; /* optional width */
+}
+
+
+.user-dropdown .dropdown-toggle {
+  background-color: transparent;
+}
+
+/* hover on the toggle itself */
+.user-dropdown .dropdown-toggle:hover  {
+  background-color: transparent;
+}
+
+/* Remove background on hover and change icon color */
+.nav-link {
+  background-color: transparent !important;
+}
+
+.nav-link {
+  color:#c7c9d3ff !important ; /* keeps default color */
+}
+
+.nav-link:hover  {
+  color: #a4a6adff !important; /* change icon color on hover */
+  background-color: transparent !important; /* ensures no bg */
+}

@@ -90,7 +90,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         }
     })
 
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     console.log(token)
 
     let config = {
@@ -281,6 +281,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         <Col>
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Date</Form.Label>
+
+                                
                                 <Form.Control
                                     type="date" placeholder='Type your Admission Date'
                                     name='admissionDate' 

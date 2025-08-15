@@ -12,7 +12,6 @@ import axios from 'axios';
 import { url } from '../utils/constant';
 import { FcReading } from "react-icons/fc";
 
-
 function StudentSignIn({isAuthenticated,setIsAuthenticated}){
     const formSchema = Yup.object().shape({
         password:Yup.string().required(),
@@ -32,13 +31,12 @@ function StudentSignIn({isAuthenticated,setIsAuthenticated}){
     })
 
     const navigate=useNavigate()
-
     const postSignInUser=async(loginUser)=>{
         console.log(loginUser)
         const res = await axios.post(`${url}/signin`,loginUser)
         console.log(res.data) 
-        sessionStorage.setItem('token',res.data.token)
-        sessionStorage.setItem('username',res.data.user.username)
+        localStorage.setItem('token',res.data.token)
+        localStorage.setItem('username',res.data.user.username)
         if(res.data.token){
             setIsAuthenticated(true) // signed in >> true
         }

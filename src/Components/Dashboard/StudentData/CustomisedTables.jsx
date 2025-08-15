@@ -64,7 +64,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
   const [viewPassword, setViewPassword] = useState(false);
   const [password, setPassword] = useState(null);
 
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -125,7 +125,6 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
               <StyledTableCell>Gender</StyledTableCell>
               <StyledTableCell>Birthdate</StyledTableCell>
               <StyledTableCell>Course ID</StyledTableCell>
-              {/* <StyledTableCell>Course Name</StyledTableCell> */}
               <StyledTableCell>Preferred Course Name</StyledTableCell>
               <StyledTableCell>Admission Fee</StyledTableCell>
               <StyledTableCell>Admission Date</StyledTableCell>
@@ -133,9 +132,9 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
           </TableHead>
           <TableBody>
 
-            {courseData && studentData?.map((student,course,index) => (
+            {studentData?.map((student,index) => (
               <StyledTableRow key={student._id}>
-              <StyledTableCell className='p-0'>1</StyledTableCell>
+              <StyledTableCell className='p-0'>{index+1}</StyledTableCell>
                 <StyledTableCell>
                   <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                     <FaEdit
@@ -150,7 +149,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                     />
                     <IoEyeSharp
                       className="text-primary"
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor:'pointer' }}
                       onClick={() => handlePasswordClick(student.password)}
                     />
                   </div>

@@ -47,7 +47,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
     }
   })
 
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   console.log(token)
 
   let config = {
@@ -96,7 +96,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
                     onBlur={formik.handleBlur} />
                     {/* Error Message */}
                     {formik.errors.studentName && formik.touched.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
-                    </Form.Group>
+                  </Form.Group>
               </Col>
               <Col>
                 {/* Username */}
@@ -153,9 +153,9 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
               <Col>
               <Form.Label className='m-0'>Preferred Course</Form.Label>
               {['checkbox'].map((type) => (
-        <div key={`inline-${type}`} className="mb-1 d-flex flex-row justify-content-between" style={{fontSize:"14px"}}>
-       
-          <Form.Check
+              <div key={`inline-${type}`} className="mb-1 d-flex flex-row justify-content-between" style={{fontSize:"14px"}}>
+                
+            <Form.Check
             inline
             label="HTML"
             name="preferredCourseName"
@@ -163,7 +163,8 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             onChange={formik.handleChange} 
             id={`inline-${type}-1`}
             value="HTML"
-          />
+            />
+
           <Form.Check
             inline
             label="CSS"
@@ -171,9 +172,9 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             name="preferredCourseName"
             type={type}
             id={`inline-${type}-2`}
-            onChange={formik.handleChange} 
-          />
-                <Form.Check
+            onChange={formik.handleChange} />
+            
+          <Form.Check
             inline
             label="Java Script"
             value="Java Script"
@@ -199,8 +200,8 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             type={type}
             id={`inline-${type}-2`}
             onChange={formik.handleChange} 
+          />
 
-          />    
           <Form.Check
             inline
             label="Mongo DB"
@@ -208,9 +209,8 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             name="preferredCourseName"
             type={type}
             id={`inline-${type}-2`}
-            onChange={formik.handleChange} 
-
-          />    
+            onChange={formik.handleChange} />  
+  
           <Form.Check
             inline
             label="SQL"

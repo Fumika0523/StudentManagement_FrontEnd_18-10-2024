@@ -44,7 +44,7 @@ setViewWarning(false)
  navigate('/coursedata')}
     
 console.log(singleCourse)
-const token = sessionStorage.getItem('token');
+const token = localStorage.getItem('token');
 const config = {
         headers:{
             Authorization:`Bearer ${token}`}}

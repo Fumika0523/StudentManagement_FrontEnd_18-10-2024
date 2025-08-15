@@ -4,7 +4,7 @@ import { url } from "../../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./CustomisedTables"
 import SideBar from "../../../HomePage/SideBar"
-import NavBar from "../../../HomePage/NavBar"
+import NavBar from "../../../HomePage/NavBar/NavBar"
 import ModalAddStudent from "../StudentData/ModalAddStudent"
 import { Button } from "react-bootstrap"
 
@@ -15,7 +15,7 @@ function ViewStudent(){
     const [show, setShow] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState (true)
 
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     let config = {
         headers:{
             Authorization:`Bearer ${token}`

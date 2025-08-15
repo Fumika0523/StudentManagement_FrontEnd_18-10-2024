@@ -1,7 +1,7 @@
 import EarningCardDisplay from "./FirstRow/EarningCardDisplay"
 import ChartDisplay from "./SecondRow/ChartDisplay"
 import SideBar from "../../HomePage/SideBar"
-import NavBar from "../../HomePage/NavBar"
+import NavBar from "../../HomePage/NavBar/NavBar"
 import { useEffect, useState } from "react"
 import { Button, Col, Container, Row } from "react-bootstrap"
 import { FaDownload } from "react-icons/fa";
@@ -18,7 +18,7 @@ function DashboardCard(){
     
     //its going to render whenever there is change (signin)
     useEffect(()=>{
-      const token = sessionStorage.getItem('token') //if you have a token,
+      const token = localStorage.getItem('token') //if you have a token,
       console.log(token) 
       setIsAuthenticated(true) //signed in,>>authentication > true
     //   getUserData()

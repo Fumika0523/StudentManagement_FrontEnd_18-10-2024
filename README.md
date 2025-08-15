@@ -53,3 +53,7 @@ student can  >>  register student,login, update the profile, later on - will be 
 Staff can >>  register staff, login (staff), add data for the student (admission,batches,add the task,attendance)
 
 Staff can add the number of courses, availability for the batches, create the task,
+
+
+--------------------
+1. Refreshing a page will auto-logout and re-direct to Signin page.

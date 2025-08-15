@@ -37,8 +37,8 @@ function StaffSignIn({isAuthenticated,setIsAuthenticated}){
         console.log(loginUser)
         const res = await axios.post(`${url}/signin`,loginUser)
         console.log(res.data) 
-        sessionStorage.setItem('token',res.data.token)
-        sessionStorage.setItem('username',res.data.user.username)
+        localStorage.setItem('token',res.data.token)
+        localStorage.setItem('username',res.data.user.username)
         if(res.data.token){
             setIsAuthenticated(true) // signed in >> true
         }

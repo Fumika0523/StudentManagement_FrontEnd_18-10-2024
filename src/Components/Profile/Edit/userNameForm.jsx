@@ -9,9 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 function userNameForm(){
     const [userData,setUserData]=useState([]) //useState valiable
-
     const navigate = useNavigate()
-
     const formSchema = Yup.object().shape({
         username:Yup.string().required()
     })
@@ -25,11 +23,11 @@ function userNameForm(){
         },
         enableReinitialize: true, //if there is any update in my initial value, please make it update >> enable > true
         onSubmit:(values)=>{
-            console.log(values)
-            updateProfile(values)
+        console.log(values)
+        updateProfile(values)
      }})
       
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     console.log('token')
 
     let config = {
@@ -39,8 +37,8 @@ function userNameForm(){
     }
 
     const updateProfile=async(updatedProfile)=>{
-        console.log("Username posted to the DB")
-        console.log("Update Username:",updatedProfile)
+    console.log("Username posted to the DB")
+    console.log("Update Username:",updatedProfile)
     
     let res = await axios.put(`${url}/users/profile`,updatedProfile,config)
     console.log(res)

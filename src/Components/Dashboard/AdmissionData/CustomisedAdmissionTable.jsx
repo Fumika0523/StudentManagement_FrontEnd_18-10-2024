@@ -49,7 +49,7 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData,courseData,set
   const [singleCourse,setSingleCourse] = useState(null)
   const [viewWarning, setViewWarning] = useState(false)
 
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const config = {
       headers:{
           Authorization: `Bearer ${token}`
@@ -116,7 +116,6 @@ const formatDateTime = (isoString) => {
             <StyledTableCell>Year</StyledTableCell>
             <StyledTableCell>CreatedAt</StyledTableCell>
             <StyledTableCell>UpdatedAt</StyledTableCell>
-
           </TableRow>
         </TableHead>
         <TableBody>
@@ -137,7 +136,6 @@ const formatDateTime = (isoString) => {
               console.log(admission)
               setSingleAdmission(admission)}}/>
             </div>
-
             </StyledTableCell>
             <StyledTableCell>{admission.courseId}</StyledTableCell>
             <StyledTableCell>{admission.courseName}</StyledTableCell>

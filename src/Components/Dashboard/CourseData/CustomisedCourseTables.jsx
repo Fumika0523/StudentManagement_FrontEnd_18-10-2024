@@ -46,7 +46,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
     console.log(courseData)
     const [viewWarning, setViewWarning] = useState(false)
    
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     const config = {
         headers:{
             Authorization: `Bearer ${token}`

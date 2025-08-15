@@ -48,7 +48,7 @@ function CustomisedBatchTables({batchData,setBatchData}){
     const [singleBatch,setSingleBatch] = useState(null) //?
     console.log(batchData)
     const [viewWarning,setViewWarning] =useState(false)
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,

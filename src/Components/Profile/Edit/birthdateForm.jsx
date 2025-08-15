@@ -25,7 +25,7 @@ const formik=useFormik({
     }
 })
 
-const token = sessionStorage.getItem('token')
+const token = localStorage.getItem('token')
 console.log('token')
 
 let config = {

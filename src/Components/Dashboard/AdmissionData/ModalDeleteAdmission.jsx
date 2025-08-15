@@ -28,7 +28,7 @@ const ModalDeleteAdmission = ({viewWarning,setViewWarning,singleAdmission,setAdm
          navigate('/admissiondata')}
             
         console.log(singleAdmission)
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         const config = {
                 headers:{
                     Authorization:`Bearer ${token}`}}

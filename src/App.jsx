@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import ProfileForm from './Components/Profile/ProfileForm'
 import { Box } from '@mui/material'
 import SideBar from './HomePage/SideBar'
-import NavBar from './HomePage/NavBar'
+import NavBar from './HomePage/NavBar/NavBar'
 import axios from 'axios'
 import UserNameForm from './Components/Profile/Edit/userNameForm'
 import { url } from './Components/utils/constant'
@@ -40,16 +40,18 @@ const [isAuthenticated,setIsAuthenticated]=useState(false)
 
 //its going to render whenever there is change (signin)
 useEffect(()=>{
-  const token = sessionStorage.getItem('token') //if you have a token,
+  const token = localStorage.getItem('token') //if you have a token,
   console.log(token) 
+  if(token){
   setIsAuthenticated(true) //signed in,>>authentication > true
-  getUserData()
+  getUserData(token)
+   }
 },[])
 
 // Get Student Data
 const getUserData = async()=>{
   console.log("App.jsx call")
-  const token=sessionStorage.getItem('token')
+  const token=localStorage.getItem('token')
   let config = {
     headers:{
       Authorization:`Bearer ${token}`

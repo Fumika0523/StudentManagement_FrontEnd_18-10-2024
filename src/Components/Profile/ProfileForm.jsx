@@ -14,7 +14,7 @@ const formatDate = (dateString) => {
 
 const [userData,setUserData] = useState([])
 
-const token = sessionStorage.getItem('token')
+const token = localStorage.getItem('token')
 console.log(token)
 
 let config = {
@@ -29,7 +29,6 @@ const getUserData=async()=>{
     console.log(res.data.userData)
     setUserData(res.data.userData)
 }
-
 useEffect(()=>{
     getUserData()
 },[]) // API call has to be made inside useEffect() only
@@ -40,7 +39,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
 
     return(
         <>   
-            <div style={{margin:"0 20%"}} className="py-5 ">
+           <div style={{margin:"0 20%"}} className="py-5 ">
               {/* Top Section */}
               <div className='fs-4 text-center'>Personal info</div>
               <div style={{fontSize:"100%"}} className="text-center" > Info about you and your preferences across Student Management Service</div>
@@ -111,7 +110,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
                   <div style={{fontSize:"70%"}}>Last changed Jul 19,2023</div>
               </div>
               <button className="mt-4 btn  btn-secondary px-4" onClick={()=>navigate('/dashboard')} >Back</button>
-              </div>
+        </div>
      
         </>
     )
