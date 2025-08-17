@@ -1,0 +1,150 @@
+.sideBarStyle {
+  background-color: #4e73df;
+  text-align: start;
+  min-height: 98vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  position: relative;
+  padding:0 0 15px 0;
+  overflow-y: hide;
+  /* z-index: 1000; */
+}
+/* Desktop widths */
+.sideBarStyle.open {
+  width: 250px;
+}
+.sideBarStyle.closed {
+  width: 80px;
+}
+
+.portalIcon {
+  text-align: center;
+  color: white;
+  font-size: 45px;
+
+  cursor: pointer;
+  justify-content: center;
+  display: flex;
+  background-color: darkblue;
+  border-radius: 5px;
+}
+
+/* Expanded vs collapsed widths */
+.sidebar-expanded {
+  width: 250px;
+}
+.sidebar-collapsed {
+  width: 150px; /* ✅ wide enough to show labels */
+}
+
+/* Toggle button */
+.hamburger-icon {
+  cursor: pointer;
+  text-align: right;
+  padding: 10px;
+  color: white;
+}
+
+.bgColor {
+  color: white;
+  font-size: 35px !important;
+  background: none !important;
+}
+.bgColor:hover {
+  transform: scale(1.1);
+  transition: 1s;
+  background-color: #809ae7 !important;
+  border-radius: 5px;
+  color: #2c51c1;
+}
+.logo-section {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.studentTitleIcon {
+  font-size: 40px;
+  margin-right: 10px;
+}
+
+.dashTitle {
+  font-weight: bold;
+  font-size: 18px;
+  white-space: nowrap;
+}
+.dashRowComponent {
+  cursor: pointer;
+  text-align: start;
+  border-bottom: 1px solid #bfbfbf;
+  color: #bfbfbf;
+  padding: 5% 0%;
+  background-color: transparent;
+  font-size: 17px;
+}
+
+.component-icon:hover {
+  background-color: #809ae7;
+  border-radius: 5px;
+  color: #2c51c1;
+  transition-duration: 1.1s !important;
+  transform: scale(1.1);
+}
+
+.dashRow {
+  cursor: pointer;
+  border-bottom: 1px solid #bfbfbf;
+  color: #bfbfbf;
+  padding: 10.5% 2%;
+  background-color: transparent;
+  font-size: 18px;
+}
+.dashRow:hover {
+  color: white !important;
+}
+/* Submenu */
+.submenu {
+  background-color: white;
+  color: black;
+  margin: 5px 0;
+  padding: 5px;
+  border-radius: 10px;
+}
+.submenu-item {
+  color: black;
+}
+.submenu-item:hover {
+  color: #4e73df;
+  font-weight: bold;
+}
+
+/* Special case: signout */
+.signOut {
+  color: rgb(127, 4, 4) !important;
+  
+}
+.signOut:hover {
+  background-color: darkblue !important;
+}
+
+.sidebarIcons {
+  color: white;
+  /* font-size:28px; */
+}
+
+.sidebarItem:hover {
+  color: rgba(53, 53, 57, 1)!important;
+}
+
+
+.sidebarItem{
+    color: #8c8c91ff !important;
+    height:40px;
+    font-size:15px;
+}
+
+.sideBarStyle::-webkit-scrollbar {
+  display: none !important;             /* Chrome, Safari */
+}

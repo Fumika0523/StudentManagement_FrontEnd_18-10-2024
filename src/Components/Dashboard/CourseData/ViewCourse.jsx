@@ -1,4 +1,4 @@
-import SideBar from "../../../HomePage/SideBar"
+import SideBar from "../../../HomePage/SideBar/SideBar"
 import { useEffect, useState } from "react"
 import NavBar from "../../../HomePage/NavBar/NavBar"
 import CustomisedCourseTables from "./CustomisedCourseTables"

@@ -34,23 +34,6 @@ const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
 
   console.log("token", token,username)
 
-  const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.
-      palette.info.light),
-    '&:hover': {
-      backgroundColor: alpha(theme.
-      palette.info.light),
-    },
-    marginLeft: 0,
-    width: '50%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: '50%',
-    },
-  }));
-
 
   const UserMenu = (
     <>
@@ -77,41 +60,47 @@ const handleLogOut = ()=>{
 
   return (
     <>
-<Navbar expand="lg" sticky="top" bg="light" data-bs-theme="light">
+<Navbar expand="lg" sticky="top" bg="light"  data-bs-theme="light">
   <Container className="border-danger  d-flex align-items-center">
     
     {/* Desktop Search (on left for sm and up) */}
     <Form className="d-none d-sm-flex align-items-center me-auto">
       <Form.Control
         type="text"
-        placeholder="Search"
+        placeholder="Search for..."
         className="ms-3"
         style={{
           borderTopRightRadius: "0",
           borderBottomRightRadius: "0",
           border: "0",
+          width:"250px",
           backgroundColor: "#efeff5"
         }}
       />
       <Button
         type="submit"
+        className=' p-1'
         style={{
           backgroundColor: "#4e73df",
           borderTopLeftRadius: "0",
           borderBottomLeftRadius: "0"
         }}
       >
-        <SearchIcon />
+        <SearchIcon className='fs-4 '/>
       </Button>
     </Form>
 
-    {/* Mobile Search Icon (on right) */}
-    <IconButton
-      className="d-flex d-sm-none ms-auto"
-      onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-    >
-      <SearchIcon />
-    </IconButton>
+{/* Icons section (right side) */}
+<Nav className="d-flex flex-row align-items-center gap-3 ms-auto">
+
+  {/* Mobile Search Icon - only visible on mobile */}
+  <Nav.Link 
+    href="#home" 
+    className="d-flex d-sm-none"
+    onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+  >
+    <SearchIcon className="fs-2" />
+  </Nav.Link>
 
     {/* Mobile popup search */}
     {mobileSearchOpen && (
@@ -138,21 +127,22 @@ const handleLogOut = ()=>{
             borderBottomLeftRadius: "0"
           }}
         >
-          <SearchIcon />
+          <SearchIcon  />
         </Button>
       </div>
     )}
-
+ 
     {/* Icons section (right side) */}
-    <Nav className="d-flex flex-row align-items-center gap-3">
+    {/* <Nav className="d-flex flex-row align-items-center gap-3"> */}
       <Nav.Link href="#home">
         <IoMdNotifications className="fs-3" />
       </Nav.Link>
+      {/* Email icon */}
       <Nav.Link href="#home">
         <FaEnvelope className="fs-4" />
       </Nav.Link>
-      <div
-        style={{ borderRight: "1px solid #a4a6adff", height: "30px" }}
+
+      <div style={{ borderRight: "1px solid #a4a6adff", height: "30px" }}
         className="topbar-divider d-none d-sm-block"
       ></div>
       <NavDropdown

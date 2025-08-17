@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import SideBar from '../../../HomePage/SideBar'
+import SideBar from '../../../HomePage/SideBar/SideBar'
 import NavBar from '../../../HomePage/NavBar/NavBar'
 import CustomisedAdmissionTable from './CustomisedAdmissionTable'
 import { useEffect } from 'react'

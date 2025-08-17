@@ -69,74 +69,12 @@
   font-size: 17px;
 }
 
-/* ===== Sidebar Styles ===== */
-.sideBarStyle {
-  background-color: #4e73df;
-  text-align: start;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: all 0.3s ease;
-  position: sticky;
-  top: 0;
-  overflow-y: auto;
-  z-index: 1000;
-}
 
-/* Desktop widths */
-.sideBarStyle.open {
-  width: 250px;
-}
-.sideBarStyle.closed {
-  width: 80px;
-}
-
-/* Mobile slide-in */
-@media (max-width: 768px) {
-  .sideBarStyle {
-    position: fixed;
-    left: -100%;
-    width: 80%;
-    max-width: 300px;
-    height: 100%;
-    top: 0;
-    transition: left 0.3s ease;
-  }
-  .sideBarStyle.open {
-    left: 0;
-  }
-}
-
-/* Toggle buttons */
-.toggle-btn {
-  display: none;
-  justify-content: flex-end;
-  padding: 5px;
-  cursor: pointer;
-}
-@media (min-width: 768px) {
-  .toggle-btn {
-    display: flex;
-  }
-}
-
-.hamburger {
-  font-size: 2rem;
-  padding: 10px;
-  background: #4e73df;
-  color: white;
-  cursor: pointer;
-}
-@media (min-width: 768px) {
-  .hamburger {
-    display: none;
-  }
-}
 
 .studentTitleIcon {
   font-size: 45px;
 }
+
 .dashTitle {
   font-weight: bold;
   text-wrap: none;
@@ -155,17 +93,7 @@
   transition: 1.5s;
 }
 
-.dashRow {
-  cursor: pointer;
-  border-bottom: 1px solid #bfbfbf;
-  color: #bfbfbf;
-  padding: 10.5% 2%;
-  background-color: transparent;
-  font-size: 18px;
-}
-.dashRow:hover {
-  color: white !important;
-}
+
 
 .dashRowComponent {
   cursor: pointer;
@@ -182,45 +110,15 @@
   cursor: pointer;
 }
 
-.sidebarItem {
-  font-size: 90%;
-  width: 100%;
-  text-align: start;
-  padding: 3% 10%;
-}
-.sidebarItem:hover {
-  color: #4e73df;
-  font-weight: bold;
-}
 
 .studentLogin {
   background-color: rgb(233, 240, 253);
   border-radius: 3%;
 }
 
-.portalIcon {
-  text-align: center;
-  color: white;
-  font-size: 45px;
-  cursor: pointer;
-  justify-content: center;
-  display: flex;
-  background-color: darkblue;
-  border-radius: 5px;
-}
 
-.bgColor {
-  color: white;
-  font-size: 35px !important;
-  background: none !important;
-}
-.bgColor:hover {
-  transform: scale(1.1);
-  transition: 1.1s;
-  background-color: #809ae7 !important;
-  border-radius: 5px;
-  color: #2c51c1;
-}
+
+
 
 .smallSidebarIcon:hover {
   transform: scale(1.1);
@@ -247,13 +145,8 @@
   flex-direction: column;
   justify-content: center;
 }
-.component-icon:hover {
-  background-color: #809ae7;
-  border-radius: 5px;
-  color: #2c51c1;
-  transition-duration: 1.1s !important;
-  transform: scale(1.1);
-}
+
+
 
 .backgroundDesign {
   width: 100%;

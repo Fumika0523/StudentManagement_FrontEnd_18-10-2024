@@ -18,17 +18,19 @@ import { MdGridView } from "react-icons/md";
 import { FaSchoolFlag } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
+import "../SideBar/SideBar.css"
+
 
 function SideBar() {
     const [open, setOpen] = useState(false); //Toggling our second icon to get sub icon
     const [expanded, setExpanded] = React.useState(false); //to open component, when its open the down-arrow should show
     const [isSidebarOpen, setIsSidebarOpen] = useState (true); // State to toggle the sidebar
 
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     console.log("token", token)
     
     const handleSignOut = () => {
-      localStorage.removeItem('token')
+      sessionStorage.removeItem('token')
       navigate('/')
     }
       const handleExpandClick = () => {
@@ -38,22 +40,19 @@ function SideBar() {
     const navigate = useNavigate()
     return (
         <>
-        <div className=""
-         style={{
-          width: isSidebarOpen ? "30%" : "12%",
-         transition:"0.8s"
-       }}>
-          <div className="sideBarStyle border-4 border-danger "        
+
+          <div className="sideBarStyle border-4 border-danger border "        
              id="sideWidth"
-             style={{padding:isSidebarOpen ? "1% 3% 0.5% 0%":"5% 13.5% 15% 10%",
-             }}>
+             style={{
+         width: isSidebarOpen ? "330px" : "150px",
+         transition:"0.8s",
+       }}>
+
                 {/* Arrow Icon */}
                 <div className="position-relative " style={{height:isSidebarOpen ?"45px":"15px"}}>
                 <div className="hamburger-icon text-white d-flex"
                  style={{zIndex:1000,cursor:"pointer",
                 justifyContent: isSidebarOpen ? "end" : "center",
-                marginRight:isSidebarOpen ? "10px" : "-10px"
-              
                }}
                     onClick={()=>setIsSidebarOpen(!isSidebarOpen)}>
               {!isSidebarOpen?
@@ -67,16 +66,14 @@ function SideBar() {
                {/* Arrow icon ends here */}
                {!isSidebarOpen ?
               <>
-
+            
               {/* Logo Icon */}
               <div className="portalIcon mx-2 py-1" >
               <FaSchoolFlag/>
               </div>
-         
-              {/* Logo Icon ends*/}
 
               {/* Dashboard */}
-              <div className="mx-3 bgColor portalIcon boarder"
+              <div className="mx-3 bgColor portalIcon"
               onClick={()=> navigate("/dashboard")} >
               <AiFillDashboard/>
               </div>      
@@ -202,7 +199,7 @@ function SideBar() {
 
             {/* COMPONENT */}
             <div 
-            className="dashRow"
+            className="dashRow row"
             onClick={handleExpandClick} >
           
             <div
@@ -225,26 +222,30 @@ function SideBar() {
             
                 <Collapse in={open}>
                 <div id="example-collapse-text" className="mx-auto"
-              style={{borderRadius:"10px", backgroundColor:"white",color:"black", marginTop:"5%",padding:"3% 0",width:"80%"
+              style={{borderRadius:"10px", backgroundColor:"white", marginTop:"5%",padding:"3% 8%",width:"80%",
                }}>
 
-              <div className="sidebarItem"   onClick={() => { navigate('/studentdata') }} >
+              <div className="sidebarItem d-flex align-items-center justify-content-start gap-2"   onClick={() => { navigate('/studentdata') }} >
+              <PiStudent className="fs-3" style={{color:"#2050deff"}}/>
               View All Student
               </div>
 
               {/* Batch */}
-              <div className="sidebarItem"   onClick={()=>{navigate('/batchdata')}}>
+              <div className="sidebarItem d-flex align-items-center justify-content-start gap-2"   onClick={()=>{navigate('/batchdata')}}>
+              <FaUsersViewfinder className="fs-3" style={{color:"#2050deff"}} />
             View All Batch
               </div>
 
               {/* Course */}
-              <div className="sidebarItem"  onClick={()=>{navigate('/coursedata')}}>
+              <div className="sidebarItem d-flex align-items-center justify-content-start gap-2"  onClick={()=>{navigate('/coursedata')}}>
+                      <MdMenuBook className="fs-3" style={{color:"#2050deff"}}/>  
                   View All Course
               </div>
 
               {/* Admission */}
-              <div className="sidebarItem"
+              <div className="sidebarItem d-flex align-items-center justify-content-start gap-2 text-nowrap"
                onClick={()=>{navigate('/admissiondata')}}>
+                <GiEntryDoor className="fs-3" style={{color:"#2050deff"}} />
               View All Admission
               </div>
               </div>
@@ -289,9 +290,8 @@ function SideBar() {
             }
           {/* </div> */}
           </div>
-        </div>
+        {/* </div> */}
         </>
     )
 }
 export default SideBar
-

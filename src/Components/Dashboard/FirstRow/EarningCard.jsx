@@ -27,8 +27,8 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
 
     return (
         <>
-         <div className="  mb-4 col-lg-3 col-md-6 col-sm-10 d-flex align-items-center justify-content-center" >
-                <div className="rounded align-items-center justify-content-center py-2 px-4 d-flex" style={borderStyle}>
+         <div className="  mb-4 col-lg-3 col-md-6 col-sm-10 d-flex align-items-center justify-content-start flex-nowrap" >
+                <div className="rounded align-items-center justify-content-center py-2 px-2 d-flex" style={borderStyle}>
                     <div className="d-flex  justify-content-between  align-items-center w-100" >
                         <div>
                             <div style={{ fontSize: "16px",color:color }}>{title}</div>
