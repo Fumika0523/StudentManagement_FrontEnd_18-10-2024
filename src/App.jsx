@@ -27,6 +27,7 @@ import StaffSignUp from './Components/Staff/StaffSignUp'
 
 
 function App() {
+  const token = localStorage.getItem('token') //if you have a token,
   const [userData,setUserData] = useState([])
   // Get Student Data
 const getUserData = async()=>{
@@ -51,7 +52,6 @@ const [isAuthenticated,setIsAuthenticated]=useState(false)
 
 //its going to render whenever there is change (signin)
 useEffect(()=>{
-  const token = localStorage.getItem('token') //if you have a token,
   console.log(token) 
   if(token){
   setIsAuthenticated(true) //signed in,>>authentication > true
@@ -62,6 +62,7 @@ useEffect(()=>{
 
   return (
     <>
+
     {/* <div className='d-flex border border-4 border-warning'> */}
       <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
@@ -69,12 +70,9 @@ useEffect(()=>{
     
       {/* Protected Routes: Redirect if Not Authenticated */}
 
-     
-      <Route path="/dashboard" element={<DashboardCard />}/>
-      <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/student-signup" element={<StudentSignUp/>}/>   
-      <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
+    {token ? 
+    <>
+        <Route path="/dashboard" element={<DashboardCard />}/>
         <Route path="/profile" element={<ProfileForm />}/>
         {/* <Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/usernameform" element={<UserNameForm/>}/>
@@ -87,7 +85,15 @@ useEffect(()=>{
         <Route path="/coursedata" element={<ViewCourse/>}/>
         <Route path="/admissiondata" element={<ViewAdmission/>}/>
         <Route path="*" element={<Navigate to = "/" />} />
-
+    </>
+    :
+    <>
+     <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/student-signup" element={<StudentSignUp/>}/>   
+      <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
+    </>
+    }
       </Routes>
       </Box>
 
