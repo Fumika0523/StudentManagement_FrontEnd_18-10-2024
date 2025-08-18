@@ -38,11 +38,12 @@ return(
                 Generate Report
                 </Button>
             </div>
-            {/* First Row */}
+         
+                {/* First Row */}
             <EarningCardDisplay  />    
 
             {/* Second Row */}
-            <ChartDisplay/>       
+            <ChartDisplay/>                 
         </div>
       </div>
 

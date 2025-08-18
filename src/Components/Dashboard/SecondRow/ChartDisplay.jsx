@@ -5,7 +5,7 @@ import DonutCard from './DonutCard'
 const ChartDisplay = () => {
   return (
     <>
-    <div className='d-flex justify-content-center align-items-center px-2 border-3 border-primary w-100 '>
+    <div className=' w-100 row border d-flex align-items-center mx-auto justify-content-center'>
         <ChartCard/>
         <DonutCard/>
     </div>

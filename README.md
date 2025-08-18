@@ -56,4 +56,6 @@ Staff can add the number of courses, availability for the batches, create the ta
 
 
 --------------------
-1. Refreshing a page will auto-logout and re-direct to Signin page.
+1. When you signed in, Refreshing a page will auto-logout and re-direct to Signin page.
+2. SideBar mobile responsible
+3. Bar chart

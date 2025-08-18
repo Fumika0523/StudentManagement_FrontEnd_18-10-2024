@@ -41,15 +41,15 @@ function SideBar() {
     return (
         <>
 
-          <div className="sideBarStyle border-4 border-danger border "        
+          <div className="sideBarStyle"        
              id="sideWidth"
              style={{
-         width: isSidebarOpen ? "330px" : "150px",
+         width: isSidebarOpen ? "350px" : "150px",
          transition:"0.8s",
        }}>
 
                 {/* Arrow Icon */}
-                <div className="position-relative " style={{height:isSidebarOpen ?"45px":"15px"}}>
+                <div className="position-relative  " style={{height:isSidebarOpen ?"55px":"15px"}}>
                 <div className="hamburger-icon text-white d-flex"
                  style={{zIndex:1000,cursor:"pointer",
                 justifyContent: isSidebarOpen ? "end" : "center",
@@ -68,12 +68,12 @@ function SideBar() {
               <>
             
               {/* Logo Icon */}
-              <div className="portalIcon mx-2 py-1" >
+              <div className="portalIcon mx-3 py-1" >
               <FaSchoolFlag/>
               </div>
 
               {/* Dashboard */}
-              <div className="mx-3 bgColor portalIcon"
+              <div className="mx-4 bgColor portalIcon"
               onClick={()=> navigate("/dashboard")} >
               <AiFillDashboard/>
               </div>      
@@ -87,11 +87,9 @@ function SideBar() {
             aria-expanded={open}
             id="expandIcon" 
            >
-            <div className="bgColor portalIcon smallSidebarIcon"
-             style={{margin:"0px 17.5px 0px 17.5px"}}
+            <div className="bgColor  mx-4 portalIcon smallSidebarIcon"
             >
             <MdGridView  />
-        
             </div>
             {/* Component ARROW */}
             <div className="arrowIcon"
@@ -107,11 +105,11 @@ function SideBar() {
              </div>
           </div>
           <Collapse in={open}>
-          <div id="example-collapse-text">
+          <div id="example-collapse-text" className="bg-white mx-auto" style={{ width:"100px",borderRadius:"15px"}}>
        
       {/* StudentData */}
       <div className="my-2">
-      <div className="component-icon mx-3" onClick={() => { navigate('/studentdata')}}
+      <div className="component-icon mx-4" onClick={() => { navigate('/studentdata')}}
       style={{cursor:"pointer"}}>
       <PiStudent />
       </div>
@@ -119,21 +117,21 @@ function SideBar() {
 
       {/* Batch Data*/}
       <div className=" my-2">
-      <div className="component-icon mx-3" onClick={()=>{navigate('/batchdata')}}>
+      <div className="component-icon mx-4" onClick={()=>{navigate('/batchdata')}}>
       <FaUsersViewfinder  />
       </div>
       </div>
 
       {/* Course Data */}
       <div className="my-2">
-      <div className="component-icon mx-3" onClick={()=>{navigate('/coursedata')}}>
+      <div className="component-icon mx-4" onClick={()=>{navigate('/coursedata')}}>
       <MdMenuBook/>         
       </div>
       </div>
 
       {/* Admission Data */}
       <div className="my-2">
-      <div className="component-icon mx-3" onClick={()=>{navigate('/admissiondata')}}
+      <div className="component-icon mx-4" onClick={()=>{navigate('/admissiondata')}}
         style={{fontSize:"40px"}}
         >
       <GiEntryDoor />
@@ -143,47 +141,45 @@ function SideBar() {
           </Collapse>
 
               {/* Chart */}
-              <div className=" mx-3 bgColor portalIcon"
+              <div className=" mx-4 bgColor portalIcon"
                onClick={()=>navigate("/chartdata")}
               >
               <FaChartArea />
               </div>
 
               {/* Utilities */}
-              <div className="mx-3 bgColor portalIcon"
+              <div className="mx-4 bgColor portalIcon"
               onClick={()=>navigate("/utilitiesdata")}>
               <FiTool/>
               </div>
           
               {/* Page */}
-              <div className="mx-3 bgColor portalIcon"
+              <div className="mx-4 bgColor portalIcon"
                 onClick={()=>navigate("/pagedata")}>
                 <FaFolder/>
               </div>
 
               {/* Table */}
-              <div className="mx-3 bgColor portalIcon" 
+              <div className="mx-4 bgColor portalIcon" 
               onClick={()=> navigate("/tabledata")}>
               <FaTable />
               </div>
 
               {/* Sign Out */}
-
-              <div className="mx-3 portalIcon bgColor signOut" 
+              <div className="mx-auto mb-3 signOut" 
               onClick={() => handleSignOut()}>
-              <FaPowerOff />
+              <FaPowerOff className="fs-2"/>
               </div>
               </> 
 
               :
-                
+                // side bar is opened
               <>
-              <div className="d-flex portalIcon col-11 border-danger text-white align-items-end justify-content-center mx-1  mx-3 " id="sideTitleIcon"
-              style={{ padding:"8px 4px 5px 4px"}}
+              <div className="d-flex portalIcon col-11 border-primary border-4 text-white align-items-end justify-content-center py-2  mx-3 " id="sideTitleIcon"
                 >
             
                 <FaSchoolFlag className=" d-flex  border-danger text-end  col-3"
-                  style={{fontSize:"45px"}} />
+                  style={{fontSize:"40px"}} />
 
                 <div className="col-9 p-0  border-danger text-start fw-bold " 
                 style={{fontSize:"23px",textWrap:"noWrap"}}

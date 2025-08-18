@@ -3,6 +3,8 @@ import { lineData } from "./ChartData";
 import Chart from 'chart.js/auto'; 
 import Card from 'react-bootstrap/Card';
 import styled from "styled-components";
+import Dropdown from 'react-bootstrap/Dropdown';
+import { HiDotsVertical } from "react-icons/hi";
 
 export const ChartCard=()=>{
     // const data ={
@@ -77,19 +79,30 @@ export const ChartCard=()=>{
 };
     return(
       <>
-      <div className="col-lg-8 mb-4 col-sm-12 col-10 d-flex justify-content-center border-warning border-4">
-      <Card className="" style={{ height:"380px",width:"97%"}}>
-      <Card.Body>
-        <Card.Title style={{color:"#4e73df"}} className="pb-3 border-bottom">Earnings Overview</Card.Title>
-        <div  >
-        <Line data={data} options={options} style={{width:"100%",height:"300px"}} />
-        </div>
+     <div className="col-lg-7 col-11">
+      <Card className=" mx-auto d-flex justify-content-center mb-3  shadow" style={{ }}>
+        <Card.Header className="d-flex py-2 flex-row justify-content-between align-items-center" as="h5" style={{color:"#4e73df"}}>
+          Earnings Overview
+           <Dropdown>
+      <Dropdown.Toggle variant="" id="dropdown-basic" className=''>
+        <HiDotsVertical className='text-secondary'/>
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+      </Dropdown.Menu>
+           </Dropdown>
+        </Card.Header>
+      <Card.Body >
+        <Line data={data} options={options} 
+        className="mx-auto w-100"
+      style={{display:"block",height:"380px"}}/>
+
      </Card.Body>
       </Card> 
-      </div>  
+      </div>
     </>
     );
 };
 
-//Create a pie chart
-//design the line chart 

@@ -61,7 +61,7 @@ const handleLogOut = ()=>{
   return (
     <>
 <Navbar expand="lg" sticky="top" bg="light"  data-bs-theme="light">
-  <Container className="border-danger  d-flex align-items-center">
+  <Container className="border-danger  d-flex align-items-center flex-nowrap">
     
     {/* Desktop Search (on left for sm and up) */}
     <Form className="d-none d-sm-flex align-items-center me-auto">
