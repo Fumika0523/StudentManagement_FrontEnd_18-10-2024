@@ -59,3 +59,17 @@ Staff can add the number of courses, availability for the batches, create the ta
 1. When you signed in, Refreshing a page will auto-logout and re-direct to Signin page.
 2. SideBar mobile responsible
 3. Bar chart
+4. Student user access (student table should be visible?)
+5. Profile edit (only Staff can do it ?)
+6. Fix all Table design
+7. Utilities ?
+8. Page ??
+9. Charts?
+10. Tables?
+11. Email icon function?
+12. Notification icon function?
+13. Search function for search box
+14. When admin login , admin icon should show on profile
+15. when student login, student icon should show on profile
+16. Profile function ?
+17. change the backend to cloud url

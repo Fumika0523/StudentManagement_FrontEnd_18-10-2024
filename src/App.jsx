@@ -27,8 +27,22 @@ import StaffSignUp from './Components/Staff/StaffSignUp'
 
 
 function App() {
-  const token=localStorage.getItem('token')
   const [userData,setUserData] = useState([])
+  // Get Student Data
+const getUserData = async()=>{
+  console.log("App.jsx call")
+ 
+  let config = {
+    headers:{
+      Authorization:`Bearer ${token}`
+    }
+  }
+  console.log("User data is called......");
+  let res = await axios.get(`${url}/users/profile`,config) //API call retrieving from users/profile
+  //console.log(res.data.userData)
+  console.log("userData")
+  setUserData(res.data.userData) //useState is updated
+}
 
 //signin part
 //initially you are not loggin,its set as false,
@@ -72,11 +86,14 @@ const getUserData = async()=>{
       <Route path="/" element={<StudentOrStaff/>}/>
     
       {/* Protected Routes: Redirect if Not Authenticated */}
-    
-      {token ? (
+
+      {isAuthenticated ? (
         <>
       <Route path="/dashboard" element={<DashboardCard />}/>
-    
+      <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/student-signup" element={<StudentSignUp/>}/>   
+      <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
         <Route path="/profile" element={<ProfileForm />}/>
         {/* <Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/usernameform" element={<UserNameForm/>}/>
@@ -92,14 +109,7 @@ const getUserData = async()=>{
         </>
       ) : (
         // Any Path >>> Redirect  >> Home Page
-     <>
-     <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-     <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-
-      <Route path="/student-signup" element={<StudentSignUp/>}/>   
-      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
-      <Route path="*" element={<Navigate to = "/" />} />
-     </>
+        <Route path="*" element={<Navigate to = "/" />} />
       )}
       </Routes>
       </Box>

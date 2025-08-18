@@ -97,8 +97,7 @@ export const ChartCard=()=>{
       <Card.Body >
         <Line data={data} options={options} 
         className="mx-auto w-100"
-      style={{display:"block",height:"380px"}}/>
-
+      style={{display:"block",height:"390px"}}/>
      </Card.Body>
       </Card> 
       </div>
