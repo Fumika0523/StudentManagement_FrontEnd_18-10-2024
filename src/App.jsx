@@ -58,24 +58,6 @@ useEffect(()=>{
   getUserData(token)
    }
 },[])
-
-
-
-// Get Student Data
-const getUserData = async()=>{
-  console.log("App.jsx call")
-  
-  let config = {
-    headers:{
-      Authorization:`Bearer ${token}`
-    }
-  }
-  console.log("User data is called......");
-  let res = await axios.get(`${url}/users/profile`,config) //API call retrieving from users/profile
-  //console.log(res.data.userData)
-  console.log("userData")
-  setUserData(res.data.userData) //useState is updated
-}
 //console.log(userData)
 
   return (
@@ -87,8 +69,7 @@ const getUserData = async()=>{
     
       {/* Protected Routes: Redirect if Not Authenticated */}
 
-      {isAuthenticated ? (
-        <>
+     
       <Route path="/dashboard" element={<DashboardCard />}/>
       <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
       <Route path="/student-signup" element={<StudentSignUp/>}/>   
@@ -105,12 +86,8 @@ const getUserData = async()=>{
         <Route path="/batchdata" element={<ViewBatch />}/>
         <Route path="/coursedata" element={<ViewCourse/>}/>
         <Route path="/admissiondata" element={<ViewAdmission/>}/>
-              
-        </>
-      ) : (
-        // Any Path >>> Redirect  >> Home Page
         <Route path="*" element={<Navigate to = "/" />} />
-      )}
+
       </Routes>
       </Box>
 
