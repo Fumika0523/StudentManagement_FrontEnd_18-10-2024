@@ -1,12 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
-import SignIn from './Components/Student/StudentSignIn'
-import SignUp from './Components/Student/StudentSignUp'
 import { useEffect, useState } from 'react'
 import ProfileForm from './Components/Profile/ProfileForm'
 import { Box } from '@mui/material'
-import SideBar from './HomePage/SideBar/SideBar'
-import NavBar from './HomePage/NavBar/NavBar'
+
 import axios from 'axios'
 import UserNameForm from './Components/Profile/Edit/userNameForm'
 import { url } from './Components/utils/constant'
@@ -21,7 +18,6 @@ import ViewCourse from './Components/Dashboard/CourseData/ViewCourse'
 import { ToastContainer } from 'react-toastify'
 import { Zoom } from 'react-toastify'
 import ViewAdmission from './Components/Dashboard/AdmissionData/viewAdmission'
-import { Container } from 'react-bootstrap'
 import StudentOrStaff from './HomePage/StudentOrStaff'
 import StaffSignIn from './Components/Staff/StaffSignIn'
 import StudentSignIn from './Components/Student/StudentSignIn'
@@ -31,6 +27,7 @@ import StaffSignUp from './Components/Staff/StaffSignUp'
 
 
 function App() {
+  const token=localStorage.getItem('token')
   const [userData,setUserData] = useState([])
 
 //signin part
@@ -51,7 +48,7 @@ useEffect(()=>{
 // Get Student Data
 const getUserData = async()=>{
   console.log("App.jsx call")
-  const token=localStorage.getItem('token')
+  
   let config = {
     headers:{
       Authorization:`Bearer ${token}`
@@ -73,14 +70,11 @@ const getUserData = async()=>{
       <Route path="/" element={<StudentOrStaff/>}/>
     
       {/* Protected Routes: Redirect if Not Authenticated */}
-
-      {isAuthenticated ? (
+    
+      {token ? (
         <>
       <Route path="/dashboard" element={<DashboardCard />}/>
-      <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/student-signup" element={<StudentSignUp/>}/>   
-      <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
+    
         <Route path="/profile" element={<ProfileForm />}/>
         {/* <Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/usernameform" element={<UserNameForm/>}/>
@@ -92,10 +86,18 @@ const getUserData = async()=>{
         <Route path="/batchdata" element={<ViewBatch />}/>
         <Route path="/coursedata" element={<ViewCourse/>}/>
         <Route path="/admissiondata" element={<ViewAdmission/>}/>
+              
         </>
       ) : (
         // Any Path >>> Redirect  >> Home Page
-        <Route path="*" element={<Navigate to = "/" />} />
+     <>
+     <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+     <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+
+      <Route path="/student-signup" element={<StudentSignUp/>}/>   
+      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
+      <Route path="*" element={<Navigate to = "/" />} />
+     </>
       )}
       </Routes>
       </Box>
