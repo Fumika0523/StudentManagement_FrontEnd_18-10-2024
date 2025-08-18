@@ -31,7 +31,23 @@ import StaffSignUp from './Components/Staff/StaffSignUp'
 
 
 function App() {
+   const token = localStorage.getItem('token')
   const [userData,setUserData] = useState([])
+  // Get Student Data
+const getUserData = async()=>{
+  console.log("App.jsx call")
+ 
+  let config = {
+    headers:{
+      Authorization:`Bearer ${token}`
+    }
+  }
+  console.log("User data is called......");
+  let res = await axios.get(`${url}/users/profile`,config) //API call retrieving from users/profile
+  //console.log(res.data.userData)
+  console.log("userData")
+  setUserData(res.data.userData) //useState is updated
+}
 
 //signin part
 //initially you are not loggin,its set as false,
@@ -48,22 +64,7 @@ useEffect(()=>{
    }
 },[])
 
-// Get Student Data
-const getUserData = async()=>{
-  console.log("App.jsx call")
-  const token=localStorage.getItem('token')
-  let config = {
-    headers:{
-      Authorization:`Bearer ${token}`
-    }
-  }
-  console.log("User data is called......");
-  let res = await axios.get(`${url}/users/profile`,config) //API call retrieving from users/profile
-  //console.log(res.data.userData)
-  console.log("userData")
-  setUserData(res.data.userData) //useState is updated
-}
-//console.log(userData)
+
 
   return (
     <>
@@ -71,16 +72,11 @@ const getUserData = async()=>{
       <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
       <Route path="/" element={<StudentOrStaff/>}/>
-    
-      {/* Protected Routes: Redirect if Not Authenticated */}
+          {/* Protected Routes: Redirect if Not Authenticated */}
 
-      {isAuthenticated ? (
+      {token ? (
         <>
       <Route path="/dashboard" element={<DashboardCard />}/>
-      <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/student-signup" element={<StudentSignUp/>}/>   
-      <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
-      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
         <Route path="/profile" element={<ProfileForm />}/>
         {/* <Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/usernameform" element={<UserNameForm/>}/>
@@ -95,7 +91,13 @@ const getUserData = async()=>{
         </>
       ) : (
         // Any Path >>> Redirect  >> Home Page
-        <Route path="*" element={<Navigate to = "/" />} />
+        <>
+      <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/student-signup" element={<StudentSignUp/>}/>   
+      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
+
+      </>
       )}
       </Routes>
       </Box>
