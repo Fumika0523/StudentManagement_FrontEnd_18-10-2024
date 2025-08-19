@@ -32,7 +32,6 @@ function App() {
   // Get Student Data
 const getUserData = async()=>{
   console.log("App.jsx call")
- 
   let config = {
     headers:{
       Authorization:`Bearer ${token}`
@@ -55,7 +54,7 @@ useEffect(()=>{
   console.log(token) 
   if(token){
   setIsAuthenticated(true) //signed in,>>authentication > true
-  getUserData(token)
+  getUserData()
    }
 },[])
 //console.log(userData)

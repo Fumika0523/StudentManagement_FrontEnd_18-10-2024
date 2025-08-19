@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { url } from "../utils/constant"
 import { useNavigate } from "react-router-dom"
+import { Button } from "react-bootstrap"
 
 function ProfileForm(){
 const navigate = useNavigate()
@@ -39,17 +40,27 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
 
     return(
         <>   
-           <div style={{margin:"0 20%"}} className="py-5 ">
+           <div  className="py-4   border-4 col-lg-6 col-sm-10 mx-auto">
               {/* Top Section */}
-              <div className='fs-4 text-center'>Personal info</div>
-              <div style={{fontSize:"100%"}} className="text-center" > Info about you and your preferences across Student Management Service</div>
-              
+              <div className='fs-3 text-center  mb-2 ' style={{color:"#808084ff"}}>Personal info</div>
+              <div  className="text-center fs-5 mb-4" > Info about you and your preferences across Student Management Service</div>
+
               {/* 2nd Section */}
-              <div className='p-2 d-flex'>
-                <div>
-              <div className='fs-4 mt-3' >Your profile info in Student Manag. Services</div>
-              <div className='mt-2' style={{fontSize:"100%"}}>Personal info and options to manage it. You can make some of this info, like your contact details, visible to others so they can reach you easily. You can also see a summary of your profiles.</div></div>
-              <img src="https://www.gstatic.com/identity/boq/accountsettingsmobile/profile_scene_visible_720x256_ee5ae234eb96dc206b79c851f41a6f69.png" alt="" style={{width:"45%", height:"120px"}} />
+              <div className='d-flex  border-warning border-4 align-items-center justify-content-center mx-auto'>
+                {/* left */}
+              <div className='fs-4 d-flex flex-column col-md-7  ' >
+                <div className="d-flex flex-row align-items-start justify-content-between">Your profile info in Student Manag. Services
+            <div className=" d-md-none d-flex">
+              <img src="https://www.gstatic.com/identity/boq/accountsettingsmobile/profile_spot_visible_128x128_3d54fe9136457d65321e6fbf2f18be96.png" alt="" className=" h-auto" style={{width:"80px"}} />
+              </div>
+                </div>
+       
+                <span className="fs-6">Personal info and options to manage it. You can make some of this info, like your contact details, visible to others so they can reach you easily. You can also see a summary of your profiles.</span>
+              </div>
+              {/* RIGHT */}
+              <div className="col-md-5  d-md-block d-none">
+              <img src="https://www.gstatic.com/identity/boq/accountsettingsmobile/profile_scene_visible_720x256_ee5ae234eb96dc206b79c851f41a6f69.png" alt=""  className="w-100 " />
+              </div>
               </div>
       
               {/* Basic Info */}
@@ -109,7 +120,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
                   <div className="text-secondary" style={{fontSize:"80%"}}>A secure password helps protect your Student Management Account</div>
                   <div style={{fontSize:"70%"}}>Last changed Jul 19,2023</div>
               </div>
-              <button className="mt-4 btn  btn-secondary px-4" onClick={()=>navigate('/dashboard')} >Back</button>
+              <Button className="mt-4  px-4"  onClick={()=>navigate('/dashboard')} >Back</Button>
         </div>
      
         </>

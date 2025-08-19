@@ -56,7 +56,7 @@ Staff can add the number of courses, availability for the batches, create the ta
 
 
 --------------------
-1. When you signed in, Refreshing a page will auto-logout and re-direct to Signin page.
+1. When you signed in, Refreshing a page will auto-logout and re-direct to Signin page.    --->>> DONE : token was passed inside getUserData(). 
 2. SideBar mobile responsible
 3. Bar chart
 4. Student user access (student table should be visible?)
@@ -73,3 +73,18 @@ Staff can add the number of courses, availability for the batches, create the ta
 15. when student login, student icon should show on profile
 16. Profile function ?
 17. change the backend to cloud url
+
+- Download the collection, upload to github                                                     ----> DONE
+- MongoDB Atlas URL                                                                             --->>> DONE
+- check importance of const [isAuthenticated,setIsAuthenticated]=useState(false) vs token
+--> token = permanent credential, used for API requests.
+--> isAuthenticated = temporary UI state, allows immediate reactivity in React.
+
+Both are needed together for a smooth login experience without page refresh.
+
+CRUD---
+Student: when you add, admission date and course id is not showing
+Admission: everything is  working 
+Course: everything is  working 
+Batch: Working fine, maybe form need to be updated
+

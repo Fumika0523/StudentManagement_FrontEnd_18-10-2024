@@ -86,7 +86,7 @@ const formik = useFormik({
     show={show} onHide={handleClose} size='lg'
     style={{margin:"8% 0"}} >
         <Modal.Header closeButton>
-          <Modal.Title  >Add Student</Modal.Title>
+          <Modal.Title  >Edit Student Info</Modal.Title>
         </Modal.Header>
         <Form onSubmit={formik.handleSubmit} className='px-5' style={{ fontSize: "80%" }}>
           <Modal.Body>
@@ -187,7 +187,7 @@ const formik = useFormik({
           </Modal.Body>
           <Modal.Footer>
             <Button style={{ backgroundColor: "#4e73df" }} type="submit">
-              Add Student
+              Update 
             </Button>
             <Button variant="secondary" onClick={handleClose}>
               Close
