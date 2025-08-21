@@ -11,6 +11,7 @@ import { Button } from "react-bootstrap"
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])
     const [courseData,setCourseData] = useState([])
+    const [admissionData,setAdmissionData] = useState([])
     const [isAuthenticated,setIsAuthenticated]=useState(false)
     const [show, setShow] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState (true)
@@ -42,12 +43,12 @@ function ViewStudent(){
         setCourseData(res.data.courseData)
     }
 
-    const getAdmissionData=async()=>{
-        console.log("Admission Data is called....")
-        let res = await axios.get(`${url}/addadmission`,config)
-        console.log("AdmissionData",res.data.getAdmissionData)
+       const getAdmissionData = async()=>{
+        console.log("Admission data is called....")
+        let res = await axios.get(`${url}/alladmission`,config)
+        console.log("AdmissionData",res.data.admissionData)
+        setAdmissionData(res.data.admissionData)
     }
-
     return(
         <>
 <div className="d-flex flex-row ">
@@ -55,7 +56,7 @@ function ViewStudent(){
     <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
         <NavBar/>
         {/* create a table */}
-        {/* <div className="d-flex justify-content-end border-warning border-3 pe-4 py-3"> */}
+
         {/* ADD Button */}
         <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
         <Button variant="outline-none" className="commonButton"
@@ -66,16 +67,11 @@ function ViewStudent(){
         {/* Buttom Table */}
         <div className="d-flex  border-black border-4   justify-content-center">
         {/* Table */}
-        <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px",width:"97%"}}>
-            {/* <div 
-           className="tableTitle"
-            //  style={{color:"#4e73df",borderBottom:"2px solid #e3e6f0"}}
-            >All Student</div> */}
-           
+        <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px",width:"97%"}}>           
             {<CustomizedTables studentData = {studentData}
-            setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData}
+            setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData}
             />}
-             {/* </div> */}
+
             {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}
 
             {/* {< HoverCustomisedTable />} */}

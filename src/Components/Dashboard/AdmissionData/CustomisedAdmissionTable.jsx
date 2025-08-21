@@ -13,8 +13,10 @@ import ModalDeleteAdmission from './ModalDeleteAdmission';
 import ModalEditAdmission from './ModalEditAdmission';
 import { useEffect } from 'react';
 import { WrapText } from '@mui/icons-material';
-
-
+import axios from 'axios';
+import { url
+  
+ } from '../../utils/constant';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#f3f4f6',
@@ -65,7 +67,7 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData,courseData,set
           useEffect(() => {
                 getStudentData()
             }, [])
-            console.log(courseData)
+            console.log(studentData)
   
   const handleEditClick = (admission)=>{
     setShow(true);
@@ -73,9 +75,9 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData,courseData,set
 }
 
 const formatDate = (dateString)=>{
-  console.log(dateString)
+  // console.log(dateString)
   const date = new Date(dateString);
-  console.log(date)
+  // console.log(date)
   return date.toLocaleDateString('en-US',{
     year:"numeric",
     month:'short',

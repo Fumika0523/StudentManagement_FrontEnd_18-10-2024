@@ -84,7 +84,31 @@ Both are needed together for a smooth login experience without page refresh.
 
 CRUD---
 Student: when you add, admission date and course id is not showing
-Admission: everything is  working 
-Course: everything is  working 
+Admission: everything is working 
+Course: everything is working 
 Batch: Working fine, maybe form need to be updated
+
+instead of eye icon >>>  key
+select Course name and student name and automatically each ids shows
+
+
+Batch No. Auto generate.
+CourseName: Drop down 
+Location: Type
+Target Student: Type
+Session Time: 
+Fee: auto generate from Dropdown
+
+
+Bulk-selection  >> Check box
+
+
+
+QUESTION:
+Admission Fee is same with course Fee?
+Preferred course(student) vs Course name (admin).
+>>> When admin data is added, preferred course in Student table should be keep as original preferred course? or should updated to coursename (added in Admin)
+
+
+
 

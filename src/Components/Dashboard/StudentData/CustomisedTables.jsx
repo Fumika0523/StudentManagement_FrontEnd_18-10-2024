@@ -10,11 +10,12 @@ import TableBody from '@mui/material/TableBody';
 import Paper from '@mui/material/Paper';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { IoEyeSharp } from "react-icons/io5";
 import axios from 'axios';
 import EditStudentData from './EditStudentData';
 import ModalShowPassword from './ModalShowPassword';
 import { url } from '../../utils/constant';
+import { FaKey } from "react-icons/fa";
+
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -147,8 +148,8 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                       style={{ cursor: 'pointer' }}
                       onClick={() => handleDeleteClick(student._id)}
                     />
-                    <IoEyeSharp
-                      className="text-primary"
+                    <FaKey
+                      className="text-secondary"
                       style={{ cursor:'pointer' }}
                       onClick={() => handlePasswordClick(student.password)}
                     />
@@ -170,7 +171,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                 <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
                 <StyledTableCell>{student.courseId}</StyledTableCell>
                 {/* <StyledTableCell>{student.courseName}</StyledTableCell> */}
-                <StyledTableCell>{student.preferredCourseName}</StyledTableCell>
+                <StyledTableCell>{student.courseName}</StyledTableCell>
                 <StyledTableCell>{student.admissionFee}</StyledTableCell>
                 <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
               </StyledTableRow>
