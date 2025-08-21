@@ -30,6 +30,7 @@ function App() {
   const token = localStorage.getItem('token') //if you have a token,
   const [userData,setUserData] = useState([])
   // Get Student Data
+  
 const getUserData = async()=>{
   console.log("App.jsx call")
   let config = {
@@ -65,7 +66,7 @@ useEffect(()=>{
     {/* <div className='d-flex border border-4 border-warning'> */}
       <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
-      <Route path="/" element={<StudentOrStaff/>}/>
+      
     
       {/* Protected Routes: Redirect if Not Authenticated */}
 
@@ -87,7 +88,8 @@ useEffect(()=>{
     </>
     :
     <>
-     <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path="/" element={<StudentOrStaff/>}/>
+      <Route path="/student-signin" element={<StudentSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
       <Route path="/student-signup" element={<StudentSignUp/>}/>   
       <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
       <Route path="/staff-signup" element={<StaffSignUp/>}/>  
