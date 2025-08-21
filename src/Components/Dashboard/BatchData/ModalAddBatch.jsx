@@ -62,23 +62,7 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     }
   }
 
-  const addBatch = async (newBatch) => {
-    try {
-      const res = await axios.post(`${url}/addbatch`, newBatch, config)
-      console.log(res)
-      if (res) {
-        let res = await axios.get(`${url}/allbatch`, config)
-        console.log("Successfully a new batch added to the DB", newBatch)
-        setBatchData(res.data.batchData)
-        notify()
-        setTimeout(() => {
-          handleClose()
-        }, 3001)
-      }
-    } catch (e) {
-      console.error('Error Adding Batch:', e)
-    }
-  }
+
       //Original Course Data
     const getCourseData = async () => {
         console.log("Console data is called....")
@@ -104,7 +88,7 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     const handleCourseNameChange = (e) => {
         const selectedCourseName = e.target.value;
             setCourseValue(selectedCourseName)
-            console.log("selectedcourse",selectedCourse)
+            // console.log("selectedcourse",selectedCourse)
         const selectedCourse = courseData.find(
             (element) => element.courseName === selectedCourseName
         );
@@ -128,7 +112,23 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
             formik.setFieldValue("studentName", selectedStudent.studentName);
         }
     };
-
+  const addBatch = async (newBatch) => {
+    try {
+      const res = await axios.post(`${url}/addbatch`, newBatch, config)
+      console.log(res)
+      if (res) {
+        let res = await axios.get(`${url}/allbatch`, config)
+        console.log("Successfully a new batch added to the DB", newBatch)
+        setBatchData(res.data.batchData)
+        notify()
+        setTimeout(() => {
+          handleClose()
+        }, 3001)
+      }
+    } catch (e) {
+      console.error('Error Adding Batch:', e)
+    }
+  }
 
   return (
     <>

@@ -102,7 +102,7 @@ Fee: auto generate from Dropdown
 
 Bulk-selection  >> Check box
 
-
+multi-course can be saved too
 
 QUESTION:
 Admission Fee is same with course Fee?
