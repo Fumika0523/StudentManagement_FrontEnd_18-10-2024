@@ -4,20 +4,27 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import React from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { url } from '../../utils/constant';
 import { Col } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
+import { toast } from 'react-toastify';
 
 
 const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }) => {
-
-    console.log(singleAdmission)
     console.log(singleAdmission._id)
     const [courseData, setCourseData] = useState([])
     const [studentData,setStudentData] = useState([])
+    const token = localStorage.getItem('token')
+    // console.log(token)
+
+    let config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
     
     const navigate = useNavigate()
     const handleClose = () => {
@@ -34,7 +41,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
         admissionFee: Yup.number().required(("Mandatory field!")),
         admissionDate: Yup.date().required(("Mandatory field!")),
         admissionYear: Yup.number().required(("Mandatory field!")),
-        admissionMonth: Yup.number().required(("Mandatory field!")),
+        admissionMonth: Yup.string(),
     })
 
 
@@ -52,29 +59,15 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             admissionYear: singleAdmission?.admissionYear,
             admissionMonth: singleAdmission?.admissionMonth
         },
+        validationSchema: formSchema,
+        enableReinitialize: true,
         onSubmit: (values) => {
-            console.log(values)
-            console.log(formik)
+            //console.log(values)
+            //console.log(formik)
             updateAdmission(values)
         }
     })
-    console.log(singleAdmission.admissionDate)
-
-    // if(singleAdmission){
-    //     const formattedDate = ;
-    //     console.log(formattedDate)
-    //     singleAdmission.admissionDate = formattedDate
-    // }
-
-
-    const token = localStorage.getItem('token')
-    console.log(token)
-
-    let config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
+    //console.log(singleAdmission.admissionDate)
 
     const formatDate = (dateString) => {
         console.log(dateString)
@@ -82,7 +75,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
         console.log(date)
         return date.toLocaleDateString('en-US', {
             year: "numeric",
-            month: 'long',
+            month: 'short',
             day: 'numeric'
         })
     }
@@ -94,32 +87,40 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
         const month = date.toLocaleString('default', { month: 'long' });
         // Get the full year
         const year = date.getFullYear();
-        console.log(`${month} ${year}`);
+       // console.log(`${month} ${year}`);
         return { month, year }
     }
 
     const a = dateFun(formik.values.admissionDate)
-    console.log(a.month) //['january' '2025']
-    console.log(a.year)
+   // console.log(a.month) //['january' '2025']
+    //console.log(a.year)
 
     const updateAdmission = async (updatedAdmission) => {
-        console.log("Admission posted to the DB")
-        
         try {
             let res = await axios.put(`${url}/updateadmission/${singleAdmission._id}`, updatedAdmission, config)
-            console.log(res)
+            console.log("updated studentName",res.data.updateAdmission.studentName)
+            const updatedStudent = res.data.updateAdmission.studentName
             if (res) {
                 let res = await axios.get(`${url}/alladmission`, config)
+                    toast.success(`Successfully Updated for ${updatedStudent}`, {
+                        style: {
+                          textWrap: "nowrap",
+                          textAlign: "center",
+                          color: "black",
+                          fontSize:"14px"
+                        },
+                      });
                 console.log("Successfully Updated the Admission", updatedAdmission)
                 setAdmissionData(res.data.admissionData)
+                   setTimeout(() => {
+                handleClose()
+            }, 1000)
                 handleClose()
             }
         } catch (e) {
             console.error("Error in Editting Admission:", e)
         }
     }
-
-
 
     //student Data
     const getStudentData = async () => {
@@ -141,9 +142,6 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             getStudentData()
         }, [])
         console.log(courseData)
-
-
-   
 
     const handleCourseIdChange = (e) => {
         // formik.handleChange === e.target.value

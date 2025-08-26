@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import React from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { url } from '../../utils/constant';
@@ -26,7 +24,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
     phoneNumber: Yup.number().required("Mandatory Field!"),
     gender: Yup.string().required("Mandatory Field!"),
     birthdate: Yup.date().required("Mandatory Field!"),
-    preferredCourseName:Yup.string().required("Mandatory Field!"),
+    preferredCourses:Yup.string().required("Mandatory Field!"),
   })
 
   const formik = useFormik({
@@ -38,7 +36,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
       phoneNumber: "",
       gender: "",
       birthdate: "",
-      preferredCourseName:"",
+      preferredCourses:"",
     },
     // validationSchema: formSchema,
     onSubmit: (values) => {
@@ -48,16 +46,17 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
   })
 
   const token = localStorage.getItem('token')
-  console.log(token)
+  // console.log(token)
 
   let config = {
     headers: {
       Authorization: `Bearer ${token}`
     }
   }
+  
 
   const addStudent = async (newStudent) => {
-    console.log(newStudent)
+    // console.log(newStudent)
     try {
       const res = await axios.post(`${url}/registerstudent`, newStudent, config)
       console.log(res)
@@ -151,14 +150,14 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             </Row>
             <Row>
               <Col>
-              <Form.Label className='m-0'>Preferred Course</Form.Label>
+              <Form.Label className='m-0'>Preferred Courses</Form.Label>
               {['checkbox'].map((type) => (
               <div key={`inline-${type}`} className="mb-1 d-flex flex-row justify-content-between" style={{fontSize:"14px"}}>
                 
             <Form.Check
             inline
             label="HTML"
-            name="preferredCourseName"
+            name="preferredCourses"
             type={type}
             onChange={formik.handleChange} 
             id={`inline-${type}-1`}
@@ -169,7 +168,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             inline
             label="CSS"
             value="CSS"
-            name="preferredCourseName"
+            name="preferredCourses"
             type={type}
             id={`inline-${type}-2`}
             onChange={formik.handleChange} />
@@ -178,7 +177,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             inline
             label="Java Script"
             value="Java Script"
-            name="preferredCourseName"
+            name="preferredCourses"
             type={type}
             id={`inline-${type}-2`}
             onChange={formik.handleChange} 
@@ -187,7 +186,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             inline
             label="Redux"
             value="Redux"
-            name="preferredCourseName"
+            name="preferredCourses"
             type={type}
             id={`inline-${type}-2`}
             onChange={formik.handleChange} 
@@ -196,7 +195,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             inline
             label="Node JS"
             value="Node JS"
-             name="preferredCourseName"
+             name="preferredCourses"
             type={type}
             id={`inline-${type}-2`}
             onChange={formik.handleChange} 
@@ -206,7 +205,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             inline
             label="Mongo DB"
             value="Mongo DB"
-            name="preferredCourseName"
+            name="preferredCourses"
             type={type}
             id={`inline-${type}-2`}
             onChange={formik.handleChange} />  
@@ -215,7 +214,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             inline
             label="SQL"
             value="SQL"
-            name="preferredCourseName"
+            name="preferredCourses"
             type={type}
             id={`inline-${type}-2`}
             onChange={formik.handleChange} 
@@ -225,7 +224,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
             inline
             label="Bootsrap"
             value="Bootsrap"
-            name="preferredCourseName"
+            name="preferredCourses"
             type={type}
             id={`inline-${type}-2`}
             onChange={formik.handleChange} 

@@ -5,25 +5,22 @@ import NavBar from "../../HomePage/NavBar/NavBar"
 import { useEffect, useState } from "react"
 import { Button, Col, Container, Row } from "react-bootstrap"
 import { FaDownload } from "react-icons/fa";
+import SelectCourseModal from "../../Components/Dashboard/StudentData/SelectCourseModal";
 
 
-function DashboardCard(){
+function DashboardCard({isAuthenticated, setIsAuthenticated}){
 
-      const [userData,setUserData] = useState([])
-    
-    //signin part
-    //initially you are not loggin,its set as false,
-    //when you get the token(signed in), your authentication as true
-    const [isAuthenticated,setIsAuthenticated]=useState(false)
-    
-    //its going to render whenever there is change (signin)
-    useEffect(()=>{
-      const token = localStorage.getItem('token') //if you have a token,
-      console.log(token) 
-      setIsAuthenticated(true) //signed in,>>authentication > true
-    //   getUserData()
-    },[])
-    
+  //  const [isAuthenticated,setIsAuthenticated]=useState(false)
+      const [showModal, setShowModal] = useState(false);
+         const token = localStorage.getItem('token') 
+    console.log(token)
+  useEffect(() => {
+    if (token) {
+      setShowModal(true); // show the modal
+    }
+  }, []);
+
+
 return(
     <>
 
@@ -45,6 +42,8 @@ return(
             {/* Second Row */}
             <ChartDisplay/>                 
         </div>
+             {/* Modal overlay */}
+      {showModal  && <SelectCourseModal show={showModal} setShow={setShowModal} />}
       </div>
 
     </>

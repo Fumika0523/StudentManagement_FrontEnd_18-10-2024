@@ -16,32 +16,31 @@ import { WrapText } from '@mui/icons-material';
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: '#f3f4f6',
-      color: '#5a5c69',
-      fontWeight: 'bold',
-      textAlign: 'center',
-      fontSize: '13px',
-      padding: '10px 15px',
-      textWrap:"noWrap"
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: '13.5px',
-      textAlign: 'center',
-      padding:"1.5px 2px",
-      margin:"0",
-      WrapText:'noWrap'
-    },
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    '&:hover': {
-      backgroundColor: '#b3e5fc',
-    },
-  }));
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#f3f4f6',
+    color: '#5a5c69',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: '14.5px',
+    padding: '10px 15px',
+    textWrap:"noWrap"
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: '13px',
+    textAlign: 'center',
+    padding: '10px 15px',
+    textWrap:"noWrap"
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&:hover': {
+    backgroundColor: '#b3e5fc',
+  },
+}));
 
 function CustomisedBatchTables({batchData,setBatchData}){
     const [show,setShow] = useState(false)

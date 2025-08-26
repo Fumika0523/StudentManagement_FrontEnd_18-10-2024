@@ -88,8 +88,8 @@ Admission: everything is working
 Course: everything is working 
 Batch: Working fine, maybe form need to be updated
 
-instead of eye icon >>>  key
-select Course name and student name and automatically each ids shows
+instead of eye icon >>>  key  --->>>>DONE
+select Course name and student name and automatically each ids shows  ----->> DONE
 
 
 Batch No. Auto generate.
@@ -99,16 +99,56 @@ Target Student: Type
 Session Time: 
 Fee: auto generate from Dropdown
 
-
 Bulk-selection  >> Check box
 
 multi-course can be saved too
 
 QUESTION:
-Admission Fee is same with course Fee?
+Admission Fee is same with course Fee? -->> SAME
+
 Preferred course(student) vs Course name (admin).
 >>> When admin data is added, preferred course in Student table should be keep as original preferred course? or should updated to coursename (added in Admin)
 
+<!-- Select Course Model -->
+
+When you sign in student, the preferred courses shoud show up (submit & skip) in Modal
+5 Courses selections in Check Box/ Radio Button. anyone select at least one, then Skip should be grayed out / Removed, Only submit button will show
+
+
+Skip: Update is cancelled
+Submit: 
+
+It should be visible to only 1st time login (), 2nd time login the modal should not be visible (skip/saved should be captured so it should no longer shown).
+
+Map Method >> Add to Cart from MovieStation, how will you store in to a data.
+if you have token, get particular student data.
+student.preferredCourses = value that you enter >>>> update (put)
+If student selected, then preferredcourse should show "skip" in table.
+if its Array, how will you update to Table ? check front-end
+
+
+QUESTIONS: student sign up should be studentData or userData?
+
+
+-- Role Based profile
+1.Update User Model --> 
+    role:{
+        type:String,
+        enum:["admin","user","manager","supportTeam","testingTeam"],
+        required:true,
+        default:"user"
+    }
+    
+    >>>> enum(Pre defined of array) 
+
+2. Update  userSchema, Generate the token >> pass role:user.role too.
+
+userSchema.methods.generateAuthToken = async function(req,res){
+    const user = this
+    const token = jwt.sign({_id:user.id,role:user.role},process.env.JWT_SECRET_KEY)
+    console.log(token)
+    return token
+}
 
 
 

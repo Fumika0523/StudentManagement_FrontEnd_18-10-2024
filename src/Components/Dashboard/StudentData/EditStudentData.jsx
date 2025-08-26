@@ -12,7 +12,14 @@ import { Col, Row } from 'react-bootstrap';
 function EditStudentData({show,setShow,setSingleStudent,singleStudent,setStudentData}){
   console.log(singleStudent._id)
   console.log(singleStudent)
-
+ const token = localStorage.getItem('token')
+ console.log('token')
+ 
+ let config = {
+     headers:{
+         Authorization:`Bearer ${token}`
+     }
+ }
     const navigate = useNavigate()
 
     const handleClose = () => {
@@ -55,14 +62,7 @@ const formik = useFormik({
  }})
  console.log(singleStudent)
 
- const token = localStorage.getItem('token')
- console.log('token')
- 
- let config = {
-     headers:{
-         Authorization:`Bearer ${token}`
-     }
- }
+
  
  //update
   const updateStudent = async(updatedStudent)=>{
@@ -79,6 +79,9 @@ const formik = useFormik({
     }catch(e){
       console.error('Error Editing Student:',e)
     }} 
+
+
+    
     return(
     <>
     <div>

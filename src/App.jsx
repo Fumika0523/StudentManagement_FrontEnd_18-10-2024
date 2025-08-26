@@ -3,7 +3,6 @@ import './App.css'
 import { useEffect, useState } from 'react'
 import ProfileForm from './Components/Profile/ProfileForm'
 import { Box } from '@mui/material'
-
 import axios from 'axios'
 import UserNameForm from './Components/Profile/Edit/userNameForm'
 import { url } from './Components/utils/constant'
@@ -23,13 +22,12 @@ import StaffSignIn from './Components/Staff/StaffSignIn'
 import StudentSignIn from './Components/Student/StudentSignIn'
 import StudentSignUp from './Components/Student/StudentSignUp'
 import StaffSignUp from './Components/Staff/StaffSignUp'
-
+import SelectCourseModal from './Components/Dashboard/StudentData/SelectCourseModal'
 
 
 function App() {
   const token = localStorage.getItem('token') //if you have a token,
   const [userData,setUserData] = useState([])
-  // Get Student Data
   
 const getUserData = async()=>{
   console.log("App.jsx call")
@@ -61,7 +59,9 @@ useEffect(()=>{
 //console.log(userData)
 
   return (
+
     <>
+    {/* <SelectCourseModal /> */}
 
     {/* <div className='d-flex border border-4 border-warning'> */}
       <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
@@ -72,7 +72,7 @@ useEffect(()=>{
 
     {token ? 
     <>
-        <Route path="/dashboard" element={<DashboardCard />}/>
+        <Route path="/dashboard" element={<DashboardCard isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}/>
         <Route path="/profile" element={<ProfileForm />}/>
         {/* <Route path="/homepage" element = {<HomePage/>} /> */}
         <Route path="/usernameform" element={<UserNameForm/>}/>
@@ -93,9 +93,12 @@ useEffect(()=>{
       <Route path="/student-signup" element={<StudentSignUp/>}/>   
       <Route path="/staff-signin" element={<StaffSignIn isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
       <Route path="/staff-signup" element={<StaffSignUp/>}/>  
+      <Route path="/staff-signup" element={<StaffSignUp/>}/>  
     </>
     }
-      </Routes>
+    
+      {/* <Route path="*" element={<Navigate to="/" />} /> */}
+</Routes>
       </Box>
 
       <ToastContainer

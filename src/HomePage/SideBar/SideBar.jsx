@@ -26,11 +26,11 @@ function SideBar() {
     const [expanded, setExpanded] = React.useState(false); //to open component, when its open the down-arrow should show
     const [isSidebarOpen, setIsSidebarOpen] = useState (true); // State to toggle the sidebar
 
-    const token = sessionStorage.getItem('token')
+    const token = localStorage.getItem('token')
     console.log("token", token)
     
     const handleSignOut = () => {
-      sessionStorage.removeItem('token')
+      localStorage.removeItem('token')
       navigate('/')
     }
       const handleExpandClick = () => {

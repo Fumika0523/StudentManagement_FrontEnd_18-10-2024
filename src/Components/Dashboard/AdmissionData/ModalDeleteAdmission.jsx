@@ -6,27 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const ModalDeleteAdmission = ({viewWarning,setViewWarning,singleAdmission,setAdmissionData}) => {
-
-  const notify = () =>{
-    console.log("Toast Notification Added")
-        toast.error("Admission is deleted successfully !",{
-            style:{
-                textWrap:"nowrap",
-                textAlign:"center",
-                padding:"0.5% 0% 0.5% 4%",
-                color:"black",
-                // autoClose: "10000",
-                // fontStyle:"italic"
-            }
-        })}
-
         const navigate = useNavigate()
         console.log(viewWarning   
         )
         const handleClose = () =>{
         setViewWarning(false)
          navigate('/admissiondata')}
-            
         console.log(singleAdmission)
         const token = localStorage.getItem('token');
         const config = {
@@ -36,15 +21,28 @@ const ModalDeleteAdmission = ({viewWarning,setViewWarning,singleAdmission,setAdm
 const handleDeleteClick = async(id) =>{
   try{
       let res = await axios.delete(`${url}/deleteadmission/${id}`,config);
-      console.log(res)
+      console.log(res.data.deleteAdmission.studentName)
+      const deletedStudent = res.data.deleteAdmission.studentName
+      console.log("deletedStudent",deletedStudent)
       if(res){
       let res = await axios.get(`${url}/alladmission`,config)
-      console.log("Successfully a Admission is deleted from DB",res.data.admissionData)
+      // console.log("Successfully a Admission is deleted from DB",res.data.admissionData)
+
+      // Show toast
+      toast.error(`${deletedStudent} has been deleted successfully!`, {
+        style: {
+          textWrap: "nowrap",
+          textAlign: "center",
+          fontSize:"14px",
+          color: "black",
+        },
+      });
+
       setAdmissionData(res.data.admissionData) // updating the original Main admission data
-      notify()
+      // notify()
       setTimeout(()=>{
           handleClose()
-      },3001)
+      },1000)
       handleClose()}   
   }catch(error){
       console.error('Error Deleting Admission:', error);    

@@ -14,9 +14,7 @@ import ModalEditAdmission from './ModalEditAdmission';
 import { useEffect } from 'react';
 import { WrapText } from '@mui/icons-material';
 import axios from 'axios';
-import { url
-  
- } from '../../utils/constant';
+import { url } from '../../utils/constant';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#f3f4f6',

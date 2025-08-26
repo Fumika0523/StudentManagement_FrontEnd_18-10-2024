@@ -30,6 +30,9 @@ export default function NavBar() {
   
 const token = localStorage.getItem('token')
 const username = localStorage.getItem('username')
+  const  userId = localStorage.getItem('_id')
+  console.log(userId)
+
 const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
 
   console.log("token", token,username)

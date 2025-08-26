@@ -14,31 +14,31 @@ import ModalDeleteCourse from './ModalDeleteCourse'
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: '#f3f4f6',
-      color: '#5a5c69',
-      fontWeight: 'bold',
-      textAlign: 'center',
-      fontSize: '14.5px',
-      padding: '10px 15px',
-      textWrap:"noWrap"
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: '13px',
-      textAlign: 'center',
-      padding: '10px 15px',
-      textWrap:"noWrap"
-    },
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    '&:hover': {
-      backgroundColor: '#b3e5fc',
-    },
-  }));
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#f3f4f6',
+    color: '#5a5c69',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: '14.5px',
+    padding: '10px 15px',
+    textWrap:"noWrap"
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: '13px',
+    textAlign: 'center',
+    padding: '10px 15px',
+    textWrap:"noWrap"
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&:hover': {
+    backgroundColor: '#b3e5fc',
+  },
+}));
 
 function CustomisedCourseTables({courseData,setCourseData}){
     const [show,setShow] = useState(false)
@@ -79,7 +79,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
           { courseData?.map((course)=>(
             <StyledTableRow key={course._id}>
                 <StyledTableCell>
-                     <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly",textAlign:"center"}}>
                      <FaEdit
                         className="text-success"
                         style={{ cursor: 'pointer' }}

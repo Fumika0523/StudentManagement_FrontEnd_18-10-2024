@@ -19,14 +19,14 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             style: {
                 textWrap: "nowrap",
                 textAlign: "center",
-                padding: "0.5% 0% 0.5% 4%",
+                fontSize:"14px",
                 color: "black",
             }
         })
     }
     const [courseValue, setCourseValue] = useState("")
     const [studentValue, setStudentValue] = useState("");
-        const [courseData, setCourseData] = useState([])
+    const [courseData, setCourseData] = useState([])
     const [studentData, setStudentData] = useState([])
 
     console.log("courseValue", courseValue)
@@ -65,13 +65,13 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     const formSchema = Yup.object().shape({
         courseId: Yup.string().required("Mandatory field!"),
         studentId: Yup.string().required(("Mandatory field!")),
-        courseName: Yup.string().required(("Please select Course ID!")),
-        studentName: Yup.string().required(("Please select Student ID!")),
-        admissionSource: Yup.string().required(("Mandatory field!")),
+        courseName: Yup.string().required(("Select Course Name!")),
+        studentName: Yup.string().required(("Please select Student Name!")),
+        admissionSource: Yup.string().required(("Please Select Source")),
         admissionFee: Yup.number().required(("Please select Course ID!")),
-        admissionDate: Yup.date().required(("Mandatory field!")),
-        admissionYear: Yup.number().required(("Please select Date!")),
-        admissionMonth: Yup.string().required(("Please select Date!")),
+        admissionDate: Yup.date().required(("Please select Date!")),
+        admissionYear: Yup.number().required(("Mandatory field!")),
+        admissionMonth: Yup.string(),
     })
 
     const formik = useFormik({
@@ -154,7 +154,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             notify()
             setTimeout(() => {
                 handleClose()
-            }, 3001)
+            }, 1000)
             handleClose()
         }
         // } catch (e) {
@@ -162,22 +162,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         // }
     }
     // console.log(formik)
-
-    // const handleCourseNameChange=(e)=>{
-    //         console.log(e.target.value) 
-    //         const selectedCourseName =e.target.value
-    //         console.log("selectedCourseName",selectedCourseName)
-    //         setCourseValue(selectedCourseName)
-    //         //find() >> Array Method
-    //         const selectedCourse = courseData.find((element)=>element.courseName == selectedCourseName)
-    //         console.log(selectedCourse.courseId)
-    //         console.log("selectedCoure",selectedCourse._id)
-    //         console.log(selectedCourse.courseFee)
-
-    //         formik.setFieldValue("courseId",selectedCourse._id)
-    //         formik.setFieldValue("courseName",selectedCourse.courseName)
-    //         formik.setFieldValue("admissionFee",selectedCourse.courseFee)
-    //     }
 
     const handleCourseNameChange = (e) => {
         const selectedCourseName = e.target.value;
@@ -194,17 +178,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         }
 
     };
-
-    // const handleStudentIdChange=(e)=>{
-    //     console.log(e.target.value)
-    //     const selectedStudentId=e.target.value
-    //       setStudentValue(selectedStudentId)
-    //     //find()
-    //     const selectedStudent = studentData.find((element)=>element._id ==selectedStudentId)
-    //     console.log(selectedStudent.studentName)
-    //     formik.setFieldValue("studentId",selectedStudentId)
-    //     formik.setFieldValue("studentName",(selectedStudent.studentName))
-    // }
 
     const handleStudentNameChange = (e) => {
         const selectedStudentName = e.target.value;
@@ -243,9 +216,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                 <Modal.Body>
                     <Row>
                         <Col>
-                            {/* Course ID */}
-
-
                             {/* Select Course Name */}
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Course Name</Form.Label>
@@ -263,7 +233,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option>  */}
                                 </select>
                                 {/* Error Message */}
-                                {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
+                                {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center" >{formik.errors.courseName}</div>}
                             </Form.Group>
 
                         </Col>

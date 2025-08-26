@@ -28,7 +28,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     padding: '10px 15px',
     textWrap:"noWrap"
   },
-
   [`&.${tableCellClasses.body}`]: {
     fontSize: '13px',
     textAlign: 'center',
@@ -42,7 +41,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
   '&:hover': {
-    backgroundColor: '#daf1fc',
+    backgroundColor: '#b3e5fc',
   },
 }));
 
@@ -126,9 +125,11 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
               <StyledTableCell>Gender</StyledTableCell>
               <StyledTableCell>Birthdate</StyledTableCell>
               <StyledTableCell>Course ID</StyledTableCell>
-              <StyledTableCell>Preferred Course Name</StyledTableCell>
+              <StyledTableCell>Preferred Courses</StyledTableCell>
               <StyledTableCell>Admission Fee</StyledTableCell>
               <StyledTableCell>Admission Date</StyledTableCell>
+              <StyledTableCell>Mapped Course</StyledTableCell> 
+              {/* from Admin data */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -137,7 +138,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
               <StyledTableRow key={student._id}>
               <StyledTableCell className='p-0'>{index+1}</StyledTableCell>
                 <StyledTableCell>
-                  <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly",textAlign:"center"}}>
                     <FaEdit
                       className="text-success"
                       style={{ cursor: 'pointer' }}
@@ -150,7 +151,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                     />
                     <FaKey
                       className="text-secondary"
-                      style={{ cursor:'pointer' }}
+                      style={{ cursor:'pointer',fontSize:"16px",  }}
                       onClick={() => handlePasswordClick(student.password)}
                     />
                   </div>
@@ -171,9 +172,11 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                 <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
                 <StyledTableCell>{student.courseId}</StyledTableCell>
                 {/* <StyledTableCell>{student.courseName}</StyledTableCell> */}
-                <StyledTableCell>{student.courseName}</StyledTableCell>
+                <StyledTableCell>{student.preferredCourses}</StyledTableCell>
                 <StyledTableCell>{student.admissionFee}</StyledTableCell>
                 <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
+                {/* from ADmin Course Name */}
+                <StyledTableCell>{student.courseName}</StyledTableCell> 
               </StyledTableRow>
             ))}
           </TableBody>
