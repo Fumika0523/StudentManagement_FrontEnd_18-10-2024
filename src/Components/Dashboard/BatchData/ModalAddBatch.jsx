@@ -300,7 +300,6 @@
 
 // ///Batch No. cannot b eddited.
 
-
 import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -315,8 +314,6 @@ import { Col, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 function ModalAddBatch({ show, setShow, setBatchData }) {
-  const [courseValue, setCourseValue] = useState("");
-  const [studentValue, setStudentValue] = useState("");
   const [courseData, setCourseData] = useState([]);
   const [studentData, setStudentData] = useState([]);
   const [nextBatchNo, setNextBatchNo] = useState(""); // auto batch no
@@ -351,59 +348,29 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-      if (!nextBatchNo) {
-        toast.error("Batch number not generated. Please try again.");
-        return;
-      }
-
-      const payload = {
-        ...values,
-        batchNumber: nextBatchNo,
+      const payload = { 
+        ...values, 
+        batchNumber: nextBatchNo, 
         fees: values.courseFee // map courseFee to fees for backend
       };
       addBatch(payload);
     }
   });
 
-  let config = { headers: { Authorization: `Bearer ${token}` } };
-
-  // Fetch next batch number when modal opens
-  useEffect(() => {
-    if (show) {
-      axios.get(`${url}/nextbatchno`, config)
-        .then(res => {
-          if (res.data?.nextBatchNo) {
-            setNextBatchNo(res.data.nextBatchNo);
-            formik.setFieldValue("batchNumber", res.data.nextBatchNo);
-          } else {
-            toast.warn("Failed to fetch batch number. You can still add manually.");
-          }
-        })
-        .catch(err => {
-          console.error("Error fetching next batch no:", err);
-          toast.warn("Failed to fetch batch number. You can still add manually.");
-        });
-    }
-  }, [show]);
-
-  const getCourseData = async () => {
-    try {
-      let res = await axios.get(`${url}/allcourse`, config);
-      setCourseData(res.data.courseData);
-    } catch (err) {
-      console.error("Error fetching courses:", err);
-      toast.error("Failed to fetch course data.");
-    }
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
   };
 
+  // Fetch courses
+  const getCourseData = async () => {
+    const res = await axios.get(`${url}/allcourse`, config);
+    setCourseData(res.data.courseData);
+  };
+
+  // Fetch students
   const getStudentData = async () => {
-    try {
-      let res = await axios.get(`${url}/allstudent`, config);
-      setStudentData(res.data.studentData);
-    } catch (err) {
-      console.error("Error fetching students:", err);
-      toast.error("Failed to fetch student data.");
-    }
+    const res = await axios.get(`${url}/allstudent`, config);
+    setStudentData(res.data.studentData);
   };
 
   useEffect(() => {
@@ -411,9 +378,26 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     getStudentData();
   }, []);
 
+  // Fetch next batch number whenever modal opens
+  const fetchNextBatchNo = async () => {
+    try {
+      const res = await axios.get(`${url}/nextbatchno`, config);
+      setNextBatchNo(res.data.nextBatchNo);
+      formik.setFieldValue("batchNumber", res.data.nextBatchNo);
+    } catch (err) {
+      console.error("Error fetching next batch no:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (show) {
+      formik.resetForm();   // reset form on modal open
+      fetchNextBatchNo();   // fetch latest batch number
+    }
+  }, [show]);
+
   const handleCourseNameChange = (e) => {
     const selectedCourseName = e.target.value;
-    setCourseValue(selectedCourseName);
     const selectedCourse = courseData.find(c => c.courseName === selectedCourseName);
     if (selectedCourse) {
       formik.setFieldValue("courseId", selectedCourse._id);
@@ -424,7 +408,6 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
 
   const handleStudentNameChange = (e) => {
     const selectedStudentName = e.target.value;
-    setStudentValue(selectedStudentName);
     const selectedStudent = studentData.find(s => s.studentName === selectedStudentName);
     if (selectedStudent) {
       formik.setFieldValue("studentId", selectedStudent._id);
@@ -434,18 +417,14 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
 
   const addBatch = async (newBatch) => {
     try {
-      const res = await axios.post(`${url}/addbatch`, newBatch, config);
-      if (res.status === 200 || res.status === 201) {
-        const allBatches = await axios.get(`${url}/allbatch`, config);
-        setBatchData(allBatches.data.batchData);
-        toast.success("Batch added successfully!");
-        setTimeout(() => handleClose(), 1000);
-      } else {
-        toast.error("Failed to add batch. Check your inputs.");
-      }
-    } catch (err) {
-      console.error("Error Adding Batch:", err.response || err);
-      toast.error(err.response?.data?.error || "Server error. Batch not added.");
+      await axios.post(`${url}/addbatch`, newBatch, config);
+      const res = await axios.get(`${url}/allbatch`, config);
+      setBatchData(res.data.batchData);
+      toast.success("Batch added successfully!");
+      setTimeout(() => handleClose(), 1000);
+    } catch (e) {
+      console.error("Error Adding Batch:", e);
+      toast.error("Failed to add batch.");
     }
   };
 
@@ -460,13 +439,7 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
             <Col>
               <Form.Group className='my-3'>
                 <Form.Label>Batch No.</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="batchNumber"
-                  value={nextBatchNo || formik.values.batchNumber}
-                  disabled
-                  placeholder="Auto-generated"
-                />
+                <Form.Control type="text" name="batchNumber" value={nextBatchNo} disabled />
               </Form.Group>
             </Col>
             <Col>
@@ -480,10 +453,13 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
                   onBlur={formik.handleBlur}
                 >
                   <option value="">Select Course</option>
-                  {courseData.map(c => <option key={c._id} value={c.courseName}>{c.courseName}</option>)}
+                  {courseData.map(c => (
+                    <option key={c._id} value={c.courseName}>{c.courseName}</option>
+                  ))}
                 </select>
-                {formik.errors.courseName && formik.touched.courseName &&
-                  <div className="text-danger text-center">{formik.errors.courseName}</div>}
+                {formik.errors.courseName && formik.touched.courseName && (
+                  <div className="text-danger text-center">{formik.errors.courseName}</div>
+                )}
               </Form.Group>
             </Col>
           </Row>
@@ -502,8 +478,9 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
                   <option value="Online">Online</option>
                   <option value="At School">At School</option>
                 </Form.Select>
-                {formik.errors.sessionType && formik.touched.sessionType &&
-                  <div className="text-danger text-center">{formik.errors.sessionType}</div>}
+                {formik.errors.sessionType && formik.touched.sessionType && (
+                  <div className="text-danger text-center">{formik.errors.sessionType}</div>
+                )}
               </Form.Group>
             </Col>
             <Col>
@@ -519,8 +496,9 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
                   <option value="Weekday">Weekday</option>
                   <option value="Weekend">Weekend</option>
                 </Form.Select>
-                {formik.errors.sessionDay && formik.touched.sessionDay &&
-                  <div className="text-danger text-center">{formik.errors.sessionDay}</div>}
+                {formik.errors.sessionDay && formik.touched.sessionDay && (
+                  <div className="text-danger text-center">{formik.errors.sessionDay}</div>
+                )}
               </Form.Group>
             </Col>
           </Row>
@@ -537,8 +515,9 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
                   onBlur={formik.handleBlur}
                   placeholder="Type your Target Student"
                 />
-                {formik.errors.targetStudent && formik.touched.targetStudent &&
-                  <div className="text-danger text-center">{formik.errors.targetStudent}</div>}
+                {formik.errors.targetStudent && formik.touched.targetStudent && (
+                  <div className="text-danger text-center">{formik.errors.targetStudent}</div>
+                )}
               </Form.Group>
             </Col>
             <Col>
@@ -552,8 +531,9 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
                   onBlur={formik.handleBlur}
                   placeholder="Type your Location"
                 />
-                {formik.errors.location && formik.touched.location &&
-                  <div className="text-danger text-center">{formik.errors.location}</div>}
+                {formik.errors.location && formik.touched.location && (
+                  <div className="text-danger text-center">{formik.errors.location}</div>
+                )}
               </Form.Group>
             </Col>
           </Row>
@@ -573,27 +553,27 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
                   <option value="Afternoon">Afternoon</option>
                   <option value="Evening">Evening</option>
                 </Form.Select>
-                {formik.errors.sessionTime && formik.touched.sessionTime &&
-                  <div className="text-danger text-center">{formik.errors.sessionTime}</div>}
+                {formik.errors.sessionTime && formik.touched.sessionTime && (
+                  <div className="text-danger text-center">{formik.errors.sessionTime}</div>
+                )}
               </Form.Group>
             </Col>
             <Col>
               <Form.Group className='my-3'>
                 <Form.Label>Course Fee</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="courseFee"
-                  value={formik.values.courseFee}
-                  disabled
-                />
+                <Form.Control type="text" name="courseFee" value={formik.values.courseFee} disabled />
               </Form.Group>
             </Col>
           </Row>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button style={{ backgroundColor: "#4e73df" }} type="submit">Save Changes</Button>
-          <Button variant="secondary" onClick={handleClose}>Close</Button>
+          <Button style={{ backgroundColor: "#4e73df" }} type="submit">
+            Save Changes
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
         </Modal.Footer>
       </Form>
     </Modal>
@@ -601,3 +581,4 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
 }
 
 export default ModalAddBatch;
+

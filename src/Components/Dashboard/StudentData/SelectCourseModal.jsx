@@ -107,124 +107,221 @@
 
 // export default SelectCourseModal;
 
+// import React, { useEffect, useState } from 'react';
+// import { Modal, Form, Button } from 'react-bootstrap';
+// import axios from 'axios';
+// import { url } from '../../utils/constant';
+// import { useFormik } from 'formik';
+// import * as Yup from "yup";
+
+// function SelectCourseModal({ show, setShow }) {
+//   const courses = ['HTML','CSS','JavaScript','Redux','Node JS','MongoDB','SQL','Bootstrap'];
+//   const [studentData, setStudentData] = useState([]);
+//   const [currentStudent, setCurrentStudent] = useState(null);
+
+//   const token = localStorage.getItem('token');
+//   const username = localStorage.getItem('username'); // logged in user
+
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
+
+//   const formSchema = Yup.object().shape({
+//     preferredCourses: Yup.array().of(Yup.string()),
+//   });
+
+//   // Fetch students and find current one
+//   const getStudentData = async () => {
+//     try {
+//       let res = await axios.get(`${url}/allstudent`, config);
+//       setStudentData(res.data.studentData);
+//       console.log("username from localStorage:", username);
+//       console.log("all usernames from studentData", res.data.studentData.map(s => s.username));
+
+//       const found = res.data.studentData.find(
+//         (student) => student.username === username
+//       );
+//       setCurrentStudent(found || null);
+//       console.log("Matched student:", found);
+//     } catch (e) {
+//       console.error("Error fetching studentData:", e);
+//     }
+//   };
+
+//   useEffect(() => {
+//     getStudentData();
+//   }, []);
+
+//   const formik = useFormik({
+//     initialValues: {
+//       preferredCourses: currentStudent?.preferredCourses || [],
+//     },
+//     validationSchema: formSchema,
+//     enableReinitialize: true, // will update when currentStudent changes
+//     onSubmit: (values) => {
+//       console.log("Selected values:", values);
+//       updateStudent(values);
+//     },
+//   });
+
+//   const updateStudent = async (updatedStudent) => {
+//     if (!currentStudent) {
+//       console.error("No matched student found!");
+//       return;
+//     }
+//     try {
+//       const res = await axios.put(
+//         `${url}/updatestudent/${currentStudent._id}`,
+//         updatedStudent,
+//         config
+//       );
+//       if (res) {
+//         let refreshed = await axios.get(`${url}/allstudent`, config);
+//         setStudentData(refreshed.data.studentData);
+//         setShow(false); // close modal
+//       }
+//     } catch (e) {
+//       console.error('Error Editing Student:', e);
+//     }
+//   };
+
+// const handleSkip = () => {
+//   updateStudent({ preferredCourses: ["Skip"] });
+//   setShow(false)
+// };
+
+
+//   // const handleCheckboxChange = (e) => {
+//   //   const { value, checked } = e.target;
+//   //   if (checked) {
+//   //     formik.setFieldValue("preferredCourses", [
+//   //       ...formik.values.preferredCourses,
+//   //       value,
+//   //     ]);
+//   //   } else {
+//   //     formik.setFieldValue(
+//   //       "preferredCourses",
+//   //       formik.values.preferredCourses.filter((course) => course !== value)
+//   //     );
+//   //   }
+//   // };
+// const handleCheckboxChange = (e) => {
+//   const { value, checked } = e.target;
+//   if (checked) {
+//     formik.setFieldValue("preferredCourses", [
+//       ...formik.values.preferredCourses,
+//       value,
+//     ]);
+//   } else {
+//     formik.setFieldValue(
+//       "preferredCourses",
+//       formik.values.preferredCourses.filter((course) => course !== value)
+//     );
+//   }
+
+//   // 👇 log the updated selection
+//   console.log("selected course:", 
+//     checked 
+//       ? [...formik.values.preferredCourses, value] 
+//       : formik.values.preferredCourses.filter((course) => course !== value)
+//   );
+// };
+
+//   return (
+//     <Modal show={show} backdrop="static" keyboard={false} centered>
+//       <Modal.Header>
+//         <Modal.Title>Preferred Courses</Modal.Title>
+//       </Modal.Header>
+//       <Form onSubmit={formik.handleSubmit} className="px-4">
+//         <Modal.Body>
+//           {courses.map((course, index) => (
+//             <Form.Check
+//               style={{ fontSize: "14px" }}
+//               key={index}
+//               inline
+//               name="preferredCourses"
+//               label={course}
+//               type="checkbox"
+//               value={course}
+//               checked={formik.values.preferredCourses.includes(course)}
+//               onChange={handleCheckboxChange}
+//             />
+//           ))}
+//         </Modal.Body>
+//         <Modal.Footer className="d-flex justify-content-between">
+//           {formik.values.preferredCourses.length === 0 && (
+//             <Button variant="secondary" onClick={handleSkip}>
+//               Skip
+//             </Button>
+//           )}
+//           <Button type="submit" style={{ backgroundColor: '#4e73df' }}>
+//             Save
+//           </Button>
+//         </Modal.Footer>
+//       </Form>
+//     </Modal>
+//   );
+// }
+
+// export default SelectCourseModal;
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
-import { url } from '../../utils/constant';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
+import { url } from '../../utils/constant';
 
 function SelectCourseModal({ show, setShow }) {
   const courses = ['HTML','CSS','JavaScript','Redux','Node JS','MongoDB','SQL','Bootstrap'];
-  const [studentData, setStudentData] = useState([]);
   const [currentStudent, setCurrentStudent] = useState(null);
 
   const token = localStorage.getItem('token');
-  const username = localStorage.getItem('username'); // logged in user
+  const username = localStorage.getItem('username');
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  const config = { headers: { Authorization: `Bearer ${token}` } };
 
-  const formSchema = Yup.object().shape({
-    preferredCourses: Yup.array().of(Yup.string()),
-  });
-
-  // Fetch students and find current one
-  const getStudentData = async () => {
-    try {
-      let res = await axios.get(`${url}/allstudent`, config);
-      setStudentData(res.data.studentData);
-
-      console.log("username from localStorage:", username);
-      console.log("all usernames from studentData", res.data.studentData.map(s => s.username));
-
-      const found = res.data.studentData.find(
-        (student) => student.username === username
-      );
-      setCurrentStudent(found || null);
-      console.log("Matched student:", found);
-    } catch (e) {
-      console.error("Error fetching studentData:", e);
-    }
-  };
-
+  // Fetch current student
   useEffect(() => {
-    getStudentData();
-  }, []);
+    const fetchStudent = async () => {
+      try {
+        const res = await axios.get(`${url}/allstudent`, config);
+        const found = res.data.studentData.find(s => s.username === username);
+        setCurrentStudent(found || null);
+      } catch (e) {
+        console.error("Error fetching student:", e);
+      }
+    };
+    fetchStudent();
+  }, [username]);
 
+  // Formik for checkbox form
   const formik = useFormik({
-    initialValues: {
-      preferredCourses: currentStudent?.preferredCourses || [],
-    },
-    validationSchema: formSchema,
-    enableReinitialize: true, // will update when currentStudent changes
-    onSubmit: (values) => {
-      console.log("Selected values:", values);
-      updateStudent(values);
+    initialValues: { preferredCourses: currentStudent?.preferredCourses || [] },
+    enableReinitialize: true,
+    validationSchema: Yup.object({ preferredCourses: Yup.array().of(Yup.string()) }),
+    onSubmit: async (values) => {
+      if (!currentStudent) return;
+      try {
+        await axios.put(`${url}/updatestudent/${currentStudent._id}`, values, config);
+        setShow(false);
+      } catch (e) {
+        console.error("Error updating student:", e);
+      }
     },
   });
 
-  const updateStudent = async (updatedStudent) => {
-    if (!currentStudent) {
-      console.error("No matched student found!");
-      return;
-    }
+  // Skip button
+  const handleSkip = async () => {
+    if (!currentStudent) return;
     try {
-      const res = await axios.put(
-        `${url}/updatestudent/${currentStudent._id}`,
-        updatedStudent,
-        config
-      );
-      if (res) {
-        let refreshed = await axios.get(`${url}/allstudent`, config);
-        setStudentData(refreshed.data.studentData);
-        setShow(false); // close modal
-      }
+      await axios.put(`${url}/updatestudent/${currentStudent._id}`, { preferredCourses: ["Skip"] }, config);
+      setShow(false);
     } catch (e) {
-      console.error('Error Editing Student:', e);
+      console.error("Error skipping courses:", e);
     }
   };
-
-  const handleSkip = () => setShow(false);
-
-  // const handleCheckboxChange = (e) => {
-  //   const { value, checked } = e.target;
-  //   if (checked) {
-  //     formik.setFieldValue("preferredCourses", [
-  //       ...formik.values.preferredCourses,
-  //       value,
-  //     ]);
-  //   } else {
-  //     formik.setFieldValue(
-  //       "preferredCourses",
-  //       formik.values.preferredCourses.filter((course) => course !== value)
-  //     );
-  //   }
-  // };
-const handleCheckboxChange = (e) => {
-  const { value, checked } = e.target;
-  if (checked) {
-    formik.setFieldValue("preferredCourses", [
-      ...formik.values.preferredCourses,
-      value,
-    ]);
-  } else {
-    formik.setFieldValue(
-      "preferredCourses",
-      formik.values.preferredCourses.filter((course) => course !== value)
-    );
-  }
-
-  // 👇 log the updated selection
-  console.log("selected course:", 
-    checked 
-      ? [...formik.values.preferredCourses, value] 
-      : formik.values.preferredCourses.filter((course) => course !== value)
-  );
-};
 
   return (
     <Modal show={show} backdrop="static" keyboard={false} centered>
@@ -233,29 +330,30 @@ const handleCheckboxChange = (e) => {
       </Modal.Header>
       <Form onSubmit={formik.handleSubmit} className="px-4">
         <Modal.Body>
-          {courses.map((course, index) => (
+          {courses.map((course, idx) => (
             <Form.Check
-              style={{ fontSize: "14px" }}
-              key={index}
+              key={idx}
               inline
+              type="checkbox"
               name="preferredCourses"
               label={course}
-              type="checkbox"
               value={course}
               checked={formik.values.preferredCourses.includes(course)}
-              onChange={handleCheckboxChange}
+              onChange={(e) => {
+                const { value, checked } = e.target;
+                const updated = checked
+                  ? [...formik.values.preferredCourses, value]
+                  : formik.values.preferredCourses.filter(c => c !== value);
+                formik.setFieldValue("preferredCourses", updated);
+              }}
             />
           ))}
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">
           {formik.values.preferredCourses.length === 0 && (
-            <Button variant="secondary" onClick={handleSkip}>
-              Skip
-            </Button>
+            <Button variant="secondary" onClick={handleSkip}>Skip</Button>
           )}
-          <Button type="submit" style={{ backgroundColor: '#4e73df' }}>
-            Save
-          </Button>
+          <Button type="submit" style={{ backgroundColor: '#4e73df' }}>Save</Button>
         </Modal.Footer>
       </Form>
     </Modal>

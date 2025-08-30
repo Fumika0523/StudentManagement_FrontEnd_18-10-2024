@@ -19,7 +19,10 @@ function SignUp() {
         password: Yup.string().required(),
         username: Yup.string().required(),
         email: Yup.string().required(),
-        phoneNumber: Yup.number().required(),      
+        phoneNumber: Yup.number().required(),
+        birthdate:Yup.date().required(),
+        gender:Yup.string(),
+        role:Yup.string().required()
     })
 
     const formik = useFormik({
@@ -30,6 +33,7 @@ function SignUp() {
             phoneNumber: "",
             birthdate:"",
             gender:"",
+            role:"student"
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
@@ -43,7 +47,7 @@ function SignUp() {
     const postSignUpUser = async (newUser) => {
         console.log(newUser)
         const res = await axios.post(`${url}/signup`, newUser)
-        console.log(res)
+        console.log(res.data.message)
         if (res.status == 200) {
             //navigate to signin page
             navigate('/student-signin')

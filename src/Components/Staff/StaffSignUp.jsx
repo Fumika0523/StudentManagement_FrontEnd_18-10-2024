@@ -30,6 +30,7 @@ function SignUp() {
             phoneNumber: "",
             birthdate:"",
             gender:"",
+            role:"admin"
         },
         validationSchema: formSchema,
         onSubmit: (values) => {

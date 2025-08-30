@@ -151,4 +151,11 @@ userSchema.methods.generateAuthToken = async function(req,res){
 }
 
 
+1. update Model
+2. Form >> signup with role >> test postman
+3. users collection >> role
+4. student collection
+5. entry 5 entries
+delete student & user collection, admin collection
+
 
