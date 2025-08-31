@@ -406,15 +406,6 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     }
   };
 
-  const handleStudentNameChange = (e) => {
-    const selectedStudentName = e.target.value;
-    const selectedStudent = studentData.find(s => s.studentName === selectedStudentName);
-    if (selectedStudent) {
-      formik.setFieldValue("studentId", selectedStudent._id);
-      formik.setFieldValue("studentName", selectedStudent.studentName);
-    }
-  };
-
   const addBatch = async (newBatch) => {
     try {
       await axios.post(`${url}/addbatch`, newBatch, config);
@@ -427,6 +418,23 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
       toast.error("Failed to add batch.");
     }
   };
+
+
+
+useEffect(() => {
+  const fetchNextBatchNo = async () => {
+    try {
+      const res = await axios.get(`${url}/nextbatchno`, config);
+      console.log(res)
+      setNextBatchNo(res.data.nextBatchNo);
+    } catch (err) {
+      console.error("Error fetching next batch no:", err);
+    }
+  };
+
+  fetchNextBatchNo();
+}, [show]); // fetch when modal opens
+
 
   return (
     <Modal show={show} onHide={handleClose} size="lg" style={{ margin: "8% 0%" }}>

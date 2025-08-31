@@ -235,10 +235,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                 {/* Error Message */}
                                 {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center" >{formik.errors.courseName}</div>}
                             </Form.Group>
-
                         </Col>
                         <Col>
-
                             {/* AUto generate Course ID */}
                             <Form.Group className='mt-3' >
                                 <Form.Label className='mb-0'>Course ID</Form.Label>
@@ -248,10 +246,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                                     onBlur={formik.handleBlur}
                                 >
                                 </Form.Control>
-
                                 {formik.errors.courseId && formik.touched.courseId && <div className="text-danger text-center">{formik.errors.courseId}</div>}
                             </Form.Group>
-
                         </Col>
                     </Row>
                     <Row>
@@ -326,8 +322,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         <Col>
                             <Form.Group className='mt-3'>
                                 <Form.Label className='mb-0'>Date</Form.Label>
-
-
                                 <Form.Control
                                     type="date" placeholder=''
                                     name='admissionDate'

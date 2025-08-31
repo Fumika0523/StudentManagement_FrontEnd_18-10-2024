@@ -172,7 +172,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                 <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
                 <StyledTableCell>{student.courseId}</StyledTableCell>
                 {/* <StyledTableCell>{student.courseName}</StyledTableCell> */}
-                <StyledTableCell>{student.preferredCourses}</StyledTableCell>
+                <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
                 <StyledTableCell>{student.admissionFee}</StyledTableCell>
                 <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
                 {/* from ADmin Course Name */}

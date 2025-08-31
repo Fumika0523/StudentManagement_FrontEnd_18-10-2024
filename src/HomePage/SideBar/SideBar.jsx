@@ -40,8 +40,7 @@ function SideBar() {
     const navigate = useNavigate()
     return (
         <>
-
-          <div className="sideBarStyle"        
+          <div className="sideBarStyle border-warning border-4  "        
              id="sideWidth"
              style={{
          width: isSidebarOpen ? "350px" : "150px",
@@ -57,7 +56,7 @@ function SideBar() {
                     onClick={()=>setIsSidebarOpen(!isSidebarOpen)}>
               {!isSidebarOpen?
              
-             <MdKeyboardDoubleArrowRight style={{fontSize:"45px"}} />
+             <MdKeyboardDoubleArrowRight style={{fontSize:"40px"}} />
              :
              <MdKeyboardDoubleArrowLeft  style={{fontSize:"45px"}}/> }
    
@@ -66,7 +65,6 @@ function SideBar() {
                {/* Arrow icon ends here */}
                {!isSidebarOpen ?
               <>
-            
               {/* Logo Icon */}
               <div className="portalIcon mx-3 py-1" >
               <FaSchoolFlag/>
@@ -79,66 +77,83 @@ function SideBar() {
               </div>      
 
            {/* Component */}
-          <div   
-            onClick={handleExpandClick}>
-          <div
-            onClick={() => setOpen(!open)}
-            aria-controls="example-collapse-text"
-            aria-expanded={open}
-            id="expandIcon" 
-           >
-            <div className="bgColor  mx-4 portalIcon smallSidebarIcon"
-            >
-            <MdGridView  />
-            </div>
-            {/* Component ARROW */}
-            <div className="arrowIcon"
-            style={{ position: "relative",top: "-32px",left:"70%",height:"0px"}} >
-              { !expanded?
-         
-              <IoIosArrowForward className="text-white fs-5"
-              />
-              :
-              <IoIosArrowDown  className="text-white fs-5"/>
-              }
-             </div>
-             </div>
-          </div>
-          <Collapse in={open}>
-          <div id="example-collapse-text" className="bg-white mx-auto" style={{ width:"100px",borderRadius:"15px"}}>
-       
-      {/* StudentData */}
-      <div className="my-2">
-      <div className="component-icon mx-4" onClick={() => { navigate('/studentdata')}}
-      style={{cursor:"pointer"}}>
-      <PiStudent />
-      </div>
-      </div>
-
-      {/* Batch Data*/}
-      <div className=" my-2">
-      <div className="component-icon mx-4" onClick={()=>{navigate('/batchdata')}}>
-      <FaUsersViewfinder  />
-      </div>
-      </div>
-
-      {/* Course Data */}
-      <div className="my-2">
-      <div className="component-icon mx-4" onClick={()=>{navigate('/coursedata')}}>
-      <MdMenuBook/>         
-      </div>
-      </div>
-
-      {/* Admission Data */}
-      <div className="my-2">
-      <div className="component-icon mx-4" onClick={()=>{navigate('/admissiondata')}}
-        style={{fontSize:"40px"}}
+        <div className=" "
+          onClick={() => setOpen(!open)} // 
+          aria-controls="example-collapse-text"
+          aria-expanded={open}
+          id="expandIcon"
+          style={{ cursor: "pointer",height:"25px" }}
         >
-      <GiEntryDoor />
-      </div>
-      </div>
-      </div>
-          </Collapse>
+          <div className="bgColor mx-4 portalIcon smallSidebarIcon ">
+            <MdGridView className=""/>
+          </div>
+
+          {/* Arrow Icon */}
+          <div
+            className="arrowIcon "
+            style={{ position: "relative", top: "-32px", left: "70%",width:"30px" }}
+          >
+            {open ? (
+              <IoIosArrowDown className="text-white fs-5" />
+            ) : (
+              <IoIosArrowForward className="text-white fs-5" />
+            )}
+          </div>
+        </div>
+
+      {/* Smooth Collapse Content */}
+      <Collapse in={open}>
+        <div
+          id="example-collapse-text"
+          className="bg-white mx-auto "
+          style={{ width: "100px", borderRadius: "15px" }}
+        >
+          {/* Student Data */}
+          <div className="my-2">
+            <div
+              className="component-icon mx-4"
+              onClick={() => navigate("/studentdata")}
+              style={{ cursor: "pointer" }}
+            >
+              <PiStudent />
+            </div>
+          </div>
+
+          {/* Batch Data */}
+          <div className="my-2">
+            <div
+              className="component-icon mx-4"
+              onClick={() => navigate("/batchdata")}
+              style={{ cursor: "pointer" }}
+            >
+              <FaUsersViewfinder />
+            </div>
+          </div>
+
+          {/* Course Data */}
+          <div className="my-2">
+            <div
+              className="component-icon mx-4"
+              onClick={() => navigate("/coursedata")}
+              style={{ cursor: "pointer" }}
+            >
+              <MdMenuBook />
+            </div>
+          </div>
+
+          {/* Admission Data */}
+          <div className="my-2">
+            <div
+              className="component-icon mx-4"
+              onClick={() => navigate("/admissiondata")}
+              style={{ fontSize: "40px", cursor: "pointer" }}
+            >
+              <GiEntryDoor />
+            </div>
+          </div>
+        </div>
+      </Collapse>
+    {/* </div> */}
 
               {/* Chart */}
               <div className=" mx-4 bgColor portalIcon"
@@ -175,9 +190,9 @@ function SideBar() {
               :
                 // side bar is opened
               <>
-              <div className="d-flex portalIcon col-11 border-primary border-4 text-white align-items-end justify-content-center py-2  mx-3 " id="sideTitleIcon"
-                >
-            
+              {/* STudent Portal */}
+              <div className="d-flex portalIcon col-11 text-white align-items-end justify-content-center py-2  mx-3 " id="sideTitleIcon"
+                >            
                 <FaSchoolFlag className=" d-flex  border-danger text-end  col-3"
                   style={{fontSize:"40px"}} />
 
@@ -189,65 +204,81 @@ function SideBar() {
               </div>
 
                 {/* Dashboard */}
-                <div className="row dashRow row text-white" >
-                <AiFillDashboard className="col-3  fs-4" /><div className="col-9 fw-bold" onClick={() => { navigate('/dashboard') }} style={{fontSize:"18px",cursor: "pointer"}} id="dashboard" >Dashboard</div>
+                <div className="dashRow row text-white" >
+                <AiFillDashboard className="col-3  fs-4" />
+                <div className="col-9 fw-bold" onClick={() => { navigate('/dashboard') }} style={{fontSize:"18px",cursor: "pointer"}} id="dashboard" >Dashboard</div>
+                 <span className="mx-auto pt-3 my-0" style={{borderBottom:"1px solid #bfbfbf", width:"85%"}}></span>
               </div>
 
             {/* COMPONENT */}
-            <div 
-            className="dashRow row"
-            onClick={handleExpandClick} >
-          
-            <div
-            id="expandIcon " 
-            onClick={() => setOpen(!open)}
-            aria-controls="example-collapse-text"
-            aria-expanded={open}
-            className="d-flex row align-items-center">
-            
-            <IoSettings className="col-3 fs-4"/>
-           <div id="component" className="col-7 ">
-            Component</div>
-              
-              {expanded?
-             
-              <IoIosArrowDown className="col-2 fs-4 text-white"
-              />
-              :
-              <IoIosArrowForward  className="col-2 fs-4 text-white"/> }
-            
-                <Collapse in={open}>
-                <div id="example-collapse-text" className="mx-auto"
-              style={{borderRadius:"10px", backgroundColor:"white", marginTop:"5%",padding:"3% 8%",width:"80%",
-               }}>
+       <div className="row" style={{ cursor: "pointer" ,color:" #bfbfbf",  backgroundColor: "transparent",  fontSize:"18px"}}>
+      {/* Header Row */}
+      <div
+        id="expandIcon"
+        onClick={() => setOpen(!open)} // 👈 only one toggle
+        aria-controls="example-collapse-text"
+        aria-expanded={open}
+        className="d-flex row align-items-center"
+      >
+        <IoSettings className="col-3 fs-4" />
+        <div id="component" className="col-7">
+          Component
+        </div>
 
-              <div className="sidebarItem d-flex align-items-center justify-content-start gap-2"   onClick={() => { navigate('/studentdata') }} >
-              <PiStudent className="fs-3" style={{color:"#2050deff"}}/>
-              View All Student
-              </div>
+        {open ? (
+          <IoIosArrowDown className="col-2 fs-4 text-white" />
+        ) : (
+          <IoIosArrowForward className="col-2 fs-4 text-white" />
+        )}
+      </div>
 
-              {/* Batch */}
-              <div className="sidebarItem d-flex align-items-center justify-content-start gap-2"   onClick={()=>{navigate('/batchdata')}}>
-              <FaUsersViewfinder className="fs-3" style={{color:"#2050deff"}} />
+      {/* Collapse Content */}
+      <Collapse in={open}>
+        <div
+          id="example-collapse-text"
+          className="mx-auto"
+          style={{
+            borderRadius: "10px",
+            backgroundColor: "white",
+            // marginTop: "5%",
+             padding: "3% 8%",
+            width: "80%",
+          }}
+        >
+          <div
+            className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+            onClick={() => navigate("/studentdata")}
+          >
+            <PiStudent className="fs-3" style={{ color: "#2050deff" }} />
+            View All Student
+          </div>
+
+          <div
+            className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+            onClick={() => navigate("/batchdata")}
+          >
+            <FaUsersViewfinder className="fs-3" style={{ color: "#2050deff" }} />
             View All Batch
-              </div>
-
-              {/* Course */}
-              <div className="sidebarItem d-flex align-items-center justify-content-start gap-2"  onClick={()=>{navigate('/coursedata')}}>
-                      <MdMenuBook className="fs-3" style={{color:"#2050deff"}}/>  
-                  View All Course
-              </div>
-
-              {/* Admission */}
-              <div className="sidebarItem d-flex align-items-center justify-content-start gap-2 text-nowrap"
-               onClick={()=>{navigate('/admissiondata')}}>
-                <GiEntryDoor className="fs-3" style={{color:"#2050deff"}} />
-              View All Admission
-              </div>
-              </div>
-            </Collapse>
           </div>
+
+          <div
+            className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+            onClick={() => navigate("/coursedata")}
+          >
+            <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
+            View All Course
           </div>
+
+          <div
+            className="sidebarItem d-flex align-items-center justify-content-start gap-2 text-nowrap"
+            onClick={() => navigate("/admissiondata")}
+          >
+            <GiEntryDoor className="fs-3" style={{ color: "#2050deff" }} />
+            View All Admission
+          </div>
+        </div>
+      </Collapse>
+    </div>
       
        {/* UTILITIES */}
         <div className="row dashRow">
@@ -256,12 +287,13 @@ function SideBar() {
           </div>
 
              {/* PAGES */}
-            <div className="row dashRow ">               <FaFolder className="col-3 fs-3"/>
+              <div className=" row" style={{ cursor: "pointer" ,color:" #bfbfbf", backgroundColor: "transparent",  fontSize:"18px"}}>          
+               <FaFolder className="col-3 fs-3"/>
                <div className="col-9" id="page">Page</div>
             </div>
 
                 {/* CHART */}
-            <div className="row dashRow">
+                  <div className=" row" style={{ cursor: "pointer" ,color:" #bfbfbf", backgroundColor: "transparent",  fontSize:"18px"}}>
                  <FaChartArea className="col-3 fs-3"  />
                  <div  className="col-9" id="chart">Charts</div>
             </div>
@@ -270,13 +302,14 @@ function SideBar() {
             <div className="row dashRow">
                 <FaTable className="col-3 fs-3"/>
                 <div className="col-9" id="tables">Tables</div>
+                   <span className="mx-auto pt-3 my-0" style={{borderBottom:"1px solid #bfbfbf", width:"85%"}}></span>
             </div>
+                 
               
                  {/* Sign Out */}
-            <div className="row dashRow"
-            style={{color: "rgb(127, 4, 4)" }}
-            onClick={() => handleSignOut()}>
+            <div className="row signOut dashRow  pb-4"
            
+            onClick={() => handleSignOut()}>
                 <FaPowerOff  className="col-3 fs-3"/>
                 <div className="col-9" id="tables">Sign Out</div>
             </div>
@@ -284,9 +317,8 @@ function SideBar() {
 
             </>
             }
-          {/* </div> */}
           </div>
-        {/* </div> */}
+
         </>
     )
 }

@@ -1,7 +1,7 @@
 .sideBarStyle {
   background-color: #4e73df;
   text-align: start;
-  min-height: 98vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -10,26 +10,15 @@
   /* z-index: 1000; */
 }
 
-
-
 .portalIcon {
   text-align: center;
   color: white;
   font-size: 45px;
-
   cursor: pointer;
   justify-content: center;
   display: flex;
   background-color: darkblue;
   border-radius: 5px;
-}
-
-/* Expanded vs collapsed widths */
-.sidebar-expanded {
-  width: 250px;
-}
-.sidebar-collapsed {
-  width: 150px; /* ✅ wide enough to show labels */
 }
 
 /* Toggle button */
@@ -111,9 +100,10 @@
 
 .dashRow {
   cursor: pointer;
-  border-bottom: 1px solid #bfbfbf;
+  display:flex;
+  /* border-bottom: 1px solid #bfbfbf; */
   color: #bfbfbf;
-  padding: 10.5% 2%;
+  /* padding: 10.5% 2%; */
   background-color: transparent;
   font-size: 18px;
 }
@@ -163,4 +153,33 @@
 
 .sideBarStyle::-webkit-scrollbar {
   display: none !important;             /* Chrome, Safari */
+}
+
+.underlineItem {
+  position: relative;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.underlineItem::after {
+  content: "";
+  position: absolute;
+  bottom: 0; /* underline at bottom of text */
+  left: 5%;   /* center it for 90% width */
+  width: 90%; /* only 90% width */
+  height: 2px; /* thickness of underline */
+  background-color: #2050de; /* underline color */
+  transition: background-color 0.3s;
+}
+
+.underlineItem:hover::after {
+  background-color: #1030aa; /* darker on hover */
+}
+
+.signOut{
+  color:rgb(127, 4, 4)
+}
+
+.signOut:hover{
+  color:rgba(159, 14, 14, 1)
 }

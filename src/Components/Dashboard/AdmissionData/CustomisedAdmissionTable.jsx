@@ -15,6 +15,8 @@ import { useEffect } from 'react';
 import { WrapText } from '@mui/icons-material';
 import axios from 'axios';
 import { url } from '../../utils/constant';
+
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#f3f4f6',
@@ -100,7 +102,7 @@ const formatDateTime = (isoString) => {
 //WHen you add a new admission data, automatically coursename should be added against the student name on student table.
   return (
     <>
-    <TableContainer  component={Paper} style={{height:"600px"}}>
+    <TableContainer  component={Paper} >
       <Table>
         <TableHead>
           <TableRow>
