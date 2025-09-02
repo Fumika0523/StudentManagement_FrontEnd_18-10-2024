@@ -52,6 +52,7 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                 courseDuration:singleCourse?.courseDuration,
                 courseFee:singleCourse?.courseFee,
         },
+        enableReinitialize:"true",
         validationSchema:formSchema,
         onSubmit:(values)=>{
             console.log(values)

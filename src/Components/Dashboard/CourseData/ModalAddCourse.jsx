@@ -62,7 +62,7 @@ const addCourse = async(newCourse)=>{
 console.log(newCourse)
 try{
 const res = await axios.post(`${url}/addcourse`,newCourse,config)
-console.log(res)
+console.log(res.data)
 if(res){
     let res = await axios.get(`${url}/allcourse`,config)
     console.log("Successfully a new course to the DB",newCourse)

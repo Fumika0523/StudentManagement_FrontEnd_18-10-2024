@@ -30,7 +30,7 @@ function viewBatch(){
 
     return(
         <>
-        <div className="d-flex border border-warning border-4" >
+        <div className="d-flex border-warning border-4" >
         <SideBar/>
         <div className="backgroundDesign d-flex flex-column " >
         <NavBar />

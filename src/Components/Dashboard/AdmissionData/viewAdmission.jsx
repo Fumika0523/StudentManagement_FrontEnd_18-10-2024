@@ -41,7 +41,7 @@ const viewAdmission = () => {
     <div className="backgroundDesign d-flex flex-column" 
     style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
     <NavBar/>
-    <div className=' d-flex justify-content-end border-warning border-3 pe-4 py-3'>
+    <div className=' d-flex justify-content-end pe-4 py-3'>
     <Button variant="outline-none" className='commonButton'
     onClick={()=>setShow(true)}
     >Add Admission</Button>

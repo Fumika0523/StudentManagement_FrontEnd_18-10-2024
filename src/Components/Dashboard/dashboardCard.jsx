@@ -9,7 +9,6 @@ import SelectCourseModal from "../../Components/Dashboard/StudentData/SelectCour
 
 
 function DashboardCard({isAuthenticated, setIsAuthenticated}){
-
   //  const [isAuthenticated,setIsAuthenticated]=useState(false)
       const [showModal, setShowModal] = useState(false);
          const token = localStorage.getItem('token') 
