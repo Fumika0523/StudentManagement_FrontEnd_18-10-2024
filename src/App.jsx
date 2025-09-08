@@ -27,12 +27,10 @@ import SelectCourseModal from './Components/Dashboard/StudentData/SelectCourseMo
 
 function App() {
   const token = localStorage.getItem('token')
-const username = localStorage.getItem('username')
 const role = localStorage.getItem('role')
 console.log("role",role)
  //if you have a token,
   const [userData,setUserData] = useState([])
-  // const [role,setRole] = useState([])
 const getUserData = async()=>{
   console.log("App.jsx call")
   let config = {
@@ -40,11 +38,9 @@ const getUserData = async()=>{
       Authorization:`Bearer ${token}`
     }
   }
-  // console.log("User data is called......");
   let res = await axios.get(`${url}/users/profile`,config) //API call retrieving from users/profile
   //console.log(res.data.userData)
   console.log("userData",res.data.userData.role)
-  // setRole("Role",res.data.userData.role)
   setUserData(res.data.userData) //useState is updated
 }
 
@@ -61,17 +57,13 @@ useEffect(()=>{
   getUserData()
    }
 },[])
-//console.log(userData)
+
 
   return (
 
     <>
-    {/* <div className='d-flex border border-4 border-warning'> */}
       <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
-      {/* Protected Routes: Redirect if Not Authenticated */}
-
-
   {token ? (
     role === "admin" ? (
       // Admin routes
@@ -117,7 +109,7 @@ useEffect(()=>{
       theme="light"
       draggable
       />
-      {/* </div> */}
+
     </>
   )
 }
