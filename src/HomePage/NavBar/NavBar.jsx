@@ -18,16 +18,14 @@ import { FaEnvelope } from "react-icons/fa";
 
 export default function NavBar() {
   
-  const navigate = useNavigate()
-  
+const navigate = useNavigate()
 const token = localStorage.getItem('token')
 const username = localStorage.getItem('username')
-  const  userId = localStorage.getItem('_id')
-  console.log(userId)
+const role = localStorage.getItem('role')
+console.log("role",role)
 
 const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
-
-  console.log("token", token,username)
+  // console.log("token", token,username)
 
 
   const UserMenu = (
@@ -45,11 +43,11 @@ const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
     </>
   )
   
-
 const handleLogOut = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('username');
-  navigate('/');
+    localStorage.removeItem('role');
+  navigate('*');
 };
 
   return (

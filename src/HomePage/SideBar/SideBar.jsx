@@ -27,8 +27,11 @@ function SideBar() {
     const [isSidebarOpen, setIsSidebarOpen] = useState (true); // State to toggle the sidebar
 
     const token = localStorage.getItem('token')
-    console.log("token", token)
-    
+    // console.log("token", token)
+    const role = localStorage.getItem('role')
+    console.log(role)
+
+
     const handleSignOut = () => {
       localStorage.removeItem('token')
       navigate('/')
@@ -105,55 +108,104 @@ function SideBar() {
       <Collapse in={open}>
         <div
           id="example-collapse-text"
-          className="bg-white mx-auto "
+          className="bg-white mx-auto"
           style={{ width: "100px", borderRadius: "15px" }}
         >
-          {/* Student Data */}
-          <div className="my-2">
-            <div
-              className="component-icon mx-4"
-              onClick={() => navigate("/studentdata")}
-              style={{ cursor: "pointer" }}
-            >
-              <PiStudent />
-            </div>
-          </div>
+          {role === "admin" ? (
+            <>
+              {/* Student Data */}
+              <div className="my-2">
+                <div
+                  className="component-icon mx-4"
+                  onClick={() => navigate("/studentdata")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <PiStudent />
+                </div>
+              </div>
 
-          {/* Batch Data */}
-          <div className="my-2">
-            <div
-              className="component-icon mx-4"
-              onClick={() => navigate("/batchdata")}
-              style={{ cursor: "pointer" }}
-            >
-              <FaUsersViewfinder />
-            </div>
-          </div>
+              {/* Batch Data */}
+              <div className="my-2">
+                <div
+                  className="component-icon mx-4"
+                  onClick={() => navigate("/batchdata")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <FaUsersViewfinder />
+                </div>
+              </div>
 
-          {/* Course Data */}
-          <div className="my-2">
-            <div
-              className="component-icon mx-4"
-              onClick={() => navigate("/coursedata")}
-              style={{ cursor: "pointer" }}
-            >
-              <MdMenuBook />
-            </div>
-          </div>
+              {/* Course Data */}
+              <div className="my-2">
+                <div
+                  className="component-icon mx-4"
+                  onClick={() => navigate("/coursedata")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <MdMenuBook />
+                </div>
+              </div>
 
-          {/* Admission Data */}
-          <div className="my-2">
-            <div
-              className="component-icon mx-4"
-              onClick={() => navigate("/admissiondata")}
-              style={{ fontSize: "40px", cursor: "pointer" }}
-            >
-              <GiEntryDoor />
-            </div>
-          </div>
+              {/* Admission Data */}
+              <div className="my-2">
+                <div
+                  className="component-icon mx-4"
+                  onClick={() => navigate("/admissiondata")}
+                  style={{ fontSize: "40px", cursor: "pointer" }}
+                >
+                  <GiEntryDoor />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+            {/* Student login */}
+              <div className="my-2">
+                <div
+                  className="component-icon mx-4"
+                  onClick={() => navigate("")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Attendance
+                </div>
+              </div>
+
+            
+              <div className="my-2">
+                <div
+                  className="component-icon mx-4"
+                  onClick={() => navigate("/")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Schedule
+                </div>
+              </div>
+
+              <div className="my-2">
+                <div
+                  className="component-icon mx-4"
+                  onClick={() => navigate("/")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Progress
+                </div>
+              </div>
+
+             
+              <div className="my-2">
+                <div
+                  className="component-icon mx-4"
+                  onClick={() => navigate("/")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Result
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </Collapse>
-    {/* </div> */}
+
 
               {/* Chart */}
               <div className=" mx-4 bgColor portalIcon"
@@ -233,51 +285,94 @@ function SideBar() {
       </div>
 
       {/* Collapse Content */}
-      <Collapse in={open}>
+     <Collapse in={open}>
+  <div
+    id="example-collapse-text"
+    className="mx-auto"
+    style={{
+      borderRadius: "10px",
+      backgroundColor: "white",
+      padding: "3% 8%",
+      width: "80%",
+    }}
+  >
+    {role === "admin" ? (
+      <>
+        {/* View All Student */}
         <div
-          id="example-collapse-text"
-          className="mx-auto"
-          style={{
-            borderRadius: "10px",
-            backgroundColor: "white",
-            // marginTop: "5%",
-             padding: "3% 8%",
-            width: "80%",
-          }}
+          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+          onClick={() => navigate("/studentdata")}
         >
-          <div
-            className="sidebarItem d-flex align-items-center justify-content-start gap-2"
-            onClick={() => navigate("/studentdata")}
-          >
-            <PiStudent className="fs-3" style={{ color: "#2050deff" }} />
-            View All Student
-          </div>
-
-          <div
-            className="sidebarItem d-flex align-items-center justify-content-start gap-2"
-            onClick={() => navigate("/batchdata")}
-          >
-            <FaUsersViewfinder className="fs-3" style={{ color: "#2050deff" }} />
-            View All Batch
-          </div>
-
-          <div
-            className="sidebarItem d-flex align-items-center justify-content-start gap-2"
-            onClick={() => navigate("/coursedata")}
-          >
-            <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
-            View All Course
-          </div>
-
-          <div
-            className="sidebarItem d-flex align-items-center justify-content-start gap-2 text-nowrap"
-            onClick={() => navigate("/admissiondata")}
-          >
-            <GiEntryDoor className="fs-3" style={{ color: "#2050deff" }} />
-            View All Admission
-          </div>
+          <PiStudent className="fs-3" style={{ color: "#2050deff" }} />
+          View All Student
         </div>
-      </Collapse>
+
+        {/* View All Batch */}
+        <div
+          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+          onClick={() => navigate("/batchdata")}
+        >
+          <FaUsersViewfinder className="fs-3" style={{ color: "#2050deff" }} />
+          View All Batch
+        </div>
+
+        {/* View All Course */}
+        <div
+          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+          onClick={() => navigate("/coursedata")}
+        >
+          <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
+          View All Course
+        </div>
+
+        {/* View All Admission */}
+        <div
+          className="sidebarItem d-flex align-items-center justify-content-start gap-2 text-nowrap"
+          onClick={() => navigate("/admissiondata")}
+        >
+          <GiEntryDoor className="fs-3" style={{ color: "#2050deff" }} />
+          View All Admission
+        </div>
+      </>
+    ) : (
+      <>
+      {/* STudent Login */}
+        <div
+          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+          onClick={() => navigate("/")}
+        >
+          <span className="fs-3" style={{ color: "#2050deff" }}></span>
+          Attendance
+        </div>
+
+        <div
+          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+          onClick={() => navigate("/")}
+        >
+          <span className="fs-3" style={{ color: "#2050deff" }}></span>
+          Schedule
+        </div>
+
+        <div
+          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+          onClick={() => navigate("/optionC")}
+        >
+          <span className="fs-3" style={{ color: "#2050deff" }}></span>
+          Progress
+        </div>
+
+        <div
+          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
+          onClick={() => navigate("/optionD")}
+        >
+          <span className="fs-3" style={{ color: "#2050deff" }}></span>
+          Result        
+          </div>
+      </>
+    )}
+  </div>
+</Collapse>
+
     </div>
       
        {/* UTILITIES */}

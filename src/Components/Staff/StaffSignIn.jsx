@@ -26,7 +26,7 @@ function StaffSignIn({isAuthenticated,setIsAuthenticated}){
         },
         validationSchema:formSchema,
         onSubmit:(values)=>{
-            console.log(values)
+            // console.log(values)
             postSignInUser(values)
         }
     })
@@ -34,11 +34,12 @@ function StaffSignIn({isAuthenticated,setIsAuthenticated}){
     const navigate=useNavigate()
 
     const postSignInUser=async(loginUser)=>{
-        console.log(loginUser)
+        // console.log(loginUser)
         const res = await axios.post(`${url}/signin`,loginUser)
         console.log(res.data) 
         localStorage.setItem('token',res.data.token)
         localStorage.setItem('username',res.data.user.username)
+         localStorage.setItem('role',res.data.role)
         if(res.data.token){
             setIsAuthenticated(true) // signed in >> true
         }

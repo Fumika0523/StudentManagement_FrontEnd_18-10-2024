@@ -20,7 +20,7 @@ function viewBatch(){
     const getBatchData = async()=>{
         console.log("Batch data is called.....") //checking if useEffect is working or not
         let res = await axios.get(`${url}/allbatch`,config)
-        console.log("BatchData",res.data.batchData)
+        console.log("BatchData",res)
         setBatchData(res.data.batchData)
     }
     useEffect(()=>{

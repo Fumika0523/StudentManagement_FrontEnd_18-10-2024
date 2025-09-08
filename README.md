@@ -150,7 +150,6 @@ userSchema.methods.generateAuthToken = async function(req,res){
     return token
 }
 
-
 1. update Model
 2. Form >> signup with role >> test postman
 3. users collection >> role
@@ -158,4 +157,7 @@ userSchema.methods.generateAuthToken = async function(req,res){
 5. entry 5 entries
 delete student & user collection, admin collection
 
+<!-- Component >>> Different options for student : Attendance, Schedule, My result  -->
+<!-- Ternary Operator for Routes -->
 
+ 

@@ -68,6 +68,7 @@ function CustomisedBatchTables({batchData,setBatchData}){
             <TableRow>
             <StyledTableCell>Action</StyledTableCell>
               <StyledTableCell>Batch No.</StyledTableCell>
+              <StyledTableCell>Status</StyledTableCell>
               <StyledTableCell>Session Type</StyledTableCell>
               <StyledTableCell>Course Name</StyledTableCell>
               <StyledTableCell>Session Day</StyledTableCell>
@@ -75,6 +76,7 @@ function CustomisedBatchTables({batchData,setBatchData}){
               <StyledTableCell>Location</StyledTableCell>
               <StyledTableCell>Session Time</StyledTableCell>
               <StyledTableCell>Fees</StyledTableCell>
+               <StyledTableCell>Assigned Student</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -100,6 +102,7 @@ function CustomisedBatchTables({batchData,setBatchData}){
                   </div>
                 </StyledTableCell>
                 <StyledTableCell>{batch.batchNumber}</StyledTableCell>
+                <StyledTableCell>{batch.status}</StyledTableCell>
                 <StyledTableCell>
                   {batch.sessionType}
                 </StyledTableCell>
@@ -111,6 +114,7 @@ function CustomisedBatchTables({batchData,setBatchData}){
                 </StyledTableCell>
                 <StyledTableCell>{batch.sessionTime}</StyledTableCell>
                 <StyledTableCell>{batch.fees}</StyledTableCell>
+                 <StyledTableCell>{batch.assignedStudent}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

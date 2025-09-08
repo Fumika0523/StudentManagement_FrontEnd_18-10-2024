@@ -23,13 +23,12 @@ function StudentSignIn({ isAuthenticated, setIsAuthenticated }) {
 onSubmit: async (values) => {
   try {
     const res = await axios.post(`${url}/signin`, values);
-
     // Check if token exists instead of res.status
     if (res.data.token) {
       // store token and username
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("username", values.username);
-
+    localStorage.setItem('token',res.data.token)
+    localStorage.setItem('username',res.data.user.username)
+    localStorage.setItem('role',res.data.role)
       setIsAuthenticated(true);
       // navigate to dashboard
       navigate("/dashboard");
