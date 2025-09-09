@@ -107,6 +107,7 @@ const formatDateTime = (isoString) => {
         <TableHead>
           <TableRow>
             <StyledTableCell>Action</StyledTableCell>
+            <StyledTableCell>Batch No.</StyledTableCell>
             <StyledTableCell>Course ID</StyledTableCell>
             <StyledTableCell>Course Name</StyledTableCell>
             <StyledTableCell>Student ID</StyledTableCell>
@@ -139,6 +140,7 @@ const formatDateTime = (isoString) => {
               setSingleAdmission(admission)}}/>
             </div>
             </StyledTableCell>
+            <StyledTableCell>{admission.batchNumber}</StyledTableCell>
             <StyledTableCell>{admission.courseId}</StyledTableCell>
             <StyledTableCell>{admission.courseName}</StyledTableCell>
             <StyledTableCell>{admission.studentId}</StyledTableCell>

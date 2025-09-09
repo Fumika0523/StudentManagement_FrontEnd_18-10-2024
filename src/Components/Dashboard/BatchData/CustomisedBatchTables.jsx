@@ -45,7 +45,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function CustomisedBatchTables({batchData,setBatchData}){
     const [show,setShow] = useState(false)
     const [singleBatch,setSingleBatch] = useState(null) //?
-    console.log(batchData)
     const [viewWarning,setViewWarning] =useState(false)
     const token = localStorage.getItem('token');
     const config = {
@@ -114,7 +113,7 @@ function CustomisedBatchTables({batchData,setBatchData}){
                 </StyledTableCell>
                 <StyledTableCell>{batch.sessionTime}</StyledTableCell>
                 <StyledTableCell>{batch.fees}</StyledTableCell>
-                 <StyledTableCell>{batch.assignedStudent}</StyledTableCell>
+                 <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

@@ -25,11 +25,12 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         })
     }
     const [courseValue, setCourseValue] = useState("")
+    const [batchValue, setBatchValue] = useState("")
     const [studentValue, setStudentValue] = useState("");
     const [courseData, setCourseData] = useState([])
     const [studentData, setStudentData] = useState([])
-
-    console.log("courseValue", courseValue)
+    const [batchData,setBatchData] = useState([])
+    //console.log("courseValue", courseValue)
 
     const navigate = useNavigate()
     const handleClose = () => {
@@ -37,32 +38,42 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         navigate('/admissiondata')
     }
 
-
     //Original Course Data
     const getCourseData = async () => {
-        console.log("Console data is called....")
+        //console.log("Console data is called....")
         let res = await axios.get(`${url}/allcourse`, config)
-        console.log("Course Data", res.data.courseData)
+        //console.log("Course Data", res.data.courseData)
         setCourseData(res.data.courseData)
     }
     useEffect(() => {
         getCourseData()
         getStudentData()
     }, [])
-    console.log(courseData)
+    //console.log(courseData)
 
     // courseData?.map((element) => console.log(element.courseName))
     // courseData?.map((element)=>console.log(element._id))
 
+    //Get Batch Data
+    const getBatchData = async()=>{
+        let res = await axios.get(`${url}/allbatch`,config)
+        console.log("BatchData",res.data.batchData)
+        setBatchData(res.data.batchData)
+    }
+    useEffect(()=>{
+        getBatchData()
+    },[])
+
     //student Data
     const getStudentData = async () => {
-        console.log("Student data is called.")
+        //console.log("Student data is called.")
         let res = await axios.get(`${url}/allstudent`, config)
-        console.log("Student Data", res.data.studentData)
+        //console.log("Student Data", res.data.studentData)
         setStudentData(res.data.studentData)
     }
 
     const formSchema = Yup.object().shape({
+        batchNumber:Yup.string().required("Please select Batch Number!"),
         courseId: Yup.string().required("Mandatory field!"),
         studentId: Yup.string().required(("Mandatory field!")),
         courseName: Yup.string().required(("Select Course Name!")),
@@ -76,6 +87,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
 
     const formik = useFormik({
         initialValues: {
+            batchNumber: "",
             courseId: "",
             studentId: "",
             studentName: "",
@@ -96,7 +108,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     })
 
     const token = localStorage.getItem('token')
-    console.log(token)
+   // console.log(token)
 
     let config = {
         headers: {
@@ -104,16 +116,16 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         }
     }
 
-    const formatDate = (dateString) => {
-        console.log(dateString)
-        const date = new Date(dateString);
-        console.log(date)
-        return date.toLocaleDateString('en-US', {
-            year: "numeric",
-            month: 'long',
-            day: 'numeric'
-        })
-    }
+    // const formatDate = (dateString) => {
+    //     console.log(dateString)
+    //     const date = new Date(dateString);
+    //     console.log(date)
+    //     return date.toLocaleDateString('en-US', {
+    //         year: "numeric",
+    //         month: 'long',
+    //         day: 'numeric'
+    //     })
+    // }
     // console.log(new Date("03-01-2025"))
 
     const dateFun = (dateString) => {
@@ -125,14 +137,14 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         const month = date.toLocaleString('default', { month: 'short' });
         // Get the full year
         const year = date.getFullYear();
-        console.log(`${month} ${year}`);
+        // console.log(`${month} ${year}`);
         // console.log(`${month}`)
         return { month, year }
     }
 
     const a = dateFun(formik.values.admissionDate)
-    console.log(a.month) //['january' '2025']
-    console.log(a.year)
+    //console.log(a.month) //['january' '2025']
+   // console.log(a.year)
 
 
     const addAdmission = async (newAdmission) => {
@@ -141,7 +153,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             ...newAdmission,
             // Shoudld select from a dropdown >> 
             studentName: studentValue,
-            courseName: courseValue
+            courseName: courseValue,
+            batchNumber:batchValue,
         }
         // try {
         console.log("Submitting admission data:", formik.values);
@@ -162,11 +175,22 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         // }
     }
     // console.log(formik)
+    const handleBatchNumber = (e) => {
+        const selectedBatchNumber = e.target.value;
+        console.log("selectedBatchNumber",selectedBatchNumber)
+            setBatchValue(selectedBatchNumber)
+        const selectedBatch = batchData.find(
+            (element) => element.batchNumber === selectedBatchNumber
+        );
+               console.log("selected Batch",selectedBatch)
+        if (selectedBatch) {
+            formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
+        }
+    };
 
     const handleCourseNameChange = (e) => {
         const selectedCourseName = e.target.value;
             setCourseValue(selectedCourseName)
-     
         const selectedCourse = courseData.find(
             (element) => element.courseName === selectedCourseName
         );
@@ -176,7 +200,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             formik.setFieldValue("courseName", selectedCourse.courseName);
             formik.setFieldValue("admissionFee", selectedCourse.courseFee);
         }
-
     };
 
     const handleStudentNameChange = (e) => {
@@ -215,6 +238,27 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             <Form onSubmit={formik.handleSubmit} style={{ padding: "1.5% 5%" }}>
                 <Modal.Body>
                     <Row>
+                        <Col>
+                            {/* Select Batch Number */}
+                            <Form.Group className='mt-3'>
+                                <Form.Label className='mb-0'>Batch No.</Form.Label>
+                                <select name="batchNumber" id="" className="form-select"
+                                    value={formik.values.batchNumber}
+                                    // onChange={formik.handleChange} //e.target.value
+                                    onChange={handleBatchNumber}
+                                    onBlur={formik.handleBlur}
+                                >
+                                    <option value="">Select Batch</option>
+                                    {batchData?.map((element) =>
+                                        <option key={element.batchNumber}
+                                            value={element.batchNumber} >{element.batchNumber}</option>
+                                    )}
+                                    {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option>  */}
+                                </select>
+                                {/* Error Message */}
+                                {formik.errors.batchNumber && formik.touched.batchNumber && <div className="text-danger text-center" >{formik.errors.batchNumber}</div>}
+                            </Form.Group>
+                        </Col>
                         <Col>
                             {/* Select Course Name */}
                             <Form.Group className='mt-3'>

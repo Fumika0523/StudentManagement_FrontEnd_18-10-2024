@@ -16,6 +16,8 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
     console.log(singleAdmission._id)
     const [courseData, setCourseData] = useState([])
     const [studentData,setStudentData] = useState([])
+    const [batchData,setBatchData] = useState([])
+    
     const token = localStorage.getItem('token')
     // console.log(token)
 
@@ -24,7 +26,6 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             Authorization: `Bearer ${token}`
         }
     }
-
     
     const navigate = useNavigate()
     const handleClose = () => {
@@ -33,6 +34,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
     }
 
     const formSchema = Yup.object().shape({
+         batchNumber:Yup.string().required("Please select Batch Number!"),
         courseId: Yup.string().required("Mandatory field!"),
         studentId: Yup.string().required(("Mandatory field!")),
         courseName: Yup.string().required(("Mandatory field!")),
@@ -47,6 +49,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
 
     const formik = useFormik({
         initialValues: {
+            batchNumber: singleAdmission?.batchNumber,
             courseId: singleAdmission?.courseId,
             studentId: singleAdmission?.studentId,
             studentName: singleAdmission?.studentName,
@@ -121,31 +124,50 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             console.error("Error in Editting Admission:", e)
         }
     }
-
+    //Batch Data
+      const getBatchData = async()=>{
+        let res = await axios.get(`${url}/allbatch`,config)
+        console.log("BatchData",res.data.batchData)
+        setBatchData(res.data.batchData)
+    }
     //student Data
     const getStudentData = async () => {
         console.log("Student data is called.")
         let res = await axios.get(`${url}/allstudent`, config)
-        console.log("Student Data", res.data.studentData)
+       // console.log("Student Data", res.data.studentData)
         setStudentData(res.data.studentData)
     }
 
-        //Original Course Data
-        const getCourseData = async () => {
+    //Original Course Data
+     const getCourseData = async () => {
             console.log("Console data is called....")
             let res = await axios.get(`${url}/allcourse`, config)
-            console.log("Course Data", res.data.courseData)
+         //   console.log("Course Data", res.data.courseData)
             setCourseData(res.data.courseData)
-        }
+    }
         useEffect(() => {
             getCourseData()
             getStudentData()
+            getBatchData()
         }, [])
         console.log(courseData)
-
+ 
+        const handleBatchChange = (e) => {
+         console.log("handleBatchChange",e.target.value)
+        const selectedBatchNumber = e.target.value;
+        console.log("selectedBatchNumber",selectedBatchNumber)
+            // setBatchValue(selectedBatchNumber)
+        const selectedBatch = batchData.find(
+            (element) => element.batchNumber === selectedBatchNumber
+        );
+               console.log("selected Batch",selectedBatch)
+        if (selectedBatch) {
+            formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
+        }
+    };
     const handleCourseIdChange = (e) => {
         // formik.handleChange === e.target.value
-        console.log(e.target.value)
+        //console.log("handleCourseIdChange",e.target.value)
         const selectedCourseId = e.target.value
         //find() >> Array Method
         const selectedCourse = courseData.find((element) => element._id == selectedCourseId)
@@ -179,6 +201,27 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             >
                 <Modal.Body>
                     <Row>
+                         <Col>
+                            {/* Select Batch Number */}
+                            <Form.Group className='mt-3'>
+                                <Form.Label className='mb-0'>Batch No.</Form.Label>
+                                <select name="batchNumber" id="" className="form-select"
+                                    value={formik.values.batchNumber}
+                                    // onChange={formik.handleChange} //e.target.value
+                                    onChange={handleBatchChange}
+                                    onBlur={formik.handleBlur}
+                                >
+                                    <option value="">Select Batch</option>
+                                    {batchData?.map((element) =>
+                                        <option key={element.batchNumber}
+                                            value={element.batchNumber} >{element.batchNumber}</option>
+                                    )}
+                                    {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option>  */}
+                                </select>
+                                {/* Error Message */}
+                                {formik.errors.batchNumber && formik.touched.batchNumber && <div className="text-danger text-center" >{formik.errors.batchNumber}</div>}
+                            </Form.Group>
+                        </Col>
                         <Col>
                             {/* Course ID << Editable*/}
                             <Form.Group>

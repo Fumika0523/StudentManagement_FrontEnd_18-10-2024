@@ -10,6 +10,7 @@ import { Button } from "react-bootstrap"
 function viewBatch(){
     const [batchData,setBatchData] = useState([])
     const [show,setShow] = useState(false)
+    const [isSidebarOpen, setIsSidebarOpen] = useState (true)
     
     const token = localStorage.getItem('token')
     let config = {
@@ -18,22 +19,21 @@ function viewBatch(){
         }}
     //original Main batch data
     const getBatchData = async()=>{
-        console.log("Batch data is called.....") //checking if useEffect is working or not
         let res = await axios.get(`${url}/allbatch`,config)
-        console.log("BatchData",res)
+        console.log("BatchData",res.data.batchData)
         setBatchData(res.data.batchData)
     }
     useEffect(()=>{
         getBatchData()
     },[])
-    console.log(batchData)
+
 
     return(
         <>
-        <div className="d-flex border-warning border-4" >
+    <div className="d-flex flex-row ">
         <SideBar/>
-        <div className="backgroundDesign d-flex flex-column " >
-        <NavBar />
+        <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
+        <NavBar/>
         <div className="d-flex justify-content-end border-warning border-3 pe-4 py-3">
         {/* ADD BUTTON  */}
         <Button className=" commonButton"

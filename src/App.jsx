@@ -26,13 +26,12 @@ import SelectCourseModal from './Components/Dashboard/StudentData/SelectCourseMo
 
 
 function App() {
-  const token = localStorage.getItem('token')
+const token = localStorage.getItem('token')
 const role = localStorage.getItem('role')
 console.log("role",role)
  //if you have a token,
   const [userData,setUserData] = useState([])
 const getUserData = async()=>{
-  console.log("App.jsx call")
   let config = {
     headers:{
       Authorization:`Bearer ${token}`
@@ -51,7 +50,7 @@ const [isAuthenticated,setIsAuthenticated]=useState(false)
 
 //its going to render whenever there is change (signin)
 useEffect(()=>{
-  console.log(token) 
+  // console.log(token) 
   if(token){
   setIsAuthenticated(true) //signed in,>>authentication > true
   getUserData()

@@ -21,9 +21,9 @@ const ModalDeleteAdmission = ({viewWarning,setViewWarning,singleAdmission,setAdm
 const handleDeleteClick = async(id) =>{
   try{
       let res = await axios.delete(`${url}/deleteadmission/${id}`,config);
-      console.log(res.data.deleteAdmission.studentName)
-      const deletedStudent = res.data.deleteAdmission.studentName
-      console.log("deletedStudent",deletedStudent)
+    //  console.log(res.data.deleteAdmission.studentName)
+      // const deletedStudent = res.data.deleteAdmission.studentName
+      // console.log("deletedStudent",deletedStudent)
       if(res){
       let res = await axios.get(`${url}/alladmission`,config)
       // console.log("Successfully a Admission is deleted from DB",res.data.admissionData)

@@ -11,7 +11,8 @@ import { Button } from "react-bootstrap"
 function ViewCourse(){
     const [courseData,setCourseData] = useState([])
     const [show,setShow] = useState(false)
-
+    const [isSidebarOpen, setIsSidebarOpen] = useState (true)
+    
     const token = localStorage.getItem('token')
     let config = {
         headers:{
@@ -32,10 +33,10 @@ function ViewCourse(){
 
 return(
     <>
-    <div className="d-flex">
-    <SideBar/>
-    <div className="backgroundDesign d-flex flex-column" >
-    <NavBar/>
+    <div className="d-flex flex-row ">
+        <SideBar/>
+    <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
+        <NavBar/>
     {/* Button */}
     <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
     <Button variant="outline-none" className=" commonButton" 
