@@ -381,16 +381,16 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
   const fetchNextBatchNo = async () => {
     try {
       const res = await axios.get(`${url}/nextbatchno`, config);
-      console.log("nextBatch",res.data.newBatch)
-      setNextBatchNo(res.data.nextBatchNo);
-      formik.setFieldValue("batchNumber", res.data.nextBatchNo);
+      console.log("fetchNextBatchNo",res.data.newBatch)
+      setNextBatchNo(res.data.newBatch);
+      formik.setFieldValue("batchNumber", res.data.newBatch);
     } catch (err) {
       console.error("Error fetching next batch no:", err);
     }
   };
   useEffect(() => {
     if (show) {
-      formik.resetForm();   // reset form on modal open
+     // formik.resetForm();   // reset form on modal open
       fetchNextBatchNo();   // fetch latest batch number
     }
   }, [show]);
@@ -409,6 +409,7 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     try {
       await axios.post(`${url}/addbatch`, newBatch, config);
       const res = await axios.get(`${url}/allbatch`, config);
+      console.log("newBatch",newBatch)
       setBatchData(res.data.batchData);
       toast.success("Batch added successfully!");
       setTimeout(() => handleClose(), 1000);
@@ -430,7 +431,7 @@ console.log("nextBatchNo",nextBatchNo)
             <Col>
               <Form.Group className='my-3'>
                 <Form.Label>Batch No.</Form.Label>
-                <Form.Control type="text" name="batchNumber"  disabled />
+                <Form.Control type="text" name="batchNumber" value={formik.values.batchNumber}  disabled />
               </Form.Group>
             </Col>
             <Col>

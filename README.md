@@ -159,5 +159,5 @@ delete student & user collection, admin collection
 
 <!-- Component >>> Different options for student : Attendance, Schedule, My result  -->
 <!-- Ternary Operator for Routes -->
-
+<!-- When you add the admission, and select batchNo, the course name should populate  -->
  

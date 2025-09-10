@@ -102,7 +102,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         enableReinitialize: true,
         onSubmit: (values) => {
             console.log(formik)
-            console.log(values)
+            console.log("values",values)
             addAdmission(values)
         }
     })
@@ -182,25 +182,34 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         const selectedBatch = batchData.find(
             (element) => element.batchNumber === selectedBatchNumber
         );
-               console.log("selected Batch",selectedBatch)
+            console.log("selected Batch",selectedBatch)
+            console.log("selected Batch' courseName",selectedBatch.courseName )
         if (selectedBatch) {
-            formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
+        formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
+        formik.setFieldValue("courseName", selectedBatch.courseName);
+     }
+        else{
+            res.send({message:"Please check again"})
         }
+             const selectedCourse = courseData.find(
+            (element) => element.courseName === selectedBatch.courseName
+             )
+        console.log(selectedCourse)
+        formik.setFieldValue("courseId", selectedCourse._id)
+        formik.setFieldValue("admissionFee",selectedCourse.courseFee)
     };
 
-    const handleCourseNameChange = (e) => {
-        const selectedCourseName = e.target.value;
-            setCourseValue(selectedCourseName)
-        const selectedCourse = courseData.find(
-            (element) => element.courseName === selectedCourseName
-        );
-               console.log("selected COURSE",selectedCourse)
-        if (selectedCourse) {
-            formik.setFieldValue("courseId", selectedCourse._id);
-            formik.setFieldValue("courseName", selectedCourse.courseName);
-            formik.setFieldValue("admissionFee", selectedCourse.courseFee);
-        }
-    };
+    // const handleCourseNameChange = (e) => {
+    //     const selectedCourseName = e.target.value;
+    //         setCourseValue(selectedCourseName)
+    //     const selectedCourse = courseData.find(
+    //         (element) => element.courseName === selectedCourseName
+    //     );
+    //         console.log("selected COURSE",selectedCourse)
+    //     if (selectedCourse) {
+    //         formik.setFieldValue("courseId", selectedCourse._id);
+    //     }
+    // };
 
     const handleStudentNameChange = (e) => {
         const selectedStudentName = e.target.value;
@@ -261,23 +270,15 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         </Col>
                         <Col>
                             {/* Select Course Name */}
-                            <Form.Group className='mt-3'>
+                              <Form.Group className='mt-3' >
                                 <Form.Label className='mb-0'>Course Name</Form.Label>
-                                <select name="courseName" id="" className="form-select"
-                                    value={formik.values.courseName}
-                                    // onChange={formik.handleChange} //e.target.value
-                                    onChange={handleCourseNameChange}
+                                <Form.Control disabled
+                                    type="text" placeholder=''
+                                    name='courseName' value={formik.values.courseName}
                                     onBlur={formik.handleBlur}
                                 >
-                                    <option value="">Select Course</option>
-                                    {courseData?.map((element) =>
-                                        <option key={element.courseName}
-                                            value={element.courseName} >{element.courseName}</option>
-                                    )}
-                                    {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option>  */}
-                                </select>
-                                {/* Error Message */}
-                                {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center" >{formik.errors.courseName}</div>}
+                                </Form.Control>
+                                {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
                             </Form.Group>
                         </Col>
                         <Col>
