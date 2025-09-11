@@ -11,7 +11,6 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import ModalEditBatch from './ModalEditBatch';
 import ModalDeleteWarning from './ModalDeleteWaning';
-import { WrapText } from '@mui/icons-material';
 
 
 // Styled components
@@ -46,24 +45,29 @@ function CustomisedBatchTables({batchData,setBatchData}){
     const [show,setShow] = useState(false)
     const [singleBatch,setSingleBatch] = useState(null) //?
     const [viewWarning,setViewWarning] =useState(false)
-    const token = localStorage.getItem('token');
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
 
   const handleEditClick = (batch)=>{
     setShow(true);
     setSingleBatch(batch)
   }
 
+  const formatDateTime = (isoString) => {
+  const date = new Date(isoString);
+  return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      // hour: '2-digit',
+      // minute: '2-digit',
+      // second: '2-digit',
+      hour12: true
+  }).replace("at","");
+};
     return(
     <>
-    {/* <h1>Batch data</h1> */}
     <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
+      <Table>
+        <TableHead>
             <TableRow>
             <StyledTableCell>Action</StyledTableCell>
               <StyledTableCell>Batch No.</StyledTableCell>
@@ -76,12 +80,14 @@ function CustomisedBatchTables({batchData,setBatchData}){
               <StyledTableCell>Session Time</StyledTableCell>
               <StyledTableCell>Fees</StyledTableCell>
                <StyledTableCell>Assigned Student</StyledTableCell>
+            <StyledTableCell>CreatedAt</StyledTableCell>
+            <StyledTableCell>UpdatedAt</StyledTableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {batchData?.map((batch) => (
-              <StyledTableRow key={batch._id}>
-                <StyledTableCell>
+        </TableHead>
+        <TableBody>
+        {batchData?.map((batch) => (
+          <StyledTableRow key={batch._id}>
+            <StyledTableCell>
                   <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly", textAlign:"center",}}>
                     <FaEdit
                       className="text-success"
@@ -99,25 +105,25 @@ function CustomisedBatchTables({batchData,setBatchData}){
                       }
                     />
                   </div>
-                </StyledTableCell>
-                <StyledTableCell>{batch.batchNumber}</StyledTableCell>
-                <StyledTableCell>{batch.status}</StyledTableCell>
-                <StyledTableCell>
-                  {batch.sessionType}
-                </StyledTableCell>
-                <StyledTableCell>{batch.courseName}</StyledTableCell>
-                <StyledTableCell>{batch.sessionDay}</StyledTableCell>
-                <StyledTableCell>{batch.targetStudent}</StyledTableCell>
-                <StyledTableCell>
-                  {batch.location}
-                </StyledTableCell>
-                <StyledTableCell>{batch.sessionTime}</StyledTableCell>
-                <StyledTableCell>{batch.fees}</StyledTableCell>
-                 <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </StyledTableCell>
+            <StyledTableCell>{batch.batchNumber}</StyledTableCell>
+            <StyledTableCell>{batch.status}</StyledTableCell>
+            <StyledTableCell>{batch.sessionType}
+            </StyledTableCell>
+            <StyledTableCell>{batch.courseName}</StyledTableCell>
+            <StyledTableCell>{batch.sessionDay}</StyledTableCell>
+            <StyledTableCell>{batch.targetStudent}</StyledTableCell>
+            <StyledTableCell>{batch.location}
+            </StyledTableCell>
+            <StyledTableCell>{batch.sessionTime}</StyledTableCell>
+            <StyledTableCell>{batch.fees}</StyledTableCell>
+            <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell>
+            <StyledTableCell>{formatDateTime(batch.createdAt)}</StyledTableCell>
+            <StyledTableCell>{formatDateTime(batch.updatedAt)}</StyledTableCell>
+        </StyledTableRow>
+        ))}
+        </TableBody>
+      </Table>
       </TableContainer>
 
       {/* Edit Part */}

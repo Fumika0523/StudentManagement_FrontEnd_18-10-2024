@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 
 const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     const notify = () => {
-        console.log("Toast Notification Added!")
+      //  console.log("Toast Notification Added!")
         toast.success("Admission is added successfully !", {
             style: {
                 textWrap: "nowrap",
@@ -26,6 +26,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     }
     const [courseValue, setCourseValue] = useState("")
     const [batchValue, setBatchValue] = useState("")
+    const [batchTargetNo, setBatchTargetNo] = useState("")
+    const [batchAssignedCount,setBatchAssignedCount] = useState("")
     const [studentValue, setStudentValue] = useState("");
     const [courseData, setCourseData] = useState([])
     const [studentData, setStudentData] = useState([])
@@ -53,11 +55,43 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
 
     // courseData?.map((element) => console.log(element.courseName))
     // courseData?.map((element)=>console.log(element._id))
+   const handleBatchNumber = (e) => {
+        const selectedBatchNumber = e.target.value;
+        //  console.log("selectedBatchNumber",selectedBatchNumber)
+            setBatchValue(selectedBatchNumber)
+        const selectedBatch = batchData.find(
+            (element) => element.batchNumber === selectedBatchNumber
+        );
+        //  console.log("selected Batch",selectedBatch)
+            //console.log("Batch assignedStudentCount",selectedBatch.assignedStudentCount)
+            setBatchAssignedCount(selectedBatch.assignedStudentCount)
+            console.log("BatchAssignedCo",batchAssignedCount)
+            setBatchTargetNo(selectedBatch.targetStudent)
+            console.log("Batch Target No,",batchTargetNo )
+            // console.log("selected Batch' courseName",selectedBatch.courseName )
+        if (selectedBatch) {
+        formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
+        formik.setFieldValue("courseName", selectedBatch.courseName);
+        setCourseValue(selectedBatch.courseName)
+     }
+        else{
+            res.send({message:"Please check again"})
+        }
+        const selectedCourse = courseData.find(
+            (element) => element.courseName === selectedBatch.courseName
+             )
+        console.log(selectedCourse)
+        formik.setFieldValue("courseId", selectedCourse._id)
+        formik.setFieldValue("admissionFee",selectedCourse.courseFee)
+    };
 
     //Get Batch Data
     const getBatchData = async()=>{
         let res = await axios.get(`${url}/allbatch`,config)
-        console.log("BatchData",res.data.batchData)
+        //console.log("BatchData",res.data.batchData)
+        // console.log("batchAssignedCount",batchAssignedCount)
+        // setBatchTargetNo(res.data.batchData.targetStudent)
+        //   console.log(batchTargetNo)
         setBatchData(res.data.batchData)
     }
     useEffect(()=>{
@@ -101,9 +135,34 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         validationSchema: formSchema,
         enableReinitialize: true,
         onSubmit: (values) => {
-            console.log(formik)
-            console.log("values",values)
-            addAdmission(values)
+        console.log("values",values)
+       // console.log(batchAssignedCount)
+        //console.log(batchTargetNo)
+        if(batchAssignedCount >= batchTargetNo){
+            console.log("Unable to add a new student, please check again")
+               toast.error("Sorry! This batch is full. Try another batch.",{
+            style:{
+                textWrap:"wrap",
+                width:"250px",
+                textAlign:"left",
+                color:"black",
+                autoClose: "300"
+            }
+        })
+        }
+        else{
+           // console.log("Successfully added")
+            toast.success("Successfully assigned!",{
+            style:{
+                textWrap:"wrap",
+                // width:"250px",
+                textAlign:"left",
+                color:"black",
+                autoClose: "300"
+            }
+        })
+            addAdmission()
+        }
         }
     })
 
@@ -146,7 +205,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     //console.log(a.month) //['january' '2025']
    // console.log(a.year)
 
-
     const addAdmission = async (newAdmission) => {
         console.log(newAdmission)
         const admission = {
@@ -156,10 +214,12 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             courseName: courseValue,
             batchNumber:batchValue,
         }
+   
         // try {
         console.log("Submitting admission data:", formik.values);
         const res = await axios.post(`${url}/addadmission`, admission, config)
-        console.log(res.data)
+        
+        console.log("addAdmission",res.data)
         if (res) {
             let res = await axios.get(`${url}/alladmission`, config)
             console.log("Successfully a new admission added to the DB!", admission)
@@ -175,42 +235,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         // }
     }
     // console.log(formik)
-    const handleBatchNumber = (e) => {
-        const selectedBatchNumber = e.target.value;
-        console.log("selectedBatchNumber",selectedBatchNumber)
-            setBatchValue(selectedBatchNumber)
-        const selectedBatch = batchData.find(
-            (element) => element.batchNumber === selectedBatchNumber
-        );
-            console.log("selected Batch",selectedBatch)
-            console.log("selected Batch' courseName",selectedBatch.courseName )
-        if (selectedBatch) {
-        formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
-        formik.setFieldValue("courseName", selectedBatch.courseName);
-     }
-        else{
-            res.send({message:"Please check again"})
-        }
-             const selectedCourse = courseData.find(
-            (element) => element.courseName === selectedBatch.courseName
-             )
-        console.log(selectedCourse)
-        formik.setFieldValue("courseId", selectedCourse._id)
-        formik.setFieldValue("admissionFee",selectedCourse.courseFee)
-    };
-
-    // const handleCourseNameChange = (e) => {
-    //     const selectedCourseName = e.target.value;
-    //         setCourseValue(selectedCourseName)
-    //     const selectedCourse = courseData.find(
-    //         (element) => element.courseName === selectedCourseName
-    //     );
-    //         console.log("selected COURSE",selectedCourse)
-    //     if (selectedCourse) {
-    //         formik.setFieldValue("courseId", selectedCourse._id);
-    //     }
-    // };
-
+ 
     const handleStudentNameChange = (e) => {
         const selectedStudentName = e.target.value;
          setStudentValue(selectedStudentName)
@@ -223,7 +248,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             formik.setFieldValue("studentName", selectedStudent.studentName);
         }
     };
-
 
     const handleAdmissionDateChange = (e) => {
         let res = dateFun(e.target.value)

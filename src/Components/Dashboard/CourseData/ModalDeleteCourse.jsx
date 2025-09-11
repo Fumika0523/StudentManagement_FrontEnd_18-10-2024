@@ -22,18 +22,7 @@ const notify = () =>{
                 // fontStyle:"italic"
             }
         })
-    //     toast.error(
-            
-    //     <div style={{margin:"0%",padding:"5px 8px"}}>
-    //     {/* <h4 style={{color:"red"}}> Deleted !</h4> */}
-    //     <p style={{color:"black"}}>  Course is deleted successfully !</p>
-    //    </div>
-    //     //     "Course is deleted successfully !", {
-    //     //    style:{
-    //     //     padding:"0.5% 3%"
-    //     //    }
-    //     //   }
-    //     );
+
          }
 
 const navigate = useNavigate()

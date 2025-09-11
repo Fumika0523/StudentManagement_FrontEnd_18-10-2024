@@ -51,9 +51,9 @@ function SideBar() {
        }}>
 
                 {/* Arrow Icon */}
-                <div className="position-relative  " style={{height:isSidebarOpen ?"55px":"15px"}}>
+                <div className="position-relative  border-4 " style={{height:isSidebarOpen ?"15px":"15px"}}>
                 <div className="hamburger-icon text-white d-flex"
-                 style={{zIndex:1000,cursor:"pointer",
+                 style={{zIndex:100,cursor:"pointer",
                 justifyContent: isSidebarOpen ? "end" : "center",
                }}
                     onClick={()=>setIsSidebarOpen(!isSidebarOpen)}>
