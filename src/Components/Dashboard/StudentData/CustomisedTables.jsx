@@ -26,13 +26,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     textAlign: 'center',
     fontSize: '14.5px',
     padding: '10px 15px',
-    textWrap:"noWrap"
+    textWrap: "noWrap"
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: '13px',
     textAlign: 'center',
     padding: '10px 15px',
-    textWrap:"noWrap"
+    textWrap: "noWrap"
   },
 }));
 
@@ -52,12 +52,12 @@ const formatDate = (dateString) => {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-    
+
   });
 };
 
 // Main component
-const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData }) => {
+const CustomizedTables = ({ studentData, setStudentData, courseData, setCourseData }) => {
 
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent] = useState(null);
@@ -78,11 +78,11 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
 
   const handleDeleteClick = async (id) => {
     try {
-      let res =await axios.delete(`${url}/deletestudent/${id}`, config);
+      let res = await axios.delete(`${url}/deletestudent/${id}`, config);
       console.log(res)
-      if(res){
-        let res = await axios.get(`${url}/allstudent`,config)
-        console.log("StudentData",res.data.studentData)
+      if (res) {
+        let res = await axios.get(`${url}/allstudent`, config)
+        console.log("StudentData", res.data.studentData)
         // console.log("index",res.data.studentData)
         setStudentData(res.data.studentData)
       }
@@ -97,26 +97,15 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
     setPassword(password);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
   return (
     <>
       <TableContainer component={Paper} >
         <Table>
           <TableHead>
             <TableRow>
-            <StyledTableCell >No.</StyledTableCell>
+              <StyledTableCell >No.</StyledTableCell>
               <StyledTableCell>Actions</StyledTableCell>
+              <StyledTableCell>Batch No.</StyledTableCell>
               <StyledTableCell>Student ID</StyledTableCell>
               <StyledTableCell>Student Name</StyledTableCell>
               <StyledTableCell>Username</StyledTableCell>
@@ -128,17 +117,17 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
               <StyledTableCell>Preferred Courses</StyledTableCell>
               <StyledTableCell>Admission Fee</StyledTableCell>
               <StyledTableCell>Admission Date</StyledTableCell>
-              <StyledTableCell>Mapped Course</StyledTableCell> 
+              <StyledTableCell>Mapped Course</StyledTableCell>
               {/* from Admin data */}
             </TableRow>
           </TableHead>
           <TableBody>
 
-            {studentData?.map((student,index) => (
+            {studentData?.map((student, index) => (
               <StyledTableRow key={student._id}>
-              <StyledTableCell className='p-0'>{index+1}</StyledTableCell>
+                <StyledTableCell className='p-0'>{index + 1}</StyledTableCell>
                 <StyledTableCell>
-            <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly",textAlign:"center"}}>
+                  <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly", textAlign: "center" }}>
                     <FaEdit
                       className="text-success"
                       style={{ cursor: 'pointer' }}
@@ -151,11 +140,12 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                     />
                     <FaKey
                       className="text-secondary"
-                      style={{ cursor:'pointer',fontSize:"16px",  }}
+                      style={{ cursor: 'pointer', fontSize: "16px", }}
                       onClick={() => handlePasswordClick(student.password)}
                     />
                   </div>
                 </StyledTableCell>
+                <StyledTableCell>{student.batchNumber}</StyledTableCell>
                 <StyledTableCell>{student._id}</StyledTableCell>
                 <StyledTableCell>
                   {student.studentName
@@ -176,7 +166,7 @@ const CustomizedTables = ({ studentData,setStudentData,courseData,setCourseData 
                 <StyledTableCell>{student.admissionFee}</StyledTableCell>
                 <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
                 {/* from ADmin Course Name */}
-                <StyledTableCell>{student.courseName}</StyledTableCell> 
+                <StyledTableCell>{student.courseName}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

@@ -13,17 +13,6 @@ import Row from 'react-bootstrap/Row';
 import { toast } from 'react-toastify';
 
 const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
-    const notify = () => {
-      //  console.log("Toast Notification Added!")
-        toast.success("Admission is added successfully !", {
-            style: {
-                textWrap: "nowrap",
-                textAlign: "center",
-                fontSize:"14px",
-                color: "black",
-            }
-        })
-    }
     const [courseValue, setCourseValue] = useState("")
     const [batchValue, setBatchValue] = useState("")
     const [batchTargetNo, setBatchTargetNo] = useState("")
@@ -134,13 +123,10 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         },
         validationSchema: formSchema,
         enableReinitialize: true,
-        onSubmit: (values) => {
-        console.log("values",values)
-       // console.log(batchAssignedCount)
-        //console.log(batchTargetNo)
-        if(batchAssignedCount >= batchTargetNo){
-            console.log("Unable to add a new student, please check again")
-               toast.error("Sorry! This batch is full. Try another batch.",{
+       onSubmit: (values) => {
+    console.log("values", values);
+    if(batchAssignedCount >= batchTargetNo){
+        toast.error("Sorry! This batch is full. Try another batch.", {
             style:{
                 textWrap:"wrap",
                 width:"250px",
@@ -149,21 +135,20 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                 autoClose: "300"
             }
         })
-        }
-        else{
-           // console.log("Successfully added")
-            toast.success("Successfully assigned!",{
+    } else {
+        toast.success("Successfully assigned!", {
             style:{
                 textWrap:"wrap",
-                // width:"250px",
                 textAlign:"left",
                 color:"black",
                 autoClose: "300"
             }
         })
-            addAdmission()
-        }
-        }
+        addAdmission(values)   // ✅ pass Formik values here
+        handleClose()
+    }
+}
+
     })
 
     const token = localStorage.getItem('token')
@@ -206,10 +191,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
    // console.log(a.year)
 
     const addAdmission = async (newAdmission) => {
-        console.log(newAdmission)
+        console.log("newAdmission",newAdmission)
         const admission = {
             ...newAdmission,
-            // Shoudld select from a dropdown >> 
             studentName: studentValue,
             courseName: courseValue,
             batchNumber:batchValue,
@@ -222,7 +206,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         console.log("addAdmission",res.data)
         if (res) {
             let res = await axios.get(`${url}/alladmission`, config)
-            console.log("Successfully a new admission added to the DB!", admission)
+            // console.log("Successfully a new admission added to the DB!", admission)
             setAdmissionData(res.data.admissionData)
             notify()
             setTimeout(() => {
@@ -246,6 +230,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
             console.log("studentId", selectedStudent._id);
             formik.setFieldValue("studentId", selectedStudent._id);
             formik.setFieldValue("studentName", selectedStudent.studentName);
+            console.log("studentName", selectedStudent.studentName);
         }
     };
 

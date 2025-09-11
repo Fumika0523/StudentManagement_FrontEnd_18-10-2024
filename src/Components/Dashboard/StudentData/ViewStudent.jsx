@@ -70,10 +70,7 @@ function ViewStudent(){
             setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData}
             />}
 
-            {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}
-
-            {/* {< HoverCustomisedTable />} */}
-      
+            {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}      
         </div>
         </div>
         {/* </div> */}

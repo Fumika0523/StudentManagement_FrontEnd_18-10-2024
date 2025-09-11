@@ -162,7 +162,7 @@ delete student & user collection, admin collection
 <!-- 1. Same student cannot have same batch -->
 
 <!-- 2. More than the target, you cannot assign the student to the batch
-when you click the add batch >>> through error -->
+when you click the add batch >>> through error --> <<< DONE>>>
 
 <!-- 3. after 7 days of a batch creation, it should not be visible in the dropdown and the lock icon should show in Action. and when you click icon, the message "please contact to super admin for any changes" -->
 <!-- 4. put filter in View STudent, "Date By"."Batch", "Course Name", "By Gender" -->
