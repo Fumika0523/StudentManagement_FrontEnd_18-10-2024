@@ -12,15 +12,14 @@ import { Col } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import { toast } from 'react-toastify';
 
-const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
+const ModalAddAdmission = ({ show, setShow, setAdmissionData,admissionData, studentData,setStudentData }) => {
     const [courseValue, setCourseValue] = useState("")
     const [batchValue, setBatchValue] = useState("")
     const [batchTargetNo, setBatchTargetNo] = useState("")
-    const [batchAssignedCount,setBatchAssignedCount] = useState("")
+    const [batchAssignedCount, setBatchAssignedCount] = useState("")
     const [studentValue, setStudentValue] = useState("");
     const [courseData, setCourseData] = useState([])
-    const [studentData, setStudentData] = useState([])
-    const [batchData,setBatchData] = useState([])
+    const [batchData, setBatchData] = useState([])
     //console.log("courseValue", courseValue)
 
     const navigate = useNavigate()
@@ -38,65 +37,59 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
     }
     useEffect(() => {
         getCourseData()
-        getStudentData()
     }, [])
     //console.log(courseData)
 
     // courseData?.map((element) => console.log(element.courseName))
     // courseData?.map((element)=>console.log(element._id))
-   const handleBatchNumber = (e) => {
+    const handleBatchNumber = (e) => {
         const selectedBatchNumber = e.target.value;
         //  console.log("selectedBatchNumber",selectedBatchNumber)
-            setBatchValue(selectedBatchNumber)
+        setBatchValue(selectedBatchNumber)
         const selectedBatch = batchData.find(
             (element) => element.batchNumber === selectedBatchNumber
         );
         //  console.log("selected Batch",selectedBatch)
-            //console.log("Batch assignedStudentCount",selectedBatch.assignedStudentCount)
-            setBatchAssignedCount(selectedBatch.assignedStudentCount)
-            console.log("BatchAssignedCo",batchAssignedCount)
-            setBatchTargetNo(selectedBatch.targetStudent)
-            console.log("Batch Target No,",batchTargetNo )
-            // console.log("selected Batch' courseName",selectedBatch.courseName )
+        //console.log("Batch assignedStudentCount",selectedBatch.assignedStudentCount)
+        setBatchAssignedCount(selectedBatch.assignedStudentCount)
+        console.log("BatchAssignedCo", batchAssignedCount)
+        setBatchTargetNo(selectedBatch.targetStudent)
+        console.log("Batch Target No,", batchTargetNo)
+        // console.log("selected Batch' courseName",selectedBatch.courseName )
         if (selectedBatch) {
-        formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
-        formik.setFieldValue("courseName", selectedBatch.courseName);
-        setCourseValue(selectedBatch.courseName)
-     }
-        else{
-            res.send({message:"Please check again"})
+            formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
+            formik.setFieldValue("courseName", selectedBatch.courseName);
+            setCourseValue(selectedBatch.courseName)
+        }
+        else {
+            res.send({ message: "Please check again" })
         }
         const selectedCourse = courseData.find(
             (element) => element.courseName === selectedBatch.courseName
-             )
+        )
         console.log(selectedCourse)
         formik.setFieldValue("courseId", selectedCourse._id)
-        formik.setFieldValue("admissionFee",selectedCourse.courseFee)
+        formik.setFieldValue("admissionFee", selectedCourse.courseFee)
     };
 
     //Get Batch Data
-    const getBatchData = async()=>{
-        let res = await axios.get(`${url}/allbatch`,config)
+    const getBatchData = async () => {
+        let res = await axios.get(`${url}/allbatch`, config)
         //console.log("BatchData",res.data.batchData)
         // console.log("batchAssignedCount",batchAssignedCount)
         // setBatchTargetNo(res.data.batchData.targetStudent)
         //   console.log(batchTargetNo)
         setBatchData(res.data.batchData)
     }
-    useEffect(()=>{
+    useEffect(() => {
         getBatchData()
-    },[])
+    }, [])
 
     //student Data
-    const getStudentData = async () => {
-        //console.log("Student data is called.")
-        let res = await axios.get(`${url}/allstudent`, config)
-        //console.log("Student Data", res.data.studentData)
-        setStudentData(res.data.studentData)
-    }
+
 
     const formSchema = Yup.object().shape({
-        batchNumber:Yup.string().required("Please select Batch Number!"),
+        batchNumber: Yup.string().required("Please select Batch Number!"),
         courseId: Yup.string().required("Mandatory field!"),
         studentId: Yup.string().required(("Mandatory field!")),
         courseName: Yup.string().required(("Select Course Name!")),
@@ -123,36 +116,59 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         },
         validationSchema: formSchema,
         enableReinitialize: true,
-       onSubmit: (values) => {
-    console.log("values", values);
-    if(batchAssignedCount >= batchTargetNo){
-        toast.error("Sorry! This batch is full. Try another batch.", {
-            style:{
-                textWrap:"wrap",
-                width:"250px",
-                textAlign:"left",
-                color:"black",
-                autoClose: "300"
-            }
-        })
-    } else {
-        toast.success("Successfully assigned!", {
-            style:{
-                textWrap:"wrap",
-                textAlign:"left",
-                color:"black",
-                autoClose: "300"
-            }
-        })
-        addAdmission(values)   // ✅ pass Formik values here
-        handleClose()
-    }
-}
+onSubmit: async (values) => {
+  console.log("Form values on submit:", values); 
+  console.log("Current admissionData:", admissionData);
+  console.log("Current studentData:", studentData);
 
+  const matchedInfo = admissionData?.map(adm2 => {
+    console.log("Checking admission:", adm2);
+    const student = studentData?.find(stu => stu._id === adm2.studentId);
+    console.log("Matched student from studentData:", student);
+
+    if (student) {
+      const info = { studentName: student.studentName, batchNumber: adm2.batchNumber, studentId: adm2.studentId };
+      console.log("Info to add to matchedInfo:", info);
+      return info;
+    }
+  }).filter(Boolean);
+
+  console.log("Final matchedInfo array:", matchedInfo);
+
+  const isAlreadyAssigned = matchedInfo.some(adm => {
+    console.log("Comparing with matchedInfo:", adm);
+    console.log("Current form values:", values.studentId, values.batchNumber);
+    return adm.studentId === values.studentId && adm.batchNumber === values.batchNumber;
+  });
+
+  console.log("isAlreadyAssigned:", isAlreadyAssigned);
+
+  if (isAlreadyAssigned) {
+    console.log("Student already assigned. Stopping submission.");
+    toast.error("This student is already assigned to this batch. Please select a different batch.", {
+        style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black", }
+    });
+    return;
+  }
+
+  console.log("Batch Assigned Count:", batchAssignedCount, "Batch Target No:", batchTargetNo);
+
+  if (batchAssignedCount >= batchTargetNo) {
+    console.log("Batch is full. Stopping submission.");
+    toast.error("Sorry! This batch is full. Try another batch.", {style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black", }});
+    return;
+  }
+
+  console.log("All checks passed. Submitting admission for:", values);
+  toast.success("Successfully assigned!", {style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black", }});
+  await addAdmission(values);
+  console.log("Admission added. Closing modal.");
+  handleClose();
+}
     })
 
     const token = localStorage.getItem('token')
-   // console.log(token)
+    // console.log(token)
 
     let config = {
         headers: {
@@ -188,49 +204,46 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
 
     const a = dateFun(formik.values.admissionDate)
     //console.log(a.month) //['january' '2025']
-   // console.log(a.year)
+    // console.log(a.year)
 
     const addAdmission = async (newAdmission) => {
-        console.log("newAdmission",newAdmission)
-        const admission = {
-            ...newAdmission,
-            studentName: studentValue,
-            courseName: courseValue,
-            batchNumber:batchValue,
-        }
-   
-        // try {
-        console.log("Submitting admission data:", formik.values);
-        const res = await axios.post(`${url}/addadmission`, admission, config)
-        
-        console.log("addAdmission",res.data)
-        if (res) {
-            let res = await axios.get(`${url}/alladmission`, config)
-            // console.log("Successfully a new admission added to the DB!", admission)
-            setAdmissionData(res.data.admissionData)
-            notify()
-            setTimeout(() => {
-                handleClose()
-            }, 1000)
-            handleClose()
-        }
-        // } catch (e) {
-        //     console.error("Error adding Admission:", e)
-        // }
+    //console.log("newAdmission", newAdmission)
+    const admission = {
+        ...newAdmission,
+        studentName: studentValue,
+        courseName: courseValue,
+        batchNumber: batchValue,
     }
+    try {
+    console.log("Submitting admission data:", formik.values);
+    const res = await axios.post(`${url}/addadmission`, admission, config)
+    //console.log("addAdmission", res.data)
+    if (res) {
+    let res = await axios.get(`${url}/alladmission`, config)
+    // console.log("Successfully a new admission added to the DB!", admission)
+    setAdmissionData(res.data.admissionData)
+    setTimeout(() => {
+        handleClose()
+    }, 1000)
+        handleClose()
+    }
+    } catch (e) {
+       console.error("Error adding Admission:", e)
+    }
+}
     // console.log(formik)
- 
+
     const handleStudentNameChange = (e) => {
         const selectedStudentName = e.target.value;
-         setStudentValue(selectedStudentName)
+        setStudentValue(selectedStudentName)
         const selectedStudent = studentData.find(
             (element) => element.studentName === selectedStudentName
         );
         if (selectedStudent) {
-            console.log("studentId", selectedStudent._id);
+            //console.log("Selected student", selectedStudent);
             formik.setFieldValue("studentId", selectedStudent._id);
             formik.setFieldValue("studentName", selectedStudent.studentName);
-            console.log("studentName", selectedStudent.studentName);
+            //console.log("studentName", selectedStudent.studentName);
         }
     };
 
@@ -244,6 +257,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
         formik.setFieldValue("admissionMonth", month)
         formik.setFieldValue("admissionYear", year)
     }
+
+
 
     return (
         <Modal show={show}
@@ -279,7 +294,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData }) => {
                         </Col>
                         <Col>
                             {/* Select Course Name */}
-                              <Form.Group className='mt-3' >
+                            <Form.Group className='mt-3' >
                                 <Form.Label className='mb-0'>Course Name</Form.Label>
                                 <Form.Control disabled
                                     type="text" placeholder=''

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TablePagination from '@mui/material/TablePagination';
+import { useEffect } from "react"
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -57,12 +58,13 @@ const formatDate = (dateString) => {
 };
 
 // Main component
-const CustomizedTables = ({ studentData, setStudentData, courseData, setCourseData }) => {
-
+const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admissionData, }) => {
+  const [studentBatchMap, setStudentBatchMap] = useState({});
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent] = useState(null);
   const [viewPassword, setViewPassword] = useState(false);
   const [password, setPassword] = useState(null);
+
 
   const token = localStorage.getItem('token');
   const config = {
@@ -96,6 +98,51 @@ const CustomizedTables = ({ studentData, setStudentData, courseData, setCourseDa
     setViewPassword(true);
     setPassword(password);
   };
+
+// useEffect(() => {
+//  console.log("studentData length:", studentData.length);
+//   console.log("admissionData length:", admissionData.length);
+// if (studentData.length && admissionData.length) {
+//     const assignedStudent = {};
+//     admissionData.forEach((adm, index) => {
+//       console.log(`Processing admission #${index}:`, adm);
+//       assignedStudent[adm.studentName] = adm.batchNumber;
+//       console.log("assigned student:", assignedStudent);
+//     });
+//     setStudentBatchMap(assignedStudent);
+//     console.log("assignedStudent:", assignedStudent);
+//   }
+// }, [studentData, admissionData]);
+
+// useEffect(() => {
+//   console.log("studentData length:", studentData.length);
+//   console.log("admissionData length:", admissionData.length);
+//   if (studentData.length && admissionData.length) {
+//     const assignedStudent = admissionData.reduce((acc, adm, index) => {
+//       console.log(`Processing admission #${index}:`, adm);
+//       acc[adm.studentName] = adm.batchNumber;
+//       console.log("Current map:", acc);
+//       return acc;
+//     }, {});
+
+//     setStudentBatchMap(assignedStudent);
+//     console.log("Final assignedStudent map:", assignedStudent);
+//   }
+// }, [studentData, admissionData]);
+
+//useEffect(() => {} React hook that runs a side effect whenever the dependencies (the array at the end) change.
+
+useEffect(() => {
+  if (studentData.length && admissionData.length) {
+    //Object.fromEntries(...) >> Converts that array of key-value pairs into an object
+    const assignedStudent = Object.fromEntries(
+      admissionData.map(admission => [admission.studentName, admission.batchNumber])
+    );
+    console.log("Batch Assigned Student:", assignedStudent);
+    setStudentBatchMap(assignedStudent);
+  }
+}, [studentData, admissionData]);
+
 
   return (
     <>
@@ -145,7 +192,7 @@ const CustomizedTables = ({ studentData, setStudentData, courseData, setCourseDa
                     />
                   </div>
                 </StyledTableCell>
-                <StyledTableCell>{student.batchNumber}</StyledTableCell>
+                <StyledTableCell>  {studentBatchMap[student.studentName] || "Not assigned"}</StyledTableCell>
                 <StyledTableCell>{student._id}</StyledTableCell>
                 <StyledTableCell>
                   {student.studentName

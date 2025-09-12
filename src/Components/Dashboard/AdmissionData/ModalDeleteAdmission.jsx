@@ -18,36 +18,38 @@ const ModalDeleteAdmission = ({viewWarning,setViewWarning,singleAdmission,setAdm
                 headers:{
                     Authorization:`Bearer ${token}`}}
 // Delete
-const handleDeleteClick = async(id) =>{
-  try{
-      let res = await axios.delete(`${url}/deleteadmission/${id}`,config);
-    //  console.log(res.data.deleteAdmission.studentName)
-      // const deletedStudent = res.data.deleteAdmission.studentName
-      // console.log("deletedStudent",deletedStudent)
-      if(res){
-      let res = await axios.get(`${url}/alladmission`,config)
-      // console.log("Successfully a Admission is deleted from DB",res.data.admissionData)
+const handleDeleteClick = async (id) => {
+  try {
+    // Delete admission
+    let deleteRes = await axios.delete(`${url}/deleteadmission/${id}`, config);
 
-      // Show toast
-      toast.error(`${deletedStudent} has been deleted successfully!`, {
-        style: {
-          textWrap: "nowrap",
-          textAlign: "center",
-          fontSize:"14px",
-          color: "black",
-        },
-      });
+    // If your backend returns the deleted admission object
+    const deletedStudent = deleteRes.data?.deleteAdmission?.studentName || "Student";
 
-      setAdmissionData(res.data.admissionData) // updating the original Main admission data
-      // notify()
-      setTimeout(()=>{
-          handleClose()
-      },1000)
-      handleClose()}   
-  }catch(error){
-      console.error('Error Deleting Admission:', error);    
-  }}
+    // Fetch updated admission list
+    let allRes = await axios.get(`${url}/alladmission`, config);
+    setAdmissionData(allRes.data.admissionData);
 
+    // Show toast
+    toast.error(`Admission has been deleted successfully!`, {
+      style: {
+        textWrap: "nowrap",
+        textAlign: "center",
+        fontSize: "14px",
+        color: "black",
+      },
+    });
+
+    // Close modal after a short delay
+    setTimeout(() => {
+      handleClose();
+    }, 1000);
+
+  } catch (error) {
+    console.error('Error Deleting Admission:', error);
+    toast.error("Failed to delete admission!");
+  }
+};
 
   return (
     <>

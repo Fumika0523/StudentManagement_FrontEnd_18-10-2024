@@ -28,7 +28,7 @@ import SelectCourseModal from './Components/Dashboard/StudentData/SelectCourseMo
 function App() {
 const token = localStorage.getItem('token')
 const role = localStorage.getItem('role')
-console.log("role",role)
+// console.log("role",role)
  //if you have a token,
   const [userData,setUserData] = useState([])
 const getUserData = async()=>{
@@ -39,9 +39,10 @@ const getUserData = async()=>{
   }
   let res = await axios.get(`${url}/users/profile`,config) //API call retrieving from users/profile
   //console.log(res.data.userData)
-  console.log("userData",res.data.userData.role)
+  // console.log("userData",res.data.userData.role)
   setUserData(res.data.userData) //useState is updated
 }
+
 
 //signin part
 //initially you are not loggin,its set as false,

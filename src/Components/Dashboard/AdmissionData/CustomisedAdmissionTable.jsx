@@ -44,10 +44,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const CustomisedAdmissionTable = ({admissionData,setAdmissionData,courseData,setCourseData}) => {
+const CustomisedAdmissionTable = ({admissionData,setAdmissionData,studentData,setStudentData}) => {
   const [show,setShow]=useState(false)
   const [singleAdmission,setSingleAdmission] = useState(null)
-  console.log(admissionData)
   const [singleCourse,setSingleCourse] = useState(null)
   const [viewWarning, setViewWarning] = useState(false)
 
@@ -56,19 +55,7 @@ const CustomisedAdmissionTable = ({admissionData,setAdmissionData,courseData,set
       headers:{
           Authorization: `Bearer ${token}`
   }}
-
-      const [studentData,setStudentData] = useState([])
-      const getStudentData = async()=>{
-        console.log("Student data is called.")
-        let res = await axios.get(`${url}/allstudent`,config)
-        console.log("Student Data",res.data.studentData)
-        setStudentData(res.data.studentData)
-        }
-          useEffect(() => {
-                getStudentData()
-            }, [])
-            console.log(studentData)
-  
+ 
   const handleEditClick = (admission)=>{
     setShow(true);
     setSingleAdmission(admission)
@@ -85,7 +72,7 @@ const formatDate = (dateString)=>{
     
   })
 }
-console.log(new Date("03-01-2025"))
+// console.log(new Date("03-01-2025"))
 
 const formatDateTime = (isoString) => {
   const date = new Date(isoString);
@@ -99,8 +86,8 @@ const formatDateTime = (isoString) => {
       hour12: true
   }).replace("at","");
 };
-//WHen you add a new admission data, automatically coursename should be added against the student name on student table.
-  return (
+  
+return (
     <>
     <TableContainer  component={Paper} >
       <Table>
@@ -175,6 +162,7 @@ const formatDateTime = (isoString) => {
     {
         viewWarning && (
             <ModalDeleteAdmission
+              admissionData={admissionData}   // ✅ pass down
             viewWarning={viewWarning}
             singleAdmission={singleAdmission}
             setAdmissionData={setAdmissionData}

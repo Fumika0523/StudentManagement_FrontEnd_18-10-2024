@@ -11,7 +11,7 @@ import { Button } from 'react-bootstrap'
 
 const viewAdmission = () => {
     const [admissionData,setAdmissionData] = useState([])
-    const [courseData,setCourseData]=useState([])
+    const [studentData,setStudentData] = useState([])
     const [show,setShow] = useState(false)
     const [isSidebarOpen, setIsSidebarOpen] = useState (true)
 
@@ -22,17 +22,24 @@ const viewAdmission = () => {
             Authorization:`Bearer ${token}`
         }}
 
+    const getStudentData = async()=>{
+    let res = await axios.get(`${url}/allstudent`,config)
+    console.log("StudentData",res.data.studentData)
+   setStudentData(res.data.studentData)
+    }
+
     // Main admission Data
     const getAdmissionData = async()=>{
-        console.log("Admission data is called....")
+        // console.log("Admission data is called....")
         let res = await axios.get(`${url}/alladmission`,config)
         console.log("AdmissionData",res.data.admissionData)
         setAdmissionData(res.data.admissionData)
     }
     useEffect(()=>{
         getAdmissionData()
+        getStudentData()
     },[])
-    console.log(admissionData)
+    // console.log(admissionData)
 
   return (
     <>
@@ -57,6 +64,9 @@ const viewAdmission = () => {
     </div>
     {show && <ModalAddAdmission show={show} setShow={setShow}
     setAdmissionData={setAdmissionData}
+    admissionData={admissionData}
+    studentData={studentData}
+    setStudentData={setStudentData}
      />}
     </div>
    </>

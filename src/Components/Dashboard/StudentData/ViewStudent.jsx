@@ -12,6 +12,7 @@ function ViewStudent(){
     const [studentData,setStudentData] = useState([])
     const [courseData,setCourseData] = useState([])
     const [admissionData,setAdmissionData] = useState([])
+
     const [isAuthenticated,setIsAuthenticated]=useState(false)
     const [show, setShow] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState (true)
@@ -23,10 +24,9 @@ function ViewStudent(){
         }}
 
     const getStudentData = async()=>{
-        console.log("Student data is called........")
         let res = await axios.get(`${url}/allstudent`,config)
-        console.log("StudentData",res.data.studentData)
-        console.log("StudentData",res)
+      //  console.log("StudentData",res.data.studentData)
+      //  console.log("StudentData",res)
         setStudentData(res.data.studentData)
         }
         useEffect(()=>{
@@ -34,21 +34,20 @@ function ViewStudent(){
          getCourseData()
          getAdmissionData()
         },[])
-    console.log(studentData)
 
     const getCourseData = async()=>{
-        console.log("CourseData is called...")
+        //console.log("CourseData is called...")
         let res = await axios.get(`${url}/allcourse`,config)
         console.log("CourseData",res.data.courseData)
         setCourseData(res.data.courseData)
     }
 
        const getAdmissionData = async()=>{
-        console.log("Admission data is called....")
         let res = await axios.get(`${url}/alladmission`,config)
         console.log("AdmissionData",res.data.admissionData)
         setAdmissionData(res.data.admissionData)
     }
+
     return(
         <>
 <div className="d-flex flex-row ">
@@ -68,6 +67,7 @@ function ViewStudent(){
         <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px",width:"97%"}}>           
             {<CustomizedTables studentData = {studentData}
             setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData}
+          
             />}
 
             {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}      

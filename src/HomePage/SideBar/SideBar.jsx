@@ -29,7 +29,7 @@ function SideBar() {
     const token = localStorage.getItem('token')
     // console.log("token", token)
     const role = localStorage.getItem('role')
-    console.log(role)
+    // console.log(role)
 
 
     const handleSignOut = () => {
