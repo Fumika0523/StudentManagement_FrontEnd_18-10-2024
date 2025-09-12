@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import TableRow from '@mui/material/TableRow';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import Table from '@mui/material/Table';
@@ -77,6 +80,14 @@ const isOlderThan7Days = (dateString) => {
   return diffInDays > 7;
 };
 
+const handleLockedClick = () => {
+  toast.info("Please contact to super admin for any changes.", {
+    autoClose: 1300, 
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+};
 
     return(
     <>
@@ -124,22 +135,21 @@ const isOlderThan7Days = (dateString) => {
             <StyledTableCell>
   <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly", textAlign: "center" }}>
     <FaEdit
-                      className="text-success"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => handleEditClick(batch)}
-                    />
-                    <MdDelete
-                      className="text-danger"
-                      style={{ cursor: 'pointer' }}
-                      onClick={()=>{
-                        setViewWarning(true)
-                        console.log(batch)
-                        setSingleBatch(batch)
-                      }
-                      }
-                    />
+    className="text-success"
+    style={{ cursor: 'pointer' }}
+    onClick={() => handleEditClick(batch)}/>
+    <MdDelete
+    className="text-danger"
+    style={{ cursor: 'pointer' }}
+    onClick={()=>{
+      setViewWarning(true)
+      console.log(batch)
+      setSingleBatch(batch)
+    }} />
     {isOlderThan7Days(batch.createdAt) && (
-      <FaLock  title="Locked"   style={{ cursor: 'pointer',fontSize: "16px",color:"#D19849" }}/>
+      <FaLock  title="Locked"   style={{ cursor: 'pointer',fontSize: "16px",color:"#D19849" }}
+        onClick={handleLockedClick}
+        />
     )}
   </div>
 </StyledTableCell>
