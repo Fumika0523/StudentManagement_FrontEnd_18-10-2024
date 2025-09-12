@@ -264,23 +264,24 @@ function SideBar() {
 
             {/* COMPONENT */}
        <div className="row" style={{ cursor: "pointer" ,color:" #bfbfbf",  backgroundColor: "transparent",  fontSize:"18px"}}>
+
       {/* Header Row */}
       <div
         id="expandIcon"
         onClick={() => setOpen(!open)} // 👈 only one toggle
         aria-controls="example-collapse-text"
         aria-expanded={open}
-        className="d-flex row align-items-center"
+        className="d-flex   align-items-center "
       >
         <IoSettings className="col-3 fs-4" />
-        <div id="component" className="col-7">
+        <div id="component" className="col-6 ">
           Component
         </div>
 
         {open ? (
-          <IoIosArrowDown className="col-2 fs-4 text-white" />
+          <IoIosArrowDown className="col-3 text-white text-end  justify-content-end p-0" />
         ) : (
-          <IoIosArrowForward className="col-2 fs-4 text-white" />
+          <IoIosArrowForward className="col-3  text-white" />
         )}
       </div>
 
@@ -288,7 +289,7 @@ function SideBar() {
      <Collapse in={open}>
   <div
     id="example-collapse-text"
-    className="mx-auto"
+    className="mx-auto mt-1"
     style={{
       borderRadius: "10px",
       backgroundColor: "white",
@@ -304,7 +305,7 @@ function SideBar() {
           onClick={() => navigate("/studentdata")}
         >
           <PiStudent className="fs-3" style={{ color: "#2050deff" }} />
-          View All Student
+          Student
         </div>
 
         {/* View All Batch */}
@@ -313,7 +314,7 @@ function SideBar() {
           onClick={() => navigate("/batchdata")}
         >
           <FaUsersViewfinder className="fs-3" style={{ color: "#2050deff" }} />
-          View All Batch
+          Batch
         </div>
 
         {/* View All Course */}
@@ -322,7 +323,7 @@ function SideBar() {
           onClick={() => navigate("/coursedata")}
         >
           <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
-          View All Course
+          Course
         </div>
 
         {/* View All Admission */}
@@ -331,7 +332,7 @@ function SideBar() {
           onClick={() => navigate("/admissiondata")}
         >
           <GiEntryDoor className="fs-3" style={{ color: "#2050deff" }} />
-          View All Admission
+          Admission
         </div>
       </>
     ) : (

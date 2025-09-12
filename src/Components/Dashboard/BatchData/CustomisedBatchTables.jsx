@@ -11,6 +11,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import ModalEditBatch from './ModalEditBatch';
 import ModalDeleteWarning from './ModalDeleteWaning';
+import { FaLock } from "react-icons/fa";
 
 
 // Styled components
@@ -63,6 +64,20 @@ function CustomisedBatchTables({batchData,setBatchData}){
       hour12: true
   }).replace("at","");
 };
+
+
+const isOlderThan7Days = (dateString) => {
+  const createdDate = new Date(dateString);
+  const today = new Date();
+  const diffInMs = today - createdDate;
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+  console.log("Check:", dateString, "=>", diffInDays, "days old");
+
+  return diffInDays > 7;
+};
+
+
     return(
     <>
     <TableContainer component={Paper}>
@@ -87,7 +102,7 @@ function CustomisedBatchTables({batchData,setBatchData}){
         <TableBody>
         {batchData?.map((batch) => (
           <StyledTableRow key={batch._id}>
-            <StyledTableCell>
+            {/* <StyledTableCell>
                   <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly", textAlign:"center",}}>
                     <FaEdit
                       className="text-success"
@@ -105,7 +120,30 @@ function CustomisedBatchTables({batchData,setBatchData}){
                       }
                     />
                   </div>
-            </StyledTableCell>
+            </StyledTableCell> */}
+            <StyledTableCell>
+  <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly", textAlign: "center" }}>
+    <FaEdit
+                      className="text-success"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleEditClick(batch)}
+                    />
+                    <MdDelete
+                      className="text-danger"
+                      style={{ cursor: 'pointer' }}
+                      onClick={()=>{
+                        setViewWarning(true)
+                        console.log(batch)
+                        setSingleBatch(batch)
+                      }
+                      }
+                    />
+    {isOlderThan7Days(batch.createdAt) && (
+      <FaLock  title="Locked"   style={{ cursor: 'pointer',fontSize: "16px",color:"#D19849" }}/>
+    )}
+  </div>
+</StyledTableCell>
+
             <StyledTableCell>{batch.batchNumber}</StyledTableCell>
             <StyledTableCell>{batch.status}</StyledTableCell>
             <StyledTableCell>{batch.sessionType}
