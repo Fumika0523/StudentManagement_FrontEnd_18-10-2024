@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import TablePagination from '@mui/material/TablePagination';
-import { useEffect } from "react"
+import React, { useState, useEffect } from 'react';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -11,12 +9,12 @@ import TableBody from '@mui/material/TableBody';
 import Paper from '@mui/material/Paper';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { FaKey } from "react-icons/fa";
 import axios from 'axios';
 import EditStudentData from './EditStudentData';
 import ModalShowPassword from './ModalShowPassword';
 import { url } from '../../utils/constant';
-import { FaKey } from "react-icons/fa";
-
+import { FormControl, Select, MenuItem, Box } from "@mui/material";
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -53,18 +51,24 @@ const formatDate = (dateString) => {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-
   });
 };
 
 // Main component
-const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admissionData, }) => {
+const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admissionData }) => {
   const [studentBatchMap, setStudentBatchMap] = useState({});
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent] = useState(null);
   const [viewPassword, setViewPassword] = useState(false);
   const [password, setPassword] = useState(null);
 
+  // Filters
+  const [genderFilter, setGenderFilter] = useState("");
+  const [batchFilter, setBatchFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
+
+  const uniqueBatches = [...new Set(admissionData.map(adm => adm.batchNumber))];
+  const uniqueGenders = [...new Set(studentData.map(stu => stu.gender))];
 
   const token = localStorage.getItem('token');
   const config = {
@@ -81,14 +85,10 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
   const handleDeleteClick = async (id) => {
     try {
       let res = await axios.delete(`${url}/deletestudent/${id}`, config);
-      console.log(res)
       if (res) {
-        let res = await axios.get(`${url}/allstudent`, config)
-        console.log("StudentData", res.data.studentData)
-        // console.log("index",res.data.studentData)
-        setStudentData(res.data.studentData)
+        let res = await axios.get(`${url}/allstudent`, config);
+        setStudentData(res.data.studentData);
       }
-      // alert('Student deleted successfully!');
     } catch (error) {
       console.error('Error deleting student:', error);
     }
@@ -99,58 +99,106 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
     setPassword(password);
   };
 
-// useEffect(() => {
-//  console.log("studentData length:", studentData.length);
-//   console.log("admissionData length:", admissionData.length);
-// if (studentData.length && admissionData.length) {
-//     const assignedStudent = {};
-//     admissionData.forEach((adm, index) => {
-//       console.log(`Processing admission #${index}:`, adm);
-//       assignedStudent[adm.studentName] = adm.batchNumber;
-//       console.log("assigned student:", assignedStudent);
-//     });
-//     setStudentBatchMap(assignedStudent);
-//     console.log("assignedStudent:", assignedStudent);
-//   }
-// }, [studentData, admissionData]);
+  useEffect(() => {
+    if (studentData.length && admissionData.length) {
+      const assignedStudent = Object.fromEntries(
+        admissionData.map(admission => [admission.studentName, admission.batchNumber])
+      );
+      setStudentBatchMap(assignedStudent);
+    }
+  }, [studentData, admissionData]);
 
-// useEffect(() => {
-//   console.log("studentData length:", studentData.length);
-//   console.log("admissionData length:", admissionData.length);
-//   if (studentData.length && admissionData.length) {
-//     const assignedStudent = admissionData.reduce((acc, adm, index) => {
-//       console.log(`Processing admission #${index}:`, adm);
-//       acc[adm.studentName] = adm.batchNumber;
-//       console.log("Current map:", acc);
-//       return acc;
-//     }, {});
+  // Apply filters
+  const filteredData = studentData.filter(student => {
+    const matchesGender = genderFilter ? student.gender === genderFilter : true;
+    const matchesBatch = batchFilter ? studentBatchMap[student.studentName] === batchFilter : true;
 
-//     setStudentBatchMap(assignedStudent);
-//     console.log("Final assignedStudent map:", assignedStudent);
-//   }
-// }, [studentData, admissionData]);
+    let matchesDate = true;
+    if (dateFilter) {
+      const admissionDate = new Date(student.admissionDate);
+      const today = new Date();
 
-//useEffect(() => {} React hook that runs a side effect whenever the dependencies (the array at the end) change.
+      if (dateFilter === "today") {
+        matchesDate = admissionDate.toDateString() === today.toDateString();
+      } else if (dateFilter === "last7") {
+        const last7 = new Date();
+        last7.setDate(today.getDate() - 7);
+        matchesDate = admissionDate >= last7;
+      } else if (dateFilter === "last30") {
+        const last30 = new Date();
+        last30.setDate(today.getDate() - 30);
+        matchesDate = admissionDate >= last30;
+      } else if (dateFilter === "older") {
+        const last30 = new Date();
+        last30.setDate(today.getDate() - 30);
+        matchesDate = admissionDate < last30;
+      }
+    }
 
-useEffect(() => {
-  if (studentData.length && admissionData.length) {
-    //Object.fromEntries(...) >> Converts that array of key-value pairs into an object
-    const assignedStudent = Object.fromEntries(
-      admissionData.map(admission => [admission.studentName, admission.batchNumber])
-    );
-    console.log("Batch Assigned Student:", assignedStudent);
-    setStudentBatchMap(assignedStudent);
-  }
-}, [studentData, admissionData]);
-
+    return matchesGender && matchesBatch && matchesDate;
+  });
 
   return (
     <>
-      <TableContainer component={Paper} >
+      {/* Filters */}
+      <Box display="flex" gap={2} mb={2}>
+        {/* Gender Filter */}
+        <FormControl size="small" sx={{ minWidth: 150 }}>
+          <Select
+            displayEmpty
+            value={genderFilter}
+            onChange={(e) => setGenderFilter(e.target.value)}
+            sx={{ fontSize: "15px" }}
+          >
+            <MenuItem value="" sx={{ fontSize: "15px" }}>Gender</MenuItem>
+            {uniqueGenders.map((gender, idx) => (
+              <MenuItem key={idx} value={gender} sx={{ fontSize: "15px" }}>
+                {gender.charAt(0).toUpperCase() + gender.slice(1)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* Batch Filter */}
+        <FormControl size="small" sx={{ minWidth: 150 }}>
+          <Select
+            displayEmpty
+            value={batchFilter}
+            onChange={(e) => setBatchFilter(e.target.value)}
+            sx={{ fontSize: "15px" }}
+          >
+            <MenuItem value="" sx={{ fontSize: "15px" }}>Batch Number</MenuItem>
+            {uniqueBatches.map((batch, idx) => (
+              <MenuItem key={idx} value={batch} sx={{ fontSize: "15px" }}>
+                {batch}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* Date Filter */}
+        <FormControl size="small" sx={{ minWidth: 150 }}>
+          <Select
+            displayEmpty
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            sx={{ fontSize: "15px" }}
+          >
+            <MenuItem value="" sx={{ fontSize: "15px" }}>Created Date</MenuItem>
+            <MenuItem value="today" sx={{ fontSize: "15px" }}>Today</MenuItem>
+            <MenuItem value="last7" sx={{ fontSize: "15px" }}>Last 7 Days</MenuItem>
+            <MenuItem value="last30" sx={{ fontSize: "15px" }}>Last 30 Days</MenuItem>
+            <MenuItem value="older" sx={{ fontSize: "15px" }}>Older</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      {/* Table */}
+      <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <StyledTableCell >No.</StyledTableCell>
+              <StyledTableCell>No.</StyledTableCell>
               <StyledTableCell>Actions</StyledTableCell>
               <StyledTableCell>Batch No.</StyledTableCell>
               <StyledTableCell>Student ID</StyledTableCell>
@@ -165,16 +213,14 @@ useEffect(() => {
               <StyledTableCell>Admission Fee</StyledTableCell>
               <StyledTableCell>Admission Date</StyledTableCell>
               <StyledTableCell>Mapped Course</StyledTableCell>
-              {/* from Admin data */}
             </TableRow>
           </TableHead>
           <TableBody>
-
-            {studentData?.map((student, index) => (
+            {filteredData?.map((student, index) => (
               <StyledTableRow key={student._id}>
-                <StyledTableCell className='p-0'>{index + 1}</StyledTableCell>
+                <StyledTableCell>{index + 1}</StyledTableCell>
                 <StyledTableCell>
-                  <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly", textAlign: "center" }}>
+                  <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly" }}>
                     <FaEdit
                       className="text-success"
                       style={{ cursor: 'pointer' }}
@@ -187,12 +233,12 @@ useEffect(() => {
                     />
                     <FaKey
                       className="text-secondary"
-                      style={{ cursor: 'pointer', fontSize: "16px", }}
+                      style={{ cursor: 'pointer', fontSize: "16px" }}
                       onClick={() => handlePasswordClick(student.password)}
                     />
                   </div>
                 </StyledTableCell>
-                <StyledTableCell>  {studentBatchMap[student.studentName] || "Not assigned"}</StyledTableCell>
+                <StyledTableCell>{studentBatchMap[student.studentName] || "Not assigned"}</StyledTableCell>
                 <StyledTableCell>{student._id}</StyledTableCell>
                 <StyledTableCell>
                   {student.studentName
@@ -203,30 +249,17 @@ useEffect(() => {
                 <StyledTableCell>{student.username}</StyledTableCell>
                 <StyledTableCell>{student.email}</StyledTableCell>
                 <StyledTableCell>{student.phoneNumber}</StyledTableCell>
-                <StyledTableCell>
-                  {student.gender.charAt(0).toUpperCase() + student.gender.slice(1)}
-                </StyledTableCell>
+                <StyledTableCell>{student.gender}</StyledTableCell>
                 <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
                 <StyledTableCell>{student.courseId}</StyledTableCell>
-                {/* <StyledTableCell>{student.courseName}</StyledTableCell> */}
                 <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
                 <StyledTableCell>{student.admissionFee}</StyledTableCell>
                 <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
-                {/* from ADmin Course Name */}
                 <StyledTableCell>{student.courseName}</StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
-        {/* <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      /> */}
       </TableContainer>
 
       {show && (
@@ -252,4 +285,3 @@ useEffect(() => {
 };
 
 export default CustomizedTables;
-

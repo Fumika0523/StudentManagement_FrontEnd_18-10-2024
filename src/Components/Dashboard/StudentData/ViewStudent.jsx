@@ -55,7 +55,7 @@ function ViewStudent(){
     <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
         <NavBar/>
         {/* ADD Button */}
-        <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
+        <div className=" d-flex justify-content-end  pe-4 py-3">
         <Button variant="outline-none" className="commonButton"
         onClick={()=>setShow(true)} 
         >Add Student</Button>
@@ -64,7 +64,7 @@ function ViewStudent(){
         {/* Buttom Table */}
         <div className="d-flex  border-black border-4   justify-content-center">
         {/* Table */}
-        <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px",width:"97%"}}>           
+        <div  style={{borderRadius:"7px",width:"97%"}}>           
             {<CustomizedTables studentData = {studentData}
             setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData}
           
