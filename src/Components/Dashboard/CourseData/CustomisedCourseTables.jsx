@@ -70,7 +70,10 @@ function CustomisedCourseTables({courseData,setCourseData}){
               <StyledTableCell>Type</StyledTableCell>
               <StyledTableCell>Time</StyledTableCell>
               <StyledTableCell>Availability</StyledTableCell>
-              <StyledTableCell>Duration</StyledTableCell>
+              <StyledTableCell>Total Hours</StyledTableCell>
+              {/*  no of days * per day session= total duration */}
+              <StyledTableCell>Number of Days</StyledTableCell> 
+              {/* 30-35 days, manually input */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -101,6 +104,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
                     <StyledTableCell>{course.courseTime}</StyledTableCell>
                     <StyledTableCell>{course.courseAvailability}</StyledTableCell>
                     <StyledTableCell>{course.courseDuration}</StyledTableCell>
+                    <StyledTableCell>{course.noOfDays}</StyledTableCell>
                 </StyledTableRow> 
              ))
            }

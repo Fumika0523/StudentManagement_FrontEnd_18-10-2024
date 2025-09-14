@@ -1,204 +1,216 @@
-import React, { useState } from 'react';
-import TableRow from '@mui/material/TableRow';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Collapse,
+  TextField,
+  Autocomplete,
+  Paper,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-import { styled } from '@mui/material/styles';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import Table from '@mui/material/Table';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import Paper from '@mui/material/Paper';
-import { FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import ModalEditBatch from './ModalEditBatch';
-import ModalDeleteWarning from './ModalDeleteWaning';
-import { FaLock } from "react-icons/fa";
+// --- Table Styles (same as your original) ---
+import { tableCellClasses } from "@mui/material/TableCell";
 
-
-// Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#f3f4f6',
-    color: '#5a5c69',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: '14.5px',
-    padding: '10px 15px',
-    textWrap:"noWrap"
+    backgroundColor: "#f3f4f6",
+    color: "#5a5c69",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: "15px",
+    padding: "10px 15px",
+    textWrap: "noWrap",
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: '13px',
-    textAlign: 'center',
-    padding: '10px 15px',
-    textWrap:"noWrap"
+    fontSize: "15px",
+    textAlign: "center",
+    padding: "10px 15px",
+    textWrap: "noWrap",
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
+  "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  '&:hover': {
-    backgroundColor: '#b3e5fc',
+  "&:hover": {
+    backgroundColor: "#b3e5fc",
   },
 }));
 
-function CustomisedBatchTables({batchData,setBatchData}){
-    const [show,setShow] = useState(false)
-    const [singleBatch,setSingleBatch] = useState(null) //?
-    const [viewWarning,setViewWarning] =useState(false)
+const Batch = ({ batchData }) => {
+  const [open, setOpen] = useState(false);
+  const [courseInput, setCourseInput] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [batchStatus, setBatchStatus] = useState("");
+  const [filteredData, setFilteredData] = useState(batchData);
 
-  const handleEditClick = (batch)=>{
-    setShow(true);
-    setSingleBatch(batch)
-  }
+  // Get unique course names
+  const uniqueCourses = [...new Set(batchData.map((b) => b.courseName))];
 
-  const formatDateTime = (isoString) => {
-  const date = new Date(isoString);
-  return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      // hour: '2-digit',
-      // minute: '2-digit',
-      // second: '2-digit',
-      hour12: true
-  }).replace("at","");
-};
+  const handleSubmit = () => {
+    let filtered = batchData;
 
+    if (selectedCourse) {
+      filtered = filtered.filter(
+        (b) =>
+          b.courseName &&
+          b.courseName.toLowerCase().includes(selectedCourse.toLowerCase())
+      );
+    }
 
-const isOlderThan7Days = (dateString) => {
-  const createdDate = new Date(dateString);
-  const today = new Date();
-  const diffInMs = today - createdDate;
-  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+    if (batchStatus) {
+      filtered = filtered.filter(
+        (b) => b.status && b.status.toLowerCase() === batchStatus.toLowerCase()
+      );
+    }
 
-  console.log("Check:", dateString, "=>", diffInDays, "days old");
+    setFilteredData(filtered);
+  };
 
-  return diffInDays > 7;
-};
+  const handleReset = () => {
+    setCourseInput("");
+    setSelectedCourse(null);
+    setBatchStatus("");
+    setFilteredData(batchData);
+  };
 
-const handleLockedClick = () => {
-  toast.info("Please contact to super admin for any changes.", {
-    autoClose: 1300, 
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-  });
-};
+  // Format Date helper
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
 
-    return(
-    <>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-            <TableRow>
-            <StyledTableCell>Action</StyledTableCell>
-              <StyledTableCell>Batch No.</StyledTableCell>
-              <StyledTableCell>Status</StyledTableCell>
-              <StyledTableCell>Session Type</StyledTableCell>
-              <StyledTableCell>Course Name</StyledTableCell>
-              <StyledTableCell>Session Day</StyledTableCell>
-              <StyledTableCell>Target Student</StyledTableCell>
-              <StyledTableCell>Location</StyledTableCell>
-              <StyledTableCell>Session Time</StyledTableCell>
-              <StyledTableCell>Fees</StyledTableCell>
-               <StyledTableCell>Assigned Student</StyledTableCell>
-            <StyledTableCell>CreatedAt</StyledTableCell>
-            <StyledTableCell>UpdatedAt</StyledTableCell>
-            </TableRow>
-        </TableHead>
-        <TableBody>
-        {batchData?.map((batch) => (
-          <StyledTableRow key={batch._id}>
-            {/* <StyledTableCell>
-                  <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly", textAlign:"center",}}>
-                    <FaEdit
-                      className="text-success"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => handleEditClick(batch)}
-                    />
-                    <MdDelete
-                      className="text-danger"
-                      style={{ cursor: 'pointer' }}
-                      onClick={()=>{
-                        setViewWarning(true)
-                        console.log(batch)
-                        setSingleBatch(batch)
-                      }
-                      }
-                    />
-                  </div>
-            </StyledTableCell> */}
-            <StyledTableCell>
-  <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly", textAlign: "center" }}>
-    <FaEdit
-    className="text-success"
-    style={{ cursor: 'pointer' }}
-    onClick={() => handleEditClick(batch)}/>
-    <MdDelete
-    className="text-danger"
-    style={{ cursor: 'pointer' }}
-    onClick={()=>{
-      setViewWarning(true)
-      console.log(batch)
-      setSingleBatch(batch)
-    }} />
-    {isOlderThan7Days(batch.createdAt) && (
-      <FaLock  title="Locked"   style={{ cursor: 'pointer',fontSize: "16px",color:"#D19849" }}
-        onClick={handleLockedClick}
-        />
-    )}
-  </div>
-</StyledTableCell>
+  return (
+    <Box p={2}>
+      {/* Filter Toggle Button */}
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={() => setOpen(!open)}
+        sx={{ mb: 2 }}
+        endIcon={open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+      >
+        {open ? "Hide Filters" : "Show Filters"}
+      </Button>
 
-            <StyledTableCell>{batch.batchNumber}</StyledTableCell>
-            <StyledTableCell>{batch.status}</StyledTableCell>
-            <StyledTableCell>{batch.sessionType}
-            </StyledTableCell>
-            <StyledTableCell>{batch.courseName}</StyledTableCell>
-            <StyledTableCell>{batch.sessionDay}</StyledTableCell>
-            <StyledTableCell>{batch.targetStudent}</StyledTableCell>
-            <StyledTableCell>{batch.location}
-            </StyledTableCell>
-            <StyledTableCell>{batch.sessionTime}</StyledTableCell>
-            <StyledTableCell>{batch.fees}</StyledTableCell>
-            <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell>
-            <StyledTableCell>{formatDateTime(batch.createdAt)}</StyledTableCell>
-            <StyledTableCell>{formatDateTime(batch.updatedAt)}</StyledTableCell>
-        </StyledTableRow>
-        ))}
-        </TableBody>
-      </Table>
-      </TableContainer>
-
-      {/* Edit Part */}
-      {
-        show && (
-          <ModalEditBatch
-          show={show}
-          setShow={setShow}
-          singleBatch={singleBatch}
-          setSingleBatch={setSingleBatch}
-          setBatchData={setBatchData} />
-        )}
-
-      {/* Delete */}
-      {
-        viewWarning && (
-          <ModalDeleteWarning
-          viewWarning = {viewWarning} 
-          singleBatch={singleBatch}
-          //passing from vieBatchData
-          setBatchData={setBatchData}
-          setViewWarning = {setViewWarning}
+      {/* Filter Panel */}
+      <Collapse in={open}>
+        <Paper
+          sx={{
+            p: 2,
+            mb: 2,
+            display: "flex",
+            gap: 2,
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          {/* Course Name Filter */}
+          <Autocomplete
+            freeSolo
+            options={uniqueCourses}
+            inputValue={courseInput}
+            onInputChange={(event, newValue) => setCourseInput(newValue)}
+            value={selectedCourse}
+            onChange={(event, newValue) => setSelectedCourse(newValue)}
+            sx={{ width: 250 }}
+            renderInput={(params) => (
+              <TextField {...params} label="Course Name" size="small" />
+            )}
           />
-        )
-      }
 
-    </>
-    )
-}
-export default CustomisedBatchTables
+          {/* Batch Status Filter */}
+          <FormControl size="small" sx={{ width: 200 }}>
+            <InputLabel>Batch Status</InputLabel>
+            <Select
+              value={batchStatus}
+              label="Batch Status"
+              onChange={(e) => setBatchStatus(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="deactive">Deactive</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* Apply & Reset Buttons */}
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleSubmit}
+          >
+            Apply
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="small"
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
+        </Paper>
+      </Collapse>
+
+      {/* Table (original structure) */}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>No.</StyledTableCell>
+              <StyledTableCell>Course Name</StyledTableCell>
+              <StyledTableCell>Batch Number</StyledTableCell>
+              <StyledTableCell>Status</StyledTableCell>
+              <StyledTableCell>Start Date</StyledTableCell>
+              <StyledTableCell>End Date</StyledTableCell>
+              <StyledTableCell>Created At</StyledTableCell>
+              <StyledTableCell>Updated At</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredData?.map((batch, index) => (
+              <StyledTableRow key={batch._id}>
+                <StyledTableCell>{index + 1}</StyledTableCell>
+                <StyledTableCell>{batch.courseName}</StyledTableCell>
+                <StyledTableCell>{batch.batchNumber}</StyledTableCell>
+                <StyledTableCell>{batch.status}</StyledTableCell>
+                <StyledTableCell>{formatDate(batch.startDate)}</StyledTableCell>
+                <StyledTableCell>{formatDate(batch.endDate)}</StyledTableCell>
+                <StyledTableCell>{formatDate(batch.createdAt)}</StyledTableCell>
+                <StyledTableCell>{formatDate(batch.updatedAt)}</StyledTableCell>
+              </StyledTableRow>
+            ))}
+            {filteredData.length === 0 && (
+              <StyledTableRow>
+                <StyledTableCell colSpan={8} align="center">
+                  No records found
+                </StyledTableCell>
+              </StyledTableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+};
+
+export default Batch;

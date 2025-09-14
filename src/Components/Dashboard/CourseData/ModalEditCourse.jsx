@@ -11,11 +11,11 @@ import { Col, Row } from 'react-bootstrap';
 
 
 const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
-    console.log(singleCourse)
-    console.log(singleCourse._id)
+    // console.log(singleCourse)
+//console.log(singleCourse._id)
 
     const notify=()=>{
-        console.log("Toast Notification Added")
+        // console.log("Toast Notification Added")
         toast.warning("Course is updated successfully !"
             ,{
                 style:{
@@ -34,23 +34,25 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
     }
 
     const formSchema = Yup.object().shape(
-        {
-               courseName:Yup.string().required("Mandatory field !"),
-                  courseType:Yup.string().required("Mandatory field !"),
-                  courseTime:Yup.string().required("Mandatory field !"),
-                  courseAvailability:Yup.string().required("Mandatory field !"),
-                  courseDuration:Yup.string().required("Mandatory field !"),
-                  courseFee:Yup.number().required("Mandatory field !"),
-        })
+    {
+      courseName:Yup.string().required("Mandatory field !"),
+        courseType:Yup.string().required("Mandatory field !"),
+        courseTime:Yup.string().required("Mandatory field !"),
+        courseAvailability:Yup.string().required("Mandatory field !"),
+        courseDuration:Yup.string().required("Mandatory field !"),
+        courseFee:Yup.number().required("Mandatory field !"),
+        noOfDays:Yup.number().required("Mandatory field !"),
+    })
     
     const formik = useFormik({
-             initialValues:{
-                courseName:singleCourse?.courseName,
-                courseType:singleCourse?.courseType,
-                courseTime:singleCourse?.courseTime,
-                courseAvailability:singleCourse?.courseAvailability,
-                courseDuration:singleCourse?.courseDuration,
-                courseFee:singleCourse?.courseFee,
+        initialValues:{
+            courseName:singleCourse?.courseName,
+            courseType:singleCourse?.courseType,
+            courseTime:singleCourse?.courseTime,
+            courseAvailability:singleCourse?.courseAvailability,
+            courseDuration:singleCourse?.courseDuration,
+            courseFee:singleCourse?.courseFee,
+            noOfDays:singleCourse?.noOfDays,
         },
         enableReinitialize:"true",
         validationSchema:formSchema,
@@ -60,7 +62,7 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
         }  
     })
     const token = localStorage.getItem('token')
-    console.log('token')
+    // console.log('token')
 
     let config = {
         headers:{
@@ -69,7 +71,7 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
 
     //Update
     const updateCourse = async(updatedCourse)=>{
-        console.log("Course posted to the DB")
+        // console.log("Course posted to the DB")
     try{
         let res = await axios.put(`${url}/updatecourse/${singleCourse._id}`,updatedCourse,config)
         console.log(res)
@@ -86,12 +88,12 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
     }}
 
     return(
-        <>
+    <>
    <Modal show={show} onHide={handleClose} >
     <Modal.Header closeButton>
-          <Modal.Title  >Edit Course</Modal.Title>
+        <Modal.Title  >Edit Course</Modal.Title>
         </Modal.Header>
-        <Form onSubmit={formik.handleSubmit} className='px-5' style={{fontSize:"80%"}} >
+        <Form onSubmit={formik.handleSubmit} className='px-2' >
         <Modal.Body>
             <Row>
                 <Col>
@@ -145,8 +147,8 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                 </Col>
             </Row>
             <Row>
-                <Col>
-                       {/* courseAvailability*/}
+            <Col sx={4}>
+            {/*courseAvailability*/}
             <Form.Group className='my-3'>
                 <Form.Label className='m-0'>Availability</Form.Label>
                 <Form.Control type="courseAvailability"
@@ -156,11 +158,12 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                 {/* Error Message */}
                 {formik.errors.courseAvailability && formik.touched.courseAvailability && <div className="text-danger text-center">{formik.errors.courseAvailability}</div>}
             </Form.Group>
-                </Col>
-                <Col>
+            </Col>
+
             {/* courseDuration */}
+            <Col sx={4}>
             <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Duration</Form.Label>
+                <Form.Label className='m-0'>Total hours</Form.Label>
                 <Form.Control type="courseDuration" 
                 name="courseDuration" value={formik.values.courseDuration}
                 onChange={formik.handleChange}
@@ -168,7 +171,25 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                 {/* Error Message */}
              {formik.errors.courseDuration && formik.touched.courseDuration && <div className="text-danger text-center">{formik.errors.courseDuration}</div>}
             </Form.Group>
-                </Col>
+            </Col>
+   {/* No. of Days */}
+<Col sx={4}>
+  <Form.Group className='my-3'>
+    <Form.Label className='m-0'>No. of Days</Form.Label>
+    <Form.Control 
+      type="number" 
+      name="noOfDays" 
+      value={formik.values.noOfDays}
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+    />
+    {/* Error Message */}
+    {formik.errors.noOfDays && formik.touched.noOfDays && (
+      <div className="text-danger text-center">{formik.errors.noOfDays}</div>
+    )}
+  </Form.Group>
+</Col>
+
             </Row>
             </Modal.Body>
             <Modal.Footer>

@@ -54,7 +54,7 @@ const viewAdmission = () => {
     >Add Admission</Button>
     </div>
      {/* Buttom Table */}
-     <div className="d-flex  border-4   justify-content-center">
+     <div className="d-flex justify-content-center">
     {/* Table */}
     <div style={{orderRadius:"7px", width:"95%"}}>
         {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} />  }
