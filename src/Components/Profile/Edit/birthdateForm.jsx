@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { url } from "../../utils/constant";
+import { IoArrowBackOutline } from "react-icons/io5";
+import NavBar from "../../../HomePage/NavBar/NavBar"
 
 function birthdateForm() {
     const [userData, setUserData] = useState([])
@@ -13,20 +15,20 @@ function birthdateForm() {
     birthdate :Yup.date().required()       
 })
 console.log(userData?.birthdate) // checking if the data is stored to userData or not
-console.log(userData)
+// console.log(userData)
 const formik=useFormik({
     initialValues:{
         birthdate:userData.birthdate || ""
     },
     enableReinitialize: true, //if there is any update in my initial value, please make it update >> enable > true
     onSubmit:(values)=>{
-        console.log(values)
+        // console.log(values)
         updateProfile(values)
     }
 })
 
 const token = localStorage.getItem('token')
-console.log('token')
+// console.log('token')
 
 let config = {
     headers:{
@@ -73,14 +75,22 @@ let config = {
         getUserData()
     },[])
 
-    return (
-        <>
-            <div className="m-5 p-3 border border-secondary-subtle rounded" style={{ width: "80%" }}>
-            <form onSubmit={formik.handleSubmit}>
-                {/* Material UI */}
-                {/* Birthday */}
-                <Box className="border-bottom border-secondary-subtle d-flex text-secondary py-3" style={{ fontSize: "80%" }}>
-                    <Box style={{ width: "30%" }}>Birthday</Box>
+return (
+    <>
+    <NavBar />
+        <div className="px-5 mt-5">
+        <div className="d-flex flex-row align-items-center  border-4 gap-2">
+        <IoArrowBackOutline className="fs-2" style={{color:"gray"}}/>
+         <span className="fs-2">Update Birthday</span>
+        </div>
+        <div className="text-start my-4" style={{width:"75%"}}>Your birthday may be used for account security and personalization across Google services. If this Google Account is for a business or organization, use the birthday of the person who manages the account.</div>
+        <div className=" p-3 border border-secondary-subtle  rounded" >
+        <form onSubmit={formik.handleSubmit}>
+         
+            {/* Birthday */}
+            <Box className="border-secondary-subtle d-flex flex-column text-secondary py-3">
+                    <div className="mb-2 fs-5 text-black">Update birthday</div>
+                    <div>
                     <TextField
                         fullWidth
                         type="date"
@@ -93,10 +103,11 @@ let config = {
                         variant="outlined"
                         size="small"
                     />
-                </Box>
+                    </div>
+            </Box>
 
-                {/* Action Buttons */}
-                <Box className="mt-3 text-end">
+            {/* Action Buttons */}
+            <Box className="mt-3 text-end">
                     {/* Cancel Button */}
                     <Button
                         variant="text"
@@ -117,10 +128,11 @@ let config = {
                     >
                     Save
                     </Button>
-                </Box>
-            </form>
+            </Box>
+        </form>
          </div>
-        </>
-    )
+         </div>
+    </>
+)
 }
 export default birthdateForm

@@ -150,24 +150,21 @@ userSchema.methods.generateAuthToken = async function(req,res){
     return token
 }
 
-1. update Model
-2. Form >> signup with role >> test postman
-3. users collection >> role
-4. student collection
-5. entry 5 entries
-delete student & user collection, admin collection
-
-<!-- Component >>> Different options for student : Attendance, Schedule, My result  -->
+1. Same student cannot be assigned to the same batch, the student should be invisible from drop-down. <<<<DONE>>>>                        
  
-<!-- 1. Same student cannot have same batch   --> <<< Instead of Error, the student should not be visible to dropdown >>>
+2.More than the target no., the student cannot be assigned >>>> Toast error shows 
+<<<<DONE>>>>
 
-<!-- 2. More than the target, you cannot assign the student to the batch
-when you click the add batch >>> --> <<< Done >>>
+3. After 7 days of Batch start date, the batch should not be visible in Add Admission.
+The lock icon should show in this batch and when you click icon, the message "please
+<<<<DONE>>>>
 
-<!-- 3. after 7 days of a .Batch start Sate , it should not be visible in the dropdown and the lock icon should show in Action. and when you click icon, the message "please contact to super admin for any changes" -->
+
+4. Student can assign only 1 batch By Admin, super Admin can assign multiple batches to student
+<<<<DONE>>>>
 
 <!-- no of days * per day session= total duration
-15               * 2                             =30      
+15  * 2      =30      
 
 total duration >>145 hrs course >> 2hrs/day  >> 145/2 =74days                                                  >>HTML   
 >> in the form >> total duration >> 2 >>30/2 >> 15 days
@@ -175,19 +172,15 @@ End date >>27-Sep-2025
 13-Sept-2025   >>Cousre >>fees >> no of days  >> 13-Sept-2025 +15 >>27-Sep-2025 (Logic here)
  -->
 
-edit icon and delete icon should be gone when lock icon is shown
-<<< After the bactch is locked , this batchNumber should not be visible from Add Admission dropdown >>>
-
 <!-- 4. put filter in View STudent, "Date By"."Batch", "Course Name", "By Gender" -->
 Date start By
 
 <!-- 5. Work on Search for Debounced -->
-
-<!--6. Student can assign only 1 batch By Admin, super Admin can assign multiple batches to student -->
 
 <!-- 7. Batch start Date should be added manually and end date is auto calculated (30 days <<< This duration is coming from Course Data (Number of days) ), course Section -->
 
 <!-- Admin User -->
 <!-- Super Admin User -->
 
-
+Question:
+The time in Batch and the time in Course should be the same ?

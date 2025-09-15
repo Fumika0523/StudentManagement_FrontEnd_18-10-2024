@@ -43,7 +43,7 @@ function viewBatch(){
         {/* Buttom Table */}
         <div className="d-flex  border-black border-4  px-3 justify-content-center">
         {/* Table */}
-        <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px", minWidth:"95%"}}>
+        <div  style={{borderRadius:"7px", minWidth:"95%"}}>
             {/* <div className="tableTitle">All Batch</div> */}
             {<CustomisedBatchTables setBatchData={setBatchData} batchData = {batchData}/>}
             {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}

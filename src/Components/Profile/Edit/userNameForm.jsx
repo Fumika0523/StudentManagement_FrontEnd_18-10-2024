@@ -28,7 +28,7 @@ function userNameForm(){
      }})
       
     const token = localStorage.getItem('token')
-    console.log('token')
+   // console.log('token')
 
     let config = {
         headers:{
@@ -37,7 +37,7 @@ function userNameForm(){
     }
 
     const updateProfile=async(updatedProfile)=>{
-    console.log("Username posted to the DB")
+    // console.log("Username posted to the DB")
     console.log("Update Username:",updatedProfile)
     
     let res = await axios.put(`${url}/users/profile`,updatedProfile,config)

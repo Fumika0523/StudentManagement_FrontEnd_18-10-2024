@@ -1,216 +1,309 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Collapse,
-  TextField,
-  Autocomplete,
-  Paper,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import React, { useState } from 'react';
+import TableRow from '@mui/material/TableRow';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { styled } from '@mui/material/styles';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import { FaEdit, FaLock } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import ModalEditBatch from './ModalEditBatch';
+import ModalDeleteWarning from './ModalDeleteWaning';
+import { Button, Collapse, TextField, Autocomplete, FormControl, InputLabel, Select, MenuItem, TableBody } from '@mui/material';
+import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai"; // import icons
+import Box from '@mui/material/Box'; 
 
-// --- Table Styles (same as your original) ---
-import { tableCellClasses } from "@mui/material/TableCell";
-
+// Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#f3f4f6",
-    color: "#5a5c69",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: "15px",
-    padding: "10px 15px",
-    textWrap: "noWrap",
+    backgroundColor: '#f3f4f6',
+    color: '#5a5c69',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: '14px',
+    padding: '10px',
+    textWrap: "noWrap"
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: "15px",
-    textAlign: "center",
-    padding: "10px 15px",
-    textWrap: "noWrap",
+    fontSize: '13.5px',
+    textAlign: 'center',
+    padding: '10px',
+    textWrap: "noWrap"
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
+  '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
-  "&:hover": {
-    backgroundColor: "#b3e5fc",
+  '&:hover': {
+    backgroundColor: '#b3e5fc',
   },
 }));
 
-const Batch = ({ batchData }) => {
-  const [open, setOpen] = useState(false);
-  const [courseInput, setCourseInput] = useState("");
+function CustomisedBatchTables({ batchData, setBatchData }) {
+  const [show, setShow] = useState(false);
+  const [singleBatch, setSingleBatch] = useState(null);
+  const [viewWarning, setViewWarning] = useState(false);
+
+  // --- Filter states ---
+  const [openFilters, setOpenFilters] = useState(true); // open by default
+  const [courseInput, setCourseInput] = useState('');
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [batchStatus, setBatchStatus] = useState("");
-  const [filteredData, setFilteredData] = useState(batchData);
+  const [batchStatus, setBatchStatus] = useState('');
+  const [dateField, setDateField] = useState(''); // 'startDate', 'endDate', 'updatedAt'
+  const [filteredData, setFilteredData] = useState([]);
+  const [showTable, setShowTable] = useState(false); // table hidden initially
 
-  // Get unique course names
-  const uniqueCourses = [...new Set(batchData.map((b) => b.courseName))];
+  const uniqueCourses = [...new Set(batchData.map(b => b.courseName))];
 
-  const handleSubmit = () => {
-    let filtered = batchData;
+  // --- Filter Handlers ---
+  const handleApplyFilter = () => {
+    let filtered = [...batchData];
 
     if (selectedCourse) {
-      filtered = filtered.filter(
-        (b) =>
-          b.courseName &&
-          b.courseName.toLowerCase().includes(selectedCourse.toLowerCase())
+      filtered = filtered.filter(batch =>
+        batch.courseName?.toLowerCase().includes(selectedCourse.toLowerCase())
       );
     }
 
     if (batchStatus) {
-      filtered = filtered.filter(
-        (b) => b.status && b.status.toLowerCase() === batchStatus.toLowerCase()
+      filtered = filtered.filter(batch =>
+        batch.status?.toLowerCase() === batchStatus.toLowerCase()
       );
     }
 
     setFilteredData(filtered);
+    setShowTable(true); // show table after applying filter
   };
 
-  const handleReset = () => {
-    setCourseInput("");
+  const handleResetFilter = () => {
+    setCourseInput('');
     setSelectedCourse(null);
-    setBatchStatus("");
-    setFilteredData(batchData);
+    setBatchStatus('');
+    setDateField('');
+    setFilteredData([]);
+    setShowTable(false); // hide table
   };
 
-  // Format Date helper
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+  const handleEditClick = (batch) => {
+    setShow(true);
+    setSingleBatch(batch);
+  };
+
+  const handleLockedClick = () => {
+    toast.info("Please contact the super admin for any changes.", {
+      autoClose: 1300,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
     });
   };
 
+  const formatDateTime = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour12: true
+    }).replace("at","");
+  };
+
+  const isOlderThan7Days = (dateString) => {
+    const createdDate = new Date(dateString);
+    const today = new Date();
+    const diffInDays = (today - createdDate) / (1000 * 60 * 60 * 24);
+    return diffInDays > 7;
+  };
+
   return (
-    <Box p={2}>
-      {/* Filter Toggle Button */}
-      <Button
+    <>
+    {/* Filter Toggle */}
+       <Button
         variant="outlined"
         size="small"
-        onClick={() => setOpen(!open)}
-        sx={{ mb: 2 }}
-        endIcon={open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        onClick={() => setOpenFilters(!openFilters)}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          borderRadius: openFilters ? '4px 4px 0 0' : '4px',
+        }}
       >
-        {open ? "Hide Filters" : "Show Filters"}
+        Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
       </Button>
 
       {/* Filter Panel */}
-      <Collapse in={open}>
-        <Paper
-          sx={{
-            p: 2,
-            mb: 2,
-            display: "flex",
-            gap: 2,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          {/* Course Name Filter */}
-          <Autocomplete
-            freeSolo
-            options={uniqueCourses}
-            inputValue={courseInput}
-            onInputChange={(event, newValue) => setCourseInput(newValue)}
-            value={selectedCourse}
-            onChange={(event, newValue) => setSelectedCourse(newValue)}
-            sx={{ width: 250 }}
-            renderInput={(params) => (
-              <TextField {...params} label="Course Name" size="small" />
-            )}
-          />
+    <Collapse in={openFilters}>
+  <Paper
+    sx={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: 2,
+      width: '100%',
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+      borderBottomLeftRadius: 4,  // same as button
+      borderBottomRightRadius: 4, // same as button
+      boxShadow: 3,               // Material UI shadow
+      p: 1,
+    }}
+  >
+    <Autocomplete
+      freeSolo
+      options={uniqueCourses}
+      inputValue={courseInput}
+      onInputChange={(e, newVal) => setCourseInput(newVal)}
+      value={selectedCourse}
+      onChange={(e, newVal) => setSelectedCourse(newVal)}
+      sx={{ width: 250 }}
+      renderInput={(params) => <TextField {...params} label="Course Name" size="small" />}
+    />
 
-          {/* Batch Status Filter */}
-          <FormControl size="small" sx={{ width: 200 }}>
-            <InputLabel>Batch Status</InputLabel>
-            <Select
-              value={batchStatus}
-              label="Batch Status"
-              onChange={(e) => setBatchStatus(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="deactive">Deactive</MenuItem>
-            </Select>
-          </FormControl>
+    <FormControl size="small" sx={{ width: 200 }}>
+      <InputLabel>Date By</InputLabel>
+      <Select
+        value={dateField}
+        label="Date By"
+        onChange={(e) => setDateField(e.target.value)}
+      >
+        <MenuItem value="">None</MenuItem>
+        <MenuItem value="startDate">Start By</MenuItem>
+        <MenuItem value="endDate">End By</MenuItem>
+        <MenuItem value="updatedAt">Updated By</MenuItem>
+      </Select>
+    </FormControl>
 
-          {/* Apply & Reset Buttons */}
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={handleSubmit}
-          >
-            Apply
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="small"
-            onClick={handleReset}
-          >
-            Reset
-          </Button>
-        </Paper>
-      </Collapse>
+    <FormControl size="small" sx={{ width: 200 }}>
+      <InputLabel>Batch Status</InputLabel>
+      <Select
+        value={batchStatus}
+        label="Batch Status"
+        onChange={(e) => setBatchStatus(e.target.value)}
+      >
+        <MenuItem value="">All</MenuItem>
+        <MenuItem value="active">Active</MenuItem>
+        <MenuItem value="deactive">Deactive</MenuItem>
+      </Select>
+    </FormControl>
 
-      {/* Table (original structure) */}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>No.</StyledTableCell>
-              <StyledTableCell>Course Name</StyledTableCell>
-              <StyledTableCell>Batch Number</StyledTableCell>
-              <StyledTableCell>Status</StyledTableCell>
-              <StyledTableCell>Start Date</StyledTableCell>
-              <StyledTableCell>End Date</StyledTableCell>
-              <StyledTableCell>Created At</StyledTableCell>
-              <StyledTableCell>Updated At</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredData?.map((batch, index) => (
-              <StyledTableRow key={batch._id}>
-                <StyledTableCell>{index + 1}</StyledTableCell>
-                <StyledTableCell>{batch.courseName}</StyledTableCell>
-                <StyledTableCell>{batch.batchNumber}</StyledTableCell>
-                <StyledTableCell>{batch.status}</StyledTableCell>
-                <StyledTableCell>{formatDate(batch.startDate)}</StyledTableCell>
-                <StyledTableCell>{formatDate(batch.endDate)}</StyledTableCell>
-                <StyledTableCell>{formatDate(batch.createdAt)}</StyledTableCell>
-                <StyledTableCell>{formatDate(batch.updatedAt)}</StyledTableCell>
-              </StyledTableRow>
-            ))}
-            {filteredData.length === 0 && (
-              <StyledTableRow>
-                <StyledTableCell colSpan={8} align="center">
-                  No records found
-                </StyledTableCell>
-              </StyledTableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <Button variant="contained" size="small" onClick={handleApplyFilter}>Apply</Button>
+    <Button variant="outlined" size="small" onClick={handleResetFilter}>Reset</Button>
+  </Paper>
+</Collapse>
+
+      {/* Table */}
+      {showTable && (
+          <Box sx={{ mt: 5 }}> {/* gap between filter panel and table */}
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Action</StyledTableCell>
+                <StyledTableCell>Batch No.</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell>Start Date</StyledTableCell>
+                <StyledTableCell>End Date</StyledTableCell>
+                <StyledTableCell>Class Type</StyledTableCell>
+                <StyledTableCell>Course</StyledTableCell>
+                <StyledTableCell>Session Day</StyledTableCell>
+                <StyledTableCell>Class Size</StyledTableCell>
+                <StyledTableCell>Location</StyledTableCell>
+                <StyledTableCell>Session Time</StyledTableCell>
+                <StyledTableCell>Fees</StyledTableCell>
+                <StyledTableCell>Assigned</StyledTableCell>
+                <StyledTableCell>Created</StyledTableCell>
+                <StyledTableCell>Updated</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredData.length === 0 ? (
+                <StyledTableRow>
+                  <StyledTableCell colSpan={14} align="center">
+                    No batches found
+                  </StyledTableCell>
+                </StyledTableRow>
+              ) : (
+                filteredData.map((batch) => (
+                  <StyledTableRow key={batch._id}>
+                    <StyledTableCell>
+                      <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly", textAlign: "center" }}>
+                        {isOlderThan7Days(batch.startDate) ? (
+                          <FaLock
+                            title="Locked"
+                            style={{ cursor: 'pointer', fontSize: 16, color: "#D19849" }}
+                            onClick={handleLockedClick}
+                          />
+                        ) : (
+                          <>
+                            <FaEdit
+                              className="text-success"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => handleEditClick(batch)}
+                            />
+                            <MdDelete
+                              className="text-danger"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                setViewWarning(true);
+                                setSingleBatch(batch);
+                              }}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </StyledTableCell>
+
+                    <StyledTableCell>{batch.batchNumber}</StyledTableCell>
+                    <StyledTableCell>{batch.status}</StyledTableCell>
+                    <StyledTableCell>{formatDateTime(batch.startDate)}</StyledTableCell>
+                    <StyledTableCell>{batch.sessionType}</StyledTableCell>
+                    <StyledTableCell>{batch.courseName}</StyledTableCell>
+                    <StyledTableCell>{batch.sessionDay}</StyledTableCell>
+                    <StyledTableCell>{batch.targetStudent}</StyledTableCell>
+                    <StyledTableCell>{batch.location}</StyledTableCell>
+                    <StyledTableCell>{batch.sessionTime}</StyledTableCell>
+                    <StyledTableCell>{batch.fees}</StyledTableCell>
+                    <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell>
+                    <StyledTableCell>{formatDateTime(batch.createdAt)}</StyledTableCell>
+                    <StyledTableCell>{formatDateTime(batch.updatedAt)}</StyledTableCell>
+                  </StyledTableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+          </Box>
+      )}
+
+      {/* Edit Modal */}
+      {show && (
+        <ModalEditBatch
+          show={show}
+          setShow={setShow}
+          singleBatch={singleBatch}
+          setSingleBatch={setSingleBatch}
+          setBatchData={setBatchData}
+        />
+      )}
+
+      {/* Delete Modal */}
+      {viewWarning && (
+        <ModalDeleteWarning
+          viewWarning={viewWarning}
+          singleBatch={singleBatch}
+          setBatchData={setBatchData}
+          setViewWarning={setViewWarning}
+        />
+      )}
+    </>
   );
-};
+}
 
-export default Batch;
+export default CustomisedBatchTables;

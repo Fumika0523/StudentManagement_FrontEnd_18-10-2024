@@ -73,6 +73,7 @@ useEffect(()=>{
         <Route path="/coursedata" element={<ViewCourse/>}/>
         <Route path="/admissiondata" element={<ViewAdmission/>}/>
         <Route path="*" element={<Navigate to="/studentdata" />} />
+        <Route path="/profile" element={<ProfileForm />}/>
       </>
     ) : (
       // Student 
