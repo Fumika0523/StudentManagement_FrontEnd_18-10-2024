@@ -52,14 +52,14 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
               {/* 2nd Section */}
               <div className='d-flex  border-warning border-4 align-items-center justify-content-center mx-auto'>
                 {/* left */}
-              <div className='fs-4 d-flex flex-column col-md-7  ' >
-                <div className="d-flex flex-row align-items-start justify-content-between">Your profile info in Student Manag. Services
+              <div className=' d-flex flex-column col-md-7  ' >
+                <div className="d-flex flex-row align-items-start justify-content-between fs-3">Your profile info in Student Manag. Services
             <div className=" d-md-none d-flex">
               <img src="https://www.gstatic.com/identity/boq/accountsettingsmobile/profile_spot_visible_128x128_3d54fe9136457d65321e6fbf2f18be96.png" alt="" className=" h-auto" style={{width:"80px"}} />
               </div>
                 </div>
        
-                <span className="fs-6">Personal info and options to manage it. You can make some of this info, like your contact details, visible to others so they can reach you easily. You can also see a summary of your profiles.</span>
+                <span className="fs-6 mt-2">Personal info and options to manage it. You can make some of this info, like your contact details, visible to others so they can reach you easily. You can also see a summary of your profiles.</span>
               </div>
               {/* RIGHT */}
               <div className="col-md-5  d-md-block d-none">
@@ -69,8 +69,8 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
       
               {/* Basic Info */}
               <div className='border border-secondary-subtle rounded my-3' >
-                  <div className='p-3 fs-5'>Basic Info</div>
-                  <div className='px-3 py-1 text-secondary' style={{fontSize:"80%"}}>Some info may be visible to other people using Student Management services.</div>
+                  <div className='p-3 fs-4'>Basic Info</div>
+                  <div className='px-3 py-1 text-secondary fs-6'>Some info may be visible to other people using Student Management services.</div>
               <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
                  <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Profile picture</div>
                   <div  className="fs-6 text-black" style={{width:"60%"}} >Add a profile picture to personalize your account</div>
@@ -100,7 +100,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
       
               {/* Contact info */}
             <div className=' mt-4 border border-secondary-subtle rounded' >
-                <div className='p-3  fs-5'>Contact info</div>
+                <div className='p-3  fs-4'>Contact info</div>
                 <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
                     <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Email</div>
                     <div className="text-black fs-6" style={{width:"70%"}} >{email}</div>
