@@ -3,6 +3,9 @@ import { useEffect, useState } from "react"
 import { url } from "../utils/constant"
 import { useNavigate } from "react-router-dom"
 import { Button } from "react-bootstrap"
+import "../Profile/ProfileForm.css"
+import NavBar from "../../HomePage/NavBar/NavBar"
+
 
 function ProfileForm(){
 const navigate = useNavigate()
@@ -25,7 +28,7 @@ let config = {
 }
 
 const getUserData=async()=>{
-    console.log("User Data is called...")
+    // console.log("User Data is called...")
     let res = await axios.get(`${url}/users/profile`,config)
     console.log(res.data.userData)
     setUserData(res.data.userData)
@@ -40,6 +43,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
 
     return(
         <>   
+        <NavBar />
            <div  className="py-4   border-4 col-lg-6 col-sm-10 mx-auto">
               {/* Top Section */}
               <div className='fs-3 text-center  mb-2 ' style={{color:"#808084ff"}}>Personal info</div>
@@ -64,49 +68,52 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
               </div>
       
               {/* Basic Info */}
-              <div className='p-3 border border-secondary-subtle rounded my-3' >
-                  <div className='pb-1 fs-5'>Basic Info</div>
-                  <div className='pb-3 text-secondary' style={{fontSize:"80%"}}>Some info may be visible to other people using Student Management services.</div>
-                  <div className='d-flex border-bottom border-secondary-subtle text-secondary' style={{fontSize:"80%"}}>
-                  <div style={{width:"30%"}}>Profile picture</div>
-                  <div style={{width:"60%"}} >Add a profile picture to personalize your account</div>
+              <div className='border border-secondary-subtle rounded my-3' >
+                  <div className='p-3 fs-5'>Basic Info</div>
+                  <div className='px-3 py-1 text-secondary' style={{fontSize:"80%"}}>Some info may be visible to other people using Student Management services.</div>
+              <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
+                 <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Profile picture</div>
+                  <div  className="fs-6 text-black" style={{width:"60%"}} >Add a profile picture to personalize your account</div>
                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrwa1p11xv_cq1ewqCn-67LO9-s41ocGYbdTILrcGusD5B_f8xO5-hkW8&s" alt="" style={{width:"7%"}} className='rounded-circle pb-1'/>
-                  </div>
-                  {/* Username */}
-                  <div className='border-bottom border-secondary-subtle d-flex text-secondary py-3' style={{fontSize:"80%"}}>
-                  <div style={{width:"30%"}}>Username</div>
-                  <div onClick={()=>{navigate('/usernameform')}} >{username}</div>
-                  </div>
+            </div>
+            
+            {/* Username */}
+         <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
+                <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Username</div>
+                
+                <div className="fs-6 text-black" onClick={()=>{navigate('/usernameform')}} >{username}</div>
+            </div>
 
-                     {/* Birthday */}
-                     <div className='border-bottom border-secondary-subtle d-flex text-secondary py-3' style={{fontSize:"80%"}}>
-                  <div style={{width:"30%"}}>Birthday</div>
+            {/* Birthday */}
+              <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
+                  <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Birthday</div>
                    {/*  calling formatDate() function */}
-                  <div onClick={()=>{navigate('/birthdateform')}}>{formatDate(birthdate)}</div> 
+                  <div className="fs-6 text-black" onClick={()=>{navigate('/birthdateform')}}>{formatDate(birthdate)}</div> 
                   </div>
 
-                     {/* Gender*/}
-                     <div className='d-flex text-secondary pt-3' style={{fontSize:"80%"}}>
-                  <div style={{width:"30%"}}>Gender</div>
-                  <div onClick={()=>{navigate('/genderform')}} >{gender}</div>
-                  </div>
-              </div>
+            {/* Gender*/}
+            <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
+            <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Gender</div>
+            <div className="fs-6 text-black" onClick={()=>{navigate('/genderform')}} >{gender}</div>
+            </div>
+        </div>
       
               {/* Contact info */}
-              <div className=' mt-4 border border-secondary-subtle rounded p-3' >
-                  <div className='pb-2 fs-5'>Contact info</div>
-                  <div className='py-3 d-flex text-secondary border-bottom border-secondary-subtle'style={{fontSize:"80%"}}>
-                      <div style={{width:"30%"}}>Email</div>
-                      <div style={{width:"70%"}} >{email}</div>
+            <div className=' mt-4 border border-secondary-subtle rounded' >
+                <div className='p-3  fs-5'>Contact info</div>
+                <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
+                    <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Email</div>
+                    <div className="text-black fs-6" style={{width:"70%"}} >{email}</div>
                   </div>
-                  <div className='d-flex text-secondary border-bottom border-secondary-subtle py-3' style={{fontSize:"80%"}}>
-                      <div style={{width:"30%"}} >Phone</div>
-                      <div style={{width:"70%"}} onClick={()=>{navigate('/phonenumberform')}}>{phoneNumber}</div>
-                  </div>
-              </div>
+
+             <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
+            <div class="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Phone</div>
+            <div className="text-black fs-6" style={{width:"70%"}} onClick={()=>{navigate('/phonenumberform')}}>{phoneNumber}</div>
+            </div>
+            </div>
 
               {/* Other info */}
-              <div  className="py-4 px-2 d-flex">
+            <div  className="py-4 px-2 d-flex">
             <div>
               <div style={{fontSize:"160%"}}> Other info and preferences</div>
                 <div className="py-1"> Ways to verify it’s you and settings for the web</div></div>

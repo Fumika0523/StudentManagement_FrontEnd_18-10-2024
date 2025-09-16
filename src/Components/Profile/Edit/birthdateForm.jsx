@@ -80,7 +80,10 @@ return (
     <NavBar />
         <div className="px-5 mt-5">
         <div className="d-flex flex-row align-items-center  border-4 gap-2">
-        <IoArrowBackOutline className="fs-2" style={{color:"gray"}}/>
+        <IoArrowBackOutline className=" fs-2" style={{color:"gray",cursor:"pointer"}}
+         onClick={()=>{
+        navigate('/profile')
+    }}/>
          <span className="fs-2">Update Birthday</span>
         </div>
         <div className="text-start my-4" style={{width:"75%"}}>Your birthday may be used for account security and personalization across Google services. If this Google Account is for a business or organization, use the birthday of the person who manages the account.</div>
