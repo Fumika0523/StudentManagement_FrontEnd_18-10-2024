@@ -22,22 +22,36 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
     navigate('/coursedata');
   };
 
-  // ✅ Yup Schema
+
   const formSchema = Yup.object().shape({
-    courseName: Yup.string().required("Mandatory field !"),
-    courseType: Yup.string().required("Mandatory field !"),
-    courseTime: Yup.string().required("Mandatory field !"),
-    courseAvailability: Yup.string().required("Mandatory field !"),
-    courseDuration: Yup.number().required("Mandatory field !"),
-    courseFee: Yup.number().required("Mandatory field !"),
-    noOfDays: Yup.number().required("Enter Number of Days"),
-  });
+  courseName: Yup.string().required("Mandatory field !"),
+  courseType: Yup.string().required("Mandatory field !"),
+  dailySessionHrs: Yup.number()
+    .typeError("Must be a number")
+    .positive("Must be greater than 0")
+    .required("Mandatory field !"),
+  courseAvailability: Yup.string().required("Mandatory field !"),
+  courseDuration: Yup.number()
+    .typeError("Must be a number")
+    .positive("Must be greater than 0")
+    .required("Mandatory field !"),
+  courseFee: Yup.number()
+    .typeError("Must be a number")
+    .positive("Must be greater than 0")
+    .required("Enter Course Fee!"),
+    noOfDays: Yup.number()
+    .typeError("Must be a number")
+    .positive("Must be greater than 0")
+    .integer("Must be a whole number")
+    .notRequired(),
+
+});
 
   const formik = useFormik({
     initialValues: {
       courseName: "",
       courseType: "",
-      courseTime: "",
+      dailySessionHrs: "",
       courseAvailability: "",
       courseDuration: "",
       courseFee: "",
@@ -74,6 +88,8 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
     }
   };
 
+
+
   return (
     <Modal show={show} onHide={handleClose} size='lg' style={{ margin: "10% 0" }}>
       <Modal.Header closeButton>
@@ -98,7 +114,6 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
                 )}
               </Form.Group>
             </Col>
-
             {/* Course Type */}
             <Col>
               <Form.Group className='my-3'>
@@ -138,36 +153,26 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
               </Form.Group>
             </Col>
 
-            {/* Time */}
+            {/* Daily Session Hours */}
             <Col>
               <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Time</Form.Label>
-                <Form.Select
-                  name="courseTime"
-                  value={formik.values.courseTime}
+                <Form.Label className='m-0'>Daily Session Hours</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="dailySessionHrs"
+                  value={formik.values.dailySessionHrs}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                >
-                  <option value="">--Select--</option>
-                  <option value="09:00 AM">09:00 AM</option>
-                  <option value="10:00 AM">10:00 AM</option>
-                  <option value="11:00 AM">11:00 AM</option>
-                  <option value="12:00 PM">12:00 PM</option>
-                  <option value="01:00 PM">01:00 PM</option>
-                  <option value="02:00 PM">02:00 PM</option>
-                  <option value="03:00 PM">03:00 PM</option>
-                  <option value="04:00 PM">04:00 PM</option>
-                  <option value="05:00 PM">05:00 PM</option>
-                </Form.Select>
-                {formik.errors.courseTime && formik.touched.courseTime && (
-                  <div className="text-danger text-center">{formik.errors.courseTime}</div>
+                />
+                {formik.errors.dailySessionHrs && formik.touched.dailySessionHrs && (
+                  <div className="text-danger text-center">{formik.errors.dailySessionHrs}</div>
                 )}
               </Form.Group>
             </Col>
           </Row>
 
           <Row>
-            {/* Availability */}
+            {/* Availability*/}
             <Col xs={4}>
               <Form.Group className='my-3'>
                 <Form.Label className='m-0'>Availability</Form.Label>
@@ -187,7 +192,7 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
               </Form.Group>
             </Col>
 
-            {/* Duration */}
+            {/* Course Duration */}
             <Col xs={4}>
               <Form.Group className='my-3'>
                 <Form.Label className='m-0'>Total Hours</Form.Label>

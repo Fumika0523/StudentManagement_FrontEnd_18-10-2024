@@ -74,11 +74,12 @@ useEffect(()=>{
         <Route path="/admissiondata" element={<ViewAdmission/>}/>
         <Route path="*" element={<Navigate to="/studentdata" />} />
         <Route path="/profile" element={<ProfileForm />}/>
+                <Route path="/dashboard" element={<DashboardCard isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}/>
+
       </>
     ) : (
       // Student 
       <>
-        <Route path="/dashboard" element={<DashboardCard isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}/>
         <Route path="/profile" element={<ProfileForm />}/>
         <Route path="/usernameform" element={<UserNameForm/>}/>
         <Route path="/genderform" element={<GenderForm />}/>

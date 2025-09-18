@@ -8,24 +8,24 @@ import { url } from '../../utils/constant';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Col, Row } from 'react-bootstrap';
+import { useEffect } from 'react';
 
 
 const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
     // console.log(singleCourse)
 //console.log(singleCourse._id)
 
-    const notify=()=>{
-        // console.log("Toast Notification Added")
-        toast.warning("Course is updated successfully !"
-            ,{
-                style:{
-                    textWrap:"nowrap",
-                    textAlign:"center",
-                    padding:"0.5% 0% 0.5% 4%",
-                    color:"black",
-                }
-            });
-    }
+    const notify = () => {
+    toast.warning("Course is updated successfully!", {
+        autoClose: 800, // auto close after 200ms
+        style: {
+            textWrap: "nowrap",
+            textAlign: "center",
+            padding: "0.5% 0% 0.5% 4%",
+            color: "black",
+        },
+    });
+};
 
     const navigate = useNavigate()
     const handleClose = ()=>{
@@ -37,24 +37,27 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
     {
       courseName:Yup.string().required("Mandatory field !"),
         courseType:Yup.string().required("Mandatory field !"),
-        courseTime:Yup.string().required("Mandatory field !"),
         courseAvailability:Yup.string().required("Mandatory field !"),
+        dailySessionHrs: Yup.number()
+            .typeError("Must be a number")
+            .positive("Must be greater than 0")
+            .required("Mandatory field !"),
         courseDuration:Yup.string().required("Mandatory field !"),
         courseFee:Yup.number().required("Mandatory field !"),
-        noOfDays:Yup.number().required("Mandatory field !"),
+        noOfDays:Yup.number(),
     })
     
     const formik = useFormik({
         initialValues:{
             courseName:singleCourse?.courseName,
             courseType:singleCourse?.courseType,
-            courseTime:singleCourse?.courseTime,
             courseAvailability:singleCourse?.courseAvailability,
+            dailySessionHrs:singleCourse?.dailySessionHrs,
             courseDuration:singleCourse?.courseDuration,
             courseFee:singleCourse?.courseFee,
             noOfDays:singleCourse?.noOfDays,
         },
-        enableReinitialize:"true",
+        enableReinitialize:true,
         validationSchema:formSchema,
         onSubmit:(values)=>{
             console.log(values)
@@ -86,6 +89,14 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
     }catch(e){
         console.error('Error Editing Course:',e);
     }}
+
+    useEffect(() => {
+  const { courseDuration, dailySessionHrs } = formik.values;
+  if (courseDuration && dailySessionHrs > 0) {
+    formik.setFieldValue("noOfDays", Math.ceil(courseDuration / dailySessionHrs));
+  }
+}, [formik.values.courseDuration, formik.values.dailySessionHrs]);
+
 
     return(
     <>
@@ -121,8 +132,8 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
                 </Col>
             </Row>
             <Row>
-                <Col>
-            {/* courseFime */}
+            <Col>
+            {/* Fee */}
             <Form.Group className='my-3'>
             <Form.Label className='m-0'>Fee</Form.Label>
             <Form.Control type="number" 
@@ -132,39 +143,50 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
              {/* Error Message */}
              {formik.errors.courseFee && formik.touched.courseFee && <div className="text-danger text-center">{formik.errors.courseFee}</div>}
             </Form.Group>
-                </Col>
-                <Col>
-                    {/* courseTime */}
-            <Form.Group className='my-3'>
-                <Form.Label className='m-0'>Time</Form.Label>
-                <Form.Control type="text" 
-                name="courseTime" value={formik.values.courseTime}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}/>
-                 {/* Error Message */}
-             {formik.errors.courseTime && formik.touched.courseTime && <div className="text-danger text-center">{formik.errors.courseTime}</div>}
-            </Form.Group>
-                </Col>
+            </Col>
+           {/* Daily Session Hours */}
+            <Col>
+              <Form.Group className='my-3'>
+                <Form.Label className='m-0'>Daily Session Hours</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="dailySessionHrs"
+                  value={formik.values.dailySessionHrs}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                {formik.errors.dailySessionHrs && formik.touched.dailySessionHrs && (
+                  <div className="text-danger text-center">{formik.errors.dailySessionHrs}</div>
+                )}
+              </Form.Group>
+            </Col>
             </Row>
             <Row>
+           {/*Availability*/}
             <Col sx={4}>
-            {/*courseAvailability*/}
             <Form.Group className='my-3'>
                 <Form.Label className='m-0'>Availability</Form.Label>
-                <Form.Control type="courseAvailability"
-                name="courseAvailability" value={formik.values.courseAvailability}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}/>
-                {/* Error Message */}
-                {formik.errors.courseAvailability && formik.touched.courseAvailability && <div className="text-danger text-center">{formik.errors.courseAvailability}</div>}
-            </Form.Group>
+                <Form.Select
+                  name="courseAvailability"
+                  value={formik.values.courseAvailability}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  <option value="">--Select--</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </Form.Select>
+                {formik.errors.courseAvailability && formik.touched.courseAvailability && (
+                  <div className="text-danger text-center">{formik.errors.courseAvailability}</div>
+                )}
+              </Form.Group>
             </Col>
 
-            {/* courseDuration */}
+            {/* Course Duration */}
             <Col sx={4}>
             <Form.Group className='my-3'>
                 <Form.Label className='m-0'>Total hours</Form.Label>
-                <Form.Control type="courseDuration" 
+                <Form.Control   type="number"
                 name="courseDuration" value={formik.values.courseDuration}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}/>
@@ -172,23 +194,23 @@ const ModalEditCourse=({show,setShow,singleCourse,setCourseData})=>{
              {formik.errors.courseDuration && formik.touched.courseDuration && <div className="text-danger text-center">{formik.errors.courseDuration}</div>}
             </Form.Group>
             </Col>
-   {/* No. of Days */}
-<Col sx={4}>
-  <Form.Group className='my-3'>
-    <Form.Label className='m-0'>No. of Days</Form.Label>
-    <Form.Control 
-      type="number" 
-      name="noOfDays" 
-      value={formik.values.noOfDays}
-      onChange={formik.handleChange}
-      onBlur={formik.handleBlur}
-    />
-    {/* Error Message */}
-    {formik.errors.noOfDays && formik.touched.noOfDays && (
-      <div className="text-danger text-center">{formik.errors.noOfDays}</div>
-    )}
-  </Form.Group>
-</Col>
+            {/* No. of Days */}
+            <Col sx={4}>
+            <Form.Group className='my-3'>
+                <Form.Label className='m-0'>No. of Days</Form.Label>
+                <Form.Control disabled
+                type="number" 
+                name="noOfDays" 
+                value={formik.values.noOfDays}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                />
+                {/* Error Message */}
+                {formik.errors.noOfDays && formik.touched.noOfDays && (
+                <div className="text-danger text-center">{formik.errors.noOfDays}</div>
+                )}
+            </Form.Group>
+            </Col>
 
             </Row>
             </Modal.Body>

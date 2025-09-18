@@ -38,7 +38,8 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
             targetStudent: singleBatch?.targetStudent,
             location: singleBatch?.location,
             sessionTime: singleBatch?.sessionTime,
-            fees: singleBatch?.fees
+            fees: singleBatch?.fees,
+            startDate:singleBatch?.startDate
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
@@ -80,9 +81,9 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                 show={show} onHide={handleClose}
                 size="lg" style={{ margin: "8% 0%" }} >
                 <Modal.Header closeButton>
-                    <Modal.Title  >Add Batch</Modal.Title>
+                    <Modal.Title  >Edit Batch</Modal.Title>
                 </Modal.Header>
-                <Form onSubmit={formik.handleSubmit} className='px-5' style={{ fontSize: "80%" }}>
+                <Form onSubmit={formik.handleSubmit} className='px-2' style={{ fontSize: "80%" }}>
                     <Modal.Body>
                         <Row>
                             <Col>
@@ -113,6 +114,21 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                             </Col>
                         </Row>
                         <Row>
+                              <Col>
+              <Form.Group className='my-3'>
+                <Form.Label>Start Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="startDate"
+                    value={formik.values.startDate}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.errors.startDate && formik.touched.startDate && (
+                  <div className="text-danger text-center">{formik.errors.startDate}</div>
+                )}
+              </Form.Group>
+            </Col>
                             <Col>
                                 {/* Session Type */}
                                 <Form.Group className='my-3'>

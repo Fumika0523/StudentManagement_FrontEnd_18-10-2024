@@ -12,7 +12,7 @@ function DashboardCard({isAuthenticated, setIsAuthenticated}){
   //  const [isAuthenticated,setIsAuthenticated]=useState(false)
       const [showModal, setShowModal] = useState(false);
          const token = localStorage.getItem('token') 
-    console.log(token)
+    //console.log(token)
   useEffect(() => {
     if (token) {
       setShowModal(true); // show the modal
@@ -29,9 +29,9 @@ return(
         <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
             <div className="d-flex align-items-center my-3 px-5 justify-content-between ">
                 <div className="fs-2 text-secondary">Dashboard</div>
-                <Button className="text-white d-flex align-items-center" style={{backgroundColor:"#4e73df",fontSize:"14px"}}>
-                <FaDownload className="text-white-50 me-1" />
-                Generate Report
+                <Button className="text-white d-flex gap-1 align-items-center" style={{backgroundColor:"#4e73df",fontSize:"14px"}}>
+                <FaDownload className="text-white-50" />
+                <span className="d-sm-none d-md-block">Generate Report</span>
                 </Button>
             </div>
          

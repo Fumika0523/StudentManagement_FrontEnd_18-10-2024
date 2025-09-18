@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -55,7 +55,7 @@ const formatDate = (dateString) => {
 };
 
 // Main component
-const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admissionData }) => {
+const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admissionData, courseData, setCourseData }) => {
   const [studentBatchMap, setStudentBatchMap] = useState({});
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent] = useState(null);
@@ -107,6 +107,15 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
       setStudentBatchMap(assignedStudent);
     }
   }, [studentData, admissionData]);
+
+    // Create a map for fast lookup: courseId => course object
+  const courseMap = useMemo(() => {
+    const map = {};
+    courseData.forEach(course => {
+      map[course._id] = course;
+    });
+    return map;
+  }, [courseData]);
 
   // Apply filters
   const filteredData = studentData.filter(student => {
@@ -201,63 +210,58 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
               <StyledTableCell>No.</StyledTableCell>
               <StyledTableCell>Actions</StyledTableCell>
               <StyledTableCell>Batch No.</StyledTableCell>
+              <StyledTableCell>Session Time</StyledTableCell>
               <StyledTableCell>Student ID</StyledTableCell>
               <StyledTableCell>Student Name</StyledTableCell>
               <StyledTableCell>Username</StyledTableCell>
               <StyledTableCell>Email</StyledTableCell>
-              <StyledTableCell>Phone Number</StyledTableCell>
+              <StyledTableCell>Phone No.</StyledTableCell>
               <StyledTableCell>Gender</StyledTableCell>
               <StyledTableCell>Birthdate</StyledTableCell>
-              <StyledTableCell>Course ID</StyledTableCell>
               <StyledTableCell>Preferred Courses</StyledTableCell>
               <StyledTableCell>Admission Fee</StyledTableCell>
               <StyledTableCell>Admission Date</StyledTableCell>
               <StyledTableCell>Mapped Course</StyledTableCell>
+              <StyledTableCell>Course ID</StyledTableCell>
+              <StyledTableCell>Session Type</StyledTableCell>
+              <StyledTableCell>Daily Session Hours</StyledTableCell>
+              <StyledTableCell>No. of Days</StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {filteredData?.map((student, index) => (
-              <StyledTableRow key={student._id}>
-                <StyledTableCell>{index + 1}</StyledTableCell>
-                <StyledTableCell>
-                  <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly" }}>
-                    <FaEdit
-                      className="text-success"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => handleEditClick(student)}
-                    />
-                    <MdDelete
-                      className="text-danger"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => handleDeleteClick(student._id)}
-                    />
-                    <FaKey
-                      className="text-secondary"
-                      style={{ cursor: 'pointer', fontSize: "16px" }}
-                      onClick={() => handlePasswordClick(student.password)}
-                    />
-                  </div>
-                </StyledTableCell>
-                <StyledTableCell>{studentBatchMap[student.studentName] || "Not assigned"}</StyledTableCell>
-                <StyledTableCell>{student._id}</StyledTableCell>
-                <StyledTableCell>
-                  {student.studentName
-                    .split(' ')
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ')}
-                </StyledTableCell>
-                <StyledTableCell>{student.username}</StyledTableCell>
-                <StyledTableCell>{student.email}</StyledTableCell>
-                <StyledTableCell>{student.phoneNumber}</StyledTableCell>
-                <StyledTableCell>{student.gender}</StyledTableCell>
-                <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
-                <StyledTableCell>{student.courseId}</StyledTableCell>
-                <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
-                <StyledTableCell>{student.admissionFee}</StyledTableCell>
-                <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
-                <StyledTableCell>{student.courseName}</StyledTableCell>
-              </StyledTableRow>
-            ))}
+           <TableBody>
+            {filteredData.map((student, index) => {
+              const course = courseMap[student.courseId] || {};
+              return (
+                <StyledTableRow key={student._id}>
+                  <StyledTableCell>{index + 1}</StyledTableCell>
+                  <StyledTableCell>
+                    <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
+                      <FaEdit className="text-success" style={{ cursor: 'pointer' }} onClick={() => handleEditClick(student)} />
+                      <MdDelete className="text-danger" style={{ cursor: 'pointer' }} onClick={() => handleDeleteClick(student._id)} />
+                      <FaKey className="text-secondary" style={{ cursor: 'pointer', fontSize: "16px" }} onClick={() => handlePasswordClick(student.password)} />
+                    </div>
+                  </StyledTableCell>
+                  <StyledTableCell>{studentBatchMap[student.studentName] || "Not assigned"}</StyledTableCell>
+                  <StyledTableCell>{course.courseTime}</StyledTableCell>
+                  <StyledTableCell>{student._id}</StyledTableCell>
+                  <StyledTableCell>{student.studentName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</StyledTableCell>
+                  <StyledTableCell>{student.username}</StyledTableCell>
+                  <StyledTableCell>{student.email}</StyledTableCell>
+                  <StyledTableCell>{student.phoneNumber}</StyledTableCell>
+                  <StyledTableCell>{student.gender}</StyledTableCell>
+                  <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
+                  <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
+                  <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
+                  <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
+                  <StyledTableCell>{course.courseName || "-"}</StyledTableCell>
+                  <StyledTableCell>{course._id || "-"}</StyledTableCell>
+                  <StyledTableCell>{course._id || "-"}</StyledTableCell>
+                  <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
+                  <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
+                  <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
+                </StyledTableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

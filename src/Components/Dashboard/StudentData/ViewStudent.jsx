@@ -25,7 +25,7 @@ function ViewStudent(){
 
     const getStudentData = async()=>{
         let res = await axios.get(`${url}/allstudent`,config)
-      //  console.log("StudentData",res.data.studentData)
+        console.log("StudentData",res.data.studentData)
       //  console.log("StudentData",res)
         setStudentData(res.data.studentData)
         }

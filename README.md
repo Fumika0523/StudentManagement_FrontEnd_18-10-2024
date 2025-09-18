@@ -149,19 +149,45 @@ userSchema.methods.generateAuthToken = async function(req,res){
     console.log(token)
     return token
 }
-
-1. Same student cannot be assigned to the same batch, the student should be invisible from drop-down. <<<<DONE>>>>                        
+<!-- 
+1. Same student cannot be assigned to the same batch, the student should be invisible from drop-down. <<<<DONE>>>>                         -->
  
-2.More than the target no., the student cannot be assigned >>>> Toast error shows 
-<<<<DONE>>>>
+<!-- 2.More than the target no., the student cannot be assigned >>>> Toast error shows 
+<<<<DONE>>>> -->
 
-3. After 7 days of Batch start date, the batch should not be visible in Add Admission.
-The lock icon should show in this batch and when you click icon, the message "please
-<<<<DONE>>>>
+<!-- 3. After 7 days of Batch start date, the batch should not be visible in Add Admission.
+The lock icon should show in this batch and when you click icon, the message "please contact Admin"
+<<<<DONE>>>>  -->
 
+<!-- 4. Student can assign only 1 batch By Admin, super Admin can assign multiple batches to student
+<<<<DONE>>>> -->
 
-4. Student can assign only 1 batch By Admin, super Admin can assign multiple batches to student
-<<<<DONE>>>>
+5. Work on Search for Debounced 
+<<<<PENDING>>>>
+
+6. Batch start Date should be added manually and end date is auto calculated (30 days <<< This duration is coming from Course Data (Number of days) ), course Section  ,
+ add "Daily Session Hours", auto calculation >> Number of Days
+<<<<PENDING>>>>
+
+7.  put filter in View STudent, "Date By"."Batch", "Course Name", "By Gender" 
+Date start By
+<<<<PENDING>>>>
+
+8. if the student is assigned to the batch, then from student section should not be deleted. 
+<<<<PENDING>>>>
+
+9. if the batch is not assigned, the mapped course should not be shown in student section
+<<<<PENDING>>>>
+
+10. All the details should be shown in Student Section. (time, duration,course data, admissiondata,assigned/de-assigned <DropDown, by default: Assigned, only if you are already assigned to batch, or initially empty >), when you assigned de-assigned from a batch, all the changes should be applied.once you de-assigned, then it should reflect as de-assigned too. only during 7 days from start date. after 7days, only Super-admin can edit.
+
+Question:
+The time in Batch and the time in Course should be the same ?
+Course: no time entry is needed
+Batch: Time (Morning,Evening,Afternoon)
+
+11. Filter auto-search should not happen only "Submit" button is applied.
+
 
 <!-- no of days * per day session= total duration
 15  * 2      =30      
@@ -172,15 +198,6 @@ End date >>27-Sep-2025
 13-Sept-2025   >>Cousre >>fees >> no of days  >> 13-Sept-2025 +15 >>27-Sep-2025 (Logic here)
  -->
 
-<!-- 4. put filter in View STudent, "Date By"."Batch", "Course Name", "By Gender" -->
-Date start By
-
-<!-- 5. Work on Search for Debounced -->
-
-<!-- 7. Batch start Date should be added manually and end date is auto calculated (30 days <<< This duration is coming from Course Data (Number of days) ), course Section -->
-
 <!-- Admin User -->
 <!-- Super Admin User -->
 
-Question:
-The time in Batch and the time in Course should be the same ?

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableRow from '@mui/material/TableRow';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -57,6 +57,7 @@ function CustomisedCourseTables({courseData,setCourseData}){
         setSingleCourse(course)
     }
 
+
   return(
   <>
    <TableContainer component={Paper} >
@@ -68,11 +69,11 @@ function CustomisedCourseTables({courseData,setCourseData}){
               <StyledTableCell>Name</StyledTableCell>
               <StyledTableCell>Fee</StyledTableCell>
               <StyledTableCell>Type</StyledTableCell>
-              <StyledTableCell>Time</StyledTableCell>
               <StyledTableCell>Availability</StyledTableCell>
               <StyledTableCell>Total Hours</StyledTableCell>
+              <StyledTableCell>Daily Session Hours</StyledTableCell>
               {/*  no of days * per day session= total duration */}
-              <StyledTableCell>Number of Days</StyledTableCell> 
+              <StyledTableCell>No. of Days</StyledTableCell> 
               {/* 30-35 days, manually input */}
             </TableRow>
           </TableHead>
@@ -101,9 +102,13 @@ function CustomisedCourseTables({courseData,setCourseData}){
                     <StyledTableCell>{course.courseName}</StyledTableCell>
                     <StyledTableCell>{course.courseFee}</StyledTableCell>
                     <StyledTableCell>{course.courseType}</StyledTableCell>
-                    <StyledTableCell>{course.courseTime}</StyledTableCell>
                     <StyledTableCell>{course.courseAvailability}</StyledTableCell>
                     <StyledTableCell>{course.courseDuration}</StyledTableCell>
+                    <StyledTableCell>
+                    {course.dailySessionHrs
+                     }
+                  </StyledTableCell>
+
                     <StyledTableCell>{course.noOfDays}</StyledTableCell>
                 </StyledTableRow> 
              ))

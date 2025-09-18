@@ -11,7 +11,8 @@ function viewBatch(){
     const [batchData,setBatchData] = useState([])
     const [show,setShow] = useState(false)
     const [isSidebarOpen, setIsSidebarOpen] = useState (true)
-    
+    const [courseData,setCourseData] = useState([])
+
     const token = localStorage.getItem('token')
     let config = {
         headers:{
@@ -27,6 +28,17 @@ function viewBatch(){
         getBatchData()
     },[])
 
+        //Original Main Course Data
+    const getCourseData = async()=>{
+        console.log("Course data is called...") // checking if useEffect is working or not
+        let res = await axios.get(`${url}/allcourse`,config)
+        console.log("CourseData",res.data.courseData)
+        setCourseData(res.data.courseData)
+    }
+    useEffect(()=>{
+        getCourseData()
+    },[])
+    console.log(courseData)
 
     return(
         <>
@@ -45,7 +57,9 @@ function viewBatch(){
         {/* Table */}
         <div  style={{borderRadius:"7px", minWidth:"95%"}}>
             {/* <div className="tableTitle">All Batch</div> */}
-            {<CustomisedBatchTables setBatchData={setBatchData} batchData = {batchData}/>}
+            {<CustomisedBatchTables setBatchData={setBatchData} batchData = {batchData}
+            setCourseData={setCourseData} courseData={courseData}
+            />}
             {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}
         </div>
         </div>

@@ -19,13 +19,13 @@ export const earningCardList = [
         color:"#1cc88a"
     },
     {
-        title:"TASKS",
+        title:"Total Batches",
         totalRevenue:"50%",
         icon:FaClipboardList,
         color:"#36b9cc"
     },
     {
-        title:"PENDING REQUESTS",
+        title:"Total Enrollment",
         totalRevenue:"18",
         icon:IoIosChatbubbles,
         color:"#f6c23e"

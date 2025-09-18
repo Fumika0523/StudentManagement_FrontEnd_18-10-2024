@@ -4,12 +4,19 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 
 function EarningCardDisplay(){
+    const token = localStorage.getItem('token')
     //I can pass it to the next component (EarningCard), where is the usage.
     const [earnings,setEarnings] = useState([])
+      let config = {
+    headers:{
+      Authorization:`Bearer ${token}`
+    }
+  }
+
     const getEarningData = async()=>{
         console.log("Earning data is called..........")
-        let res = await axios.get(`${url}/earnings`)
-        console.log(res.data)
+        let res = await axios.get(`${url}/earnings`,config)
+        console.log("res.data",res.data)
         setEarnings(res.data)
       }
       useEffect(()=>{
@@ -22,7 +29,7 @@ function EarningCardDisplay(){
             {
                 //earningCardList.map((element,index)=> <EarningCard {...element} key={index}/>
                 //)
-                 earnings.map((element,index)=><EarningCard {...element} key = {index}/>)
+                 earnings?.map((element,index)=><EarningCard {...element} key = {index}/>)
             }
        
     

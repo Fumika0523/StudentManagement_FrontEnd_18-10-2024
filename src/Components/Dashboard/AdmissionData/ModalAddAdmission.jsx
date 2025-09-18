@@ -157,7 +157,7 @@ onSubmit: async (values) => {
 
   // Check batch capacity
   if (batchAssignedCount >= batchTargetNo) {
-    toast.error("Sorry! This batch is full. Try another batch.", {
+    toast.error("Sorry! This batch is full. Please try another batch or contact to super admin.", {
       style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black" }
     });
     return;

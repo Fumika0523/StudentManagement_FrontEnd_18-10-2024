@@ -44,7 +44,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function CustomisedBatchTables({ batchData, setBatchData }) {
+function CustomisedBatchTables({ batchData, setBatchData, setCourseData,courseData  }) {
   const [show, setShow] = useState(false);
   const [singleBatch, setSingleBatch] = useState(null);
   const [viewWarning, setViewWarning] = useState(false);
@@ -60,7 +60,6 @@ function CustomisedBatchTables({ batchData, setBatchData }) {
 
   const uniqueCourses = [...new Set(batchData.map(b => b.courseName))];
 
-  // --- Filter Handlers ---
   const handleApplyFilter = () => {
     let filtered = [...batchData];
 
@@ -120,6 +119,8 @@ function CustomisedBatchTables({ batchData, setBatchData }) {
     return diffInDays > 7;
   };
 
+  console.log("courseData",courseData)
+
   return (
     <>
     {/* Filter Toggle */}
@@ -139,64 +140,83 @@ function CustomisedBatchTables({ batchData, setBatchData }) {
       </Button>
 
       {/* Filter Panel */}
-    <Collapse in={openFilters}>
-  <Paper
-    sx={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      gap: 2,
-      width: '100%',
-      borderTopLeftRadius: 0,
-      borderTopRightRadius: 0,
-      borderBottomLeftRadius: 4,  // same as button
-      borderBottomRightRadius: 4, // same as button
-      boxShadow: 3,               // Material UI shadow
-      p: 1,
-    }}
-  >
-    <Autocomplete
-      freeSolo
-      options={uniqueCourses}
-      inputValue={courseInput}
-      onInputChange={(e, newVal) => setCourseInput(newVal)}
-      value={selectedCourse}
-      onChange={(e, newVal) => setSelectedCourse(newVal)}
-      sx={{ width: 250 }}
-      renderInput={(params) => <TextField {...params} label="Course Name" size="small" />}
-    />
+  <Collapse in={openFilters}>
+    <Paper
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        gap: 2,
+        width: '100%',
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 4,  // same as button
+        borderBottomRightRadius: 4, // same as button
+        boxShadow: 3,               // Material UI shadow
+        p: 1,
+      }}
+    >
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: 250 }}>
+  <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+    Course Name
+  </span>
+  <Autocomplete
+    freeSolo
+    options={uniqueCourses}
+    inputValue={courseInput}
+    onInputChange={(e, newValue) => setCourseInput(newValue)}
+    value={selectedCourse}
+    onChange={(e, newValue) => setSelectedCourse(newValue)}
+    renderInput={(params) => (
+      <TextField {...params} placeholder="" size="small" />
+    )}
+  />
+    </Box>
 
-    <FormControl size="small" sx={{ width: 200 }}>
-      <InputLabel>Date By</InputLabel>
-      <Select
-        value={dateField}
-        label="Date By"
-        onChange={(e) => setDateField(e.target.value)}
-      >
-        <MenuItem value="">None</MenuItem>
+      <FormControl size="small" sx={{ width: 200 }}>
+      <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+          Date Filter By
+      </span>
+        <Select
+            value={dateField}
+            displayEmpty
+            onChange={(e) => setDateField(e.target.value)}
+          >
+        <MenuItem value="">
+          --Select--
+        </MenuItem>
         <MenuItem value="startDate">Start By</MenuItem>
         <MenuItem value="endDate">End By</MenuItem>
         <MenuItem value="updatedAt">Updated By</MenuItem>
       </Select>
-    </FormControl>
+      </FormControl>
 
-    <FormControl size="small" sx={{ width: 200 }}>
-      <InputLabel>Batch Status</InputLabel>
+
+      <FormControl size="small" sx={{ width: 200 }}>
+       <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+        Course Name
+      </span>
       <Select
         value={batchStatus}
-        label="Batch Status"
+        displayEmpty
         onChange={(e) => setBatchStatus(e.target.value)}
       >
-        <MenuItem value="">All</MenuItem>
+        <MenuItem value="">
+          --Select--
+        </MenuItem>
         <MenuItem value="active">Active</MenuItem>
         <MenuItem value="deactive">Deactive</MenuItem>
       </Select>
     </FormControl>
+    <Box className=" w-100 align-items-center gap-3 d-flex flex-row">
+    {/* Apply */}
+      <Button variant="contained" size="small" onClick={handleApplyFilter}>Apply</Button>
 
-    <Button variant="contained" size="small" onClick={handleApplyFilter}>Apply</Button>
-    <Button variant="outlined" size="small" onClick={handleResetFilter}>Reset</Button>
-  </Paper>
-</Collapse>
+    {/* Reset */}
+      <Button variant="outlined" size="small" onClick={handleResetFilter}>Reset</Button>
+      </Box>
+    </Paper>
+  </Collapse>
 
       {/* Table */}
       {showTable && (
@@ -263,7 +283,9 @@ function CustomisedBatchTables({ batchData, setBatchData }) {
                     <StyledTableCell>{batch.batchNumber}</StyledTableCell>
                     <StyledTableCell>{batch.status}</StyledTableCell>
                     <StyledTableCell>{formatDateTime(batch.startDate)}</StyledTableCell>
-                    <StyledTableCell>{batch.sessionType}</StyledTableCell>
+                  <StyledTableCell>{formatDateTime(batch.endDate)}</StyledTableCell> {/* missing field */}
+                  <StyledTableCell>{batch.sessionType}</StyledTableCell>
+
                     <StyledTableCell>{batch.courseName}</StyledTableCell>
                     <StyledTableCell>{batch.sessionDay}</StyledTableCell>
                     <StyledTableCell>{batch.targetStudent}</StyledTableCell>
