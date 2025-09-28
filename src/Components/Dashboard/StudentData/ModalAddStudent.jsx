@@ -76,11 +76,12 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
     <>
       <Modal
         show={show} onHide={handleClose} size='lg'
-        style={{margin:"8% 0"}} >
+        style={{margin:"8% 0"}}
+         >
         <Modal.Header closeButton>
         <Modal.Title  >Add Student</Modal.Title>
         </Modal.Header>
-        <Form onSubmit={formik.handleSubmit} className='px-5' style={{ fontSize: "80%" }}>
+        <Form onSubmit={formik.handleSubmit} className='px-3' style={{ fontSize: "" }}>
           <Modal.Body>
             <Row>
               <Col>
@@ -111,8 +112,8 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
               </Col>
             </Row>
             <Row>
-              <Col className='pt-4 pe-0'>
-                {/* Gender */}
+              {/* Gender */}
+              <Col className='pt-4 pe-0 ' xs={6} md={6}>
                 <div>Gender</div>
                 <div className='form-check form-check-inline'>
                   <Form.Check style={{fontSize:"14px"}} type="radio" name="gender" label={`Male`}
@@ -123,7 +124,23 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
                     value="female"
                     onChange={formik.handleChange} /></div>
               </Col>
-              <Col>
+                 {/* Assign/De-assigned */}
+              {/* <Col className='pt-4 pe-0' xs={6} md={6}>
+                <div>Status</div>
+                <Form.Select
+                  name="status"
+                  value={formik.values.status || ""}
+                  onChange={formik.handleChange}
+                  style={{ fontSize: "14px" }}
+                >
+                  <option value="">-- Select Status --</option>
+                  <option value="Assigned">Assigned</option>
+                  <option value="De-assigned">De-assigned</option>
+                </Form.Select>
+              </Col> */}
+                </Row>
+              <Row>
+             <Col className='pt-4 pe-0' xs={6}>
                 {/* Email */}
                 <Form.Group className='my-3'>
                   <Form.Label className='m-0'>Email Address</Form.Label>
@@ -135,7 +152,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
                     {formik.errors.email && formik.touched.email && <div className="text-danger text-center">{formik.errors.email}</div>}
                 </Form.Group>
               </Col>
-              <Col>
+             <Col className='pt-4 pe-0' xs={6} >
                 {/* B-Date*/}
                 <Form.Group className='mt-3'>
                   <Form.Label className='m-0'>Birthdate</Form.Label>
@@ -149,89 +166,38 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
               </Col>
             </Row>
             <Row>
-              <Col>
-              <Form.Label className='m-0'>Preferred Courses</Form.Label>
-              {['checkbox'].map((type) => (
-              <div key={`inline-${type}`} className="mb-1 d-flex flex-row justify-content-between" style={{fontSize:"14px"}}>
-                
-            <Form.Check
-            inline
-            label="HTML"
-            name="preferredCourses"
-            type={type}
-            onChange={formik.handleChange} 
-            id={`inline-${type}-1`}
-            value="HTML"
-            />
+     <Col>
+  <Form.Label className='pt-4 m-0'>Preferred Courses</Form.Label>
+  <div
+    className="d-flex flex-wrap gap-3 mt-1"
+    style={{ fontSize: "14px" }}
+  >
+    {[
+      "HTML",
+      "CSS",
+      "Java Script",
+      "Redux",
+      "Node JS",
+      "Mongo DB",
+      "SQL",
+      "Bootstrap",
+    ].map((course, idx) => (
+      <Form.Check
+        key={idx}
+        inline={false} // we don’t need inline since flex-wrap will handle layout
+        label={course}
+        name="preferredCourses"
+        type="checkbox"
+        value={course}
+        id={`preferred-${course}`}
+        onChange={formik.handleChange}
+        checked={formik.values.preferredCourses?.includes(course) || false}
+      />
+    ))}
+  </div>
+</Col>
 
-          <Form.Check
-            inline
-            label="CSS"
-            value="CSS"
-            name="preferredCourses"
-            type={type}
-            id={`inline-${type}-2`}
-            onChange={formik.handleChange} />
-            
-          <Form.Check
-            inline
-            label="Java Script"
-            value="Java Script"
-            name="preferredCourses"
-            type={type}
-            id={`inline-${type}-2`}
-            onChange={formik.handleChange} 
-          />
-          <Form.Check
-            inline
-            label="Redux"
-            value="Redux"
-            name="preferredCourses"
-            type={type}
-            id={`inline-${type}-2`}
-            onChange={formik.handleChange} 
-          />
-            <Form.Check
-            inline
-            label="Node JS"
-            value="Node JS"
-             name="preferredCourses"
-            type={type}
-            id={`inline-${type}-2`}
-            onChange={formik.handleChange} 
-          />
 
-          <Form.Check
-            inline
-            label="Mongo DB"
-            value="Mongo DB"
-            name="preferredCourses"
-            type={type}
-            id={`inline-${type}-2`}
-            onChange={formik.handleChange} />  
-  
-          <Form.Check
-            inline
-            label="SQL"
-            value="SQL"
-            name="preferredCourses"
-            type={type}
-            id={`inline-${type}-2`}
-            onChange={formik.handleChange} 
-
-          />     
-            <Form.Check
-            inline
-            label="Bootsrap"
-            value="Bootsrap"
-            name="preferredCourses"
-            type={type}
-            id={`inline-${type}-2`}
-            onChange={formik.handleChange} 
-          />    
-        </div>
-      ))}
-              </Col>
               </Row>
               <Row>
              {/* Phone No.*/}

@@ -195,6 +195,7 @@ const CustomisedAdmissionTable = ({ admissionData, setAdmissionData }) => {
           <TableHead>
             <TableRow>
               <StyledTableCell>Action</StyledTableCell>
+               <StyledTableCell>Status</StyledTableCell>
               <StyledTableCell>Batch No.</StyledTableCell>
               <StyledTableCell>Course ID</StyledTableCell>
               <StyledTableCell>Course Name</StyledTableCell>
@@ -237,8 +238,9 @@ const CustomisedAdmissionTable = ({ admissionData, setAdmissionData }) => {
                     />
                   </div>
                 </StyledTableCell>
+                <StyledTableCell>Yes/No</StyledTableCell>
                 <StyledTableCell>{admission.batchNumber}</StyledTableCell>
-                <StyledTableCell>{admission.courseId}</StyledTableCell>
+               <StyledTableCell>{admission.courseId}</StyledTableCell>
                 <StyledTableCell>{admission.courseName}</StyledTableCell>
                 <StyledTableCell>{admission.studentId}</StyledTableCell>
                 <StyledTableCell>{admission.studentName}</StyledTableCell>

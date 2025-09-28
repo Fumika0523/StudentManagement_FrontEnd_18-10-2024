@@ -102,15 +102,24 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData,courseDa
     });
   };
 
-  const formatDateTime = (isoString) => {
-    const date = new Date(isoString);
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      hour12: true
-    }).replace("at","");
-  };
+  // const formatDateTime = (isoString) => {
+  //   const date = new Date(isoString);
+  //   return date.toLocaleString('en-US', {
+  //     year: 'numeric',
+  //     month: 'short',
+  //     day: '2-digit',
+  //     hour12: true
+  //   }).replace("at","");
+  // };
+const formatDateTime = (date) => {
+  const d = new Date(date);
+  if (isNaN(d)) {
+    console.log("Invalid date:", date);
+    return "-";
+  }
+  return d.toLocaleString('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour12: true }).replace("at", "");
+};
+
 
   const isOlderThan7Days = (dateString) => {
     const createdDate = new Date(dateString);
@@ -119,7 +128,8 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData,courseDa
     return diffInDays > 7;
   };
 
-  console.log("courseData",courseData)
+  console.log("batchData:", batchData);
+  console.log("courseData:", courseData);
 
   return (
     <>
@@ -283,7 +293,19 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData,courseDa
                     <StyledTableCell>{batch.batchNumber}</StyledTableCell>
                     <StyledTableCell>{batch.status}</StyledTableCell>
                     <StyledTableCell>{formatDateTime(batch.startDate)}</StyledTableCell>
-                  <StyledTableCell>{formatDateTime(batch.endDate)}</StyledTableCell> {/* missing field */}
+                    <StyledTableCell>
+                    {batch.startDate
+                      ? (() => {
+                          const course = courseData?.find(c => c.courseName === batch.courseName); // or c.courseName
+                          // console.log("batch.courseName:", batch.courseName, "matched course:", course);
+
+                          if (!course || !course.noOfDays) return '-';
+                          const endDate = new Date(new Date(batch.startDate).getTime() + course.noOfDays * 24 * 60 * 60 * 1000);
+                          // console.log("EndDate:", endDate);
+                          return formatDateTime(endDate);
+                        })()
+                      : '-'}
+                  </StyledTableCell>
                   <StyledTableCell>{batch.sessionType}</StyledTableCell>
 
                     <StyledTableCell>{batch.courseName}</StyledTableCell>

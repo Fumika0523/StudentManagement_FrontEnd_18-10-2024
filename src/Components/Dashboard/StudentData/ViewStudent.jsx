@@ -12,7 +12,7 @@ function ViewStudent(){
     const [studentData,setStudentData] = useState([])
     const [courseData,setCourseData] = useState([])
     const [admissionData,setAdmissionData] = useState([])
-
+    const [batchData,setBatchData] = useState([])
     const [isAuthenticated,setIsAuthenticated]=useState(false)
     const [show, setShow] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState (true)
@@ -22,6 +22,12 @@ function ViewStudent(){
         headers:{
             Authorization:`Bearer ${token}`
         }}
+    
+        const getBatchData = async()=>{
+        let res = await axios.get(`${url}/allbatch`,config)
+        console.log("BatchData",res.data.batchData)
+        setBatchData(res.data.batchData)
+    }
 
     const getStudentData = async()=>{
         let res = await axios.get(`${url}/allstudent`,config)
@@ -33,6 +39,7 @@ function ViewStudent(){
          getStudentData()
          getCourseData()
          getAdmissionData()
+         getBatchData()
         },[])
 
     const getCourseData = async()=>{
@@ -66,7 +73,7 @@ function ViewStudent(){
         {/* Table */}
         <div  style={{borderRadius:"7px",width:"97%"}}>           
             {<CustomizedTables studentData = {studentData}
-            setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData}
+            setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData} batchData={batchData} setBatchData={setBatchData}
           
             />}
 

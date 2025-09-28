@@ -326,6 +326,19 @@ const isOlderThan7Days = (dateString) => {
                                 {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
                             </Form.Group>
                         </Col>
+                          <Col className='pt-4 pe-0' xs={6} md={6}>
+                <div>Status</div>
+                <Form.Select
+                  name="status"
+                  value={formik.values.status || ""}
+                  onChange={formik.handleChange}
+                  style={{ fontSize: "14px" }}
+                >
+                  <option value="">-- Select Status --</option>
+                  <option value="Assigned">Assigned</option>
+                  <option value="De-assigned">De-assigned</option>
+                </Form.Select>
+              </Col>
                         <Col>
                             {/* AUto generate Course ID */}
                             <Form.Group className='mt-3' >

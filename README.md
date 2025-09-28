@@ -167,27 +167,34 @@ The lock icon should show in this batch and when you click icon, the message "pl
 
 6. Batch start Date should be added manually and end date is auto calculated (30 days <<< This duration is coming from Course Data (Number of days) ), course Section  ,
  add "Daily Session Hours", auto calculation >> Number of Days
-<<<<PENDING>>>>
+<<<<DONE>>>>
 
 7.  put filter in View STudent, "Date By"."Batch", "Course Name", "By Gender" 
 Date start By
 <<<<PENDING>>>>
 
 8. if the student is assigned to the batch, then from student section should not be deleted. 
-<<<<PENDING>>>>
+<<<<DONE>>>>
 
 9. if the batch is not assigned, the mapped course should not be shown in student section
-<<<<PENDING>>>>
+<<<<DONE>>>>
 
 10. All the details should be shown in Student Section. (time, duration,course data, admissiondata,assigned/de-assigned <DropDown, by default: Assigned, only if you are already assigned to batch, or initially empty >), when you assigned de-assigned from a batch, all the changes should be applied.once you de-assigned, then it should reflect as de-assigned too. only during 7 days from start date. after 7days, only Super-admin can edit.
+When you update(Edit), the Status should show on Modal(both Admission & student). not when you add the student initially in Add Admission.
+Once you deassigned the Batch, both Admission and Student table should show De-assigned.
+When its Deassigned, Batch count should reduce, and
+Admission Table (StudentName, studentId) will show De-assigned.
+Dashboard data should change.
 
-Question:
-The time in Batch and the time in Course should be the same ?
-Course: no time entry is needed
-Batch: Time (Morning,Evening,Afternoon)
 
 11. Filter auto-search should not happen only "Submit" button is applied.
+Options for Assign/Deassigned
 
+
+12. Create profile for Staff >> Only Addition, Cancellation
+Edit is only for Admin
+Super Admin can have all access (including Deletion)
+If you want cancel the admission, Admission is cancelled (Staff, Admin, Super Admin)
 
 <!-- no of days * per day session= total duration
 15  * 2      =30      

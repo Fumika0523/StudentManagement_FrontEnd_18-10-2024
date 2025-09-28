@@ -55,7 +55,7 @@ const formatDate = (dateString) => {
 };
 
 // Main component
-const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admissionData, courseData, setCourseData }) => {
+const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admissionData, courseData, setCourseData, batchData, setBatchData }) => {
   const [studentBatchMap, setStudentBatchMap] = useState({});
   const [show, setShow] = useState(false);
   const [singleStudent, setSingleStudent] = useState(null);
@@ -99,14 +99,26 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
     setPassword(password);
   };
 
-  useEffect(() => {
-    if (studentData.length && admissionData.length) {
-      const assignedStudent = Object.fromEntries(
-        admissionData.map(admission => [admission.studentName, admission.batchNumber])
-      );
-      setStudentBatchMap(assignedStudent);
-    }
-  }, [studentData, admissionData]);
+useEffect(() => {
+  if (studentData.length && admissionData.length && batchData.length) {
+    const studentBatchMap = {};
+
+    admissionData.forEach(admission => {
+      const batch = batchData.find(b => b.batchNumber === admission.batchNumber);
+      if (batch) {
+        studentBatchMap[admission.studentName] = {
+          batchNumber: admission.batchNumber,
+          sessionTime: batch.sessionTime
+        };
+      }
+    });
+
+    setStudentBatchMap(studentBatchMap);
+    console.log("studentBatchMap", studentBatchMap);
+  }
+}, [studentData, admissionData, batchData]);
+
+
 
     // Create a map for fast lookup: courseId => course object
   const courseMap = useMemo(() => {
@@ -146,6 +158,7 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
 
     return matchesGender && matchesBatch && matchesDate;
   });
+
 
   return (
     <>
@@ -209,6 +222,7 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
             <TableRow>
               <StyledTableCell>No.</StyledTableCell>
               <StyledTableCell>Actions</StyledTableCell>
+              <StyledTableCell>Status</StyledTableCell>
               <StyledTableCell>Batch No.</StyledTableCell>
               <StyledTableCell>Session Time</StyledTableCell>
               <StyledTableCell>Student ID</StyledTableCell>
@@ -234,17 +248,30 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
               return (
                 <StyledTableRow key={student._id}>
                   <StyledTableCell>{index + 1}</StyledTableCell>
+                  {/* Action */}
                   <StyledTableCell>
-                    <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
-                      <FaEdit className="text-success" style={{ cursor: 'pointer' }} onClick={() => handleEditClick(student)} />
-                      <MdDelete className="text-danger" style={{ cursor: 'pointer' }} onClick={() => handleDeleteClick(student._id)} />
-                      <FaKey className="text-secondary" style={{ cursor: 'pointer', fontSize: "16px" }} onClick={() => handlePasswordClick(student.password)} />
+                  <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
+                  {/* Edit */}
+                  <FaEdit className="text-success" style={{ cursor: 'pointer' }} onClick={() => handleEditClick(student)} />
+                  {/* Delete */}
+                  {studentBatchMap[student.studentName]?.batchNumber ? '' :     <MdDelete className="text-danger" style={{ cursor: 'pointer' }} onClick={() => handleDeleteClick(student._id)} /> }
+                  {/* Lock */}
+                  <FaKey className="text-secondary" style={{ cursor: 'pointer', fontSize: "16px" }} onClick={() => handlePasswordClick(student.password)} />
                     </div>
                   </StyledTableCell>
-                  <StyledTableCell>{studentBatchMap[student.studentName] || "Not assigned"}</StyledTableCell>
-                  <StyledTableCell>{course.courseTime}</StyledTableCell>
+                  {/* Status */}
+                  <StyledTableCell>
+                  {studentBatchMap[student.studentName]?.batchNumber ? 'Assigned' : 'Not Assigned'}
+                </StyledTableCell>
+                  {/* BatchNumber */}
+                  <StyledTableCell>  {studentBatchMap[student.studentName]?.batchNumber || "Not assigned"}</StyledTableCell>
+                  
+                  <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "Not assigned"}</StyledTableCell>
+                  {/* Student ID */}
                   <StyledTableCell>{student._id}</StyledTableCell>
+                  {/* Student Name */}
                   <StyledTableCell>{student.studentName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</StyledTableCell>
+                  {/* Username */}
                   <StyledTableCell>{student.username}</StyledTableCell>
                   <StyledTableCell>{student.email}</StyledTableCell>
                   <StyledTableCell>{student.phoneNumber}</StyledTableCell>
@@ -254,7 +281,6 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
                   <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
                   <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
                   <StyledTableCell>{course.courseName || "-"}</StyledTableCell>
-                  <StyledTableCell>{course._id || "-"}</StyledTableCell>
                   <StyledTableCell>{course._id || "-"}</StyledTableCell>
                   <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
                   <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>

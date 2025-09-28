@@ -4,7 +4,7 @@ import { FaDollarSign } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosChatbubbles } from "react-icons/io";
 
-function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,icon,color} << response from server, destructuring
+function EarningCard({title,total,icon,color}) { //{title,totalRevenue,icon,color} << response from server, destructuring
     const Icons = {
         TfiBag: TfiBag, //if I have this icon, then map to the react icon
         FaDollarSign: FaDollarSign,
@@ -22,8 +22,8 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
         borderLeftWidth:"thick",
         borderColor:color,
     }
-  console.log(Icons[icon]) //[icon] >> prop, passing the icon[TfiBag],icon[FaDollarSign]...
-  console.log(Icons.icon) //undefined, icon is not passed to ".icon"
+  //console.log(Icons[icon]) //[icon] >> prop, passing the icon[TfiBag],icon[FaDollarSign]...
+  //console.log(Icons.icon) //undefined, icon is not passed to ".icon"
 
     return (
         <>
@@ -32,7 +32,7 @@ function EarningCard({title,totalRevenue,icon,color}) { //{title,totalRevenue,ic
                     <div className="d-flex  justify-content-between  align-items-center w-100" >
                         <div>
                             <div style={{ fontSize: "16px",color:color }}>{title}</div>
-                            <div className="fw-bold fs-4">$ {totalRevenue}</div>
+                            <div className="fw-bold fs-4">{total}</div>
                         </div>
                         <div className="my-2">
                             {/* {React.createElement(icon) } */}

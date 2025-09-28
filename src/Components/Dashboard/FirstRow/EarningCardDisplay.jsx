@@ -16,12 +16,20 @@ function EarningCardDisplay(){
     const getEarningData = async()=>{
         console.log("Earning data is called..........")
         let res = await axios.get(`${url}/earnings`,config)
-        console.log("res.data",res.data)
+        console.log("getEarningData",res.data)
         setEarnings(res.data)
       }
       useEffect(()=>{
         getEarningData()
       },[])
+
+      const currentYear = new Date().getFullYear()
+      console.log("current Year",currentYear)
+
+      const currentMonth = new Date().getMonth()+1
+      console.log("currentMonth",currentMonth)
+
+      
 
     return(
         <>
