@@ -22,7 +22,7 @@ const navigate = useNavigate()
 const token = localStorage.getItem('token')
 const username = localStorage.getItem('username')
 const role = localStorage.getItem('role')
-console.log("role",role)
+// console.log("role",role)
 
 const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
   // console.log("token", token,username)
@@ -46,8 +46,8 @@ const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
 const handleLogOut = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('username');
-    localStorage.removeItem('role');
-  navigate('*');
+  localStorage.removeItem('role');
+  navigate('/');
 };
 
   return (
@@ -150,12 +150,14 @@ const handleLogOut = () => {
               <FaUser className="fs-5 iconStyle" /> Profile
             </NavDropdown.Item>
             <NavDropdown.Divider />
+            {/* Logout */}
             <NavDropdown.Item
-              className="d-flex align-items-center gap-2"
-              onClick={() => handleLogOut()}
-            >
-              <PiSignOutBold className="fs-5 iconStyle" />
-              Logout
+            as="button" 
+            className="d-flex align-items-center gap-2"
+            onClick={handleLogOut}
+          >
+            <PiSignOutBold className="fs-5 iconStyle" />
+            Logout
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>

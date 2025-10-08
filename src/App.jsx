@@ -23,6 +23,7 @@ import StudentSignIn from './Components/Student/StudentSignIn'
 import StudentSignUp from './Components/Student/StudentSignUp'
 import StaffSignUp from './Components/Staff/StaffSignUp'
 import SelectCourseModal from './Components/Dashboard/StudentData/SelectCourseModal'
+import ChartDisplay from './Components/Dashboard/SampleChart/ChartDisplay'
 
 
 function App() {
@@ -60,12 +61,12 @@ useEffect(()=>{
 
 
   return (
-
     <>
       <Box  sx={{ flexGrow: 1, display:"flex", flexDirection:"column" }}  >
       <Routes>
+        <Route path="/chartdisplay" element={<ChartDisplay />}/>
   {token ? (
-    role === "admin" ? (
+    role === "admin" ||  role === "staff" ? (
       // Admin routes
       <>
         <Route path="/studentdata" element={<ViewStudent isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>}/>
@@ -74,9 +75,8 @@ useEffect(()=>{
         <Route path="/admissiondata" element={<ViewAdmission/>}/>
         <Route path="*" element={<Navigate to="/studentdata" />} />
         <Route path="/profile" element={<ProfileForm />}/>
-                <Route path="/dashboard" element={<DashboardCard isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}/>
-
-      </>
+        <Route path="/dashboard" element={<DashboardCard isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}/>
+          </>
     ) : (
       // Student 
       <>

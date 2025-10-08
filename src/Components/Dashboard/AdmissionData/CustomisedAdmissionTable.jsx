@@ -7,10 +7,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import Paper from "@mui/material/Paper";
-import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import ModalDeleteAdmission from "./ModalDeleteAdmission";
 import ModalEditAdmission from "./ModalEditAdmission";
+import { FaEdit, FaLock } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 // MUI filter controls
 import { FormControl, Select, MenuItem } from "@mui/material";
@@ -51,6 +52,7 @@ const CustomisedAdmissionTable = ({ admissionData, setAdmissionData }) => {
   const [courseFilter, setCourseFilter] = useState("");
   const [batchFilter, setBatchFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
+  const role = localStorage.getItem('role');
 
   const handleEditClick = (admission) => {
     setShow(true);
@@ -213,32 +215,40 @@ const CustomisedAdmissionTable = ({ admissionData, setAdmissionData }) => {
           <TableBody>
             {filteredData?.map((admission) => (
               <StyledTableRow key={admission._id}>
+                {/* Actions */}
                 <StyledTableCell>
-                  <div
-                    style={{
-                      display: "flex",
-                      fontSize: "18px",
-                      justifyContent: "space-evenly",
-                      textAlign: "center",
-                    }}
-                  >
-                    <FaEdit
-                      className="text-success"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleEditClick(admission)}
-                    />
-
-                    <MdDelete
-                      className="text-danger"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setViewWarning(true);
-                        setSingleAdmission(admission);
-                      }}
-                    />
-                  </div>
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: "18px",
+                    justifyContent: "space-evenly",
+                    textAlign: "center",
+                  }}
+                >
+                  {/* Show only if NOT Staff */}
+                  {role !== "staff" && (
+                    <>
+                      {/* Edit */}
+                      <FaEdit
+                        className="text-success"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleEditClick(admission)}
+                      />
+                      {/* Delete */}
+                      <MdDelete
+                        className="text-danger"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setViewWarning(true);
+                          setSingleAdmission(admission);
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
                 </StyledTableCell>
-                <StyledTableCell>Yes/No</StyledTableCell>
+
+                <StyledTableCell>{admission.batchNumber? <>Yes</>:<>No</>}</StyledTableCell>
                 <StyledTableCell>{admission.batchNumber}</StyledTableCell>
                <StyledTableCell>{admission.courseId}</StyledTableCell>
                 <StyledTableCell>{admission.courseName}</StyledTableCell>

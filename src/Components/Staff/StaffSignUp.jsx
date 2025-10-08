@@ -19,7 +19,8 @@ function SignUp() {
         password: Yup.string().required(),
         username: Yup.string().required(),
         email: Yup.string().required(),
-        phoneNumber: Yup.number().required(),      
+        // phoneNumber: Yup.number().required(),  
+        role: Yup.string().required()
     })
 
     const formik = useFormik({
@@ -27,10 +28,10 @@ function SignUp() {
             username: "",
             password: "",
             email: "",
-            phoneNumber: "",
+            // phoneNumber: "",
             birthdate:"",
             gender:"",
-            role:"admin"
+            role:""
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
@@ -114,12 +115,33 @@ function SignUp() {
                         {/* 3rd ROW */}
                         <div className="row mb-2">  
                         {/* Phone No.*/}
-                        <Form.Group className='col-lg-6 col-sm-6 col-md-6 '>
+                        {/* <Form.Group className='col-lg-6 col-sm-6 col-md-6 '>
                             <Form.Label className='formLabel m-0'>Phone No.</Form.Label>
                             <Form.Control type="phoneNumber" name="phoneNumber"
                                 value={formik.values.phoneNumber}
                                 onChange={formik.handleChange} />
-                        </Form.Group> 
+                        </Form.Group>  */}
+                        
+                        {/* Role */}
+                        <Form.Group className='col-lg-6 col-sm-6 col-md-6'>
+                        <Form.Label className='formLabel m-0'>Role</Form.Label>
+                        <Form.Select
+                            name="role"
+                            value={formik.values.role}
+                            onChange={formik.handleChange}
+                        >
+                            <option value="">--Select Role--</option>
+                            <option value="admin">Admin</option>
+                            <option value="staff">Staff</option>
+                            <option value="user">User</option>
+                            <option value="manager">Manager</option>
+                            <option value="supportTeam">Support Team</option>
+                            <option value="testingTeam">Testing Team</option>
+                            <option value="guest">Guest</option>
+                            <option value="student">Student</option>
+                        </Form.Select>
+                        </Form.Group>
+
                         {/* Password*/}
                         <Form.Group className='col-lg-6 col-sm-6 col-md-6'>
                             <Form.Label className='formLabel m-0'>Password</Form.Label>

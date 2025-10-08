@@ -12,7 +12,7 @@ import { Col } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import { toast } from 'react-toastify';
 
-const ModalAddAdmission = ({ show, setShow, setAdmissionData,admissionData, studentData,setStudentData }) => {
+const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, studentData, setStudentData }) => {
     const [courseValue, setCourseValue] = useState("")
     const [batchValue, setBatchValue] = useState("")
     const [batchTargetNo, setBatchTargetNo] = useState("")
@@ -42,46 +42,46 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData,admissionData, stud
 
     // courseData?.map((element) => console.log(element.courseName))
     // courseData?.map((element)=>console.log(element._id))
-  const handleBatchNumber = (e) => {
-  const selectedBatchNumber = e.target.value;
-  setBatchValue(selectedBatchNumber);
+    const handleBatchNumber = (e) => {
+        const selectedBatchNumber = e.target.value;
+        setBatchValue(selectedBatchNumber);
 
-  const selectedBatch = batchData.find(
-    (element) => element.batchNumber === selectedBatchNumber
-  );
+        const selectedBatch = batchData.find(
+            (element) => element.batchNumber === selectedBatchNumber
+        );
 
-  if (!selectedBatch) {
-    // clear related fields if nothing selected
-    setBatchAssignedCount(0);
-    setBatchTargetNo(0);
-    formik.setFieldValue("batchNumber", "");
-    formik.setFieldValue("courseName", "");
-    formik.setFieldValue("courseId", "");
-    formik.setFieldValue("admissionFee", "");
-    return;
-  }
+        if (!selectedBatch) {
+            // clear related fields if nothing selected
+            setBatchAssignedCount(0);
+            setBatchTargetNo(0);
+            formik.setFieldValue("batchNumber", "");
+            formik.setFieldValue("courseName", "");
+            formik.setFieldValue("courseId", "");
+            formik.setFieldValue("admissionFee", "");
+            return;
+        }
 
-  // set numbers (use fallback zero if missing)
-  setBatchAssignedCount(selectedBatch.assignedStudentCount ?? 0);
-  setBatchTargetNo(selectedBatch.targetStudent ?? 0);
+        // set numbers (use fallback zero if missing)
+        setBatchAssignedCount(selectedBatch.assignedStudentCount ?? 0);
+        setBatchTargetNo(selectedBatch.targetStudent ?? 0);
 
-  // populate formik and local state
-  formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
-  formik.setFieldValue("courseName", selectedBatch.courseName);
-  setCourseValue(selectedBatch.courseName);
+        // populate formik and local state
+        formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
+        formik.setFieldValue("courseName", selectedBatch.courseName);
+        setCourseValue(selectedBatch.courseName);
 
-  // find course to set courseId and admission fee
-  const selectedCourse = courseData.find(
-    (element) => element.courseName === selectedBatch.courseName
-  );
-  if (selectedCourse) {
-    formik.setFieldValue("courseId", selectedCourse._id);
-    formik.setFieldValue("admissionFee", selectedCourse.courseFee);
-  } else {
-    formik.setFieldValue("courseId", "");
-    formik.setFieldValue("admissionFee", "");
-  }
-};
+        // find course to set courseId and admission fee
+        const selectedCourse = courseData.find(
+            (element) => element.courseName === selectedBatch.courseName
+        );
+        if (selectedCourse) {
+            formik.setFieldValue("courseId", selectedCourse._id);
+            formik.setFieldValue("admissionFee", selectedCourse.courseFee);
+        } else {
+            formik.setFieldValue("courseId", "");
+            formik.setFieldValue("admissionFee", "");
+        }
+    };
 
     //Get Batch Data
     const getBatchData = async () => {
@@ -107,6 +107,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData,admissionData, stud
         admissionDate: Yup.date().required(("Please select Date!")),
         admissionYear: Yup.number().required(("Mandatory field!")),
         admissionMonth: Yup.string(),
+        status:Yup.string(),
     })
 
     const formik = useFormik({
@@ -121,55 +122,56 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData,admissionData, stud
             admissionDate: "",
             admissionYear: "",
             admissionMonth: "",
+            status:"Assigned"
         },
         validationSchema: formSchema,
         enableReinitialize: true,
-onSubmit: async (values) => {
-  // Existing matchedInfo logic
-  const matchedInfo = admissionData?.map(adm2 => {
-    const student = studentData?.find(stu => stu._id === adm2.studentId);
-    if (student) {
-      return { studentName: student.studentName, batchNumber: adm2.batchNumber, studentId: adm2.studentId };
-    }
-  }).filter(Boolean);
+        onSubmit: async (values) => {
+            // Existing matchedInfo logic
+            const matchedInfo = admissionData?.map(adm2 => {
+                const student = studentData?.find(stu => stu._id === adm2.studentId);
+                if (student) {
+                    return { studentName: student.studentName, batchNumber: adm2.batchNumber, studentId: adm2.studentId };
+                }
+            }).filter(Boolean);
 
-  // Check if student already assigned to this batch
-  const isAlreadyAssigned = matchedInfo.some(adm =>
-    adm.studentId === values.studentId && adm.batchNumber === values.batchNumber
-  );
+            // Check if student already assigned to this batch
+            const isAlreadyAssigned = matchedInfo.some(adm =>
+                adm.studentId === values.studentId && adm.batchNumber === values.batchNumber
+            );
 
-  if (isAlreadyAssigned) {
-    toast.error("This student is already assigned to this batch. Please select a different batch.", {
-      style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black" }
-    });
-    return;
-  }
+            if (isAlreadyAssigned) {
+                toast.error("This student is already assigned to this batch. Please select a different batch.", {
+                    style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black" }
+                });
+                return;
+            }
 
-  // Check how many batches this student is assigned to
-  const totalBatchesAssigned = matchedInfo.filter(adm => adm.studentId === values.studentId).length;
+            // Check how many batches this student is assigned to
+            const totalBatchesAssigned = matchedInfo.filter(adm => adm.studentId === values.studentId).length;
 
-  if (totalBatchesAssigned >= 1) {
-    toast.error("Multiple batch assignment is restricted. Please contact the super admin for assistance.", {
-      style: { textWrap: "wrap", width: "360px", textAlign: "left", color: "black" }
-    });
-    return;
-  }
+            if (totalBatchesAssigned >= 1) {
+                toast.error("Multiple batch assignment is restricted. Please contact the super admin for assistance.", {
+                    style: { textWrap: "wrap", width: "360px", textAlign: "left", color: "black" }
+                });
+                return;
+            }
 
-  // Check batch capacity
-  if (batchAssignedCount >= batchTargetNo) {
-    toast.error("Sorry! This batch is full. Please try another batch or contact to super admin.", {
-      style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black" }
-    });
-    return;
-  }
+            // Check batch capacity
+            if (batchAssignedCount >= batchTargetNo) {
+                toast.error("Sorry! This batch is full. Please try another batch or contact to super admin.", {
+                    style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black" }
+                });
+                return;
+            }
 
-  // If all checks pass, submit admission
-  toast.success("Successfully assigned!", {
-    style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black" }
-  });
-  await addAdmission(values);
-  handleClose();
-}
+            // If all checks pass, submit admission
+            toast.success("Successfully assigned!", {
+                style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black" }
+            });
+            await addAdmission(values);
+            handleClose();
+        }
 
     })
 
@@ -213,30 +215,30 @@ onSubmit: async (values) => {
     // console.log(a.year)
 
     const addAdmission = async (newAdmission) => {
-    //console.log("newAdmission", newAdmission)
-    const admission = {
-        ...newAdmission,
-        studentName: studentValue,
-        courseName: courseValue,
-        batchNumber: batchValue,
+        //console.log("newAdmission", newAdmission)
+        const admission = {
+            ...newAdmission,
+            studentName: studentValue,
+            courseName: courseValue,
+            batchNumber: batchValue,
+        }
+        try {
+            console.log("Submitting admission data:", formik.values);
+            const res = await axios.post(`${url}/addadmission`, admission, config)
+            //console.log("addAdmission", res.data)
+            if (res) {
+                let res = await axios.get(`${url}/alladmission`, config)
+                // console.log("Successfully a new admission added to the DB!", admission)
+                setAdmissionData(res.data.admissionData)
+                setTimeout(() => {
+                    handleClose()
+                }, 1000)
+                handleClose()
+            }
+        } catch (e) {
+            console.error("Error adding Admission:", e)
+        }
     }
-    try {
-    console.log("Submitting admission data:", formik.values);
-    const res = await axios.post(`${url}/addadmission`, admission, config)
-    //console.log("addAdmission", res.data)
-    if (res) {
-    let res = await axios.get(`${url}/alladmission`, config)
-    // console.log("Successfully a new admission added to the DB!", admission)
-    setAdmissionData(res.data.admissionData)
-    setTimeout(() => {
-        handleClose()
-    }, 1000)
-        handleClose()
-    }
-    } catch (e) {
-       console.error("Error adding Admission:", e)
-    }
-}
     // console.log(formik)
 
     const handleStudentNameChange = (e) => {
@@ -264,15 +266,15 @@ onSubmit: async (values) => {
         formik.setFieldValue("admissionYear", year)
     }
 
-// hide batches whose startDate is > 7 days ago
-const isOlderThan7Days = (dateString) => {
-  if (!dateString) return false; // treat missing date as allowed
-  const startDate = new Date(dateString);
-  const today = new Date();
-  const diffInMs = today - startDate;
-  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-  return diffInDays > 7;
-};
+    // hide batches whose startDate is > 7 days ago
+    const isOlderThan7Days = (dateString) => {
+        if (!dateString) return false; // treat missing date as allowed
+        const startDate = new Date(dateString);
+        const today = new Date();
+        const diffInMs = today - startDate;
+        const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+        return diffInDays > 7;
+    };
 
     return (
         <Modal show={show}
@@ -285,37 +287,64 @@ const isOlderThan7Days = (dateString) => {
             <Form onSubmit={formik.handleSubmit} style={{ padding: "1.5% 5%" }}>
                 <Modal.Body>
                     <Row>
-                        <Col>
-                     <Form.Group className='mt-3'>
-  <Form.Label className='mb-0'>Batch No.</Form.Label>
-  <select
-    name="batchNumber"
-    className="form-select"
-    value={formik.values.batchNumber}
-    onChange={handleBatchNumber}
-    onBlur={formik.handleBlur}
-  >
-    <option value="">Select Batch</option>
+                        <Col xs={6} md={6}>
+                            <Form.Group className='mt-3'>
+                                <Form.Label className='mb-0'>Batch No.</Form.Label>
+                                <select
+                                    name="batchNumber"
+                                    className="form-select"
+                                    value={formik.values.batchNumber}
+                                    onChange={handleBatchNumber}
+                                    onBlur={formik.handleBlur}
+                                >
+                                    <option value="">Select Batch</option>
 
-    {batchData
-      // remove batches whose startDate is more than 7 days ago
-      ?.filter((element) => !isOlderThan7Days(element.startDate))
-      .map((element) => (
-        <option key={element.batchNumber} value={element.batchNumber}>
-          {element.batchNumber}
-        </option>
-    ))}
-  </select>
+                                    {batchData
+                                        // remove batches whose startDate is more than 7 days ago
+                                        ?.filter((element) => !isOlderThan7Days(element.startDate))
+                                        .map((element) => (
+                                            <option key={element.batchNumber} value={element.batchNumber}>
+                                                {element.batchNumber}
+                                            </option>
+                                        ))}
+                                </select>
 
-  {formik.errors.batchNumber && formik.touched.batchNumber && (
-    <div className="text-danger text-center">{formik.errors.batchNumber}</div>
-  )}
-</Form.Group>
+                                {formik.errors.batchNumber && formik.touched.batchNumber && (
+                                    <div className="text-danger text-center">{formik.errors.batchNumber}</div>
+                                )}
+                            </Form.Group>
 
                         </Col>
-                        <Col>
-                            {/* Select Course Name */}
-                            <Form.Group className='mt-3' >
+                        {/* Status */}
+                        <Col className='pt-4 pe-0' >
+                            <div>Status</div>
+                            <Form.Select
+                            disabled
+                                name="status"
+                                value={formik.values.status || ""}
+                                onChange={formik.handleChange}
+                                style={{ fontSize: "14px" }}
+                            >
+                                <option value="Assigned">Assigned</option>
+                            </Form.Select>
+                        </Col>
+                         {/* Course ID */}
+                        <Col xs={6} md={6}>
+                                {/* AUto generate Course ID */}
+                                <Form.Group className='mt-3' >
+                                    <Form.Label className='mb-0'>Course ID</Form.Label>
+                                    <Form.Control disabled
+                                        type="text" placeholder=''
+                                        name='courseId' value={formik.values.courseId}
+                                        onBlur={formik.handleBlur}
+                                    >
+                                    </Form.Control>
+                                    {formik.errors.courseId && formik.touched.courseId && <div className="text-danger text-center">{formik.errors.courseId}</div>}
+                                </Form.Group>
+                        </Col>
+                        <Col xs={6} md={6}>
+                        {/* Select Course Name */}
+                        <Form.Group className='mt-3' >
                                 <Form.Label className='mb-0'>Course Name</Form.Label>
                                 <Form.Control disabled
                                     type="text" placeholder=''
@@ -324,33 +353,7 @@ const isOlderThan7Days = (dateString) => {
                                 >
                                 </Form.Control>
                                 {formik.errors.courseName && formik.touched.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
-                            </Form.Group>
-                        </Col>
-                          <Col className='pt-4 pe-0' xs={6} md={6}>
-                <div>Status</div>
-                <Form.Select
-                  name="status"
-                  value={formik.values.status || ""}
-                  onChange={formik.handleChange}
-                  style={{ fontSize: "14px" }}
-                >
-                  <option value="">-- Select Status --</option>
-                  <option value="Assigned">Assigned</option>
-                  <option value="De-assigned">De-assigned</option>
-                </Form.Select>
-              </Col>
-                        <Col>
-                            {/* AUto generate Course ID */}
-                            <Form.Group className='mt-3' >
-                                <Form.Label className='mb-0'>Course ID</Form.Label>
-                                <Form.Control disabled
-                                    type="text" placeholder=''
-                                    name='courseId' value={formik.values.courseId}
-                                    onBlur={formik.handleBlur}
-                                >
-                                </Form.Control>
-                                {formik.errors.courseId && formik.touched.courseId && <div className="text-danger text-center">{formik.errors.courseId}</div>}
-                            </Form.Group>
+                        </Form.Group>
                         </Col>
                     </Row>
                     <Row>
@@ -359,26 +362,26 @@ const isOlderThan7Days = (dateString) => {
                         <Col>
                             <Form.Group className="mt-3">
                                 <Form.Label className="mb-0">Student Name</Form.Label>
-<select
-  name="studentName"
-  className="form-select"
-  value={formik.values.studentName}
-  onChange={handleStudentNameChange}
-  onBlur={formik.handleBlur}
->
-  <option value="">--Select--</option>
+                                <select
+                                    name="studentName"
+                                    className="form-select"
+                                    value={formik.values.studentName}
+                                    onChange={handleStudentNameChange}
+                                    onBlur={formik.handleBlur}
+                                >
+                                    <option value="">--Select--</option>
 
-  {studentData
-    ?.filter(student => {
-      // check if this student is already assigned to any batch
-      return !admissionData?.some(adm => adm.studentId === student._id);
-    })
-    .map(student => (
-      <option key={student._id} value={student.studentName}>
-        {student.studentName}
-      </option>
-    ))}
-</select>
+                                    {studentData
+                                        ?.filter(student => {
+                                            // check if this student is already assigned to any batch
+                                            return !admissionData?.some(adm => adm.studentId === student._id);
+                                        })
+                                        .map(student => (
+                                            <option key={student._id} value={student.studentName}>
+                                                {student.studentName}
+                                            </option>
+                                        ))}
+                                </select>
 
                                 {formik.errors.studentName && formik.touched.studentName && (
                                     <div className="text-danger text-center">
@@ -505,7 +508,7 @@ const isOlderThan7Days = (dateString) => {
                                     value={formik.values.admissionSource}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}>
-        <option value="">--Select--</option>
+                                    <option value="">--Select--</option>
                                     <option value={"Social"}>Social</option>
                                     <option value={"Referral"}>Referral</option>
                                     <option value={"Direct"}>Direct</option>

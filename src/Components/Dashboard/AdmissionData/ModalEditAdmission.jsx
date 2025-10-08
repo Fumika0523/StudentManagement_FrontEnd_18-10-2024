@@ -223,9 +223,29 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                             </Form.Group>
                         </Col>
                         <Col>
+                            {/* Select Batch Number */}
+                            <Form.Group className='mt-3'>
+                                <Form.Label className='mb-0'>Status</Form.Label>
+                                <select name="batchNumber" id="" className="form-select"
+                                    value={formik.values.batchNumber}
+                                    // onChange={formik.handleChange} //e.target.value
+                                    onChange={handleBatchChange}
+                                    onBlur={formik.handleBlur}
+                                >
+                                    <option >Assign</option>
+                                    
+                                    <option>De-assign</option>
+                                </select>
+                                {/* Error Message */}
+                                {formik.errors.batchNumber && formik.touched.batchNumber && <div className="text-danger text-center" >{formik.errors.batchNumber}</div>}
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
                             {/* Course ID << Editable*/}
                             <Form.Group>
-                                <Form.Label>Course ID</Form.Label>
+                                <Form.Label className='mb-0'>Course ID</Form.Label>
                                 <select name="courseId" id="" className="form-select" value={formik.values.courseId}
                                     // onChange={formik.handleChange} //e.target.value
                                     onChange={handleCourseIdChange}

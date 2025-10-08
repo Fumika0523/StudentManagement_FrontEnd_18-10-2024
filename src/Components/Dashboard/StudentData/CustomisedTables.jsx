@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import Paper from '@mui/material/Paper';
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaLock } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { FaKey } from "react-icons/fa";
 import axios from 'axios';
@@ -15,6 +15,8 @@ import EditStudentData from './EditStudentData';
 import ModalShowPassword from './ModalShowPassword';
 import { url } from '../../utils/constant';
 import { FormControl, Select, MenuItem, Box } from "@mui/material";
+import { toast } from 'react-toastify';
+
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -61,8 +63,7 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
   const [singleStudent, setSingleStudent] = useState(null);
   const [viewPassword, setViewPassword] = useState(false);
   const [password, setPassword] = useState(null);
-
-  // Filters
+  const role = localStorage.getItem('role')  // Filters
   const [genderFilter, setGenderFilter] = useState("");
   const [batchFilter, setBatchFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
@@ -158,6 +159,14 @@ useEffect(() => {
 
     return matchesGender && matchesBatch && matchesDate;
   });
+const formatDateTime = (date) => {
+  const d = new Date(date);
+  if (isNaN(d)) {
+    console.log("Invalid date:", date);
+    return "-";
+  }
+  return d.toLocaleString('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour12: true }).replace("at", "");
+};
 
 
   return (
@@ -240,6 +249,7 @@ useEffect(() => {
               <StyledTableCell>Session Type</StyledTableCell>
               <StyledTableCell>Daily Session Hours</StyledTableCell>
               <StyledTableCell>No. of Days</StyledTableCell>
+              <StyledTableCell>Created Date</StyledTableCell>
             </TableRow>
           </TableHead>
            <TableBody>
@@ -248,17 +258,41 @@ useEffect(() => {
               return (
                 <StyledTableRow key={student._id}>
                   <StyledTableCell>{index + 1}</StyledTableCell>
-                  {/* Action */}
-                  <StyledTableCell>
-                  <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
-                  {/* Edit */}
-                  <FaEdit className="text-success" style={{ cursor: 'pointer' }} onClick={() => handleEditClick(student)} />
-                  {/* Delete */}
-                  {studentBatchMap[student.studentName]?.batchNumber ? '' :     <MdDelete className="text-danger" style={{ cursor: 'pointer' }} onClick={() => handleDeleteClick(student._id)} /> }
-                  {/* Lock */}
-                  <FaKey className="text-secondary" style={{ cursor: 'pointer', fontSize: "16px" }} onClick={() => handlePasswordClick(student.password)} />
-                    </div>
-                  </StyledTableCell>
+                 {/* Action */}
+                <StyledTableCell>
+  <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
+    {/* Edit */}
+    <FaEdit
+      className={role === "admin" ? "text-success" : "text-muted"}
+      style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+      onClick={() => {
+        if (role === "admin") {
+          handleEditClick(student);
+        } else {
+          toast.error("To edit the information, please contact Admin", { autoClose: 2000 });
+        }
+      }}
+    />
+    {/* Delete */}
+    <MdDelete
+      className={role === "admin" ? "text-danger" : "text-muted"}
+      style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+      onClick={() => {
+        if (role === "admin") {
+          handleDeleteClick(student._id);
+        } else {
+          toast.error("To delete the information, please contact Super-Admin", { autoClose: 2000 });
+        }
+      }}
+    />
+    {/* Lock */}
+    <FaKey
+      className="text-secondary"
+      style={{ cursor: 'pointer', fontSize: "16px" }}
+      onClick={() => handlePasswordClick(student.password)}
+    />
+  </div>
+</StyledTableCell>
                   {/* Status */}
                   <StyledTableCell>
                   {studentBatchMap[student.studentName]?.batchNumber ? 'Assigned' : 'Not Assigned'}
@@ -285,6 +319,7 @@ useEffect(() => {
                   <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
                   <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
                   <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
+                  <StyledTableCell>{formatDateTime(student.createdAt)}</StyledTableCell>
                 </StyledTableRow>
               );
             })}

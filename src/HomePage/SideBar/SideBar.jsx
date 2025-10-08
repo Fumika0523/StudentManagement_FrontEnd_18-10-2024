@@ -111,7 +111,7 @@ function SideBar() {
           className="bg-white mx-auto"
           style={{ width: "100px", borderRadius: "15px" }}
         >
-          {role === "admin" ? (
+          {role === "admin" || role === "staff" ? (
             <>
               {/* Student Data */}
               <div className="my-2">
@@ -297,7 +297,7 @@ function SideBar() {
       width: "80%",
     }}
   >
-    {role === "admin" ? (
+    {role === "admin"  || role === "staff" ? (
       <>
         {/* View All Student */}
         <div

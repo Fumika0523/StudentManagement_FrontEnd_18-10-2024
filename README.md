@@ -179,32 +179,26 @@ Date start By
 9. if the batch is not assigned, the mapped course should not be shown in student section
 <<<<DONE>>>>
 
-10. All the details should be shown in Student Section. (time, duration,course data, admissiondata,assigned/de-assigned <DropDown, by default: Assigned, only if you are already assigned to batch, or initially empty >), when you assigned de-assigned from a batch, all the changes should be applied.once you de-assigned, then it should reflect as de-assigned too. only during 7 days from start date. after 7days, only Super-admin can edit.
-When you update(Edit), the Status should show on Modal(both Admission & student). not when you add the student initially in Add Admission.
-Once you deassigned the Batch, both Admission and Student table should show De-assigned.
-When its Deassigned, Batch count should reduce, and
-Admission Table (StudentName, studentId) will show De-assigned.
-Dashboard data should change.
+10. All the details should be shown in Student Section. (time, duration,course data, admissiondata,assigned/de-assigned
 
 
 11. Filter auto-search should not happen only "Submit" button is applied.
 Options for Assign/Deassigned
 
 
-12. Create profile for Staff >> Only Addition, Cancellation
-Edit is only for Admin
+12. Create profile for Staff <<<Done>>>
+  A)  Only Addition, Cancellation,
+  B)  Edit is only for Admin
 Super Admin can have all access (including Deletion)
 If you want cancel the admission, Admission is cancelled (Staff, Admin, Super Admin)
 
-<!-- no of days * per day session= total duration
-15  * 2      =30      
+13. by default: Assigned, only if you are already assigned to batch, or initially empty >), when you assigned de-assigned from a batch, all the changes should be applied.once you de-assigned, then it should reflect as de-assigned too. only during 7 days from start date. after 7days, only Super-admin can edit.
+When you update(Edit), the Status should show on Modal(both Admission & student). not when you add the student initially in Add Admission.
+Once you deassigned the Batch, both Admission and Student table should show De-assigned.
+When its Deassigned, Batch count should reduce, and
+Admission Table (StudentName, studentId) will show De-assigned.
+Dashboard data should change.
 
-total duration >>145 hrs course >> 2hrs/day  >> 145/2 =74days                                                  >>HTML   
->> in the form >> total duration >> 2 >>30/2 >> 15 days
-End date >>27-Sep-2025
-13-Sept-2025   >>Cousre >>fees >> no of days  >> 13-Sept-2025 +15 >>27-Sep-2025 (Logic here)
- -->
-
-<!-- Admin User -->
-<!-- Super Admin User -->
-
+When you add the student in Admission, status will show assign by default.
+When you Edit the student in Admission, you will have dropdown.
+Question: De-assign >> if the batch is freezed, you are unable to de-assign ?

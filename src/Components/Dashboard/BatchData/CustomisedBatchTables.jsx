@@ -15,6 +15,8 @@ import ModalDeleteWarning from './ModalDeleteWaning';
 import { Button, Collapse, TextField, Autocomplete, FormControl, InputLabel, Select, MenuItem, TableBody } from '@mui/material';
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai"; // import icons
 import Box from '@mui/material/Box'; 
+import { FaKey } from "react-icons/fa";
+
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,7 +61,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData,courseDa
   const [showTable, setShowTable] = useState(false); // table hidden initially
 
   const uniqueCourses = [...new Set(batchData.map(b => b.courseName))];
-
+  const role = localStorage.getItem('role')
   const handleApplyFilter = () => {
     let filtered = [...batchData];
 
@@ -235,6 +237,7 @@ const formatDateTime = (date) => {
           <Table>
             <TableHead>
               <TableRow>
+                <StyledTableCell>No.</StyledTableCell>
                 <StyledTableCell>Action</StyledTableCell>
                 <StyledTableCell>Batch No.</StyledTableCell>
                 <StyledTableCell>Status</StyledTableCell>
@@ -260,38 +263,55 @@ const formatDateTime = (date) => {
                   </StyledTableCell>
                 </StyledTableRow>
               ) : (
-                filteredData.map((batch) => (
+                filteredData.map((batch,index) => (
                   <StyledTableRow key={batch._id}>
+                      <StyledTableCell>{index + 1}</StyledTableCell>
+                    {/* Action */}
                     <StyledTableCell>
-                      <div style={{ display: 'flex', fontSize: "18px", justifyContent: "space-evenly", textAlign: "center" }}>
-                        {isOlderThan7Days(batch.startDate) ? (
-                          <FaLock
-                            title="Locked"
-                            style={{ cursor: 'pointer', fontSize: 16, color: "#D19849" }}
-                            onClick={handleLockedClick}
-                          />
-                        ) : (
+                      <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
+                        {role === "admin" && (
                           <>
-                            <FaEdit
-                              className="text-success"
+                         <FaEdit
+                            className="text-success"
                               style={{ cursor: 'pointer' }}
-                              onClick={() => handleEditClick(batch)}
-                            />
-                            <MdDelete
-                              className="text-danger"
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => {
-                                setViewWarning(true);
-                                setSingleBatch(batch);
-                              }}
-                            />
+                              onClick={() => handleEditClick(course)}/>
+                            {/* Delete */}
+                            {studentBatchMap[student.studentName]?.batchNumber ? null : (
+                              <MdDelete
+                                className="text-danger"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => handleDeleteClick(student._id)}
+                              />
+                            )}
                           </>
                         )}
+                        {/* Lock */}
+                        <FaKey
+                              className="text-success"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => handleEditClick(student)}
+                            />
+                                           {/* Password  */}
+                          <FaKey
+                          className="text-secondary"
+                          style={{ cursor: 'pointer', fontSize: "16px" }}
+                          onClick={() => handlePasswordClick(student.password)}
+                        />
                       </div>
                     </StyledTableCell>
 
+
                     <StyledTableCell>{batch.batchNumber}</StyledTableCell>
-                    <StyledTableCell>{batch.status}</StyledTableCell>
+                    <StyledTableCell>
+                    {batch.startDate
+                      ? (() => {
+                          const course = courseData?.find(c => c.courseName === batch.courseName);
+                          if (!course || !course.noOfDays) return '-';
+                          const endDate = new Date(new Date(batch.startDate).getTime() + course.noOfDays * 24 * 60 * 60 * 1000);
+                          return new Date() > endDate ? "Closed" : "Open";
+                        })()
+                      : '-'}
+                  </StyledTableCell>
                     <StyledTableCell>{formatDateTime(batch.startDate)}</StyledTableCell>
                     <StyledTableCell>
                     {batch.startDate
@@ -307,7 +327,6 @@ const formatDateTime = (date) => {
                       : '-'}
                   </StyledTableCell>
                   <StyledTableCell>{batch.sessionType}</StyledTableCell>
-
                     <StyledTableCell>{batch.courseName}</StyledTableCell>
                     <StyledTableCell>{batch.sessionDay}</StyledTableCell>
                     <StyledTableCell>{batch.targetStudent}</StyledTableCell>

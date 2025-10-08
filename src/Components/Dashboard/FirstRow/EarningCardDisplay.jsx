@@ -1,7 +1,9 @@
 import EarningCard from "./EarningCard"
-import {earningCardList,url} from '../../utils/constant'
+import {url} from '../../utils/constant'
 import { useEffect, useState } from "react"
 import axios from "axios"
+import React from 'react';
+
 
 function EarningCardDisplay(){
     const token = localStorage.getItem('token')
@@ -13,35 +15,43 @@ function EarningCardDisplay(){
     }
   }
 
-    const getEarningData = async()=>{
-        console.log("Earning data is called..........")
-        let res = await axios.get(`${url}/earnings`,config)
-        console.log("getEarningData",res.data)
-        setEarnings(res.data)
-      }
+    const getEarningData = async () => {
+  try {
+    let res = await axios.get(`${url}/earnings`, config)
+    console.log("getEarningData", res.data)
+    setEarnings(res.data)
+  } catch (error) {
+    if (error.response) {
+      // Backend responded with an error
+      console.error("Response error:", error.response.status, error.response.data)
+    } else if (error.request) {
+      // No response received
+      console.error("No response:", error.request)
+    } else {
+      // Axios setup error
+      console.error("Error setting up request:", error.message)
+    }
+  }
+}
       useEffect(()=>{
         getEarningData()
-      },[])
+      },[])     
 
-      const currentYear = new Date().getFullYear()
-      console.log("current Year",currentYear)
-
-      const currentMonth = new Date().getMonth()+1
-      console.log("currentMonth",currentMonth)
-
-      
 
     return(
         <>
-        <div className=" d-flex justify-content-center align-items-center mx-auto  row px-2  w-100">
-            {
-                //earningCardList.map((element,index)=> <EarningCard {...element} key={index}/>
-                //)
-                 earnings?.map((element,index)=><EarningCard {...element} key = {index}/>)
-            }
-       
-    
-        </div>
+  <div className="d-flex justify-content-center align-items-center mx-auto row px-2 w-100">
+  <div className="fs-4">MTD</div>
+  {earnings?.map((element, index) => (
+    <React.Fragment key={index}>
+      <EarningCard {...element}title={element.title.toUpperCase()} />
+      {index === 3 && (
+        <div className="fs-4">YTD</div>
+      )}
+    </React.Fragment>
+  ))}
+</div>
+
         </>
     )
 }

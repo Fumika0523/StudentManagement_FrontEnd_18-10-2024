@@ -55,7 +55,7 @@ function viewBatch(){
         {/* Buttom Table */}
         <div className="d-flex  border-black border-4  px-3 justify-content-center">
         {/* Table */}
-        <div  style={{borderRadius:"7px", minWidth:"95%"}}>
+        <div className="my-3" style={{borderRadius:"7px", minWidth:"95%"}}>
             {/* <div className="tableTitle">All Batch</div> */}
             {<CustomisedBatchTables setBatchData={setBatchData} batchData = {batchData}
             setCourseData={setCourseData} courseData={courseData}

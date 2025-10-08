@@ -75,9 +75,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
   return (
     <>
       <Modal
-        show={show} onHide={handleClose} size='lg'
-        style={{margin:"8% 0"}}
-         >
+        show={show} onHide={handleClose} size='lg'  >
         <Modal.Header closeButton>
         <Modal.Title  >Add Student</Modal.Title>
         </Modal.Header>
