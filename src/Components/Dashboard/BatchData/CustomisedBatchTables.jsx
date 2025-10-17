@@ -266,42 +266,62 @@ const formatDateTime = (date) => {
                 filteredData.map((batch,index) => (
                   <StyledTableRow key={batch._id}>
                       <StyledTableCell>{index + 1}</StyledTableCell>
-                    {/* Action */}
-                    <StyledTableCell>
-                      <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
-                        {role === "admin" && (
-                          <>
-                         <FaEdit
-                            className="text-success"
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => handleEditClick(course)}/>
-                            {/* Delete */}
-                            {studentBatchMap[student.studentName]?.batchNumber ? null : (
-                              <MdDelete
-                                className="text-danger"
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => handleDeleteClick(student._id)}
-                              />
-                            )}
-                          </>
-                        )}
-                        {/* Lock */}
-                        <FaKey
-                              className="text-success"
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => handleEditClick(student)}
-                            />
-                                           {/* Password  */}
-                          <FaKey
-                          className="text-secondary"
-                          style={{ cursor: 'pointer', fontSize: "16px" }}
-                          onClick={() => handlePasswordClick(student.password)}
-                        />
-                      </div>
-                    </StyledTableCell>
+                      {/* Action */}
+              <StyledTableCell>
+  <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
+    {/* Edit or Lock */}
+    {role === "admin" ? (
+      batch.startDate && isOlderThan7Days(batch.startDate) ? (
+        <FaLock
+          className="text-muted"
+          style={{ cursor: 'pointer', opacity: 0.6 }}
+          onClick={() =>
+            toast.error("This batch is already locked, please contact Super-Admin", { autoClose: 2000 })
+          }
+        />
+      ) : (
+        <FaEdit
+          className="text-success"
+          style={{ cursor: 'pointer' }}
+          onClick={() => handleEditClick(batch)}
+        />
+      )
+    ) : (
+      <FaEdit
+        className="text-muted"
+        style={{ cursor: 'pointer', opacity: 0.6 }}
+        onClick={() =>
+          toast.error("To edit this information, please contact Admin", { autoClose: 2000 })
+        }
+      />
+    )}
+
+    {/* Delete */}
+    <MdDelete
+      className={role === "admin" ? "text-danger" : "text-muted"}
+      style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+      onClick={() => {
+        if (role === "admin") {
+          setSingleBatch(batch);
+          setViewWarning(true);
+        } else {
+          toast.error("To delete this information, please contact Super-Admin", { autoClose: 2000 });
+        }
+      }}
+    />
+
+    {/* Key (view password / lock info) */}
+    <FaKey
+      className="text-secondary"
+      style={{ cursor: 'pointer', fontSize: "16px" }}
+      onClick={() => handleLockedClick()}
+    />
+  </div>
+</StyledTableCell>
 
 
-                    <StyledTableCell>{batch.batchNumber}</StyledTableCell>
+                  {/* Batch Number */}
+                  <StyledTableCell>{batch.batchNumber}</StyledTableCell>
                     <StyledTableCell>
                     {batch.startDate
                       ? (() => {

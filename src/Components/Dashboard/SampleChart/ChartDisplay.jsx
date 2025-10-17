@@ -5,7 +5,6 @@ import SampleChart from './SampleChart'
 const ChartDisplay = () => {
   return (
     <>
-    <div>ChartDisplay</div>
     <SampleChart/>
     </>
 

@@ -13,9 +13,7 @@ import { url } from "../utils/constant"
 function DashboardCard({isAuthenticated, setIsAuthenticated}){
   //  const [isAuthenticated,setIsAuthenticated]=useState(false)
       const [showModal, setShowModal] = useState(false);
-      const [admissionData,setAdmissionData] = useState([])
-      const [studentData,setStudentData] = useState([])
-      const [batchData,setBatchData] = useState([])
+
       const token = localStorage.getItem('token') 
     //console.log(token)
           let config = {
@@ -44,7 +42,7 @@ return(
             </div>
          
              {/* First Row */}
-        <EarningCardDisplay  studentData={studentData} setStudentData={setStudentData} admissionData={admissionData} setAdmissionData={setAdmissionData} batchData={batchData} setBatchData={setBatchData} />    
+        <EarningCardDisplay   />    
 
             {/* Second Row */}
             <ChartDisplay/>                  

@@ -109,7 +109,8 @@ useEffect(() => {
       if (batch) {
         studentBatchMap[admission.studentName] = {
           batchNumber: admission.batchNumber,
-          sessionTime: batch.sessionTime
+          sessionTime: batch.sessionTime,
+          source:admission.admissionSource
         };
       }
     });
@@ -241,6 +242,7 @@ const formatDateTime = (date) => {
               <StyledTableCell>Phone No.</StyledTableCell>
               <StyledTableCell>Gender</StyledTableCell>
               <StyledTableCell>Birthdate</StyledTableCell>
+              <StyledTableCell>Source</StyledTableCell>
               <StyledTableCell>Preferred Courses</StyledTableCell>
               <StyledTableCell>Admission Fee</StyledTableCell>
               <StyledTableCell>Admission Date</StyledTableCell>
@@ -311,6 +313,7 @@ const formatDateTime = (date) => {
                   <StyledTableCell>{student.phoneNumber}</StyledTableCell>
                   <StyledTableCell>{student.gender}</StyledTableCell>
                   <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
+                  <StyledTableCell>{studentBatchMap[student.studentName]?.source|| "-" }</StyledTableCell>
                   <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
                   <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
                   <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>

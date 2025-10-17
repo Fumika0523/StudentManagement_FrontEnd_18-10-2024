@@ -40,7 +40,7 @@ function EarningCardDisplay(){
 
     return(
         <>
-  <div className="d-flex justify-content-center align-items-center mx-auto row px-2 w-100">
+  <div className="d-flex border-4 justify-content-center align-items-center mx-auto row px-2 w-100">
   <div className="fs-4">MTD</div>
   {earnings?.map((element, index) => (
     <React.Fragment key={index}>

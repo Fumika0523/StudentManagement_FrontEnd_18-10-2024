@@ -24,7 +24,7 @@ const viewAdmission = () => {
 
     const getStudentData = async()=>{
     let res = await axios.get(`${url}/allstudent`,config)
-    console.log("StudentData",res.data.studentData)
+    // console.log("StudentData",res.data.studentData)
    setStudentData(res.data.studentData)
     }
 
@@ -32,7 +32,7 @@ const viewAdmission = () => {
     const getAdmissionData = async()=>{
         // console.log("Admission data is called....")
         let res = await axios.get(`${url}/alladmission`,config)
-        console.log("AdmissionData",res.data.admissionData)
+        // console.log("AdmissionData",res.data.admissionData)
         setAdmissionData(res.data.admissionData)
     }
     useEffect(()=>{
