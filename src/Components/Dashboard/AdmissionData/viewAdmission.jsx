@@ -43,11 +43,11 @@ const viewAdmission = () => {
 
   return (
     <>
-    <div className='d-flex '>
-    <SideBar/>
+    {/* <div className='d-flex '> */}
+    {/* <SideBar/> */}
     <div className="backgroundDesign d-flex flex-column" 
     style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
-    <NavBar/>
+    {/* <NavBar/> */}
     <div className=' d-flex justify-content-end pe-4 py-3'>
     <Button variant="outline-none" className='commonButton'
     onClick={()=>setShow(true)}
@@ -67,7 +67,7 @@ const viewAdmission = () => {
     studentData={studentData}
     setStudentData={setStudentData}
      />}
-    </div>
+    {/* </div> */}
    </>
   )
 }

@@ -33,10 +33,10 @@ function ViewCourse(){
 
 return(
     <>
-    <div className="d-flex flex-row ">
-        <SideBar/>
+    {/* <div className="d-flex flex-row ">
+        <SideBar/> */}
     <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
-        <NavBar/>
+        {/* <NavBar/> */}
     {/* Button */}
     <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
     <Button variant="outline-none" className=" commonButton" 
@@ -54,7 +54,7 @@ return(
     {
         show && <ModalAddCourse show={show} setShow={setShow} setCourseData = {setCourseData} />
     }
-    </div>
+    {/* </div> */}
 
     </>
 )

@@ -30,10 +30,10 @@ function DashboardCard({isAuthenticated, setIsAuthenticated}){
 
 return(
     <>
-    <div className="d-flex flex-row" >
-        <SideBar />
+    {/* <div className="d-flex flex-row" > */}
+        {/* <SideBar /> */}
     <div className="backgroundDesign d-flex flex-column " >
-        <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>
+        {/* <NavBar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/> */}
             <div className="d-flex align-items-center mt-3 px-3 justify-content-end ">
                 <Button className="text-white d-flex gap-1 align-items-center" style={{backgroundColor:"#4e73df",fontSize:"14px"}}>
                 <FaDownload className="text-white-50" />
@@ -50,7 +50,7 @@ return(
         </div>
              {/* Modal overlay */}
       {showModal  && <SelectCourseModal show={showModal} setShow={setShowModal} />}
-      </div>
+      {/* </div> */}
 
     </>
 )

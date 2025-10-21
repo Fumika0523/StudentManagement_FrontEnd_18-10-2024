@@ -104,15 +104,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData,courseDa
     });
   };
 
-  // const formatDateTime = (isoString) => {
-  //   const date = new Date(isoString);
-  //   return date.toLocaleString('en-US', {
-  //     year: 'numeric',
-  //     month: 'short',
-  //     day: '2-digit',
-  //     hour12: true
-  //   }).replace("at","");
-  // };
+
 const formatDateTime = (date) => {
   const d = new Date(date);
   if (isNaN(d)) {
@@ -137,7 +129,7 @@ const formatDateTime = (date) => {
     <>
     {/* Filter Toggle */}
        <Button
-        variant="outlined"
+        variant="contained"
         size="small"
         onClick={() => setOpenFilters(!openFilters)}
         sx={{
@@ -148,7 +140,7 @@ const formatDateTime = (date) => {
           borderRadius: openFilters ? '4px 4px 0 0' : '4px',
         }}
       >
-        Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
+        Filter {openFilters ? <AiOutlineMinus className='fs-6' /> : <AiOutlinePlus className='fs-6' />}
       </Button>
 
       {/* Filter Panel */}
@@ -168,8 +160,9 @@ const formatDateTime = (date) => {
         p: 1,
       }}
     >
+      {/* Course Name */}
     <Box sx={{ display: 'flex', flexDirection: 'column', width: 250 }}>
-  <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+  <span className='mb-0' style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
     Course Name
   </span>
   <Autocomplete
@@ -185,9 +178,10 @@ const formatDateTime = (date) => {
   />
     </Box>
 
+      {/* Date By */}
       <FormControl size="small" sx={{ width: 200 }}>
-      <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-          Date Filter By
+      <span className='mb-0' style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+          Date  By
       </span>
         <Select
             value={dateField}
@@ -203,9 +197,9 @@ const formatDateTime = (date) => {
       </Select>
       </FormControl>
 
-
+      {/* Course Name */}
       <FormControl size="small" sx={{ width: 200 }}>
-       <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+       <span className='mb-0' style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
         Course Name
       </span>
       <Select
@@ -219,7 +213,8 @@ const formatDateTime = (date) => {
         <MenuItem value="active">Active</MenuItem>
         <MenuItem value="deactive">Deactive</MenuItem>
       </Select>
-    </FormControl>
+      </FormControl>
+
     <Box className=" w-100 align-items-center gap-3 d-flex flex-row">
     {/* Apply */}
       <Button variant="contained" size="small" onClick={handleApplyFilter}>Apply</Button>

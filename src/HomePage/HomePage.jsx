@@ -7,8 +7,8 @@ function HomePage(){
     return(
         <>
         <div className='container'>
-        <SideBar />
-        <NavBar/>
+        {/* <SideBar />
+        <NavBar/> */}
         <DashboardCard/>
         </div>
         </>

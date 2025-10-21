@@ -1,32 +1,22 @@
-import { styled, alpha } from '@mui/material/styles';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Image from 'react-bootstrap/Image'
-import {Link, useNavigate} from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
-import * as React from 'react';
+import { useNavigate } from "react-router-dom";
+import * as React from "react";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import { FaEnvelope, FaUser } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import { FaUser } from "react-icons/fa";
 import { PiSignOutBold } from "react-icons/pi";
-import "../NavBar/NavBar.css"
-import { FaEnvelope } from "react-icons/fa";
+import SearchIcon from "@mui/icons-material/Search";
+import { MdMenu } from "react-icons/md";
+import Image from "react-bootstrap/Image";
+import "../NavBar/NavBar.css";
 
-export default function NavBar() {
-  
-const navigate = useNavigate()
-const token = localStorage.getItem('token')
-const username = localStorage.getItem('username')
-const role = localStorage.getItem('role')
-// console.log("role",role)
-
-const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
-  // console.log("token", token,username)
-
+export default function NavBar({ toggleSidebar }) {
+  const navigate = useNavigate();
+  const username = localStorage.getItem("username");
 
   const UserMenu = (
     <>
@@ -42,101 +32,61 @@ const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
     </span>
     </>
   )
-  
-const handleLogOut = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('username');
-  localStorage.removeItem('role');
-  navigate('/');
-};
+
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
+    navigate("/");
+  };
 
   return (
-  <>
-    <Navbar expand="lg" sticky="top" bg="light"  data-bs-theme="light">
-      <Container className="border-danger  d-flex align-items-center flex-nowrap">
-        
-        {/* Desktop Search (on left for sm and up) */}
-        <Form className="d-none d-sm-flex align-items-center me-auto">
+    <Navbar expand="lg" sticky="top"  bg="light" className="shadow-sm" 
+    >
+      <Container fluid className="d-flex align-items-center flex-nowrap justify-content-between" >
+        {/* Hamburger icon for mobile */}
+        <MdMenu
+          className="d-flex d-sm-block d-md-none"
+          size={30}
+          style={{ cursor: "pointer", color: "#4e73df"  , position:"absolute", left:"15px"}}
+          onClick={toggleSidebar}
+        />
+
+        {/* Search (hidden on mobile) */}
+        <Form className="d-none d-md-flex align-items-center me-auto">
           <Form.Control
             type="text"
             placeholder="Search for..."
-            className="ms-3"
             style={{
               borderTopRightRadius: "0",
               borderBottomRightRadius: "0",
               border: "0",
-              width:"250px",
+              width: "250px",
               backgroundColor: "#efeff5"
             }}
           />
           <Button
             type="submit"
-            className=' p-1'
             style={{
               backgroundColor: "#4e73df",
               borderTopLeftRadius: "0",
               borderBottomLeftRadius: "0"
             }}
           >
-            <SearchIcon className='fs-4 '/>
+            <SearchIcon />
           </Button>
         </Form>
 
-    {/* Icons section (right side) */}
-    <Nav className="d-flex flex-row align-items-center gap-3 ms-auto">
-
-      {/* Mobile Search Icon - only visible on mobile */}
-      <Nav.Link 
-        href="#home" 
-        className="d-flex d-sm-none"
-        onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-      >
-        <SearchIcon className="fs-2" />
-      </Nav.Link>
-
-        {/* Mobile popup search */}
-        {mobileSearchOpen && (
+        {/* Right Side Icons */}
+        <Nav className="d-flex flex-row align-items-center gap-3 ms-auto">
+          <IoMdNotifications className="fs-3"  style={{color:"#a4a6adff"}} />
+          <FaEnvelope className="fs-4" style={{color:"#a4a6adff"}} />
           <div
-            className="d-flex flex-row position-absolute bg-white p-2 rounded shadow"
-            style={{ top: "50px", zIndex: 1000, width: "90%", left: "5%" }}
-          >
-            <Form.Control
-              type="text"
-              placeholder="Search"
-              style={{
-                borderTopRightRadius: "0",
-                borderBottomRightRadius: "0",
-                border: "0",
-                backgroundColor: "#efeff5"
-              }}
-              className="me-2"
-            />
-            <Button
-              type="submit"
-              style={{
-                backgroundColor: "#4e73df",
-                borderTopLeftRadius: "0",
-                borderBottomLeftRadius: "0"
-              }}
-            >
-              <SearchIcon  />
-            </Button>
-          </div>
-        )}
-    
-        {/* Icons section (right side) */}
-        {/* <Nav className="d-flex flex-row align-items-center gap-3"> */}
-          <Nav.Link href="#home">
-            <IoMdNotifications className="fs-3" />
-          </Nav.Link>
-          {/* Email icon */}
-          <Nav.Link href="#home">
-            <FaEnvelope className="fs-4" />
-          </Nav.Link>
-
-          <div style={{ borderRight: "1px solid #a4a6adff", height: "30px" }}
-            className="topbar-divider d-none d-sm-block"
+            style={{ borderRight: "1px solid #a4a6adff", height: "30px" }}
+            className="d-none d-sm-block"
           ></div>
+
+          {/* User Dropdown */}
           <NavDropdown
             align="end"
             id="basic-nav-dropdown"
@@ -150,6 +100,7 @@ const handleLogOut = () => {
               <FaUser className="fs-5 iconStyle" /> Profile
             </NavDropdown.Item>
             <NavDropdown.Divider />
+            
             {/* Logout */}
             <NavDropdown.Item
             as="button" 
@@ -163,6 +114,5 @@ const handleLogOut = () => {
         </Nav>
       </Container>
     </Navbar>
-  </>
   );
 }

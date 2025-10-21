@@ -42,11 +42,12 @@ function viewBatch(){
 
     return(
         <>
-    <div className="d-flex flex-row ">
-        <SideBar/>
-        <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
-        <NavBar/>
-        <div className="d-flex justify-content-end border-warning border-3 pe-4 py-3">
+        <div className=""
+        //   style={{border:"2px solid red"}}
+        >
+        <div className="d-flex justify-content-end  pe-4 "
+
+        >
         {/* ADD BUTTON  */}
         <Button className=" commonButton"
          onClick={()=>setShow(true)}>Add Batch</Button>
@@ -55,7 +56,7 @@ function viewBatch(){
         {/* Buttom Table */}
         <div className="d-flex  border-black border-4  px-3 justify-content-center">
         {/* Table */}
-        <div className="my-3" style={{borderRadius:"7px", minWidth:"95%"}}>
+        <div className="" style={{borderRadius:"7px", minWidth:"95%"}}>
             {/* <div className="tableTitle">All Batch</div> */}
             {<CustomisedBatchTables setBatchData={setBatchData} batchData = {batchData}
             setCourseData={setCourseData} courseData={courseData}
@@ -63,7 +64,7 @@ function viewBatch(){
             {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}
         </div>
         </div>
-        </div>
+     
         {show && <ModalAddBatch show={show} setShow={setShow}
         setBatchData={setBatchData}
         />}

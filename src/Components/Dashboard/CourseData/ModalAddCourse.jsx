@@ -83,7 +83,7 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
         }, 3000);
       }
     } catch (e) {
-      console.error('Error Adding Course:', e);
+     // console.error('Error Adding Course:', e);
       toast.error("Failed to add course. Please try again.");
     }
   };

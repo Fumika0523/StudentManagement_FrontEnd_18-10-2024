@@ -54,9 +54,6 @@ const options = {
   }
 };
 
-
-
-
   return (
   <>
     <Card className=' d-flex shadow justify-content-center mb-3' >

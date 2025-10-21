@@ -11,10 +11,20 @@ import { Col, Row } from 'react-bootstrap';
 
 function ModalAddStudent({ show, setShow, setStudentData }) {
   const navigate = useNavigate()
+    const notify = () => {
+      toast.success("Course added successfully !");
+    };
   const handleClose = () => {
     setShow(false)
     navigate('/studentdata')
   }
+  
+    const getStudentData = async()=>{
+        let res = await axios.get(`${url}/allstudent`,config)
+        console.log("StudentData",res.data.studentData)
+        setStudentData(res.data.studentData)
+        }
+ 
 
   const formSchema = Yup.object().shape({
     studentName: Yup.string().required("Mandatory Field!"),
@@ -38,9 +48,9 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
       birthdate: "",
       preferredCourses:"",
     },
-    // validationSchema: formSchema,
+    //validationSchema: formSchema,
     onSubmit: (values) => {
-      console.log(values)
+     // console.log(values)
       addStudent(values)
     }
   })
@@ -54,22 +64,27 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
     }
   }
   
+// Adding student API
+const addStudent = async (newStudent) => {
+  try {
+    const res = await axios.post(`${url}/registerstudent`, newStudent, config);
+    if (res) {
+      //console.log("Successfully added a new student to the DB");
 
-  const addStudent = async (newStudent) => {
-    // console.log(newStudent)
-    try {
-      const res = await axios.post(`${url}/registerstudent`, newStudent, config)
-      console.log(res)
-      if (res) {
-        let res = await axios.get(`${url}/allstudent`, config)
-        console.log("Successfully a new student to the DB", newStudent)
-        setStudentData(res.data.studentData)
-        handleClose()
-      }
-    } catch (e) {
-      console.error('Error Adding Student:', e)
+      // Fetch latest data
+      const updated = await axios.get(`${url}/allstudent`, config);
+      setStudentData(updated.data.studentData);
+      notify();
+      setTimeout(() => {
+      handleClose();
+        }, 3000);
     }
+  } catch (e) {
+    toast.error("Failed to add course. Please try again.");
+    //console.error("Error Adding Student:", e);
   }
+};
+
   // When you click the save.>> update
 
   return (

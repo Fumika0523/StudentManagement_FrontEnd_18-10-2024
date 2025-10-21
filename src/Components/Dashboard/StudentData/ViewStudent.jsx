@@ -56,10 +56,8 @@ function ViewStudent(){
 
     return(
         <>
-<div className="d-flex flex-row ">
-    <SideBar/>
-    <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
-        <NavBar/>
+
+    <div className="  backgroundDesign d-flex flex-column  " >
         {/* ADD Button */}
         <div className=" d-flex justify-content-end  pe-4 py-3">
         <Button variant="outline-none" className="commonButton"
@@ -85,7 +83,7 @@ function ViewStudent(){
             setStudentData={setStudentData}
             />}
            
-        </div>
+ 
         </>
     )
 }
