@@ -45,17 +45,20 @@ const getMonth = (locale = "en-US", style = "short") => {
 export const ChartCard = ({ earnings, setEarnings, admissionData, setAdmissionData }) => {
   // Localized month names
   const months = getMonth();
-
+  console.log("admissionData",admissionData)
   // Calculate total admissionFee per month
   const monthlyTotals = admissionData?.reduce((acc, cv) => {
      //reduce() is an array method that lets you accumulate a single result from an array
   //(acc, cv) => { ... } >> acc -> accumulator, stores the running total for each month >> cv -> current value, the current admission object in the loop >>>> this is to sum up admission fees for each month
     const monthIndex = new Date(cv.admissionDate).getMonth();
+    console.log("monthIndex",monthIndex)
       //const monthIndex = new Date(cv.admissionDate).getMonth()
   // creates a JavaScript Date object from cv.admissionDate
   //.getMonth() returns the month index 0-11(0=Jan, 11=Dec)
   // monthIndex tells us which month this admisssion belongs to
     acc[monthIndex] = (acc[monthIndex] || 0) + (cv.admissionFee || 0);
+    console.log("acc[monyhIndex]",acc[monthIndex])
+    console.log("cv.admissionFee ",cv.admissionFee )
       //acc[monthIndex] = (acc[monthIndex] || 0) + (cv.admissionFee || 0)
   //acc[monthIndex] >> the current total for that month
   //(acc[monthIndex] || 0) >> if nothing exists yet, then show 0
@@ -104,7 +107,8 @@ export const ChartCard = ({ earnings, setEarnings, admissionData, setAdmissionDa
 
   return (
     <>
-      <Card className=" d-flex justify-content-center mb-3 shadow">
+
+      <Card className=" d-flex justify-content-center  shadow">
         <Card.Header className="d-flex py-2 flex-row justify-content-between align-items-center" as="h5" style={{ color: "#4e73df" }}>
           Admission Overview
         </Card.Header>

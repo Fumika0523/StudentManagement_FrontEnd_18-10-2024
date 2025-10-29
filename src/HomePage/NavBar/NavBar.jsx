@@ -52,40 +52,11 @@ export default function NavBar({ toggleSidebar }) {
           onClick={toggleSidebar}
         />
 
-        {/* Search (hidden on mobile) */}
-        <Form className="d-none d-md-flex align-items-center me-auto">
-          <Form.Control
-            type="text"
-            placeholder="Search for..."
-            style={{
-              borderTopRightRadius: "0",
-              borderBottomRightRadius: "0",
-              border: "0",
-              width: "250px",
-              backgroundColor: "#efeff5"
-            }}
-          />
-          <Button
-            type="submit"
-            style={{
-              backgroundColor: "#4e73df",
-              borderTopLeftRadius: "0",
-              borderBottomLeftRadius: "0"
-            }}
-          >
-            <SearchIcon />
-          </Button>
-        </Form>
+
 
         {/* Right Side Icons */}
         <Nav className="d-flex flex-row align-items-center gap-3 ms-auto">
-          <IoMdNotifications className="fs-3"  style={{color:"#a4a6adff"}} />
-          <FaEnvelope className="fs-4" style={{color:"#a4a6adff"}} />
-          <div
-            style={{ borderRight: "1px solid #a4a6adff", height: "30px" }}
-            className="d-none d-sm-block"
-          ></div>
-
+     
           {/* User Dropdown */}
           <NavDropdown
             align="end"

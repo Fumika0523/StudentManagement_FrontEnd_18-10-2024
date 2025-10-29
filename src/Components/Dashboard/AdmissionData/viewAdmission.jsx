@@ -13,7 +13,8 @@ const viewAdmission = () => {
     const [admissionData,setAdmissionData] = useState([])
     const [studentData,setStudentData] = useState([])
     const [show,setShow] = useState(false)
-    const [isSidebarOpen, setIsSidebarOpen] = useState (true)
+    const [batchData,setBatchData] = useState([])
+    const [courseData,setCourseData] = useState([])
 
     
     const token = localStorage.getItem('token')
@@ -22,10 +23,23 @@ const viewAdmission = () => {
             Authorization:`Bearer ${token}`
         }}
 
+        const getCourseData = async()=>{
+        //console.log("Course data is called...") // checking if useEffect is working or not
+        let res = await axios.get(`${url}/allcourse`,config)
+        //console.log("CourseData",res.data.courseData)
+        setCourseData(res.data.courseData)
+    }
+
+
     const getStudentData = async()=>{
     let res = await axios.get(`${url}/allstudent`,config)
     // console.log("StudentData",res.data.studentData)
    setStudentData(res.data.studentData)
+    }
+     const getBatchData = async()=>{
+        let res = await axios.get(`${url}/allbatch`,config)
+       // console.log("BatchData",res.data.batchData)
+        setBatchData(res.data.batchData)
     }
 
     // Main admission Data
@@ -38,36 +52,14 @@ const viewAdmission = () => {
     useEffect(()=>{
         getAdmissionData()
         getStudentData()
+        getCourseData()
+        getBatchData()
     },[])
     // console.log(admissionData)
 
   return (
     <>
-    {/* <div className='d-flex '> */}
-    {/* <SideBar/> */}
-    <div className="backgroundDesign d-flex flex-column" 
-    style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
-    {/* <NavBar/> */}
-    <div className=' d-flex justify-content-end pe-4 py-3'>
-    <Button variant="outline-none" className='commonButton'
-    onClick={()=>setShow(true)}
-    >Add Admission</Button>
-    </div>
-     {/* Buttom Table */}
-     <div className="d-flex justify-content-center">
-    {/* Table */}
-    <div style={{orderRadius:"7px", width:"95%"}}>
-        {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} />  }
-    </div>
-    </div>
-    </div>
-    {show && <ModalAddAdmission show={show} setShow={setShow}
-    setAdmissionData={setAdmissionData}
-    admissionData={admissionData}
-    studentData={studentData}
-    setStudentData={setStudentData}
-     />}
-    {/* </div> */}
+        {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} batchData = {batchData} courseData={courseData} studentData={studentData} setStudentData={setStudentData}/>  }
    </>
   )
 }

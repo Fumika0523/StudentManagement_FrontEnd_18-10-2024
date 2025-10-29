@@ -227,7 +227,7 @@ const formatDateTime = (date) => {
 
       {/* Table */}
       {showTable && (
-          <Box sx={{ mt: 5 }}> {/* gap between filter panel and table */}
+          <Box sx={{ mt: 3 }}> {/* gap between filter panel and table */}
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -305,16 +305,15 @@ const formatDateTime = (date) => {
       }}
     />
 
-    {/* Key (view password / lock info) */}
-    <FaKey
-      className="text-secondary"
-      style={{ cursor: 'pointer', fontSize: "16px" }}
-      onClick={() => handleLockedClick()}
-    />
-  </div>
-</StyledTableCell>
-
-
+                  {/* Key (view password / lock info) */}
+                  <FaKey
+                    className="text-secondary"
+                    style={{ cursor: 'pointer', fontSize: "16px" }}
+                    onClick={() => handleLockedClick()}
+                  />
+                </div>
+              </StyledTableCell>
+              
                   {/* Batch Number */}
                   <StyledTableCell>{batch.batchNumber}</StyledTableCell>
                     <StyledTableCell>

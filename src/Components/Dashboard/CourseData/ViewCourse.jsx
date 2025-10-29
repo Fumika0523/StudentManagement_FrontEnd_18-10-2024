@@ -1,6 +1,4 @@
-import SideBar from "../../../HomePage/SideBar/SideBar"
 import { useEffect, useState } from "react"
-import NavBar from "../../../HomePage/NavBar/NavBar"
 import CustomisedCourseTables from "./CustomisedCourseTables"
 import ModalAddCourse from "./ModalAddCourse"
 import { url } from "../../utils/constant"
@@ -11,7 +9,6 @@ import { Button } from "react-bootstrap"
 function ViewCourse(){
     const [courseData,setCourseData] = useState([])
     const [show,setShow] = useState(false)
-    const [isSidebarOpen, setIsSidebarOpen] = useState (true)
     
     const token = localStorage.getItem('token')
     let config = {
@@ -33,28 +30,24 @@ function ViewCourse(){
 
 return(
     <>
-    {/* <div className="d-flex flex-row ">
-        <SideBar/> */}
-    <div className="backgroundDesign d-flex flex-column" style={{minWidth:isSidebarOpen ?"75%":"88%"}}>
-        {/* <NavBar/> */}
-    {/* Button */}
-    <div className=" d-flex justify-content-end border-warning border-3 pe-4 py-3">
+
+ <div className="d-flex justify-content-end  pe-4 " >
+    {/* ADD Button */}
     <Button variant="outline-none" className=" commonButton" 
     onClick={()=>setShow(true)}> Add Course</Button>
     </div>
+
    {/* Buttom Table */}
-   <div className="d-flex  border-black border-4 justify-content-center">
-        {/* Table */}
-        <div  style={{border:"2px solid #e3e6f0",borderRadius:"7px", minWidth:"95%"}}>
-    {/* <div className="tableTitle" >All Course</div> */}
-    <CustomisedCourseTables setCourseData={setCourseData} courseData={courseData} />
+    <div className="d-flex  border-black border-4  px-3 justify-content-center">       
+    {/* Table */}    
+    <div className="" style={{borderRadius:"7px", minWidth:"95%"}}>
+        <CustomisedCourseTables setCourseData={setCourseData} courseData={courseData} />
     </div>
     </div>
-    </div>
+
     {
         show && <ModalAddCourse show={show} setShow={setShow} setCourseData = {setCourseData} />
     }
-    {/* </div> */}
 
     </>
 )

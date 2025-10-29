@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { url } from '../../utils/constant';
 import { Col, Row } from 'react-bootstrap';
-
+import { toast } from 'react-toastify';
 
 function ModalAddStudent({ show, setShow, setStudentData }) {
   const navigate = useNavigate()

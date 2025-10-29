@@ -6,8 +6,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { HiDotsVertical } from "react-icons/hi";
 
 
-
-
 function DonutCard({admissionData, setAdmissionData}) {
 
   // const sourceTitle = admissionData?.map((element)=>(element.admissionSource))
@@ -56,12 +54,12 @@ const options = {
 
   return (
   <>
-    <Card className=' d-flex shadow justify-content-center mb-3' >
+    <Card className=' d-flex shadow justify-content-center'  >
       <Card.Header className="d-flex py-2 m-0 flex-row justify-content-between align-items-center" as="h5" style={{color:"#4e73df"}}> Admission Source
       </Card.Header>
-      <Card.Body>
+      <Card.Body style={{ height: "350px" }}>
       <Doughnut data={data} options={options} className='d-flex flex-row'
-      style={{display:"block",height:"330px"}}/>     
+      style={{display:"block"}}/>     
       </Card.Body>
     </Card>
   </>

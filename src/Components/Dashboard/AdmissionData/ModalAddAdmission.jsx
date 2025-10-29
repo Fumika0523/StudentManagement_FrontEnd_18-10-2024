@@ -184,18 +184,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         }
     }
 
-    // const formatDate = (dateString) => {
-    //     console.log(dateString)
-    //     const date = new Date(dateString);
-    //     console.log(date)
-    //     return date.toLocaleDateString('en-US', {
-    //         year: "numeric",
-    //         month: 'long',
-    //         day: 'numeric'
-    //     })
-    // }
-    // console.log(new Date("03-01-2025"))
-
     const dateFun = (dateString) => {
         if (!dateString) {
             return { month: "", year: "" }
@@ -261,6 +249,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         let month = res.month
         let year = res.year
         console.log(month, year)
+        console.log("e.target.value",e.target.value)
         formik.setFieldValue("admissionDate", e.target.value)
         formik.setFieldValue("admissionMonth", month)
         formik.setFieldValue("admissionYear", year)
@@ -276,6 +265,9 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         return diffInDays > 7;
     };
 
+    console.log("studentData", studentData);
+
+    
     return (
         <Modal show={show}
             onHide={handleClose}
@@ -371,8 +363,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
                                 >
                                     <option value="">--Select--</option>
 
-                                    {studentData
-                                        ?.filter(student => {
+                                    {studentData?.filter(student => {
                                             // check if this student is already assigned to any batch
                                             return !admissionData?.some(adm => adm.studentId === student._id);
                                         })

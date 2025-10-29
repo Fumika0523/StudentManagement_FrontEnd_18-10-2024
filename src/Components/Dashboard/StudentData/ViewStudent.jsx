@@ -56,29 +56,13 @@ function ViewStudent(){
 
     return(
         <>
-
-    <div className="  backgroundDesign d-flex flex-column  " >
-        {/* ADD Button */}
-        <div className=" d-flex justify-content-end  pe-4 py-3">
-        <Button variant="outline-none" className="commonButton"
-        onClick={()=>setShow(true)} 
-        >Add Student</Button>
-        </div>
-
-        {/* Buttom Table */}
-        <div className="d-flex  border-black border-4   justify-content-center">
+        <div className="">
         {/* Table */}
-        <div  style={{borderRadius:"7px",width:"97%"}}>           
             {<CustomizedTables studentData = {studentData}
             setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData} batchData={batchData} setBatchData={setBatchData}
-          
             />}
+        </div>
 
-            {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}      
-        </div>
-        </div>
-        {/* </div> */}
-        </div>
             {show && <ModalAddStudent show={show} setShow={setShow}
             setStudentData={setStudentData}
             />}

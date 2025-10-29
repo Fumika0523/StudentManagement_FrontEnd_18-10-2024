@@ -1,102 +1,207 @@
-import React, { useEffect, useState } from 'react';
-import TableRow from '@mui/material/TableRow';
+import React, { useState } from 'react';
+import {
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Paper, Button, Collapse, Box, TextField, Autocomplete
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import Table from '@mui/material/Table';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import Paper from '@mui/material/Paper';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import ModalEditCourse from './ModalEditCourse';
-import ModalDeleteCourse from './ModalDeleteCourse'
-
+import ModalDeleteCourse from './ModalDeleteCourse';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
+  [`&.${TableCell.head}`]: {
     backgroundColor: '#f3f4f6',
     color: '#5a5c69',
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: '14.5px',
     padding: '10px 15px',
-    textWrap:"noWrap"
+    whiteSpace: 'nowrap',
   },
-  [`&.${tableCellClasses.body}`]: {
+  [`&.${TableCell.body}`]: {
     fontSize: '13px',
     textAlign: 'center',
     padding: '10px 15px',
-    textWrap:"noWrap"
+    whiteSpace: 'nowrap',
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '&:hover': {
-    backgroundColor: '#b3e5fc',
-  },
+  '&:nth-of-type(odd)': { backgroundColor: theme.palette.action.hover },
+  '&:hover': { backgroundColor: '#b3e5fc' },
 }));
 
-function CustomisedCourseTables({courseData,setCourseData}){
-    const [show,setShow] = useState(false)
-    const [singleCourse,setSingleCourse] = useState(null) //?
-    console.log(courseData)
-    const [viewWarning, setViewWarning] = useState(false)
-   
-    const token = localStorage.getItem('token')
-    const config = {
-        headers:{
-            Authorization: `Bearer ${token}`
-    }}
+export default function CourseTable({ courseData, setCourseData }) {
+  const [openFilters, setOpenFilters] = useState(true);
+  const [courseInput, setCourseInput] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
+  const [showTable, setShowTable] = useState(false);
 
-    const handleEditClick = (course)=>{
-        setShow(true);
-        setSingleCourse(course)
+  const [show, setShow] = useState(false);
+  const [viewWarning, setViewWarning] = useState(false);
+  const [singleCourse, setSingleCourse] = useState(null);
+
+  const uniqueCourses = [...new Set(courseData.map(c => c.courseName))];
+
+  // Apply Filter
+  const handleApplyFilter = () => {
+    let filtered = [...courseData];
+    if (selectedCourse) {
+      filtered = filtered.filter(c =>
+        c.courseName?.toLowerCase().includes(selectedCourse.toLowerCase())
+      );
     }
+    setFilteredData(filtered);
+    setShowTable(true);
+  };
 
+  // Reset Filter
+  const handleResetFilter = () => {
+    setCourseInput('');
+    setSelectedCourse(null);
+    setFilteredData([]);
+    setShowTable(false);
+  };
 
-  return(
-  <>
-   <TableContainer component={Paper} >
-      <Table >
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Action</StyledTableCell>
-            <StyledTableCell>ID</StyledTableCell>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell>Fee</StyledTableCell>
-              <StyledTableCell>Type</StyledTableCell>
-              <StyledTableCell>Availability</StyledTableCell>
-              <StyledTableCell>Total Hours</StyledTableCell>
-              <StyledTableCell>Daily Session Hours</StyledTableCell>
-              {/*  no of days * per day session= total duration */}
-              <StyledTableCell>No. of Days</StyledTableCell> 
-              {/* 30-35 days, manually input */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-          
-        {/* What is key ..??? */}
-          { courseData?.map((course)=>(
-            <StyledTableRow key={course._id}>
-                <StyledTableCell>
-            <div style={{ display: 'flex',fontSize:"18px", justifyContent:"space-evenly",textAlign:"center"}}>
-                     <FaEdit
-                        className="text-success"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => handleEditClick(course)}/>
-                    
-                    <MdDelete
-                        className="text-danger"
-                        style={{ cursor: 'pointer' }}
-                        onClick={()=>{
-                        setViewWarning(true)
-                        console.log(course)
-                        setSingleCourse(course)}}/></div>
-                        
+  const handleEditClick = (course) => {
+    setShow(true);
+    setSingleCourse(course);
+  };
+
+  return (
+    <>
+      {/* Filter Toggle */}
+      <Button
+        variant="contained"
+        size="small"
+        onClick={() => setOpenFilters(!openFilters)}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          borderRadius: openFilters ? '4px 4px 0 0' : '4px',
+        }}
+      >
+        Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
+      </Button>
+
+      {/* Filter Panel */}
+      <Collapse in={openFilters}>
+        <Paper
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 3,
+            width: '100%',
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
+            borderBottomLeftRadius: 4,
+            borderBottomRightRadius: 4,
+            boxShadow: 3,
+            p: 2,
+            mb: 2,
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: 3,
+            }}
+          >
+            {/* Course Name */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: 250 }}>
+              <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+                Course Name
+              </span>
+              <Autocomplete
+                freeSolo
+                options={uniqueCourses}
+                inputValue={courseInput}
+                onInputChange={(e, newValue) => setCourseInput(newValue)}
+                value={selectedCourse}
+                onChange={(e, newValue) => setSelectedCourse(newValue)}
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="Search..." size="small" />
+                )}
+              />
+            </Box>
+          </Box>
+
+          {/* Buttons */}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-end"
+            gap={2}
+            width="100%"
+          >
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleApplyFilter}
+            >
+              Apply
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleResetFilter}
+            >
+              Reset
+            </Button>
+          </Box>
+        </Paper>
+      </Collapse>
+
+      {/* Table */}
+      {showTable && (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Action</StyledTableCell>
+                <StyledTableCell>ID</StyledTableCell>
+                <StyledTableCell>Name</StyledTableCell>
+                <StyledTableCell>Fee</StyledTableCell>
+                <StyledTableCell>Type</StyledTableCell>
+                <StyledTableCell>Availability</StyledTableCell>
+                <StyledTableCell>Total Hours</StyledTableCell>
+                <StyledTableCell>Daily Session Hours</StyledTableCell>
+                <StyledTableCell>No. of Days</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredData.length === 0 ? (
+                <StyledTableRow>
+                  <StyledTableCell colSpan={9} align="center">
+                    No courses found
+                  </StyledTableCell>
+                </StyledTableRow>
+              ) : (
+                filteredData.map((course) => (
+                  <StyledTableRow key={course._id}>
+                    <StyledTableCell>
+                      <div style={{ display: 'flex', justifyContent: "space-evenly" }}>
+                        <FaEdit
+                          className="text-success"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleEditClick(course)}
+                        />
+                        <MdDelete
+                          className="text-danger"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => {
+                            setViewWarning(true);
+                            setSingleCourse(course);
+                          }}
+                        />
+                      </div>
                     </StyledTableCell>
                     <StyledTableCell>{course._id}</StyledTableCell>
                     <StyledTableCell>{course.courseName}</StyledTableCell>
@@ -104,43 +209,37 @@ function CustomisedCourseTables({courseData,setCourseData}){
                     <StyledTableCell>{course.courseType}</StyledTableCell>
                     <StyledTableCell>{course.courseAvailability}</StyledTableCell>
                     <StyledTableCell>{course.courseDuration}</StyledTableCell>
-                    <StyledTableCell>
-                    {course.dailySessionHrs
-                     }
-                  </StyledTableCell>
-
+                    <StyledTableCell>{course.dailySessionHrs}</StyledTableCell>
                     <StyledTableCell>{course.noOfDays}</StyledTableCell>
-                </StyledTableRow> 
-             ))
-           }
-          </TableBody>
-        </Table>
-      </TableContainer>
- 
-      {/* Edit */}
-    {
-        show && (
-            <ModalEditCourse
-            show = {show}
-            setShow = {setShow}
-            singleCourse = {singleCourse}
-            setSingleCourse = {setSingleCourse}
-            setCourseData = {setCourseData}/>
-    )}
+                  </StyledTableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
 
-      {/* Delete */}
-    {
-        viewWarning && (
-            <ModalDeleteCourse
-            viewWarning = {viewWarning}
-            singleCourse = {singleCourse}
-            setCourseData = {setCourseData}
-            setSingleCourse = {setSingleCourse}
-            setViewWarning={setViewWarning}/>
-        )
-    }
-   
+      {/* Edit Modal */}
+      {show && (
+        <ModalEditCourse
+          show={show}
+          setShow={setShow}
+          singleCourse={singleCourse}
+          setSingleCourse={setSingleCourse}
+          setCourseData={setCourseData}
+        />
+      )}
+
+      {/* Delete Modal */}
+      {viewWarning && (
+        <ModalDeleteCourse
+          viewWarning={viewWarning}
+          singleCourse={singleCourse}
+          setCourseData={setCourseData}
+          setSingleCourse={setSingleCourse}
+          setViewWarning={setViewWarning}
+        />
+      )}
     </>
-)
+  );
 }
-export default CustomisedCourseTables

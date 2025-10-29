@@ -61,7 +61,7 @@ function SideBar({ isSidebarVisible = true }) {
   } else if (screenWidth >= 768 && screenWidth < 1024) {
     sidebarWidth = isSidebarOpen ? "360px" : "150px"; // tablet toggle
   } else {
-    sidebarWidth = isSidebarOpen ? "360px" : "150px"; // desktop toggle
+    sidebarWidth = isSidebarOpen ? "300px" : "150px"; // desktop toggle
   }
 
   return (
@@ -69,11 +69,8 @@ function SideBar({ isSidebarVisible = true }) {
       <div
         className="sideBarStyle"
         style={{
-          width: sidebarWidth,
+           width: sidebarWidth,
           transition: "all 0.9s ",
-          overflowX: "hidden",
-          
-          // position: screenWidth < 768 ? "fixed" : "relative",
           left: screenWidth < 768 && !isSidebarVisible ? "-150px" : "0",
         }}
       >
@@ -135,6 +132,7 @@ function SideBar({ isSidebarVisible = true }) {
                   left: "70%",
                   width: "30px",
                 }}
+
               >
                 {open ? (
                   <IoIosArrowDown className="text-white fs-5" />

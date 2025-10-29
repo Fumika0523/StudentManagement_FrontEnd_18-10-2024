@@ -10,7 +10,6 @@ import { Button } from "react-bootstrap"
 function viewBatch(){
     const [batchData,setBatchData] = useState([])
     const [show,setShow] = useState(false)
-    const [isSidebarOpen, setIsSidebarOpen] = useState (true)
     const [courseData,setCourseData] = useState([])
 
     const token = localStorage.getItem('token')
@@ -30,7 +29,7 @@ function viewBatch(){
 
         //Original Main Course Data
     const getCourseData = async()=>{
-        console.log("Course data is called...") // checking if useEffect is working or not
+        //console.log("Course data is called...") // checking if useEffect is working or not
         let res = await axios.get(`${url}/allcourse`,config)
         console.log("CourseData",res.data.courseData)
         setCourseData(res.data.courseData)
@@ -42,12 +41,7 @@ function viewBatch(){
 
     return(
         <>
-        <div className=""
-        //   style={{border:"2px solid red"}}
-        >
-        <div className="d-flex justify-content-end  pe-4 "
-
-        >
+        <div className="d-flex justify-content-end  pe-4 " >
         {/* ADD BUTTON  */}
         <Button className=" commonButton"
          onClick={()=>setShow(true)}>Add Batch</Button>
@@ -68,7 +62,7 @@ function viewBatch(){
         {show && <ModalAddBatch show={show} setShow={setShow}
         setBatchData={setBatchData}
         />}
-        </div>
+
         </>
     )
 }

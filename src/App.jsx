@@ -34,7 +34,7 @@ function App() {
   const [userData, setUserData] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // ✅ State for sidebar visibility (mobile toggle)
+  //  State for sidebar visibility (mobile toggle)
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
   const getUserData = async () => {
@@ -58,31 +58,51 @@ function App() {
     }
   }, []);
 
-  return (
-    <>
-      {/** Navbar & Sidebar appear only when logged in */}
-      {token && (
-        <>
-         <div className="d-flex flex-row " > 
-        <SideBar isSidebarVisible={isSidebarVisible} />
-          <div className="backgroundDesign d-flex flex-column " >
 
-          <NavBar toggleSidebar={() => setIsSidebarVisible(prev => !prev)} />
-          <div style={{ display: 'flex',  }}>
+return (
+  <>
+    {/** Navbar & Sidebar appear only when logged in */}
+    {token && (
+      <>
+        <div 
+          className="d-flex flex-row" 
+          style={{ 
+            // border: "3px solid yellow",
+            width: "100vw",           //  Add viewport width
+            maxWidth: "100vw",        //  Prevent expansion
+            overflow: "hidden",       // Hide overflow
+            height: "100vh"           // Full viewport height
+          }} 
+        > 
+          <SideBar isSidebarVisible={isSidebarVisible} />
+          
+          <div 
+            className="backgroundDesign d-flex flex-column" 
+            style={{
+              flex: 1,                //  Take remaining space
+              maxWidth: "100%",       //  Don't exceed parent
+              overflow: "hidden"      //  Prevent expansion
+            }}
+          >
+            <NavBar toggleSidebar={() => setIsSidebarVisible(prev => !prev)} />
+            
             <Box
               sx={{
                 flexGrow: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                //  width: '100%',
-                overflowX: 'hidden',
+                width: '100%',          //  Full width of parent
+                maxWidth: '100%',       //  Don't exceed parent
+                overflowX: 'hidden',    //  Hide horizontal overflow
+                overflowY: 'auto',      //  Allow vertical scroll
+                padding: 2,             //  Add some padding
               }}
             >
               <Routes>
+                {/* Your routes remain the same */}
                 <Route path="/chartdisplay" element={<ChartDisplay />} />
                 {role === 'admin' || role === 'staff' ? (
                   <>
-                    {/* Admin/Staff Routes */}
                     <Route
                       path="/studentdata"
                       element={
@@ -109,63 +129,56 @@ function App() {
                   </>
                 ) : (
                   <>
-                    {/* Student Routes */}
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/usernameform" element={<UserNameForm />} />
                     <Route path="/genderform" element={<GenderForm />} />
                     <Route path="/birthdateform" element={<BirthdateForm />} />
-                    <Route
-                      path="/phonenumberform"
-                      element={<PhoneNumberForm />}
-                    />
+                    <Route path="/phonenumberform" element={<PhoneNumberForm />} />
                     <Route path="/passwordform" element={<PasswordForm />} />
-                    <Route
-                      path="*"
-                      element={<Navigate to="/dashboard" replace />}
-                    />
+                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
                   </>
                 )}
               </Routes>
             </Box>
-           </div>
           </div>
-       </div>
-        </>
-      )}
+        </div>
+      </>
+    )}
 
-      {/**  Public (no token) routes */}
-      {!token && (
-        <>
-          <Routes>
-            <Route path="/" element={<StudentOrStaff />} />
-            <Route
-              path="/student-signin"
-              element={
-                <StudentSignIn
-                  isAuthenticated={isAuthenticated}
-                  setIsAuthenticated={setIsAuthenticated}
-                />
-              }
-            />
-            <Route path="/student-signup" element={<StudentSignUp />} />
-            <Route
-              path="/staff-signin"
-              element={
-                <StaffSignIn
-                  isAuthenticated={isAuthenticated}
-                  setIsAuthenticated={setIsAuthenticated}
-                />
-              }
-            />
-            <Route path="/staff-signup" element={<StaffSignUp />} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </>
-      )}
+    {/* Public routes remain the same */}
+    {!token && (
+      <>
+        <Routes>
+          <Route path="/" element={<StudentOrStaff />} />
+          <Route
+            path="/student-signin"
+            element={
+              <StudentSignIn
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
+          <Route path="/student-signup" element={<StudentSignUp />} />
+          <Route
+            path="/staff-signin"
+            element={
+              <StaffSignIn
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
+          />
+          <Route path="/staff-signup" element={<StaffSignUp />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </>
+    )}
 
-      <ToastContainer transition={Zoom} autoClose={2000} theme="light" draggable />
-    </>
-  );
+    <ToastContainer transition={Zoom} autoClose={2000} theme="light" draggable />
+  </>
+);
+
 }
 
 export default App;

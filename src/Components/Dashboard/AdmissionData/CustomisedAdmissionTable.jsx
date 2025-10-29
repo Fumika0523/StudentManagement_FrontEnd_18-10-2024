@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -10,11 +10,11 @@ import Paper from "@mui/material/Paper";
 import { MdDelete } from "react-icons/md";
 import ModalDeleteAdmission from "./ModalDeleteAdmission";
 import ModalEditAdmission from "./ModalEditAdmission";
-import { FaEdit, FaLock } from "react-icons/fa";
-import { toast } from 'react-toastify';
-
-// MUI filter controls
-import { FormControl, Select, MenuItem } from "@mui/material";
+import { FaEdit } from "react-icons/fa";
+import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+import ModalAddAdmission from './ModalAddAdmission'
+import TablePagination from '@mui/material/TablePagination';
+import { FormControl, Select, MenuItem, Button, Collapse, Box, Autocomplete, TextField } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -24,13 +24,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     textAlign: "center",
     fontSize: "14.5px",
     padding: "10px 15px",
-    textWrap: "noWrap",
+    whiteSpace: "nowrap",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: "13px",
     textAlign: "center",
     padding: "10px 15px",
-    textWrap: "noWrap",
+    whiteSpace: "nowrap",
   },
 }));
 
@@ -43,32 +43,104 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const CustomisedAdmissionTable = ({ admissionData, setAdmissionData }) => {
-  const [show, setShow] = useState(false);
+const CustomisedAdmissionTable = ({ 
+  admissionData,setAdmissionData, batchData,studentData, setStudentData 
+}) => {
+  const [showEdit, setShowEdit] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
   const [singleAdmission, setSingleAdmission] = useState(null);
   const [viewWarning, setViewWarning] = useState(false);
-
-  // filters
-  const [courseFilter, setCourseFilter] = useState("");
-  const [batchFilter, setBatchFilter] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
+  const [openFilters, setOpenFilters] = useState(false);
+  
+  // Filter states
+  const [courseInput, setCourseInput] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [dateField, setDateField] = useState('');
+  const [batchStatus, setBatchStatus] = useState('');
+  const [showTable, setShowTable] = useState(false);
+  
+  // Pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
+  
   const role = localStorage.getItem('role');
 
+  // Memoize unique courses
+  const uniqueCourses = useMemo(() => {
+    if (!Array.isArray(batchData)) return [];
+    return [...new Set(batchData.map(b => b?.courseName).filter(Boolean))];
+  }, [batchData]);
+
+  // Filter admissionData, not batchData
+  const handleApplyFilter = () => {
+    if (!Array.isArray(admissionData)) {
+      console.error('admissionData is not an array');
+      return;
+    }
+
+    let filtered = [...admissionData];
+
+    // Filter by course
+    if (selectedCourse) {
+      filtered = filtered.filter(admission =>
+        admission?.courseName?.toLowerCase().includes(selectedCourse.toLowerCase())
+      );
+    }
+
+    // Filter by batch status (if applicable to admission)
+    if (batchStatus) {
+      filtered = filtered.filter(admission =>
+        admission?.status?.toLowerCase() === batchStatus.toLowerCase()
+      );
+    }
+
+    // Filter by date field (if dateField is selected)
+    // You can add date range filtering here if needed
+    setPage(0); // Reset to first page
+    setShowTable(true);
+    
+    // Store filtered data (you'll need to add this state)
+    setFilteredData(filtered);
+  };
+
+  const [filteredData, setFilteredData] = useState([]);
+
+const handleResetFilter = () => {
+  setCourseInput('');
+  setSelectedCourse(null);
+  setBatchStatus('');
+  setDateField('');
+  setFilteredData([]);
+  setShowTable(false); // ✅ hides the table
+  setPage(0);
+};
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const handleEditClick = (admission) => {
-    setShow(true);
+    setShowEdit(true);
     setSingleAdmission(admission);
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
-      // year: "numeric",
-      // month: "short",
       day: "numeric",
+      month: "short",
+      year: "numeric",
     });
   };
 
   const formatDateTime = (isoString) => {
+    if (!isoString) return 'N/A';
     const date = new Date(isoString);
     return date
       .toLocaleString("en-US", {
@@ -80,211 +152,265 @@ const CustomisedAdmissionTable = ({ admissionData, setAdmissionData }) => {
       .replace("at", "");
   };
 
-
-  const Courses = [...new Set(admissionData.map((a) => a.courseName))];
-  const Batches = [...new Set(admissionData.map((a) => a.batchNumber))];
-
-  // date filtering 
-  const filterByDate = (createdAt) => {
-    if (!dateFilter) return true;
-
-    const today = new Date();
-    const createdDate = new Date(createdAt);
-    const diffInDays = (today - createdDate) / (1000 * 60 * 60 * 24);
-
-    if (dateFilter === "today") {
-      return createdDate.toDateString() === today.toDateString();
-    }
-    if (dateFilter === "last7") {
-      return diffInDays <= 7;
-    }
-    if (dateFilter === "last30") {
-      return diffInDays <= 30;
-    }
-    if (dateFilter === "older") {
-      return diffInDays > 30;
-    }
-
-    return true;
-  };
-
-  // filtering logic
-  const getFilteredData = () => {
-    return admissionData.filter((admission) => {
-      const courseMatch =
-        !courseFilter || admission.courseName === courseFilter;
-      const batchMatch = !batchFilter || admission.batchNumber === batchFilter;
-      const dateMatch = filterByDate(admission.createdAt);
-
-      return courseMatch && batchMatch && dateMatch;
-    });
-  };
-
-  const filteredData = getFilteredData();
+  // Data to display
+  const displayData = showTable ? filteredData : admissionData;
+  const paginatedData = Array.isArray(displayData) 
+    ? displayData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    : [];
 
   return (
-    <>
-      {/* Filter Controls */}
-      <div
-      className=" border-4 mb-3 "
-        style={{
-          display: "flex",
-          gap: "20px",
-          justifyContent: "flex-start",
+    <Box sx={{ width: '100%', maxWidth: '100%' }}>
+      {/* Filter Section */}
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between', 
+          alignItems: 'stretch',
+          py: 2,
+          gap: 2,
         }}
       >
-        {/* Course Name Filter */}
-<FormControl size="small" sx={{ minWidth: 150 }}>
-  <Select
-    displayEmpty
-    value={courseFilter}
-    onChange={(e) => setCourseFilter(e.target.value)}
-    sx={{ fontSize: "15px" }}
-  >
-    <MenuItem value="" sx={{ fontSize: "15px" }}>
-      Course Name
-    </MenuItem>
-    {Courses.map((course, idx) => (
-      <MenuItem key={idx} value={course} sx={{ fontSize: "15px" }}>
-        {course}
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
+        <Box >
+          {/* Filter Toggle */}
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => setOpenFilters(!openFilters)}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%' ,
+              borderRadius: openFilters ? '4px 4px 0 0' : '4px',
+            }}
+          >
+            Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
+          </Button>
 
-{/* Batch Number  */}
-<FormControl size="small" sx={{ minWidth: 150 }}>
-  <Select
-    displayEmpty
-    value={batchFilter}
-    onChange={(e) => setBatchFilter(e.target.value)}
-    sx={{ fontSize: "15px" }}
-  >
-    <MenuItem value="" sx={{ fontSize: "15px" }}>
-      Batch Number
-    </MenuItem>
-    {Batches.map((batch, idx) => (
-      <MenuItem key={idx} value={batch} sx={{ fontSize: "15px" }}>
-        {batch}
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
+          {/* Filter Panel */}
+          <Collapse in={openFilters}>
+            <Paper
+              sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: 2,
+                maxWidth: '100%',
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                borderBottomLeftRadius: 4,
+                borderBottomRightRadius: 4,
+                boxShadow: 3,
+                p: 2,
+              }}
+            >
+              {/* Course Name */}
+              <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 200, flex: 1 }}>
+                <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+                  Course Name
+                </span>
+                <Autocomplete
+                  freeSolo
+                  options={uniqueCourses}
+                  inputValue={courseInput}
+                  onInputChange={(e, newValue) => setCourseInput(newValue)}
+                  value={selectedCourse}
+                  onChange={(e, newValue) => setSelectedCourse(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} placeholder="Select or type" size="small" />
+                  )}
+                />
+              </Box>
 
-{/* Created Date Filter */}
-<FormControl size="small" sx={{ minWidth: 150 }}>
-  <Select
-    displayEmpty
-    value={dateFilter}
-    onChange={(e) => setDateFilter(e.target.value)}
-    sx={{ fontSize: "15px" }}
-  >
-    <MenuItem value="" sx={{ fontSize: "15px" }}>
-      Created Date
-    </MenuItem>
-    <MenuItem value="today" sx={{ fontSize: "15px" }}>Today</MenuItem>
-    <MenuItem value="last7" sx={{ fontSize: "15px" }}>Last 7 Days</MenuItem>
-    <MenuItem value="last30" sx={{ fontSize: "15px" }}>Last 30 Days</MenuItem>
-    <MenuItem value="older" sx={{ fontSize: "15px" }}>Older</MenuItem>
-  </Select>
-</FormControl>
+              {/* Date By */}
+              <FormControl size="small" sx={{ minWidth: 200, flex: 1 }}>
+                <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+                  Date By
+                </span>
+                <Select
+                  value={dateField}
+                  displayEmpty
+                  onChange={(e) => setDateField(e.target.value)}
+                >
+                  <MenuItem value="">--Select--</MenuItem>
+                  <MenuItem value="startDate">Start Date</MenuItem>
+                  <MenuItem value="endDate">End Date</MenuItem>
+                  <MenuItem value="updatedAt">Updated Date</MenuItem>
+                </Select>
+              </FormControl>
 
-      </div>
+              {/* Batch Status - Fixed label */}
+              <FormControl size="small" sx={{ minWidth: 200, flex: 1 }}>
+                <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
+                  Batch Status
+                </span>
+                <Select
+                  value={batchStatus}
+                  displayEmpty
+                  onChange={(e) => setBatchStatus(e.target.value)}
+                >
+                  <MenuItem value="">--Select--</MenuItem>
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="inactive">Inactive</MenuItem>
+                </Select>
+              </FormControl>
+
+              {/* Action Buttons */}
+              <Box sx={{ display: 'flex', gap: 2, width: '100%', mt: 1 }}>
+                <Button 
+                  variant="contained" 
+                  size="small" 
+                  onClick={handleApplyFilter}
+                  sx={{ minWidth: 100 }}
+                >
+                  Apply
+                </Button>
+                <Button 
+                  variant="outlined" 
+                  size="small" 
+                  onClick={handleResetFilter}
+                  sx={{ minWidth: 100 }}
+                >
+                  Reset
+                </Button>
+              </Box>
+            </Paper>
+          </Collapse>
+        </Box>
+
+        {/* Add Button */}
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', mt: { xs: 0, md: 0 } }}>
+          <button 
+            className="commonButton"
+            onClick={() => setShowAdd(true)}
+          >
+            Add Admission
+          </button>
+        </Box>
+      </Box>
 
       {/* Table */}
-      <TableContainer component={Paper}  > 
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Action</StyledTableCell>
-               <StyledTableCell>Status</StyledTableCell>
-              <StyledTableCell>Batch No.</StyledTableCell>
-              <StyledTableCell>Course ID</StyledTableCell>
-              <StyledTableCell>Course Name</StyledTableCell>
-              <StyledTableCell>Student ID</StyledTableCell>
-              <StyledTableCell>Student Name</StyledTableCell>
-              <StyledTableCell>Source</StyledTableCell>
-              <StyledTableCell>Fee</StyledTableCell>
-              <StyledTableCell>Date</StyledTableCell>
-              <StyledTableCell>Month</StyledTableCell>
-              <StyledTableCell>Year</StyledTableCell>
-              <StyledTableCell>CreatedAt</StyledTableCell>
-              <StyledTableCell>UpdatedAt</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredData?.map((admission) => (
-              <StyledTableRow key={admission._id}>
-                {/* Actions */}
-                <StyledTableCell>
-                <div
-                  style={{
-                    display: "flex",
-                    fontSize: "18px",
-                    justifyContent: "space-evenly",
-                    textAlign: "center",
-                  }}
-                >
-                  {/* Show only if NOT Staff */}
-                  {role !== "staff" && (
-                    <>
-                      {/* Edit */}
-                      <FaEdit
-                        className="text-success"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleEditClick(admission)}
-                      />
-                      {/* Delete */}
-                      <MdDelete
-                        className="text-danger"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setViewWarning(true);
-                          setSingleAdmission(admission);
-                        }}
-                      />
-                    </>
-                  )}
-                </div>
-                </StyledTableCell>
+      {showTable  && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            maxWidth: "100%",
+          }}
+        >
+          <TableContainer 
+            component={Paper}
+            sx={{ 
+              maxWidth: '100%',
+              overflowX: 'auto',
+            }}
+          >
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Action</StyledTableCell>
+                  <StyledTableCell>Status</StyledTableCell>
+                  <StyledTableCell>Batch No.</StyledTableCell>
+                  <StyledTableCell>Course ID</StyledTableCell>
+                  <StyledTableCell>Course Name</StyledTableCell>
+                  <StyledTableCell>Student ID</StyledTableCell>
+                  <StyledTableCell>Student Name</StyledTableCell>
+                  <StyledTableCell>Source</StyledTableCell>
+                  <StyledTableCell>Fee</StyledTableCell>
+                  <StyledTableCell>Date</StyledTableCell>
+                  <StyledTableCell>Month</StyledTableCell>
+                  <StyledTableCell>Year</StyledTableCell>
+                  <StyledTableCell>CreatedAt</StyledTableCell>
+                  <StyledTableCell>UpdatedAt</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((admission) => (
+                    <StyledTableRow key={admission._id}>
+                      <StyledTableCell>
+                        <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
+                          {role !== "staff" && (
+                            <>
+                              <FaEdit
+                                className="text-success"
+                                style={{ cursor: "pointer", fontSize: "18px" }}
+                                onClick={() => handleEditClick(admission)}
+                              />
+                              <MdDelete
+                                className="text-danger"
+                                style={{ cursor: "pointer", fontSize: "18px" }}
+                                onClick={() => {
+                                  setViewWarning(true);
+                                  setSingleAdmission(admission);
+                                }}
+                              />
+                            </>
+                          )}
+                        </Box>
+                      </StyledTableCell>
+                      <StyledTableCell>
+                        {admission.batchNumber ? "Yes" : "No"}
+                      </StyledTableCell>
+                      <StyledTableCell>{admission.batchNumber || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{admission.courseId || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{admission.courseName || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{admission.studentId || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{admission.studentName || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{admission.admissionSource || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{admission.admissionFee || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{formatDate(admission.admissionDate)}</StyledTableCell>
+                      <StyledTableCell>{admission.admissionMonth || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{admission.admissionYear || 'N/A'}</StyledTableCell>
+                      <StyledTableCell>{formatDateTime(admission.createdAt)}</StyledTableCell>
+                      <StyledTableCell>{formatDateTime(admission.updatedAt)}</StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <StyledTableCell colSpan={14} align="center">
+                      No data available
+                    </StyledTableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-                <StyledTableCell>{admission.batchNumber? <>Yes</>:<>No</>}</StyledTableCell>
-                <StyledTableCell>{admission.batchNumber}</StyledTableCell>
-               <StyledTableCell>{admission.courseId}</StyledTableCell>
-                <StyledTableCell>{admission.courseName}</StyledTableCell>
-                <StyledTableCell>{admission.studentId}</StyledTableCell>
-                <StyledTableCell>{admission.studentName}</StyledTableCell>
-                <StyledTableCell>{admission.admissionSource}</StyledTableCell>
-                <StyledTableCell>{admission.admissionFee}</StyledTableCell>
-                <StyledTableCell>
-                  {formatDate(admission.admissionDate)}
-                </StyledTableCell>
-                <StyledTableCell>{admission.admissionMonth}</StyledTableCell>
-                <StyledTableCell>{admission.admissionYear}</StyledTableCell>
-                <StyledTableCell>
-                  {formatDateTime(admission.createdAt)}
-                </StyledTableCell>
-                <StyledTableCell>
-                  {formatDateTime(admission.updatedAt)}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          {/* Fixed Pagination - removed absolute positioning */}
+          <TablePagination
+            component="div"
+            count={displayData.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            sx={{
+              boxShadow: 2,
+              p: 1,
+              width: "100%",
+              maxWidth: "100%",
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          />
+        </Box>
+      )}
 
-      {/* Edit */}
-      {show && (
+      {/* Modals */}
+      {showEdit && (
         <ModalEditAdmission
-          show={show}
-          setShow={setShow}
+          show={showEdit}
+          setShow={setShowEdit}
           singleAdmission={singleAdmission}
           setSingleAdmission={setSingleAdmission}
           setAdmissionData={setAdmissionData}
         />
       )}
 
-      {/* Delete */}
       {viewWarning && (
         <ModalDeleteAdmission
           admissionData={admissionData}
@@ -294,7 +420,18 @@ const CustomisedAdmissionTable = ({ admissionData, setAdmissionData }) => {
           setViewWarning={setViewWarning}
         />
       )}
-    </>
+
+      {showAdd && (
+        <ModalAddAdmission
+          show={showAdd}
+          setShow={setShowAdd}
+          setAdmissionData={setAdmissionData}
+          admissionData={admissionData}
+          studentData={studentData}
+          setStudentData={setStudentData}
+        />
+      )}
+    </Box>
   );
 };
 
