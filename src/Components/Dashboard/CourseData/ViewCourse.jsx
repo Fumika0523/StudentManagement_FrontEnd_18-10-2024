@@ -31,24 +31,8 @@ function ViewCourse(){
 return(
     <>
 
- <div className="d-flex justify-content-end  pe-4 " >
-    {/* ADD Button */}
-    <Button variant="outline-none" className=" commonButton" 
-    onClick={()=>setShow(true)}> Add Course</Button>
-    </div>
-
-   {/* Buttom Table */}
-    <div className="d-flex  border-black border-4  px-3 justify-content-center">       
-    {/* Table */}    
-    <div className="" style={{borderRadius:"7px", minWidth:"95%"}}>
         <CustomisedCourseTables setCourseData={setCourseData} courseData={courseData} />
-    </div>
-    </div>
-
-    {
-        show && <ModalAddCourse show={show} setShow={setShow} setCourseData = {setCourseData} />
-    }
-
+ 
     </>
 )
 }

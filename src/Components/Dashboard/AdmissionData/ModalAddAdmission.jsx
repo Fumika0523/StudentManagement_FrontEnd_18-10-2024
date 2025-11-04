@@ -429,8 +429,8 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
                                 <Form.Control
                                     type="date" placeholder=''
                                     name='admissionDate'
+                                    max={new Date().toISOString().split('T')[0]}
                                     //value={formik.values.admissionDate} 
-                                    //onChange={formik.handleChange}
                                     onChange={handleAdmissionDateChange}
                                     onBlur={formik.handleBlur} />
                                 {/* console.log(new Date("03-01-2025")) */}
@@ -449,7 +449,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
                                     //check
                                     name="admissionMonth"
                                     value={((dateFun(formik.values.admissionDate)).month) || ""}
-
+                                
                                     onBlur={formik.handleBlur}
                                 >
                                 </Form.Control>

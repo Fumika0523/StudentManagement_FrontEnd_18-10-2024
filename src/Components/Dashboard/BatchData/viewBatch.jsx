@@ -9,7 +9,6 @@ import { Button } from "react-bootstrap"
 
 function viewBatch(){
     const [batchData,setBatchData] = useState([])
-    const [show,setShow] = useState(false)
     const [courseData,setCourseData] = useState([])
 
     const token = localStorage.getItem('token')
@@ -41,27 +40,11 @@ function viewBatch(){
 
     return(
         <>
-        <div className="d-flex justify-content-end  pe-4 " >
-        {/* ADD BUTTON  */}
-        <Button className=" commonButton"
-         onClick={()=>setShow(true)}>Add Batch</Button>
-        </div>
 
-        {/* Buttom Table */}
-        <div className="d-flex  border-black border-4  px-3 justify-content-center">
-        {/* Table */}
-        <div className="" style={{borderRadius:"7px", minWidth:"95%"}}>
-            {/* <div className="tableTitle">All Batch</div> */}
             {<CustomisedBatchTables setBatchData={setBatchData} batchData = {batchData}
             setCourseData={setCourseData} courseData={courseData}
             />}
-            {/* We cannot pass the studentData cant be passed, because in HoverCust... component, the row is above the function. so we cannot use it. so we have to api call in hover.. component */}
-        </div>
-        </div>
      
-        {show && <ModalAddBatch show={show} setShow={setShow}
-        setBatchData={setBatchData}
-        />}
 
         </>
     )

@@ -50,7 +50,7 @@ const CustomisedAdmissionTable = ({
   const [showAdd, setShowAdd] = useState(false);
   const [singleAdmission, setSingleAdmission] = useState(null);
   const [viewWarning, setViewWarning] = useState(false);
-  const [openFilters, setOpenFilters] = useState(false);
+  const [openFilters, setOpenFilters] = useState(true);
   
   // Filter states
   const [courseInput, setCourseInput] = useState('');

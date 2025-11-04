@@ -56,7 +56,7 @@ const getEarningData = async (selectedMonth = month, selectedYear = year) => {
   }}
   style={{ width: "180px", fontWeight: 500 }}
 >
-  <option value="">-- Select Month --</option>
+  <option disabled value="">Select Month</option>
   {months.map((m) => (
     <option key={m} value={m}>
       {m}
@@ -73,7 +73,7 @@ const getEarningData = async (selectedMonth = month, selectedYear = year) => {
   }}
   style={{ width: "120px", fontWeight: 500 }}
 >
-  <option value="">-- Year --</option>
+  <option value="" disabled>Year</option>
   {Array.from({ length: 5 }, (_, i) => {
     const y = new Date().getFullYear() - i;
     return (

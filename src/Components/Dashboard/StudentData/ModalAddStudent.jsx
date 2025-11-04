@@ -12,11 +12,10 @@ import { toast } from 'react-toastify';
 function ModalAddStudent({ show, setShow, setStudentData }) {
   const navigate = useNavigate()
     const notify = () => {
-      toast.success("Course added successfully !");
+      toast.success("Student added successfully !");
     };
   const handleClose = () => {
     setShow(false)
-    navigate('/studentdata')
   }
   
     const getStudentData = async()=>{
@@ -75,9 +74,6 @@ const addStudent = async (newStudent) => {
       const updated = await axios.get(`${url}/allstudent`, config);
       setStudentData(updated.data.studentData);
       notify();
-      setTimeout(() => {
-      handleClose();
-        }, 3000);
     }
   } catch (e) {
     toast.error("Failed to add course. Please try again.");

@@ -13,15 +13,12 @@ import { toast } from 'react-toastify';
 
 function ModalAddBatch({ show, setShow, setBatchData }) {
   const [courseData, setCourseData] = useState([]);
-  const [studentData, setStudentData] = useState([]);
   const [nextBatchNo, setNextBatchNo] = useState(""); // auto batch no
 
   const token = localStorage.getItem('token');
-  const navigate = useNavigate();
 
   const handleClose = () => {
     setShow(false);
-    navigate('/batchdata');
   };
 
   const formSchema = Yup.object().shape({
@@ -65,25 +62,21 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     setCourseData(res.data.courseData);
   };
 
-  // Fetch students
-  const getStudentData = async () => {
-    const res = await axios.get(`${url}/allstudent`, config);
-    setStudentData(res.data.studentData);
-  };
+ 
   useEffect(() => {
     getCourseData();
-    getStudentData();
   }, []);
 
   // Fetch next batch number whenever modal opens
   const fetchNextBatchNo = async () => {
     try {
       const res = await axios.get(`${url}/nextbatchno`, config);
-      console.log("fetchNextBatchNo",res.data.newBatch)
+      //console.log("fetchNextBatchNo",res.data.newBatch)
       setNextBatchNo(res.data.newBatch);
       formik.setFieldValue("batchNumber", res.data.newBatch);
     } catch (err) {
-      console.error("Error fetching next batch no:", err);
+      //console.error("Error fetching next batch no:", err);
+      toast.error("Failed to get next batch number");
     }
   };
   useEffect(() => {
@@ -103,16 +96,17 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     }
   };
 
+
   const addBatch = async (newBatch) => {
     try {
       await axios.post(`${url}/addbatch`, newBatch, config);
       const res = await axios.get(`${url}/allbatch`, config);
-      console.log("newBatch",newBatch)
+      // console.log("newBatch",newBatch)
       setBatchData(res.data.batchData);
       toast.success("Batch added successfully!");
       setTimeout(() => handleClose(), 1000);
     } catch (e) {
-      console.error("Error Adding Batch:", e);
+     // console.error("Error Adding Batch:", e);
       toast.error("Failed to add batch.");
     }
   };

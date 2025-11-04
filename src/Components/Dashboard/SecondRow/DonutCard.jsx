@@ -1,15 +1,19 @@
 import React from 'react';
-import {Chart, ArcElement, Tooltip, Legend, Title} from 'chart.js';
-import {Doughnut} from 'react-chartjs-2';
+import { Chart, ArcElement, Tooltip, Legend, Title } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
 import Card from 'react-bootstrap/Card';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { HiDotsVertical } from "react-icons/hi";
+
+Chart.register(ArcElement, Tooltip, Legend, Title);
+
 
 
 function DonutCard({admissionData, setAdmissionData}) {
 
   // const sourceTitle = admissionData?.map((element)=>(element.admissionSource))
   // console.log("SourceTitle",sourceTitle)
+  
 const now = new Date();
 const currentYr = now.getFullYear();
 const startOfMonth = new Date(currentYr, now.getMonth(), 1);

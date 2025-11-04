@@ -8,7 +8,7 @@ import axios from "axios"
 import { url } from "../utils/constant"
 
 
-function DashboardCard({isAuthenticated, setIsAuthenticated}){
+function DashboardCard(){
   //  const [isAuthenticated,setIsAuthenticated]=useState(false)
       const [showModal, setShowModal] = useState(false);
 
@@ -36,7 +36,7 @@ return(
         </div>
              {/* Modal overlay */}
       {showModal  && <SelectCourseModal show={showModal} setShow={setShowModal} />}
-      {/* </div> */}
+
 
     </>
 )
