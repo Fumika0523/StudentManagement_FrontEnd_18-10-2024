@@ -27,6 +27,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import ModalEditBatch from './ModalEditBatch';
 import ModalDeleteWarning from './ModalDeleteWaning';
 import ModalAddBatch from './ModalAddBatch';
+import TablePagination from "@mui/material/TablePagination";
+
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -36,13 +38,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: '13.5px',
-    padding: '5px 10px',
+    padding: '7.5px 10px',
     textWrap: "noWrap",
   },
   [`&.${theme.components?.MuiTableCell?.body || 'MuiTableCell-body'}`]: {
     fontSize: '13px',
     textAlign: 'center',
-    padding: '5px 10px',
+    padding: '7.5px 10px',
     textWrap: "noWrap",
   },
 }));
@@ -79,6 +81,19 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
   const [openFilters, setOpenFilters] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
   const [showTable, setShowTable] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(15); // show up to 15 per page
+
+
+  const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+};
+
+const handleChangeRowsPerPage = (event) => {
+  setRowsPerPage(parseInt(event.target.value, 10));
+  setPage(0);
+};
+
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -252,7 +267,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
 
       <Box sx={{ width: '100%', maxWidth: '100%' }}>
         {/* Filters and Add Button */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'stretch', gap: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'stretch', gap: 3 }}>
           <Box sx={{ width: '80%' }}>
             <Button
               variant="contained"
@@ -407,7 +422,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
 
         {/* Table */}
         {showTable && (
-          <Box sx={{ mt: 3 }}>
+          <Box sx={{ mt: 1}}>
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
@@ -437,7 +452,10 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                       <StyledTableCell colSpan={16} align="center">No batches found</StyledTableCell>
                     </StyledTableRow>
                   ) : (
-                    filteredData.map((batch, index) => {
+                    filteredData
+  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+  .map((batch, index) => {
+
                       // Single logic calculation per batch
                       const course = courseData?.find(c => c.courseName === batch.courseName);
                       if (!course || !course.noOfDays) return null;
@@ -573,6 +591,43 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                 </TableBody>
               </Table>
             </TableContainer>
+     <Box
+  sx={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderTop: "1px solid #ddd",
+    paddingY: 0.5,
+    marginTop: "-4px",     // 👈 balances top gap
+    minHeight: "52px",     // 👈 keeps stable height
+  }}
+>
+  <TablePagination
+    rowsPerPageOptions={[15, 30, 50]}
+    component="div"
+    count={filteredData.length}
+    rowsPerPage={rowsPerPage}
+    page={page}
+    onPageChange={handleChangePage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
+    labelRowsPerPage="Rows per page"
+    sx={{
+      m: 0,                // remove extra margin
+      p: 0,                // remove extra padding
+      ".MuiTablePagination-toolbar": {
+        justifyContent: "center", // 👈 centers the pagination controls
+        alignItems: "center",
+        minHeight: "48px",
+      },
+      ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows": {
+        marginTop: 0, // fix vertical misalignment
+        marginBottom: 0,
+      },
+    }}
+  />
+</Box>
+
+
           </Box>
         )}
 
@@ -586,6 +641,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
         {showAdd && (
           <ModalAddBatch show={showAdd} setShow={setShowAdd} batchData={batchData} setBatchData={setBatchData} courseData={courseData} setCourseData={setCourseData} />
         )}
+
       </Box>
     </>
   );
