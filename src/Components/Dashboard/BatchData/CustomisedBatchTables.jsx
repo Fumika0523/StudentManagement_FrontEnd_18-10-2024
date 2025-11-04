@@ -11,7 +11,7 @@ import {
   Box,
   Chip,
   FormControl,
-  Table ,
+  Table,
   InputLabel,
   Select,
   MenuItem,
@@ -38,14 +38,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: '13.5px',
     padding: '5px 10px',
     textWrap: "noWrap",
-    // border:"2px solid red"
   },
   [`&.${theme.components?.MuiTableCell?.body || 'MuiTableCell-body'}`]: {
     fontSize: '13px',
     textAlign: 'center',
     padding: '5px 10px',
     textWrap: "noWrap",
-    // border:"2px solid red"
   },
 }));
 
@@ -54,15 +52,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:hover': { backgroundColor: '#b3e5fc' },
 }));
 
-// ✅ Blinking red dot
+// Blinking red dot
 const dotStyle = `
 .live-dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   background-color: red;
   border-radius: 50%;
-  margin-left: 6px;
+  margin-right: 3px;
   box-shadow: 0 0 0 rgba(255, 0, 0, 0.4);
   animation: pulse 1.5s infinite;
 }
@@ -82,16 +80,31 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
   const [filteredData, setFilteredData] = useState([]);
   const [showTable, setShowTable] = useState(false);
 
+  // Filter states
+  const [filters, setFilters] = useState({
+    batchNumber: '',
+    courseName: '',
+    status: '',
+    sessionType: '',
+    sessionDay: '',
+    location: '',
+    createdDateFrom: '',
+    createdDateTo: '',
+    startDateFrom: '',
+    startDateTo: ''
+  });
+
   const role = localStorage.getItem('role');
 
   const handleEditClick = (batch) => {
     setShow(true);
     setSingleBatch(batch);
   };
-//Whenever batchData changes (after adding a new batch), it automatically updates filteredData.This only happens when showTable is true (when the table is visible).Now when you add a batch, the table will refresh automatically without needing to click "Apply" again
+
+  // Whenever batchData changes, automatically update filteredData if table is visible
   useEffect(() => {
     if (showTable && batchData.length > 0) {
-      setFilteredData([...batchData]);
+      handleApplyFilter();
     }
   }, [batchData, showTable]);
 
@@ -113,27 +126,128 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
   };
 
   const handleApplyFilter = () => {
-    setFilteredData([...batchData]);
+    let filtered = [...batchData];
+
+    // Filter by batch number
+    if (filters.batchNumber) {
+      filtered = filtered.filter(batch =>
+        batch.batchNumber?.toLowerCase().includes(filters.batchNumber.toLowerCase())
+      );
+    }
+
+    // Filter by course name
+    if (filters.courseName) {
+      filtered = filtered.filter(batch =>
+        batch.courseName?.toLowerCase().includes(filters.courseName.toLowerCase())
+      );
+    }
+
+    // Filter by status
+    if (filters.status) {
+      filtered = filtered.filter(batch => {
+        const course = courseData?.find(c => c.courseName === batch.courseName);
+        if (!course || !course.noOfDays) return false;
+
+        const startDate = new Date(batch.startDate);
+        const endDate = new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000);
+        const today = new Date();
+
+        let status = "";
+        if (today < startDate) status = "Not Started";
+        else if (today >= startDate && today < endDate) status = "In Progress";
+        else status = "Completed";
+
+        return status === filters.status;
+      });
+    }
+
+    // Filter by session type
+    if (filters.sessionType) {
+      filtered = filtered.filter(batch => batch.sessionType === filters.sessionType);
+    }
+
+    // Filter by session day
+    if (filters.sessionDay) {
+      filtered = filtered.filter(batch => batch.sessionDay === filters.sessionDay);
+    }
+
+    // Filter by location
+    if (filters.location) {
+      filtered = filtered.filter(batch =>
+        batch.location?.toLowerCase().includes(filters.location.toLowerCase())
+      );
+    }
+
+    // Filter by created date range
+    if (filters.createdDateFrom || filters.createdDateTo) {
+      filtered = filtered.filter(batch => {
+        const createdDate = new Date(batch.createdAt);
+        const fromDate = filters.createdDateFrom ? new Date(filters.createdDateFrom) : null;
+        const toDate = filters.createdDateTo ? new Date(filters.createdDateTo) : null;
+
+        if (fromDate && toDate) {
+          return createdDate >= fromDate && createdDate <= toDate;
+        } else if (fromDate) {
+          return createdDate >= fromDate;
+        } else if (toDate) {
+          return createdDate <= toDate;
+        }
+        return true;
+      });
+    }
+
+    // Filter by start date range
+    if (filters.startDateFrom || filters.startDateTo) {
+      filtered = filtered.filter(batch => {
+        const startDate = new Date(batch.startDate);
+        const fromDate = filters.startDateFrom ? new Date(filters.startDateFrom) : null;
+        const toDate = filters.startDateTo ? new Date(filters.startDateTo) : null;
+
+        if (fromDate && toDate) {
+          return startDate >= fromDate && startDate <= toDate;
+        } else if (fromDate) {
+          return startDate >= fromDate;
+        } else if (toDate) {
+          return startDate <= toDate;
+        }
+        return true;
+      });
+    }
+
+    setFilteredData(filtered);
     setShowTable(true);
   };
 
   const handleResetFilter = () => {
+    setFilters({
+      batchNumber: '',
+      courseName: '',
+      status: '',
+      sessionType: '',
+      sessionDay: '',
+      location: '',
+      createdDateFrom: '',
+      createdDateTo: '',
+      startDateFrom: '',
+      startDateTo: ''
+    });
     setFilteredData([]);
     setShowTable(false);
   };
 
+  const handleFilterChange = (field, value) => {
+    setFilters(prev => ({ ...prev, [field]: value }));
+  };
+
   const isOlderThan7Days = (dateString) => {
-  const createdDate = new Date(dateString);
-  const today = new Date();
-  const diffInDays = (today - createdDate) / (1000 * 60 * 60 * 24);
-  return diffInDays > 7;
-};
-
-
+    const createdDate = new Date(dateString);
+    const today = new Date();
+    const diffInDays = (today - createdDate) / (1000 * 60 * 60 * 24);
+    return diffInDays > 7;
+  };
 
   return (
     <>
-      {/* Inject live-dot CSS */}
       <style>{dotStyle}</style>
 
       <Box sx={{ width: '100%', maxWidth: '100%' }}>
@@ -156,6 +270,124 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
             </Button>
             <Collapse in={openFilters}>
               <Paper sx={{ p: 2, mb: 2 }}>
+                {/* Filter Grid */}
+                <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2} mb={2}>
+                  {/* Batch Number */}
+                  <TextField
+                    size="small"
+                    label="Batch Number"
+                    value={filters.batchNumber}
+                    onChange={(e) => handleFilterChange('batchNumber', e.target.value)}
+                    placeholder="Search batch no..."
+                  />
+
+                  {/* Course Name - Autocomplete */}
+                  <Autocomplete
+                    size="small"
+                    options={[...new Set(batchData.map(b => b.courseName))]}
+                    value={filters.courseName || null}
+                    onChange={(event, newValue) => handleFilterChange('courseName', newValue || '')}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Course Name" placeholder="Type to search..." />
+                    )}
+                    freeSolo
+                    clearOnEscape
+                  />
+
+                  {/* Status */}
+                  <FormControl size="small" fullWidth>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      value={filters.status}
+                      label="Status"
+                      onChange={(e) => handleFilterChange('status', e.target.value)}
+                    >
+                      <MenuItem value="">All Status</MenuItem>
+                      <MenuItem value="Not Started">Not Started</MenuItem>
+                      <MenuItem value="In Progress">In Progress</MenuItem>
+                      <MenuItem value="Completed">Completed</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  {/* Session Type */}
+                  <FormControl size="small" fullWidth>
+                    <InputLabel>Session Type</InputLabel>
+                    <Select
+                      value={filters.sessionType}
+                      label="Session Type"
+                      onChange={(e) => handleFilterChange('sessionType', e.target.value)}
+                    >
+                      <MenuItem value="">All Types</MenuItem>
+                      <MenuItem value="Online">Online</MenuItem>
+                      <MenuItem value="At School">At School</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  {/* Session Day */}
+                  <FormControl size="small" fullWidth>
+                    <InputLabel>Session Day</InputLabel>
+                    <Select
+                      value={filters.sessionDay}
+                      label="Session Day"
+                      onChange={(e) => handleFilterChange('sessionDay', e.target.value)}
+                    >
+                      <MenuItem value="">All Days</MenuItem>
+                      <MenuItem value="Weekday">Weekday</MenuItem>
+                      <MenuItem value="Weekend">Weekend</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  {/* Location */}
+                  <TextField
+                    size="small"
+                    label="Location"
+                    value={filters.location}
+                    onChange={(e) => handleFilterChange('location', e.target.value)}
+                    placeholder="Search location..."
+                  />
+
+                  {/* Created Date From */}
+                  <TextField
+                    size="small"
+                    type="date"
+                    label="Created From"
+                    value={filters.createdDateFrom}
+                    onChange={(e) => handleFilterChange('createdDateFrom', e.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                  />
+
+                  {/* Created Date To */}
+                  <TextField
+                    size="small"
+                    type="date"
+                    label="Created To"
+                    value={filters.createdDateTo}
+                    onChange={(e) => handleFilterChange('createdDateTo', e.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                  />
+
+                  {/* Start Date From */}
+                  <TextField
+                    size="small"
+                    type="date"
+                    label="Start Date From"
+                    value={filters.startDateFrom}
+                    onChange={(e) => handleFilterChange('startDateFrom', e.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                  />
+
+                  {/* Start Date To */}
+                  <TextField
+                    size="small"
+                    type="date"
+                    label="Start Date To"
+                    value={filters.startDateTo}
+                    onChange={(e) => handleFilterChange('startDateTo', e.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Box>
+
+                {/* Action Buttons */}
                 <Box display="flex" justifyContent="flex-end" gap={2}>
                   <Button variant="contained" size="small" onClick={handleApplyFilter}>
                     Apply
@@ -223,36 +455,34 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                         <StyledTableRow key={batch._id}>
                           <StyledTableCell>{index + 1}</StyledTableCell>
 
-                          {/* Action icons based on status, After 7 days from created batch Date, the batch will be auto-lock. */}
-
+                          {/* Action icons based on status */}
                           <StyledTableCell>
                             <div
                               style={{
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
-                                // border:"2px solid blue"
                               }}
                             >
-                              {/* Case 1: In Progress — Live dot + Lock (only once) */}
+                              {/* Case 1: In Progress — Live dot + Lock */}
                               {status === "In Progress" && (
                                 <>
-                                <div className='d-flex flex-row align-items-center gap-1'>
-                                  <span className="live-dot"></span>
-                                  <FaLock
-                                    className="text-secondary"
-                                    style={{ cursor: "pointer", opacity: 0.9, fontSize: "15.5px" }}
-                                    onClick={() =>
-                                      toast.info("This batch is unable to edit. Please contact to super admin.", {
-                                        autoClose: 2000,
-                                      })
-                                    }
-                                  />
+                                  <div className='d-flex flex-row align-items-center gap-1'>
+                                    <span className="live-dot dotStyle"></span>
+                                    <FaLock
+                                      className="text-secondary"
+                                      style={{ cursor: "pointer", opacity: 0.9, fontSize: "15.5px" }}
+                                      onClick={() =>
+                                        toast.info("This batch is unable to edit. Please contact to super admin.", {
+                                          autoClose: 2000,
+                                        })
+                                      }
+                                    />
                                   </div>
                                 </>
                               )}
 
-                              {/* Case 2: Older than 7 days (locked, but not In Progress or Completed) */}
+                              {/* Case 2: Older than 7 days (locked) */}
                               {isOlderThan7Days(batch.createdAt) &&
                                 status !== "In Progress" &&
                                 status !== "Completed" && (
@@ -268,7 +498,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                                   />
                                 )}
 
-                              {/*  Case 3: Editable (Completed, Not Started, or fallback within 7 days) */}
+                              {/* Case 3: Editable */}
                               {(
                                 (!isOlderThan7Days(batch.createdAt) && status !== "In Progress") ||
                                 status === "Completed" ||
@@ -281,7 +511,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                                 />
                               )}
 
-                              {/*  Delete – always visible for admin */}
+                              {/* Delete – always visible for admin */}
                               <MdDelete
                                 className={role === "admin" ? "text-danger" : "text-muted"}
                                 style={{
@@ -296,17 +526,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
 
                           {/* Data cells */}
                           <StyledTableCell>{batch.batchNumber}</StyledTableCell>
-                          {/* Batch Status */}
-                          {/* <StyledTableCell>
-                            <Chip label={status} 
-                            color={
-                              status === "Not Started" ? "error"
-                                : status === "In Progress" ? "warning"
-                                : "success"
-                            }
-                             variant="outlined" />
-                          </StyledTableCell> */}
-                        <StyledTableCell>
+                          <StyledTableCell>
                             <span
                               style={{
                                 backgroundColor:
@@ -321,10 +541,10 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                                     : status === "In Progress"
                                     ? "#e18b08ff"
                                     : "#2e7d32",
-                                padding: "4px 10px",
+                                padding: "4px 6px",
                                 borderRadius: "12px",
                                 fontWeight: 600,
-                                fontSize: "13px",
+                                fontSize: "12px",
                                 display: "inline-block",
                                 minWidth: "90px",
                                 textAlign: "center",
@@ -371,4 +591,4 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
   );
 }
 
-export default CustomisedBatchTables;
+export default CustomisedBatchTables
