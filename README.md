@@ -220,10 +220,10 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 
 // When your batch is completed - updated the form send a request to batch complete button >> Unlock the edit >> 
 
-// 1. 4 check boxes (assign, deassign, drop-out,  certificate generated or not? )
-//2. when you select all, the status option will be enabled 
-//3. Batch completed option will be able to select (only 1 dropdown)  and when you click this option 
-//4. Save button should show.
+// 1. 4 check boxes (assign, deassign, drop-out,  certificate generated or not? )  <<<Done>>>
+//2. when you select all, the status option will be enabled  <<<Done>>>
+//3. Batch completed option will be able to select (only 1 dropdown)  and when you click this option  <<<Done>>>
+//4. Save button should show.  <<<Done>>>
 // Whhen you click save button then Store data in a DB.
 // check the schema
 // then check the updated

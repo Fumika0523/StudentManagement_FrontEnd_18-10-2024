@@ -456,18 +456,19 @@ const handleChangeRowsPerPage = (event) => {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((batch, index) => {
 
-                      // Single logic calculation per batch
-                      const course = courseData?.find(c => c.courseName === batch.courseName);
-                      if (!course || !course.noOfDays) return null;
+const course = courseData?.find(c => c.courseName === batch.courseName);
+ if (!course || !course.noOfDays) return null;
 
-                      const startDate = new Date(batch.startDate);
-                      const endDate = new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000);
-                      const today = new Date();
+ const startDate = new Date(batch.startDate);
+ const endDate = new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000);
+ const today = new Date();
 
-                      let status = "";
-                      if (today < startDate) status = "Not Started";
-                      else if (today >= startDate && today < endDate) status = "In Progress";
-                      else status = "Completed";
+let status = "";
+ if (today < startDate) status = "Not Started";
+ else if (today >= startDate && today < endDate) status = "In Progress";
+ else status = "Completed";
+
+
 
                       return (
                         <StyledTableRow key={batch._id}>
@@ -546,6 +547,7 @@ const handleChangeRowsPerPage = (event) => {
 
                           {/* Data cells */}
                           <StyledTableCell>{batch.batchNumber}</StyledTableCell>
+                          {/* Status */}
                           <StyledTableCell>
                             <span
                               style={{
