@@ -11,7 +11,7 @@ import { Col, Row } from 'react-bootstrap';
 
 const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     console.log(singleBatch)
-    console.log(singleBatch._id)
+    // console.log(singleBatch._id)
 
     const navigate = useNavigate()
     const handleClose = () => {
@@ -26,7 +26,8 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
         targetStudent: Yup.string().required("Mandatory Field !"),
         location: Yup.string().required("Mandatory Field !"),
         sessionTime: Yup.string().required("Mandatory Field !"),
-        fees: Yup.number().required("Mandatory Field !")
+        fees: Yup.number().required("Mandatory Field !"),
+        status: Yup.string()
     })
 
     const formik = useFormik({
@@ -39,7 +40,8 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
             location: singleBatch?.location,
             sessionTime: singleBatch?.sessionTime,
             fees: singleBatch?.fees,
-            startDate:singleBatch?.startDate
+            startDate: singleBatch?.startDate ? new Date(singleBatch.startDate).toISOString().split("T")[0] : "",
+            status: singleBatch?.status
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
@@ -86,9 +88,9 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                 <Form onSubmit={formik.handleSubmit} className='px-2' style={{ fontSize: "80%" }}>
                     <Modal.Body>
                         <Row>
-                            <Col>
+                            <Col md={4}>
                                 {/* Batch Number*/}
-                                <Form.Group className='my-3'>
+                                <Form.Group className='mb-2'>
                                     <Form.Label className='m-0'>Batch No.</Form.Label>
                                     <Form.Control type="text"
                                         placeholder='Type your Batch No.'
@@ -100,9 +102,24 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                                     {formik.errors.batchNumber && formik.touched.batchNumber && <div className="text-danger text-center">{formik.errors.batchNumber}</div>}
                                 </Form.Group>
                             </Col>
-                            <Col>
-                                {/* Course Name */}
-                                <Form.Group className='my-3'>
+                            {/*Status */}
+                            <Col md={4}>
+                       
+                                <Form.Group className='mb-2'>
+                                    <Form.Label className='m-0'>Status</Form.Label>
+                                    <Form.Control type="text"
+                                        disabled
+                                        placeholder='Type your Course Name' name="status"
+                                        value={formik.values.status}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur} />
+                                    {/* Error Message */}
+                                    {formik.errors.status && formik.touched.status && <div className="text-danger text-center">{formik.errors.status}</div>}
+                                </Form.Group>
+                            </Col>
+                            {/* Course Name */}
+                            <Col md={4}>
+                                <Form.Group className='mb-2'>
                                     <Form.Label className='m-0'>Course Name</Form.Label>
                                     <Form.Control type="text" placeholder='Type your Course Name' name="courseName"
                                         value={formik.values.courseName}
@@ -114,50 +131,66 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                             </Col>
                         </Row>
                         <Row>
-                              <Col>
-              <Form.Group className='my-3'>
-                <Form.Label>Start Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="startDate"
-                    value={formik.values.startDate}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                />
-                {formik.errors.startDate && formik.touched.startDate && (
-                  <div className="text-danger text-center">{formik.errors.startDate}</div>
-                )}
-              </Form.Group>
-            </Col>
-                            <Col>
-                                {/* Session Type */}
-                                <Form.Group className='my-3'>
-                                    <Form.Label className='m-0'>Session Type</Form.Label>
-                                    <Form.Control type="text" placeholder='Type your Session Type' name="sessionType"
-                                        value={formik.values.sessionType}
+                            {/* Start Date */}
+                            <Col md={4}>
+                                <Form.Group className='mb-2'>
+                                    <Form.Label className='m-0'>Start Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        name="startDate"
+                                        value={formik.values.startDate}
                                         onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur} />
-                                    {/* Error Message */}
-                                    {formik.errors.batchNumber && formik.touched.batchNumber && <div className="text-danger text-center">{formik.errors.batchNumber}</div>}
+                                        onBlur={formik.handleBlur}
+                                    />
+                                    {formik.errors.startDate && formik.touched.startDate && (
+                                        <div className="text-danger text-center">{formik.errors.startDate}</div>
+                                    )}
                                 </Form.Group>
                             </Col>
-                            <Col>
-                                {/* Session Day */}
-                                <Form.Group className='my-3'>
-                                    <Form.Label className='m-0'>Session Day</Form.Label>
-                                    <Form.Control type="text" placeholder='Type your Session Day' name="sessionDay"
+                            {/* Session Type */}
+                            <Col md={4}>
+
+                                <Form.Group className='mb-2'>
+                                    <Form.Label>Session Type</Form.Label>
+                                    <Form.Select
+                                        name="sessionType"
+                                        value={formik.values.sessionType}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                    >
+                                        <option value="">Select Session Type</option>
+                                        <option value="Online">Online</option>
+                                        <option value="At School">At School</option>
+                                    </Form.Select>
+                                    {formik.errors.sessionType && formik.touched.sessionType && (
+                                        <div className="text-danger text-center">{formik.errors.sessionType}</div>
+                                    )}
+                                </Form.Group>
+                            </Col>
+                            {/* Session Day */}
+                            <Col md={4}>
+                                <Form.Group className='mb-2'>
+                                    <Form.Label>Session Day</Form.Label>
+                                    <Form.Select
+                                        name="sessionDay"
                                         value={formik.values.sessionDay}
                                         onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur} />
-                                    {/* Error Message */}
-                                    {formik.errors.sessionDay && formik.touched.sessionDay && <div className="text-danger text-center">{formik.errors.sessionDay}</div>}
+                                        onBlur={formik.handleBlur}
+                                    >
+                                        <option value="">Select Session Day</option>
+                                        <option value="Weekday">Weekday</option>
+                                        <option value="Weekend">Weekend</option>
+                                    </Form.Select>
+                                    {formik.errors.sessionDay && formik.touched.sessionDay && (
+                                        <div className="text-danger text-center">{formik.errors.sessionDay}</div>
+                                    )}
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row>
-                            <Col>
+                            <Col md={6}>
                                 {/* Target Student */}
-                                <Form.Group className='my-3'>
+                                <Form.Group className='mb-2'>
                                     <Form.Label className='m-0'>Target Student</Form.Label>
                                     <Form.Control type="text" placeholder='Type your Target Student' name="targetStudent"
                                         value={formik.values.targetStudent}
@@ -167,9 +200,9 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                                     {formik.errors.targetStudent && formik.touched.targetStudent && <div className="text-danger text-center">{formik.errors.targetStudent}</div>}
                                 </Form.Group>
                             </Col>
-                            <Col>
+                            <Col md={6}>
                                 {/* Location */}
-                                <Form.Group className='my-3'>
+                                <Form.Group className='mb-2'>
                                     <Form.Label className='m-0'>Location</Form.Label>
                                     <Form.Control type="text" placeholder='Type your Location' name='location'
                                         value={formik.values.location}
@@ -182,21 +215,27 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                         </Row>
 
                         <Row>
-                            <Col>
-                                {/* Session Time */}
-                                <Form.Group className='my-3'>
+                            <Col md={6}>                                {/* Session Time */}
+                                <Form.Group className='mb-2'>
                                     <Form.Label className='m-0'>Session Time</Form.Label>
-                                    <Form.Control type="text" placeholder='Type your Session Time' name="sessionTime"
+                                    <Form.Select
+                                        name="sessionTime"
                                         value={formik.values.sessionTime}
                                         onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur} />
+                                        onBlur={formik.handleBlur}
+                                    >
+                                        <option value="">Select Session Time</option>
+                                        <option value="Morning">Morning</option>
+                                        <option value="Afternoon">Afternoon</option>
+                                        <option value="Evening">Evening</option>
+                                    </Form.Select>
                                     {/* Error Message */}
                                     {formik.errors.sessionTime && formik.touched.sessionTime && <div className="text-danger text-center">{formik.errors.sessionTime}</div>}
                                 </Form.Group>
                             </Col>
-                            <Col>
+                            <Col md={6}>
                                 {/* Fees */}
-                                <Form.Group className='my-3'>
+                                <Form.Group className='mb-2'>
                                     <Form.Label className='m-0'>Fees</Form.Label>
                                     <Form.Control type="number" placeholder='Type your Fees' name="fees"
                                         value={formik.values.fees}

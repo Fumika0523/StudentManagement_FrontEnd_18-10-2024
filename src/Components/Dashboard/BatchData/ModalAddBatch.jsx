@@ -101,10 +101,10 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     try {
       await axios.post(`${url}/addbatch`, newBatch, config);
       const res = await axios.get(`${url}/allbatch`, config);
-      // console.log("newBatch",newBatch)
+      //console.log("res",res.data.batchData)
       setBatchData(res.data.batchData);
+        setTimeout(() => handleClose(), 1000);
       toast.success("Batch added successfully!");
-      setTimeout(() => handleClose(), 1000);
     } catch (e) {
      // console.error("Error Adding Batch:", e);
       toast.error("Failed to add batch.");
@@ -178,6 +178,7 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
                 )}
               </Form.Group>
             </Col>
+                   {/* Session Day */}
             <Col>
               <Form.Group className='my-3'>
                 <Form.Label>Session Day</Form.Label>

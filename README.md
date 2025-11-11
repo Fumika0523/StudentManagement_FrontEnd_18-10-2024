@@ -204,8 +204,6 @@ When you Edit the student in Admission, you will have dropdown.
 Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 
 
-
-
 // When you select specific Month, the Line chart should show only specific month too - not full year
 // Initial loading - full year (current year)
 
@@ -222,8 +220,10 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 
 // When your batch is completed - updated the form send a request to batch complete button >> Unlock the edit >> 
 
-// 4 check boxes
-// assign, deassign, drop-out,  certificate generated or not? >>> Then Status will be enabled >> Batch completed option (only 1 dropdown) will shown and when you click this option >> Save button should show.
+// 1. 4 check boxes (assign, deassign, drop-out,  certificate generated or not? )
+//2. when you select all, the status option will be enabled 
+//3. Batch completed option will be able to select (only 1 dropdown)  and when you click this option 
+//4. Save button should show.
 // Whhen you click save button then Store data in a DB.
 // check the schema
 // then check the updated
@@ -231,6 +231,13 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 
 // Utilities - Attendance (Current 7 Days), Certificate
 
-
 // in-training , Training completed, Not yet started, batch Completed.
-// live icon /// lock icon change to Edit icon.
+//Add live icon when the batch status is in-training.  <<<Done>>>
+
+
+/// lock icon change to Edit icon when the batch is completed <<<Done>>>
+
+
+
+
+

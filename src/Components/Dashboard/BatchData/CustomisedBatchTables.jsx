@@ -453,8 +453,8 @@ const handleChangeRowsPerPage = (event) => {
                     </StyledTableRow>
                   ) : (
                     filteredData
-  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-  .map((batch, index) => {
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((batch, index) => {
 
                       // Single logic calculation per batch
                       const course = courseData?.find(c => c.courseName === batch.courseName);
@@ -518,9 +518,11 @@ const handleChangeRowsPerPage = (event) => {
 
                               {/* Case 3: Editable */}
                               {(
+                                // if its less than 7 days since creation and status is Not in-progress or already complete 
                                 (!isOlderThan7Days(batch.createdAt) && status !== "In Progress") ||
                                 status === "Completed" ||
-                                status === "Not Started"
+                                  (!isOlderThan7Days(batch.createdAt) &&    status === "Not Started")
+                              
                               ) && (
                                 <FaEdit
                                   className="text-success"
@@ -591,7 +593,7 @@ const handleChangeRowsPerPage = (event) => {
                 </TableBody>
               </Table>
             </TableContainer>
-     <Box
+          <Box
   sx={{
     display: "flex",
     justifyContent: "center",
@@ -625,8 +627,7 @@ const handleChangeRowsPerPage = (event) => {
       },
     }}
   />
-</Box>
-
+        </Box>
 
           </Box>
         )}
@@ -638,6 +639,7 @@ const handleChangeRowsPerPage = (event) => {
         {viewWarning && (
           <ModalDeleteWarning viewWarning={viewWarning} singleBatch={singleBatch} setBatchData={setBatchData} setViewWarning={setViewWarning} />
         )}
+        
         {showAdd && (
           <ModalAddBatch show={showAdd} setShow={setShowAdd} batchData={batchData} setBatchData={setBatchData} courseData={courseData} setCourseData={setCourseData} />
         )}
