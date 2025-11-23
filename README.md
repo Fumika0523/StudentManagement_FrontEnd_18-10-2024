@@ -181,10 +181,8 @@ Date start By
 
 10. All the details should be shown in Student Section. (time, duration,course data, admissiondata,assigned/de-assigned
 
-
 11. Filter auto-search should not happen only "Submit" button is applied.
 Options for Assign/Deassigned
-
 
 12. Create profile for Staff <<<Done>>>
   A)  Only Addition, Cancellation,
@@ -202,7 +200,6 @@ Dashboard data should change.
 When you add the student in Admission, status will show assign by default.
 When you Edit the student in Admission, you will have dropdown.
 Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
-
 
 // When you select specific Month, the Line chart should show only specific month too - not full year
 // Initial loading - full year (current year)
@@ -224,20 +221,32 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 //2. when you select all, the status option will be enabled  <<<Done>>>
 //3. Batch completed option will be able to select (only 1 dropdown)  and when you click this option  <<<Done>>>
 //4. Save button should show.  <<<Done>>>
-// Whhen you click save button then Store data in a DB.
-// check the schema
-// then check the updated
-
+// Whhen you click save button then status is stored in a DB.<<<Done>>>
 
 // Utilities - Attendance (Current 7 Days), Certificate
 
 // in-training , Training completed, Not yet started, batch Completed.
 //Add live icon when the batch status is in-training.  <<<Done>>>
 
-
 /// lock icon change to Edit icon when the batch is completed <<<Done>>>
 
+-----------------------------------------------------------------------------------------
+1. Edit icon will show within 7 days since Batch is created. <<<Done>>>
+2. When 7 days are passed, the Lock icon will show <<<Done>>>
+3. When the batch is completed the status shows "Training completed" from "In-Progress". <<<Done>>>
+4. When training completed shown, the button will show next to Lock Icon / or at the end. <<<Done>>>
+5. When this button is clicked, the approval request will be sent to Admin (optional) <<<Checking>>>
+6. Once Admin is approved, the lock icon will changed to live-icon (To remind for the updations) and Edit icon will show.  
+7. When you click Edit icon, 4 check boxes will show- assign, deassign, drop-out,  certificate generated or not? 
+8. when you select all, the status option will be enabled  
+9. Batch completed option will be able to select (only 1 dropdown) on STatus  and when you click this option
+10. Save button should show. - send Put request
+11. When you click save button then status is stored in a DB - and display on the browser.
 
+Create a state variable for the batch status, use the state variable whenever i need to change the state you will update the state variable.
 
+create 1 useEffect, here you do the put call - pass  the dependency array as a batch status and store in DB
+Check how many times of UseEffect triggering
 
+Add human icon in Action, and when you click this icon, the Modal (student Name, Asigned status, maximum 5) will shown and you can see all the student list and Add download button inside Modal, add simple search. when you type, the data should shown.
 

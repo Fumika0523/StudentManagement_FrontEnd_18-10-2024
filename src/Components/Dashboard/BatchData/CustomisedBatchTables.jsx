@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaCircleCheck } from "react-icons/fa6";
 import {
   TableRow,
   TableCell,
@@ -9,7 +10,6 @@ import {
   Button,
   Collapse,
   Box,
-  Chip,
   FormControl,
   Table,
   InputLabel,
@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
-import { FaEdit, FaLock, FaKey } from "react-icons/fa";
+import { FaEdit, FaLock } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -28,7 +28,9 @@ import ModalEditBatch from './ModalEditBatch';
 import ModalDeleteWarning from './ModalDeleteWaning';
 import ModalAddBatch from './ModalAddBatch';
 import TablePagination from "@mui/material/TablePagination";
-
+import { IoIosInformationCircle } from "react-icons/io";
+import { url } from '../../utils/constant';
+import axios from 'axios';
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -73,6 +75,25 @@ const dotStyle = `
 }
 `;
 
+// 🔹 Helper: compute status based on DB value + dates
+const computeStatus = (batch, course) => {
+  // Final state always wins
+  if (batch.status === "Batch Completed") return "Batch Completed";
+
+  if (!batch.startDate || !course || !course.noOfDays) {
+    // Fallback: use DB or default
+    return batch.status || "Not Started";
+  }
+
+  const startDate = new Date(batch.startDate);
+  const endDate = new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000);
+  const today = new Date();
+
+  if (today < startDate) return "Not Started";
+  if (today >= startDate && today < endDate) return "In Progress";
+  return "Training Completed";
+};
+
 function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseData }) {
   const [show, setShow] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -84,16 +105,25 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15); // show up to 15 per page
 
+  // 🔹 Local status map { batchId: statusString }
+  const [statusMap, setStatusMap] = useState({});
+
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   const handleChangePage = (event, newPage) => {
-  setPage(newPage);
-};
+    setPage(newPage);
+  };
 
-const handleChangeRowsPerPage = (event) => {
-  setRowsPerPage(parseInt(event.target.value, 10));
-  setPage(0);
-};
-
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -109,8 +139,6 @@ const handleChangeRowsPerPage = (event) => {
     startDateTo: ''
   });
 
-  const role = localStorage.getItem('role');
-
   const handleEditClick = (batch) => {
     setShow(true);
     setSingleBatch(batch);
@@ -122,6 +150,58 @@ const handleChangeRowsPerPage = (event) => {
       handleApplyFilter();
     }
   }, [batchData, showTable]);
+
+  // 🔹 Build statusMap whenever batchData / courseData changes
+  useEffect(() => {
+    if (!batchData || batchData.length === 0) return;
+
+    setStatusMap((prev) => {
+      const updated = { ...prev };
+      batchData.forEach((batch) => {
+        const course = courseData?.find((c) => c.courseName === batch.courseName);
+        const newStatus = computeStatus(batch, course);
+        updated[batch._id] = newStatus;
+      });
+      return updated;
+    });
+  }, [batchData, courseData]);
+
+  // 🔹 Sync statusMap → Backend (only when different from DB)
+  useEffect(() => {
+    if (!batchData || batchData.length === 0) return;
+    if (!token) return;
+
+    const syncStatuses = async () => {
+      try {
+        await Promise.all(
+          batchData.map((batch) => {
+            const localStatus = statusMap[batch._id];
+            if (!localStatus) return null;
+            if (localStatus === batch.status) return null; // already in sync
+
+            return axios
+              .put(`${url}/updatebatch/${batch._id}`, { status: localStatus }, config)
+              .then(() => {
+                // update frontend copy
+                setBatchData((prev) =>
+                  prev.map((b) =>
+                    b._id === batch._id ? { ...b, status: localStatus } : b
+                  )
+                );
+              })
+              .catch((err) => {
+                console.error("Failed to sync status for batch", batch._id, err);
+              });
+          }).filter(Boolean)
+        );
+      } catch (e) {
+        console.error("Error syncing batch statuses", e);
+      }
+    };
+
+    syncStatuses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusMap]); // batchData & config are stable enough here for your use case
 
   const handleDelete = (batch) => {
     if (role === "admin") {
@@ -157,22 +237,12 @@ const handleChangeRowsPerPage = (event) => {
       );
     }
 
-    // Filter by status
+    // Filter by status (using same status logic as table)
     if (filters.status) {
       filtered = filtered.filter(batch => {
         const course = courseData?.find(c => c.courseName === batch.courseName);
-        if (!course || !course.noOfDays) return false;
-
-        const startDate = new Date(batch.startDate);
-        const endDate = new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000);
-        const today = new Date();
-
-        let status = "";
-        if (today < startDate) status = "Not Started";
-        else if (today >= startDate && today < endDate) status = "In Progress";
-        else status = "Completed";
-
-        return status === filters.status;
+        const computed = computeStatus(batch, course);
+        return computed === filters.status;
       });
     }
 
@@ -261,6 +331,33 @@ const handleChangeRowsPerPage = (event) => {
     return diffInDays > 7;
   };
 
+  // 🔹 Admin approval request (staff)
+  const handleSendApproval = async (batch) => {
+    try {
+      const response = await axios.post(
+        `${url}/batch/send-approval-request`,
+        {
+          batchId: batch._id,
+          username: localStorage.getItem("username"),
+        },
+        config
+      );
+
+      console.log("SUCCESS:", response.data.message);
+      toast.success("Approval request sent to Admin");
+
+      // update local state to show 'pending'
+      setBatchData((prev) =>
+        prev.map((b) =>
+          b._id === batch._id ? { ...b, approvalStatus: "pending" } : b
+        )
+      );
+    } catch (error) {
+      console.log("ERROR:", error.response?.data || error.message);
+      toast.error("Failed to send approval request");
+    }
+  };
+
   return (
     <>
       <style>{dotStyle}</style>
@@ -320,7 +417,8 @@ const handleChangeRowsPerPage = (event) => {
                       <MenuItem value="">All Status</MenuItem>
                       <MenuItem value="Not Started">Not Started</MenuItem>
                       <MenuItem value="In Progress">In Progress</MenuItem>
-                      <MenuItem value="Completed">Completed</MenuItem>
+                      <MenuItem value="Training Completed">Training Completed</MenuItem>
+                      <MenuItem value="Batch Completed">Batch Completed</MenuItem>
                     </Select>
                   </FormControl>
 
@@ -422,7 +520,7 @@ const handleChangeRowsPerPage = (event) => {
 
         {/* Table */}
         {showTable && (
-          <Box sx={{ mt: 1}}>
+          <Box sx={{ mt: 1 }}>
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
@@ -453,202 +551,376 @@ const handleChangeRowsPerPage = (event) => {
                     </StyledTableRow>
                   ) : (
                     filteredData
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((batch, index) => {
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((batch, index) => {
+                        const course = courseData?.find(c => c.courseName === batch.courseName);
+                        const computedStatus = statusMap[batch._id] || computeStatus(batch, course);
+                        const status = computedStatus;
 
-const course = courseData?.find(c => c.courseName === batch.courseName);
- if (!course || !course.noOfDays) return null;
+                        const startDate = new Date(batch.startDate);
+                        const endDate = course && course.noOfDays
+                          ? new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000)
+                          : null;
 
- const startDate = new Date(batch.startDate);
- const endDate = new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000);
- const today = new Date();
+                        const isOld = isOlderThan7Days(batch.createdAt);
+                        const approvalStatus = batch.approvalStatus || null;
 
-let status = "";
- if (today < startDate) status = "Not Started";
- else if (today >= startDate && today < endDate) status = "In Progress";
- else status = "Completed";
+                        const renderActionIcons = () => {
+                          // 🔹 BATCH COMPLETED: final state
+                          if (status === "Batch Completed") {
+                            return (
+                              <FaCircleCheck
+                                className="text-success"
+                                style={{ fontSize: "18px", cursor: "default" }}
+                                title="Batch fully completed"
+                              />
+                            );
+                          }
 
+                          // 🔹 NOT STARTED: Edit < 7 days, Lock > 7 days
+                          if (status === "Not Started") {
+                            if (isOld) {
+                              return (
+                                <FaLock
+                                  className="text-muted"
+                                  style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                  onClick={() =>
+                                    toast.error(
+                                      "This batch is locked (over 7 days old). Contact Super-Admin.",
+                                      { autoClose: 2000 }
+                                    )
+                                  }
+                                />
+                              );
+                            }
+                            return (
+                              <FaEdit
+                                className="text-success"
+                                style={{ cursor: "pointer", fontSize: "17px" }}
+                                onClick={() => handleEditClick(batch)}
+                              />
+                            );
+                          }
 
+                          // 🔹 IN PROGRESS: Always Lock (no editing)
+                          if (status === "In Progress") {
+                            return (
+                              <FaLock
+                                className="text-muted"
+                                style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                onClick={() =>
+                                  toast.error(
+                                    "This batch is in progress. Editing is disabled.",
+                                    { autoClose: 2000 }
+                                  )
+                                }
+                              />
+                            );
+                          }
 
-                      return (
-                        <StyledTableRow key={batch._id}>
-                          <StyledTableCell>{index + 1}</StyledTableCell>
-
-                          {/* Action icons based on status */}
-                          <StyledTableCell>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                              }}
-                            >
-                              {/* Case 1: In Progress — Live dot + Lock */}
-                              {status === "In Progress" && (
-                                <>
-                                  <div className='d-flex flex-row align-items-center gap-1'>
-                                    <span className="live-dot dotStyle"></span>
-                                    <FaLock
-                                      className="text-secondary"
-                                      style={{ cursor: "pointer", opacity: 0.9, fontSize: "15.5px" }}
-                                      onClick={() =>
-                                        toast.info("This batch is unable to edit. Please contact to super admin.", {
-                                          autoClose: 2000,
-                                        })
-                                      }
-                                    />
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Case 2: Older than 7 days (locked) */}
-                              {isOlderThan7Days(batch.createdAt) &&
-                                status !== "In Progress" &&
-                                status !== "Completed" && (
+                          // 🔹 TRAINING COMPLETED
+                          if (status === "Training Completed") {
+                            // ✅ Admin: Edit < 7 days, Lock > 7 days (ignores approval)
+                            if (role === "admin") {
+                              if (isOld) {
+                                return (
                                   <FaLock
                                     className="text-muted"
                                     style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
                                     onClick={() =>
                                       toast.error(
-                                        "This batch is locked (over 7 days old). Please contact Super-Admin.",
+                                        "This batch is locked (over 7 days old). Contact Super-Admin.",
                                         { autoClose: 2000 }
                                       )
                                     }
                                   />
-                                )}
-
-                              {/* Case 3: Editable */}
-                              {(
-                                // if its less than 7 days since creation and status is Not in-progress or already complete 
-                                (!isOlderThan7Days(batch.createdAt) && status !== "In Progress") ||
-                                status === "Completed" ||
-                                  (!isOlderThan7Days(batch.createdAt) &&    status === "Not Started")
-                              
-                              ) && (
+                                );
+                              }
+                              return (
                                 <FaEdit
                                   className="text-success"
                                   style={{ cursor: "pointer", fontSize: "17px" }}
                                   onClick={() => handleEditClick(batch)}
                                 />
-                              )}
+                              );
+                            }
 
-                              {/* Delete – always visible for admin */}
-                              <MdDelete
-                                className={role === "admin" ? "text-danger" : "text-muted"}
+                            // ✅ Staff: approvalStatus logic
+                            if (role === "staff") {
+                              // Never requested yet → Lock + Info (send request)
+                              if (!approvalStatus) {
+                                return (
+                                  <>
+                                    <FaLock
+                                      className="text-muted"
+                                      style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                      onClick={() =>
+                                        toast.error(
+                                          "This batch is locked to edit, please request approval from Admin.",
+                                          { autoClose: 2000 }
+                                        )
+                                      }
+                                    />
+                                    <IoIosInformationCircle
+                                      className="text-primary fs-5"
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() => handleSendApproval(batch)}
+                                      title="Send approval request to Admin"
+                                    />
+                                  </>
+                                );
+                              }
+
+                              // Pending → Lock + disabled Info icon
+                              if (approvalStatus === "pending") {
+                                return (
+                                  <>
+                                    <FaLock
+                                      className="text-muted"
+                                      style={{
+                                        cursor: "not-allowed",
+                                        opacity: 0.7,
+                                        fontSize: "16px",
+                                      }}
+                                    />
+                                    <IoIosInformationCircle
+                                      className="text-secondary fs-5"
+                                      style={{
+                                        cursor: "not-allowed",
+                                        opacity: 0.4,
+                                      }}
+                                      onClick={() =>
+                                        toast.info("Waiting for admin approval…", {
+                                          autoClose: 2000,
+                                        })
+                                      }
+                                      title="Waiting for admin approval"
+                                    />
+                                  </>
+                                );
+                              }
+
+                              // Approved → Live-dot + Edit (always)
+                              if (approvalStatus === "approved") {
+                                return (
+                                  <>
+                                    <span
+                                      className="live-dot"
+                                      title="Approved by Admin - please update this batch"
+                                    />
+                                    <FaEdit
+                                      className="text-success"
+                                      style={{ cursor: "pointer", fontSize: "17px" }}
+                                      onClick={() => handleEditClick(batch)}
+                                    />
+                                  </>
+                                );
+                              }
+
+                              // Declined → Lock + disabled Edit
+                              if (approvalStatus === "declined") {
+                                return (
+                                  <>
+                                    <FaLock
+                                      className="text-muted"
+                                      style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                      onClick={() =>
+                                        toast.error(
+                                          "Approval request was declined by Admin.",
+                                          { autoClose: 2000 }
+                                        )
+                                      }
+                                    />
+                                    <FaEdit
+                                      className="text-muted"
+                                      style={{
+                                        cursor: "not-allowed",
+                                        opacity: 0.4,
+                                        fontSize: "17px",
+                                      }}
+                                      onClick={() =>
+                                        toast.info(
+                                          "Editing disabled. Approval request was declined.",
+                                          { autoClose: 2000 }
+                                        )
+                                      }
+                                    />
+                                  </>
+                                );
+                              }
+                            }
+                          }
+
+                          // Fallback (should not normally hit)
+                          return (
+                            <FaLock
+                              className="text-muted"
+                              style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                              onClick={() =>
+                                toast.error("This batch is locked.", { autoClose: 2000 })
+                              }
+                            />
+                          );
+                        };
+
+                        return (
+                          <StyledTableRow key={batch._id}>
+                            <StyledTableCell>{index + 1}</StyledTableCell>
+
+                            {/* Action icons based on status */}
+                            <StyledTableCell>
+                              <div
                                 style={{
-                                  cursor: "pointer",
-                                  fontSize: "18px",
-                                  opacity: role === "admin" ? 1 : 0.5,
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center",
+                                  gap: "8px",
                                 }}
-                                onClick={() => handleDelete(batch)}
-                              />
-                            </div>
-                          </StyledTableCell>
+                              >
+                                {renderActionIcons()}
 
-                          {/* Data cells */}
-                          <StyledTableCell>{batch.batchNumber}</StyledTableCell>
-                          {/* Status */}
-                          <StyledTableCell>
-                            <span
-                              style={{
-                                backgroundColor:
-                                  status === "Not Started"
-                                    ? "#fdecea"
-                                    : status === "In Progress"
-                                    ? "#faf3cdff"
-                                    : "#e6f4ea",
-                                color:
-                                  status === "Not Started"
-                                    ? "#d32f2f"
-                                    : status === "In Progress"
-                                    ? "#e18b08ff"
-                                    : "#2e7d32",
-                                padding: "4px 6px",
-                                borderRadius: "12px",
-                                fontWeight: 600,
-                                fontSize: "12px",
-                                display: "inline-block",
-                                minWidth: "90px",
-                                textAlign: "center",
-                              }}
-                            >
-                              {status}
-                            </span>
-                          </StyledTableCell>
+                                {/* Delete icon (admin only) */}
+                                <MdDelete
+                                  className={role === "admin" ? "text-danger" : "text-muted"}
+                                  style={{
+                                    cursor: "pointer",
+                                    fontSize: "18px",
+                                    opacity: role === "admin" ? 1 : 0.5,
+                                  }}
+                                  onClick={() => handleDelete(batch)}
+                                />
+                              </div>
+                            </StyledTableCell>
 
-                          <StyledTableCell>{formatDateTime(startDate)}</StyledTableCell>
-                          <StyledTableCell>{formatDateTime(endDate)}</StyledTableCell>
-                          <StyledTableCell>{batch.sessionType}</StyledTableCell>
-                          <StyledTableCell>{batch.courseName}</StyledTableCell>
-                          <StyledTableCell>{batch.sessionDay}</StyledTableCell>
-                          <StyledTableCell>{batch.targetStudent}</StyledTableCell>
-                          <StyledTableCell>{batch.location}</StyledTableCell>
-                          <StyledTableCell>{batch.sessionTime}</StyledTableCell>
-                          <StyledTableCell>{batch.fees}</StyledTableCell>
-                          <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell>
-                          <StyledTableCell>{formatDateTime(batch.createdAt)}</StyledTableCell>
-                          <StyledTableCell>{formatDateTime(batch.updatedAt)}</StyledTableCell>
-                        </StyledTableRow>
-                      );
-                    })
+                            {/* Data cells */}
+                            <StyledTableCell>{batch.batchNumber}</StyledTableCell>
+
+                            {/* Status badge */}
+                            <StyledTableCell>
+                              <span
+                                style={{
+                                  backgroundColor:
+                                    status === "Not Started"
+                                      ? "#fdecea"
+                                      : status === "In Progress"
+                                      ? "#faf3cdff"
+                                      : status === "Training Completed"
+                                      ? "#e6f4ea"
+                                      : "#a1c5feff", // Batch Completed
+                                  color:
+                                    status === "Not Started"
+                                      ? "#d32f2f"
+                                      : status === "In Progress"
+                                      ? "#e18b08ff"
+                                      : status === "Training Completed"
+                                      ? "#2e7d32"
+                                      : "#042378ff", // Batch Completed
+                                  padding: "4px 8px",
+                                  borderRadius: "12px",
+                                  fontWeight: 600,
+                                  fontSize: "11px",
+                                  display: "inline-block",
+                                  minWidth: "110px",
+                                  textAlign: "center",
+                                }}
+                              >
+                                {status}
+                              </span>
+                            </StyledTableCell>
+
+                            <StyledTableCell>
+                              {startDate && !isNaN(startDate) ? formatDateTime(startDate) : "-"}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                              {endDate && !isNaN(endDate) ? formatDateTime(endDate) : "-"}
+                            </StyledTableCell>
+                            <StyledTableCell>{batch.sessionType}</StyledTableCell>
+                            <StyledTableCell>{batch.courseName}</StyledTableCell>
+                            <StyledTableCell>{batch.sessionDay}</StyledTableCell>
+                            <StyledTableCell>{batch.targetStudent}</StyledTableCell>
+                            <StyledTableCell>{batch.location}</StyledTableCell>
+                            <StyledTableCell>{batch.sessionTime}</StyledTableCell>
+                            <StyledTableCell>{batch.fees}</StyledTableCell>
+                            <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell>
+                            <StyledTableCell>{formatDateTime(batch.createdAt)}</StyledTableCell>
+                            <StyledTableCell>{formatDateTime(batch.updatedAt)}</StyledTableCell>
+                          </StyledTableRow>
+                        );
+                      })
                   )}
                 </TableBody>
               </Table>
             </TableContainer>
-          <Box
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderTop: "1px solid #ddd",
-    paddingY: 0.5,
-    marginTop: "-4px",     // 👈 balances top gap
-    minHeight: "52px",     // 👈 keeps stable height
-  }}
->
-  <TablePagination
-    rowsPerPageOptions={[15, 30, 50]}
-    component="div"
-    count={filteredData.length}
-    rowsPerPage={rowsPerPage}
-    page={page}
-    onPageChange={handleChangePage}
-    onRowsPerPageChange={handleChangeRowsPerPage}
-    labelRowsPerPage="Rows per page"
-    sx={{
-      m: 0,                // remove extra margin
-      p: 0,                // remove extra padding
-      ".MuiTablePagination-toolbar": {
-        justifyContent: "center", // 👈 centers the pagination controls
-        alignItems: "center",
-        minHeight: "48px",
-      },
-      ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows": {
-        marginTop: 0, // fix vertical misalignment
-        marginBottom: 0,
-      },
-    }}
-  />
-        </Box>
-
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderTop: "1px solid #ddd",
+                paddingY: 0.5,
+                marginTop: "-4px",
+                minHeight: "52px",
+              }}
+            >
+              <TablePagination
+                rowsPerPageOptions={[15, 30, 50]}
+                component="div"
+                count={filteredData.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage="Rows per page"
+                sx={{
+                  m: 0,
+                  p: 0,
+                  ".MuiTablePagination-toolbar": {
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "48px",
+                  },
+                  ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows": {
+                    marginTop: 0,
+                    marginBottom: 0,
+                  },
+                }}
+              />
+            </Box>
           </Box>
         )}
 
         {/* Modals */}
         {show && (
-          <ModalEditBatch show={show} setShow={setShow} singleBatch={singleBatch} setSingleBatch={setSingleBatch} setBatchData={setBatchData} />
+          <ModalEditBatch
+            show={show}
+            setShow={setShow}
+            singleBatch={singleBatch}
+            setSingleBatch={setSingleBatch}
+            setBatchData={setBatchData}
+          />
         )}
         {viewWarning && (
-          <ModalDeleteWarning viewWarning={viewWarning} singleBatch={singleBatch} setBatchData={setBatchData} setViewWarning={setViewWarning} />
-        )}
-        
-        {showAdd && (
-          <ModalAddBatch show={showAdd} setShow={setShowAdd} batchData={batchData} setBatchData={setBatchData} courseData={courseData} setCourseData={setCourseData} />
+          <ModalDeleteWarning
+            viewWarning={viewWarning}
+            singleBatch={singleBatch}
+            setBatchData={setBatchData}
+            setViewWarning={setViewWarning}
+          />
         )}
 
+        {showAdd && (
+          <ModalAddBatch
+            show={showAdd}
+            setShow={setShowAdd}
+            batchData={batchData}
+            setBatchData={setBatchData}
+            courseData={courseData}
+            setCourseData={setCourseData}
+          />
+        )}
       </Box>
     </>
   );
 }
 
-export default CustomisedBatchTables
+export default CustomisedBatchTables;

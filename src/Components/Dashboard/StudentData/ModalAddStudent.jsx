@@ -10,20 +10,11 @@ import { Col, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 function ModalAddStudent({ show, setShow, setStudentData }) {
-  const navigate = useNavigate()
+
     const notify = () => {
       toast.success("Student added successfully !");
     };
-  const handleClose = () => {
-    setShow(false)
-  }
-  
-    const getStudentData = async()=>{
-        let res = await axios.get(`${url}/allstudent`,config)
-        console.log("StudentData",res.data.studentData)
-        setStudentData(res.data.studentData)
-        }
- 
+
 
   const formSchema = Yup.object().shape({
     studentName: Yup.string().required("Mandatory Field!"),
@@ -69,11 +60,11 @@ const addStudent = async (newStudent) => {
     const res = await axios.post(`${url}/registerstudent`, newStudent, config);
     if (res) {
       //console.log("Successfully added a new student to the DB");
-
       // Fetch latest data
       const updated = await axios.get(`${url}/allstudent`, config);
       setStudentData(updated.data.studentData);
-      notify();
+        setTimeout(() => handleClose(), 1000);
+      toast.success("Batch added successfully!");
     }
   } catch (e) {
     toast.error("Failed to add course. Please try again.");
@@ -81,7 +72,6 @@ const addStudent = async (newStudent) => {
   }
 };
 
-  // When you click the save.>> update
 
   return (
     <>

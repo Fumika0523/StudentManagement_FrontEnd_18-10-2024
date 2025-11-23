@@ -23,10 +23,11 @@ import StudentSignUp from './Components/Student/StudentSignUp';
 import StaffSignUp from './Components/Staff/StaffSignUp';
 import SelectCourseModal from './Components/Dashboard/StudentData/SelectCourseModal';
 import ChartDisplay from './Components/Dashboard/SampleChart/ChartDisplay';
-
-// ✅ Import new Navbar & Sidebar
 import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';
+import ApprovePage from './Components/Dashboard/BatchData/AdminApproval/ApprovePage';
+
+
 
 function App() {
   const token = localStorage.getItem('token');
@@ -126,6 +127,7 @@ return (
                     />
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="*" element={<Navigate to="/studentdata" />} />
+                    <Route path="/approve" element={<ApprovePage />} />
                   </>
                 ) : (
                   <>

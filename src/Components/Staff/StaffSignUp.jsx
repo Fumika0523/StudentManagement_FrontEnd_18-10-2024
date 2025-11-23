@@ -28,7 +28,7 @@ function SignUp() {
             username: "",
             password: "",
             email: "",
-            // phoneNumber: "",
+            phoneNumber: "",
             birthdate:"",
             gender:"",
             role:""
@@ -43,13 +43,17 @@ function SignUp() {
     const navigate = useNavigate()
 
     const postSignUpUser = async (newUser) => {
-        console.log(newUser)
+        try{
+         console.log("newUser",newUser)
         const res = await axios.post(`${url}/signup`, newUser)
-        console.log(res)
         if (res.status == 200) {
-            //navigate to signin page
+            console.log("successfully signedup!")
             navigate('/staff-signin')
         }
+        }catch(error){
+            console.log("Sign up Error:",error.response.data || error.message)
+        }
+   
     }
 
     return (
@@ -130,7 +134,7 @@ function SignUp() {
                             value={formik.values.role}
                             onChange={formik.handleChange}
                         >
-                            <option value="">--Select Role--</option>
+                            <option value="">Select Role</option>
                             <option value="admin">Admin</option>
                             <option value="staff">Staff</option>
                             <option value="user">User</option>

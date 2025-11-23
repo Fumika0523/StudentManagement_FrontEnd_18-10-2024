@@ -11,7 +11,11 @@ import { useEffect, useState } from 'react';
 
 const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
   const navigate = useNavigate();
+
+  // 🔹 Lock rule (older than 7 days from startDate)
   const [isLocked, setIsLocked] = useState(false);
+
+  // 🔹 Checklist for Training Completed → Batch Completed
   const [checkboxes, setCheckboxes] = useState({
     assign: false,
     deassign: false,
@@ -20,20 +24,43 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
   });
 
   const allChecked = Object.values(checkboxes).every(Boolean);
-  const isCompleted = singleBatch?.status === "Completed";
+
+  // 🔹 Separate state for batch status (tutor suggestion)
+  const [batchStatus, setBatchStatus] = useState(singleBatch?.status || "");
+
+  const token = localStorage.getItem('token');
+  const config = { headers: { Authorization: `Bearer ${token}` } };
 
   const handleClose = () => {
     setShow(false);
+    toast.success("Batch is successfully completed!", { autoClose: 2000 });
+      setTimeout(() => {
+        handleClose(); 
+      }, 500);
+
     navigate('/batchdata');
   };
 
-  // 🔹 Lock if batch older than 7 days
+  // 🔹 Reset lock & checkboxes when opening for a new batch
   useEffect(() => {
     if (singleBatch?.startDate) {
       const diffDays =
         (new Date() - new Date(singleBatch.startDate)) / (1000 * 60 * 60 * 24);
       setIsLocked(diffDays > 7);
+    } else {
+      setIsLocked(false);
     }
+
+    // reset checklist when switching batch
+    setCheckboxes({
+      assign: false,
+      deassign: false,
+      dropout: false,
+      certificate: false,
+    });
+
+    // initial batchStatus from prop
+    setBatchStatus(singleBatch?.status || "");
   }, [singleBatch]);
 
   // 🔹 Validation Schema
@@ -48,7 +75,9 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     status: Yup.string(),
   });
 
+  // 🔹 Formik
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       batchNumber: singleBatch?.batchNumber || "",
       courseName: singleBatch?.courseName || "",
@@ -61,7 +90,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
       startDate: singleBatch?.startDate
         ? new Date(singleBatch.startDate).toISOString().split("T")[0]
         : "",
-      status: singleBatch?.status || "",
+      status: batchStatus || singleBatch?.status || "",
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
@@ -69,13 +98,23 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     },
   });
 
-  const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+  // 🔹 Is Training Completed (from current status state)
+  const isTrainingCompleted = batchStatus === "Training Completed" || "Batch Completed";
 
-  // 🔹 Update Batch API
+  // 🔹 Update Batch API (full form save)
   const updateBatch = async (updatedBatch) => {
     try {
-      const res = await axios.put(`${url}/updatebatch/${singleBatch._id}`, updatedBatch, config);
+      const payload = {
+        ...updatedBatch,
+        status: batchStatus, // ensure we send the latest status state
+      };
+
+      const res = await axios.put(
+        `${url}/updatebatch/${singleBatch._id}`,
+        payload,
+        config
+      );
+
       if (res) {
         const refreshed = await axios.get(`${url}/allbatch`, config);
         setBatchData(refreshed.data.batchData);
@@ -92,28 +131,61 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     setCheckboxes((prev) => ({ ...prev, [name]: checked }));
   };
 
-  // 🔹 Unified status logic (same as table)
+  // 🔹 Unified status logic: auto status from dates (up to Training Completed)
   useEffect(() => {
-    if (singleBatch && singleBatch.startDate) {
-      const startDate = new Date(singleBatch.startDate);
-      const courseDays = singleBatch.noOfDays || singleBatch.course?.noOfDays || 0;
-      const endDate = new Date(startDate.getTime() + courseDays * 24 * 60 * 60 * 1000);
-      const today = new Date();
+    if (!singleBatch || !singleBatch.startDate) return;
 
-      let newStatus = singleBatch.status;
+    const startDate = new Date(singleBatch.startDate);
+    const courseDays = singleBatch.noOfDays || singleBatch.course?.noOfDays || 0;
+    const endDate = new Date(startDate.getTime() + courseDays * 24 * 60 * 60 * 1000);
+    const today = new Date();
 
-      // Only auto-update if not manually marked as Training Completed
-      if (newStatus !== "Training Completed") {
-        if (today < startDate) newStatus = "Not Started";
-        else if (today >= startDate && today < endDate) newStatus = "In Progress";
-        else newStatus = "Completed";
-      }
+    let newStatus = singleBatch.status || "";
 
-      formik.setFieldValue("status", newStatus);
+    // If already manually completed → DO NOT override
+    if (singleBatch.status === "Batch Completed") {
+      newStatus = "Batch Completed";
+    } else {
+      // Auto-generate up to Training Completed
+      if (today < startDate) newStatus = "Not Started";
+      else if (today >= startDate && today < endDate) newStatus = "In Progress";
+      else newStatus = "Training Completed";
     }
+
+    setBatchStatus(newStatus);
+    formik.setFieldValue("status", newStatus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleBatch]);
 
-  const disableFields = isLocked || isCompleted;
+  // 🔹 Tutor suggestion: when batchStatus changes, sync to DB
+  useEffect(() => {
+    if (!singleBatch?._id) return;
+    if (!batchStatus) return;
+    if (batchStatus === singleBatch.status) return; // no change
+
+    const updateStatusOnly = async () => {
+      try {
+        await axios.put(
+          `${url}/updatebatch/${singleBatch._id}`,
+          { status: batchStatus },
+          config
+        );
+        // You could optionally refresh table here if needed
+      } catch (e) {
+        console.error("Error updating batch status only:", e);
+      }
+    };
+
+    updateStatusOnly();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [batchStatus]);
+
+  // 🔹 Save button logic
+  // - If NOT locked → can always save
+  // - If locked → only can save when we are finalizing to Batch Completed
+  const canSave =
+    !isLocked ||
+    (batchStatus === "Batch Completed" && allChecked);
 
   return (
     <Modal show={show} onHide={handleClose} size="lg" style={{ minWidth: "550px" }}>
@@ -124,8 +196,8 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
       <Form onSubmit={formik.handleSubmit} className="px-2" style={{ fontSize: "13px" }}>
         <Modal.Body>
 
-          {/* ✅ Checklist appears only if status = Completed */}
-          {isCompleted && (
+          {/* 🔹 Checklist appears only if status = Training Completed */}
+          {isTrainingCompleted && (
             <div className="mb-2 border rounded p-2 bg-light">
               <Row>
                 <Col lg={3} md={3} sm={6}>
@@ -180,30 +252,36 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="batchNumber"
                   value={formik.values.batchNumber}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 />
               </Form.Group>
             </Col>
 
-            {/* 🔹 Status (auto-calculated or manual Training Completed) */}
+            {/* 🔹 Status (auto-calculated + manual Batch Completed) */}
             <Col md={4}>
               <Form.Group className="mb-2">
                 <Form.Label className="m-0">Status</Form.Label>
-                {allChecked ? (
+
+                {isTrainingCompleted && allChecked ? (
+                  // Once all tasks are done → allow Training Completed / Batch Completed switch
                   <Form.Select
                     name="status"
-                    value={formik.values.status}
-                    onChange={formik.handleChange}
+                    value={batchStatus}
+                    onChange={(e) => {
+                      const newStatus = e.target.value;
+                      setBatchStatus(newStatus);
+                      formik.setFieldValue("status", newStatus);
+                    }}
                   >
                     <option value="">Select</option>
-                    <option value="Training Completed">Training Completed</option>
+                    <option value="Batch Completed">Batch Completed</option>
                   </Form.Select>
                 ) : (
+                  // Otherwise → display read-only current status
                   <Form.Control
                     type="text"
                     name="status"
-                    value={formik.values.status}
-                    onChange={formik.handleChange}
+                    value={batchStatus}
                     disabled
                   />
                 )}
@@ -218,7 +296,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="courseName"
                   value={formik.values.courseName}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 />
               </Form.Group>
             </Col>
@@ -233,7 +311,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="startDate"
                   value={formik.values.startDate}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 />
               </Form.Group>
             </Col>
@@ -245,7 +323,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="sessionType"
                   value={formik.values.sessionType}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 >
                   <option value="">Select Session Type</option>
                   <option value="Online">Online</option>
@@ -261,7 +339,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="sessionDay"
                   value={formik.values.sessionDay}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 >
                   <option value="">Select Session Day</option>
                   <option value="Weekday">Weekday</option>
@@ -280,7 +358,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="targetStudent"
                   value={formik.values.targetStudent}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 />
               </Form.Group>
             </Col>
@@ -293,7 +371,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="location"
                   value={formik.values.location}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 />
               </Form.Group>
             </Col>
@@ -307,7 +385,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="sessionTime"
                   value={formik.values.sessionTime}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 >
                   <option value="">Select Session Time</option>
                   <option value="Morning">Morning</option>
@@ -325,7 +403,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   name="fees"
                   value={formik.values.fees}
                   onChange={formik.handleChange}
-                  disabled={disableFields}
+                  disabled={isLocked}
                 />
               </Form.Group>
             </Col>
@@ -336,7 +414,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
           <Button
             style={{ backgroundColor: "#4e73df" }}
             type="submit"
-            disabled={disableFields && !(isCompleted && allChecked)}
+            disabled={!canSave}
           >
             Save Changes
           </Button>
