@@ -346,7 +346,7 @@ const formatDateTime = (date) => {
                     maxWidth: "100%",marginTop:"10px"
                   }}
                 >
-      <TableContainer component={Paper}>
+     <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
@@ -362,7 +362,6 @@ const formatDateTime = (date) => {
               <StyledTableCell>Phone No.</StyledTableCell>
               <StyledTableCell>Gender</StyledTableCell>
               <StyledTableCell>Birthdate</StyledTableCell>
-              <StyledTableCell>Source</StyledTableCell>
               <StyledTableCell>Preferred Courses</StyledTableCell>
               <StyledTableCell>Admission Fee</StyledTableCell>
               <StyledTableCell>Admission Date</StyledTableCell>
@@ -374,86 +373,80 @@ const formatDateTime = (date) => {
               <StyledTableCell>Created Date</StyledTableCell>
             </TableRow>
           </TableHead>
-           
-  <TableBody>
-  {paginatedData.length > 0 ? (
-    paginatedData.map((stu, i) => {
-      const assigned = studentBatchMap[stu.studentName];
-      const course = courseMap[stu.courseId] || {};
-
-      return (
-        <StyledTableRow key={stu._id}>
-          <StyledTableCell>{page * rowsPerPage + i + 1}</StyledTableCell>
-
-          {/* Actions */}
-          <StyledTableCell>
-            <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
-              {role !== "staff" && (
-                <>
-                  <FaEdit
-                    className="text-success"
-                    style={{ cursor: "pointer", fontSize: "18px" }}
-                    onClick={() => handleEditClick(stu)}
-                  />
-                  <MdDelete
-                    className="text-danger"
-                    style={{ cursor: "pointer", fontSize: "18px" }}
-                    onClick={() => handleDeleteClick(stu._id)}
-                  />
-                  <FaKey
-                    className="text-secondary"
-                    style={{ cursor: "pointer", fontSize: "16px" }}
-                    onClick={() => handlePasswordClick(stu.password)}
-                  />
-                </>
-              )}
-            </Box>
-          </StyledTableCell>
-
-          {/* Status */}
-          <StyledTableCell>{assigned ? "Assigned" : "Not Assigned"}</StyledTableCell>
-
-          {/* Batch Details */}
-          <StyledTableCell>{assigned?.batchNumber || "Not assigned"}</StyledTableCell>
-          <StyledTableCell>{assigned?.sessionTime || "Not assigned"}</StyledTableCell>
-
-          {/* Student Info */}
-          <StyledTableCell>{stu._id}</StyledTableCell>
-          <StyledTableCell>
-            {stu.studentName
-              .split(" ")
-              .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-              .join(" ")}
-          </StyledTableCell>
-          <StyledTableCell>{stu.username}</StyledTableCell>
-          <StyledTableCell>{stu.email}</StyledTableCell>
-          <StyledTableCell>{stu.phoneNumber}</StyledTableCell>
-          <StyledTableCell>{stu.gender}</StyledTableCell>
-          <StyledTableCell>{formatDate(stu.birthdate)}</StyledTableCell>
-          <StyledTableCell>{assigned?.source || "-"}</StyledTableCell>
-          <StyledTableCell>{stu.preferredCourses?.join(", ")}</StyledTableCell>
-          <StyledTableCell>{stu.admissionFee || "-"}</StyledTableCell>
-          <StyledTableCell>{formatDate(stu.admissionDate)}</StyledTableCell>
-          <StyledTableCell>{course.courseName || "-"}</StyledTableCell>
-          <StyledTableCell>{course._id || "-"}</StyledTableCell>
-          <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
-          <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
-          <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
-          <StyledTableCell>{formatDateTime(stu.createdAt)}</StyledTableCell>
-        </StyledTableRow>
-      );
-    })
-  ) : (
-    <StyledTableRow>
-      <StyledTableCell colSpan={21} align="center">
-        No students found
-      </StyledTableCell>
-    </StyledTableRow>
-  )}
-</TableBody>
-
-          </Table>
-        </TableContainer>
+           <TableBody>
+            {filteredData.map((student, index) => {
+              const course = courseMap[student.courseId] || {};
+              return (
+                <StyledTableRow key={student._id}>
+                  <StyledTableCell>{index + 1}</StyledTableCell>
+                 {/* Action */}
+                <StyledTableCell>
+  <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
+    {/* Edit */}
+    <FaEdit
+      className={role === "admin" ? "text-success" : "text-muted"}
+      style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+      onClick={() => {
+        if (role === "admin") {
+          handleEditClick(student);
+        } else {
+          toast.error("To edit the information, please contact Admin", { autoClose: 2000 });
+        }
+      }}
+    />
+    {/* Delete */}
+    <MdDelete
+      className={role === "admin" ? "text-danger" : "text-muted"}
+      style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+      onClick={() => {
+        if (role === "admin") {
+          handleDeleteClick(student._id);
+        } else {
+          toast.error("To delete the information, please contact Super-Admin", { autoClose: 2000 });
+        }
+      }}
+    />
+    {/* Lock */}
+    <FaKey
+      className="text-secondary"
+      style={{ cursor: 'pointer', fontSize: "16px" }}
+      onClick={() => handlePasswordClick(student.password)}
+    />
+  </div>
+</StyledTableCell>
+                  {/* Status */}
+                  <StyledTableCell>
+                  {studentBatchMap[student.studentName]?.batchNumber ? 'Assigned' : 'Not Assigned'}
+                </StyledTableCell>
+                  {/* BatchNumber */}
+                  <StyledTableCell>  {studentBatchMap[student.studentName]?.batchNumber || "Not assigned"}</StyledTableCell>
+                  
+                  <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "Not assigned"}</StyledTableCell>
+                  {/* Student ID */}
+                  <StyledTableCell>{student._id}</StyledTableCell>
+                  {/* Student Name */}
+                  <StyledTableCell>{student.studentName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</StyledTableCell>
+                  {/* Username */}
+                  <StyledTableCell>{student.username}</StyledTableCell>
+                  <StyledTableCell>{student.email}</StyledTableCell>
+                  <StyledTableCell>{student.phoneNumber}</StyledTableCell>
+                  <StyledTableCell>{student.gender}</StyledTableCell>
+                  <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
+                  <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
+                  <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
+                  <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
+                  <StyledTableCell>{course.courseName || "-"}</StyledTableCell>
+                  <StyledTableCell>{course._id || "-"}</StyledTableCell>
+                  <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
+                  <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
+                  <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
+                  <StyledTableCell>{formatDateTime(student.createdAt)}</StyledTableCell>
+                </StyledTableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
               <TablePagination
                   component="div"

@@ -62,6 +62,7 @@ function App() {
 
 return (
   <>
+
     {/** Navbar & Sidebar appear only when logged in */}
     {token && (
       <>
@@ -101,15 +102,17 @@ return (
             >
               <Routes>
                 {/* Your routes remain the same */}
+
                 <Route path="/chartdisplay" element={<ChartDisplay />} />
                 {role === 'admin' || role === 'staff' ? (
                   <>
+                    <Route path="/approve" element={<ApprovePage />} />
                     <Route
                       path="/studentdata"
                       element={
                         <ViewStudent
-                          isAuthenticated={isAuthenticated}
-                          setIsAuthenticated={setIsAuthenticated}
+                          // isAuthenticated={isAuthenticated}
+                          // setIsAuthenticated={setIsAuthenticated}
                         />
                       }
                     />
@@ -127,7 +130,6 @@ return (
                     />
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="*" element={<Navigate to="/studentdata" />} />
-                    <Route path="/approve" element={<ApprovePage />} />
                   </>
                 ) : (
                   <>

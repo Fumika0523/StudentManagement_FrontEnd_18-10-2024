@@ -11,6 +11,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios';
 import { url } from '../utils/constant';
 import { FcVoicePresentation } from "react-icons/fc";
+import { toast } from 'react-toastify';
 
 function StaffSignIn({isAuthenticated,setIsAuthenticated}){
 
@@ -26,25 +27,47 @@ function StaffSignIn({isAuthenticated,setIsAuthenticated}){
         },
         validationSchema:formSchema,
         onSubmit:(values)=>{
-            // console.log(values)
+            //console.log(values)
             postSignInUser(values)
         }
     })
 
     const navigate=useNavigate()
-
+   
     const postSignInUser=async(loginUser)=>{
-        // console.log(loginUser)
+    try{
         const res = await axios.post(`${url}/signin`,loginUser)
-        console.log(res.data) 
-        localStorage.setItem('token',res.data.token)
+        //console.log("postSignInUser",res.data) 
+       localStorage.setItem('token',res.data.token)
         localStorage.setItem('username',res.data.user.username)
          localStorage.setItem('role',res.data.role)
         if(res.data.token){
+            toast.success(res.data.message);
             setIsAuthenticated(true) // signed in >> true
         }
-        navigate('/dashboard')
+         const searchParams = new URLSearchParams(window.location.search);
+        const redirect = searchParams.get("redirect");
+        const batchId = searchParams.get("batchId");
+          
+    console.log('🔍 Full URL:', window.location.href);
+    console.log('🔍 Search params:', window.location.search);
+    console.log('🔍 Redirect param:', redirect);
+    console.log('🔍 BatchId param:', batchId);
+            // After we save token + role
+           if (redirect && batchId) {
+      window.location.href = `${redirect}?batchId=${batchId}`;
+    } else {
+      window.location.href = '/studentdata'; // default redirect
     }
+
+    }catch(e){
+        console.log(e)
+        if(e.response?.data?.message){
+             toast.error(e.response?.data?.message); 
+        }else{
+            toast.error("Something went wrong. Please try again.");
+        }
+    }}
 
     return(
         <>

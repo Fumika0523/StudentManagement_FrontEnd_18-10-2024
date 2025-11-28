@@ -75,7 +75,7 @@ const dotStyle = `
 }
 `;
 
-// 🔹 Helper: compute status based on DB value + dates
+//  Helper: compute status based on DB value + dates
 const computeStatus = (batch, course) => {
   // Final state always wins
   if (batch.status === "Batch Completed") return "Batch Completed";
@@ -331,7 +331,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
     return diffInDays > 7;
   };
 
-  // 🔹 Admin approval request (staff)
+  //  Admin approval request (staff)
   const handleSendApproval = async (batch) => {
     try {
       const response = await axios.post(
@@ -342,7 +342,6 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
         },
         config
       );
-
       console.log("SUCCESS:", response.data.message);
       toast.success("Approval request sent to Admin");
 
@@ -587,7 +586,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                                   onClick={() =>
                                     toast.error(
                                       "This batch is locked (over 7 days old). Contact Super-Admin.",
-                                      { autoClose: 2000 }
+                            { autoClose: 2000 }
                                     )
                                   }
                                 />
@@ -618,9 +617,9 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                             );
                           }
 
-                          // 🔹 TRAINING COMPLETED
+                          //  TRAINING COMPLETED
                           if (status === "Training Completed") {
-                            // ✅ Admin: Edit < 7 days, Lock > 7 days (ignores approval)
+                            //  Admin: Edit < 7 days, Lock > 7 days (ignores approval)
                             if (role === "admin") {
                               if (isOld) {
                                 return (
@@ -645,7 +644,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                               );
                             }
 
-                            // ✅ Staff: approvalStatus logic
+                            //  Staff: approvalStatus logic
                             if (role === "staff") {
                               // Never requested yet → Lock + Info (send request)
                               if (!approvalStatus) {

@@ -183,7 +183,7 @@ function SignUp() {
             <div className='signinCard2 col-11 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4 d-flex  justify-content flex-row'>
             <div className='text-center message'>Or already have an account? &nbsp;</div>
             <Link className='link-underline link-underline-opacity-0 text-center' 
-                              to='/student-signin'
+            to='/staff-signin'
             >Sign in</Link>                   
              </div>
                 </div>

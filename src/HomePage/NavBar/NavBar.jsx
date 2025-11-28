@@ -52,8 +52,6 @@ export default function NavBar({ toggleSidebar }) {
           onClick={toggleSidebar}
         />
 
-
-
         {/* Right Side Icons */}
         <Nav className="d-flex flex-row align-items-center gap-3 ms-auto">
      
