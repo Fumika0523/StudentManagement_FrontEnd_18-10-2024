@@ -34,6 +34,13 @@ function App() {
   const role = localStorage.getItem('role');
   const [userData, setUserData] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Check if URL contains redirect params (approval link)
+const searchParams = new URLSearchParams(window.location.search);
+const redirect = searchParams.get("redirect");
+const batchId = searchParams.get("batchId");
+
+const hasApprovalRedirect = redirect && batchId;
+
 
   //  State for sidebar visibility (mobile toggle)
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -150,7 +157,7 @@ return (
     )}
 
     {/* Public routes remain the same */}
-    {!token && (
+    {(!token || hasApprovalRedirect) && (
       <>
         <Routes>
           <Route path="/" element={<StudentOrStaff />} />
@@ -165,12 +172,12 @@ return (
           />
           <Route path="/student-signup" element={<StudentSignUp />} />
           <Route
-            path="/staff-signin"
-            element={
-              <StaffSignIn
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-              />
+        path="/staff-signin"
+        element={
+          <StaffSignIn
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+          />
             }
           />
           <Route path="/staff-signup" element={<StaffSignUp />} />

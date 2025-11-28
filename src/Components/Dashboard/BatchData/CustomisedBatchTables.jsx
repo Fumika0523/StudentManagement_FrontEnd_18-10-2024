@@ -18,6 +18,7 @@ import {
   TextField,
   Autocomplete,
 } from '@mui/material';
+import { MdOutlineRateReview } from "react-icons/md";
 import { styled } from '@mui/material/styles';
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { FaEdit, FaLock } from "react-icons/fa";
@@ -143,6 +144,12 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
     setShow(true);
     setSingleBatch(batch);
   };
+
+  const handleAdminReviewClick = (batch)=>{
+    if(batch.approvalStatus == "pending" && batch.requestedBy){
+      window.location.href = `/approve?batchId=${batch._id}`
+    }
+  }
 
   // Whenever batchData changes, automatically update filteredData if table is visible
   useEffect(() => {
@@ -616,11 +623,24 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                               />
                             );
                           }
-
+                             if (role === "admin") {
                           //  TRAINING COMPLETED
                           if (status === "Training Completed") {
-                            //  Admin: Edit < 7 days, Lock > 7 days (ignores approval)
-                            if (role === "admin") {
+                              if (approvalStatus === "pending") {
+                       return (
+                            <>
+                              <MdOutlineRateReview
+                                className="text-primary"
+                                style={{ fontSize: "20px", cursor: "pointer" }}
+                                title="Approval request pending"
+                                onClick={()=>handleAdminReviewClick(batch)}
+                              />
+                              
+                            </>
+                          );
+                        }
+                         //  Admin: Edit < 7 days, Lock > 7 days (ignores approval)
+                         
                               if (isOld) {
                                 return (
                                   <FaLock
@@ -748,6 +768,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                                 );
                               }
                             }
+                            
                           }
 
                           // Fallback (should not normally hit)

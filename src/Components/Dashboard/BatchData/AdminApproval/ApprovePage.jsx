@@ -90,12 +90,15 @@ const handleDecision = async (action) => {
 
     toast.success(res.data.message);
 
+
     // Update UI
     setBatch((prev) => ({
       ...prev,
       approvalStatus: action === "approve" ? "approved" : "declined",
     }));
-
+ setTimeout(() => {
+      window.location.href = "/batchdata";
+    }, 800);
   } catch (err) {
     const msg =
       err.response?.data?.message ||
