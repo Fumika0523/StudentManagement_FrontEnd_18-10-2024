@@ -235,19 +235,19 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 2. When 7 days are passed, the Lock icon will show <<<Done>>>
 3. When the batch is completed the status shows "Training completed" from "In-Progress". <<<Done>>>
 4. When training completed shown, the button will show next to Lock Icon / or at the end. <<<Done>>>
-5. When this button is clicked, the approval request will be sent to Admin (optional) <<<Checking>>>
-6. Once Admin is approved, the lock icon will changed to live-icon (To remind for the updations) and Edit icon will show.  <<<Checking>>>
-7. When you click Edit icon, 4 check boxes will show- assign, deassign, drop-out,  certificate generated or not?  <<<Checking>>>
-8. when you select all, the status option will be enabled  <<<Checking>>>
-9. Batch completed option will be able to select (only 1 dropdown) on STatus  and when you click this option <<<Checking>>>
-10. Save button should show. - send Put request <<<Checking>>>
-11. When you click save button then status is stored in a DB - and display on the browser. <<<Checking>>>
-12. From admin page, the review request icon should show in case the admin missed email request 
+5. When this button is clicked, the approval request will be sent to Admin (optional) <<<Done>>>
+6. Once Admin is approved, the lock icon will changed to live-icon (To remind for the updations) and Edit icon will show.  <<<Done>>>
+7. When you click Edit icon, 4 check boxes will show- assign, deassign, drop-out,  certificate generated or not?  <<<Done>>>
+8. when you select all, the status option will be enabled  <<<Done>>>
+9. Batch completed option will be able to select (only 1 dropdown) on STatus  and when you click this option <<<Done>>>
+10. Save button should show. - send Put request <<<Done>>>
+11. When you click save button then status is stored in a DB - and display on the browser. <<<Done>>>
+12. From admin page, the review request icon should show in case the admin missed email request <<<Done>>> <<<Added by me>>>
 
 Create a state variable for the batch status, use the state variable whenever i need to change the state you will update the state variable.
 
 create 1 useEffect, here you do the put call - pass  the dependency array as a batch status and store in DB
 Check how many times of UseEffect triggering
 
-Add human icon in Action, and when you click this icon, the Modal (student Name, Asigned status, maximum 5) will shown and you can see all the student list and Add download button inside Modal, add simple search. when you type, the data should shown.
+13. Add human icon in Action, and when you click this icon, the Modal (student Name, Asigned status, maximum 5) will shown and you can see all the student list and Add download button inside Modal, add simple search. when you type, the data should shown.
 

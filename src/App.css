@@ -4,19 +4,22 @@
   justify-content: center;
 }
 
-.signinBtn,
-.sign-Btn {
-  background: linear-gradient(135deg, #4F74DF, #69C879);
+.google-btn:hover {
+    background-color: #f8f9fa !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
 }
 
-.signinBtn:hover,
+
 .sign-Btn:hover,
 .signup-Btn:hover {
-  transform: scale(1.07);
+  transform: scale(1.02);
   transition: 0.3s;
 }
 
 .sign-Btn {
+  background: linear-gradient(135deg, #4F74DF, #69C879);
   text-align: center;
   align-items: center;
   justify-content: center;

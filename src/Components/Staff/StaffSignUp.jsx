@@ -53,7 +53,6 @@ function SignUp() {
         }catch(error){
             console.log("Sign up Error:",error.response.data || error.message)
         }
-   
     }
 
     return (

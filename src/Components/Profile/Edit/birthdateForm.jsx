@@ -49,7 +49,7 @@ let config = {
         console.log("User data is called")
         let res = await fetch(`${url}/users/profile`,config)
         let data = await res.json()
-        console.log(data.userData)
+         console.log(data.userData)
 
         if (data.userData) {
             // Extract YYYY-MM-DD from the date string

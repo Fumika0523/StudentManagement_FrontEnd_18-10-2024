@@ -570,219 +570,211 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
 
                         const isOld = isOlderThan7Days(batch.createdAt);
                         const approvalStatus = batch.approvalStatus || null;
+const renderActionIcons = () => {
+  // FINAL state
+  if (status === "Batch Completed") {
+    return (
+      <FaCircleCheck
+        className="text-success"
+        style={{ fontSize: "18px", cursor: "default" }}
+        title="Batch fully completed"
+      />
+    );
+  }
 
-                        const renderActionIcons = () => {
-                          // 🔹 BATCH COMPLETED: final state
-                          if (status === "Batch Completed") {
-                            return (
-                              <FaCircleCheck
-                                className="text-success"
-                                style={{ fontSize: "18px", cursor: "default" }}
-                                title="Batch fully completed"
-                              />
-                            );
-                          }
+  // NOT STARTED
+  if (status === "Not Started") {
+    if (isOld) {
+      return (
+        <FaLock
+          className="text-muted"
+          style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+          onClick={() =>
+            toast.error(
+              "This batch is locked (over 7 days old). Contact Super-Admin.",
+              { autoClose: 2000 }
+            )
+          }
+        />
+      );
+    }
+    return (
+      <FaEdit
+        className="text-success"
+        style={{ cursor: "pointer", fontSize: "17px" }}
+        onClick={() => handleEditClick(batch)}
+      />
+    );
+  }
 
-                          // 🔹 NOT STARTED: Edit < 7 days, Lock > 7 days
-                          if (status === "Not Started") {
-                            if (isOld) {
-                              return (
-                                <FaLock
-                                  className="text-muted"
-                                  style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                  onClick={() =>
-                                    toast.error(
-                                      "This batch is locked (over 7 days old). Contact Super-Admin.",
-                            { autoClose: 2000 }
-                                    )
-                                  }
-                                />
-                              );
-                            }
-                            return (
-                              <FaEdit
-                                className="text-success"
-                                style={{ cursor: "pointer", fontSize: "17px" }}
-                                onClick={() => handleEditClick(batch)}
-                              />
-                            );
-                          }
+  // IN PROGRESS
+  if (status === "In Progress") {
+    return (
+      <FaLock
+        className="text-muted"
+        style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+        onClick={() =>
+          toast.error("This batch is in progress. Editing is disabled.", {
+            autoClose: 2000,
+          })
+        }
+      />
+    );
+  }
 
-                          // 🔹 IN PROGRESS: Always Lock (no editing)
-                          if (status === "In Progress") {
-                            return (
-                              <FaLock
-                                className="text-muted"
-                                style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                onClick={() =>
-                                  toast.error(
-                                    "This batch is in progress. Editing is disabled.",
-                                    { autoClose: 2000 }
-                                  )
-                                }
-                              />
-                            );
-                          }
-                             if (role === "admin") {
-                          //  TRAINING COMPLETED
-                          if (status === "Training Completed") {
-                              if (approvalStatus === "pending") {
-                       return (
-                            <>
-                              <MdOutlineRateReview
-                                className="text-primary"
-                                style={{ fontSize: "20px", cursor: "pointer" }}
-                                title="Approval request pending"
-                                onClick={()=>handleAdminReviewClick(batch)}
-                              />
-                              
-                            </>
-                          );
-                        }
-                         //  Admin: Edit < 7 days, Lock > 7 days (ignores approval)
-                         
-                              if (isOld) {
-                                return (
-                                  <FaLock
-                                    className="text-muted"
-                                    style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                    onClick={() =>
-                                      toast.error(
-                                        "This batch is locked (over 7 days old). Contact Super-Admin.",
-                                        { autoClose: 2000 }
-                                      )
-                                    }
-                                  />
-                                );
-                              }
-                              return (
-                                <FaEdit
-                                  className="text-success"
-                                  style={{ cursor: "pointer", fontSize: "17px" }}
-                                  onClick={() => handleEditClick(batch)}
-                                />
-                              );
-                            }
+  // TRAINING COMPLETED
+  if (status === "Training Completed") {
+    // ADMIN VIEW
+    if (role === "admin") {
+      if (approvalStatus === "pending") {
+        return (
+          <MdOutlineRateReview
+            className="text-primary"
+            style={{ fontSize: "20px", cursor: "pointer" }}
+            title="Approval request pending"
+            onClick={() => handleAdminReviewClick(batch)}
+          />
+        );
+      }
 
-                            //  Staff: approvalStatus logic
-                            if (role === "staff") {
-                              // Never requested yet → Lock + Info (send request)
-                              if (!approvalStatus) {
-                                return (
-                                  <>
-                                    <FaLock
-                                      className="text-muted"
-                                      style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                      onClick={() =>
-                                        toast.error(
-                                          "This batch is locked to edit, please request approval from Admin.",
-                                          { autoClose: 2000 }
-                                        )
-                                      }
-                                    />
-                                    <IoIosInformationCircle
-                                      className="text-primary fs-5"
-                                      style={{ cursor: "pointer" }}
-                                      onClick={() => handleSendApproval(batch)}
-                                      title="Send approval request to Admin"
-                                    />
-                                  </>
-                                );
-                              }
+      if (isOld) {
+        return (
+          <FaLock
+            className="text-muted"
+            style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+            onClick={() =>
+              toast.error(
+                "This batch is locked (over 7 days old). Contact Super-Admin.",
+                { autoClose: 2000 }
+              )
+            }
+          />
+        );
+      }
 
-                              // Pending → Lock + disabled Info icon
-                              if (approvalStatus === "pending") {
-                                return (
-                                  <>
-                                    <FaLock
-                                      className="text-muted"
-                                      style={{
-                                        cursor: "not-allowed",
-                                        opacity: 0.7,
-                                        fontSize: "16px",
-                                      }}
-                                    />
-                                    <IoIosInformationCircle
-                                      className="text-secondary fs-5"
-                                      style={{
-                                        cursor: "not-allowed",
-                                        opacity: 0.4,
-                                      }}
-                                      onClick={() =>
-                                        toast.info("Waiting for admin approval…", {
-                                          autoClose: 2000,
-                                        })
-                                      }
-                                      title="Waiting for admin approval"
-                                    />
-                                  </>
-                                );
-                              }
+      return (
+        <FaEdit
+          className="text-success"
+          style={{ cursor: "pointer", fontSize: "17px" }}
+          onClick={() => handleEditClick(batch)}
+        />
+      );
+    }
 
-                              // Approved → Live-dot + Edit (always)
-                              if (approvalStatus === "approved") {
-                                return (
-                                  <>
-                                    <span
-                                      className="live-dot"
-                                      title="Approved by Admin - please update this batch"
-                                    />
-                                    <FaEdit
-                                      className="text-success"
-                                      style={{ cursor: "pointer", fontSize: "17px" }}
-                                      onClick={() => handleEditClick(batch)}
-                                    />
-                                  </>
-                                );
-                              }
+    // STAFF VIEW
+    if (role === "staff") {
+      // No request yet → Lock + Info
+      if (!approvalStatus) {
+        return (
+          <>
+            <FaLock
+              className="text-muted"
+              style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+              onClick={() =>
+                toast.error(
+                  "This batch is locked to edit, please request approval from Admin.",
+                  { autoClose: 2000 }
+                )
+              }
+            />
+            <IoIosInformationCircle
+              className="text-primary fs-5"
+              style={{ cursor: "pointer" }}
+              onClick={() => handleSendApproval(batch)}
+              title="Send approval request to Admin"
+            />
+          </>
+        );
+      }
 
-                              // Declined → Lock + disabled Edit
-                              if (approvalStatus === "declined") {
-                                return (
-                                  <>
-                                    <FaLock
-                                      className="text-muted"
-                                      style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                      onClick={() =>
-                                        toast.error(
-                                          "Approval request was declined by Admin.",
-                                          { autoClose: 2000 }
-                                        )
-                                      }
-                                    />
-                                    <FaEdit
-                                      className="text-muted"
-                                      style={{
-                                        cursor: "not-allowed",
-                                        opacity: 0.4,
-                                        fontSize: "17px",
-                                      }}
-                                      onClick={() =>
-                                        toast.info(
-                                          "Editing disabled. Approval request was declined.",
-                                          { autoClose: 2000 }
-                                        )
-                                      }
-                                    />
-                                  </>
-                                );
-                              }
-                            }
-                            
-                          }
+      // Pending
+      if (approvalStatus === "pending") {
+        return (
+          <>
+            <FaLock
+              className="text-muted"
+              style={{
+                cursor: "not-allowed",
+                opacity: 0.7,
+                fontSize: "16px",
+              }}
+            />
+            <IoIosInformationCircle
+              className="text-secondary fs-5"
+              style={{
+                cursor: "not-allowed",
+                opacity: 0.4,
+              }}
+              onClick={() =>
+                toast.info("Waiting for admin approval…", { autoClose: 2000 })
+              }
+              title="Waiting for admin approval"
+            />
+          </>
+        );
+      }
 
-                          // Fallback (should not normally hit)
-                          return (
-                            <FaLock
-                              className="text-muted"
-                              style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                              onClick={() =>
-                                toast.error("This batch is locked.", { autoClose: 2000 })
-                              }
-                            />
-                          );
-                        };
+      // Approved
+      if (approvalStatus === "approved") {
+        return (
+          <>
+            <span
+              className="live-dot"
+              title="Approved by Admin - please update this batch"
+            />
+            <FaEdit
+              className="text-success"
+              style={{ cursor: "pointer", fontSize: "17px" }}
+              onClick={() => handleEditClick(batch)}
+            />
+          </>
+        );
+      }
 
+      // Declined
+      if (approvalStatus === "declined") {
+        return (
+          <>
+            <FaLock
+              className="text-muted"
+              style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+              onClick={() =>
+                toast.error("Approval request was declined by Admin.", {
+                  autoClose: 2000,
+                })
+              }
+            />
+            <FaEdit
+              className="text-muted"
+              style={{
+                cursor: "not-allowed",
+                opacity: 0.4,
+                fontSize: "17px",
+              }}
+              onClick={() =>
+                toast.info(
+                  "Editing disabled. Approval request was declined.",
+                  { autoClose: 2000 }
+                )
+              }
+            />
+          </>
+        );
+      }
+    }
+  }
+
+  // Fallback
+  return (
+    <FaLock
+      className="text-muted"
+      style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+      onClick={() => toast.error("This batch is locked.", { autoClose: 2000 })}
+    />
+  );
+};
+
+                        
                         return (
                           <StyledTableRow key={batch._id}>
                             <StyledTableCell>{index + 1}</StyledTableCell>
