@@ -121,18 +121,8 @@ useEffect(() => {
     console.log(' Rendering StaffSignIn component');
 
     const handleGoogleLogin = () => {
-    // Preserve redirect params if they exist
-    const searchParams = new URLSearchParams(window.location.search);
-    const redirect = searchParams.get("redirect");
-    const batchId = searchParams.get("batchId");
-
-    let googleAuthUrl = `${url}/auth/google`;
-
-    if (redirect && batchId) {
-        googleAuthUrl += `?redirect=${encodeURIComponent(redirect)}&batchId=${batchId}`;
-    }
-
-    window.location.href = googleAuthUrl;
+    console.log("Please login with Google")
+    window.location.href="http://localhost:8001/auth/google/"
 };
 
 

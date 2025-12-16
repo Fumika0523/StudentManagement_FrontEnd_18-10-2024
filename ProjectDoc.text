@@ -56,10 +56,10 @@ Download individual student records.
 👩‍🎓 Student Features
 
 Authentication
-Register/login via normal signup or Google OAuth.
-Auto-creation of student record at registration.
+Register/login via normal signup or Google OAuth.               <<<< In progress
+Auto-creation of student record at registration.                
 
-Profile Management  >> completed >> Google 
+Profile Management  >> completed >> Google                       <<<< In progress
 Update own profile (name, contact details, profile picture).
 Cannot modify admin-controlled details (batch, fees, admissions).
 
