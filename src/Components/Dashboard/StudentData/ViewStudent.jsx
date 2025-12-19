@@ -3,10 +3,7 @@ import { useState } from "react"
 import { url } from "../../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./CustomisedTables"
-import SideBar from "../../../HomePage/SideBar/SideBar"
-import NavBar from "../../../HomePage/NavBar/NavBar"
 import ModalAddStudent from "../StudentData/ModalAddStudent"
-import { Button } from "react-bootstrap"
 
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])

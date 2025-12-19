@@ -8,14 +8,15 @@ import { url } from '../../utils/constant';
 import axios from 'axios';
 import { Col, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
   const navigate = useNavigate();
 
-  // 🔹 Lock rule (older than 7 days from startDate)
+  //  Lock rule (older than 7 days from startDate)
   const [isLocked, setIsLocked] = useState(false);
 
-  // 🔹 Checklist for Training Completed → Batch Completed
+  //  Checklist for Training Completed → Batch Completed
   const [checkboxes, setCheckboxes] = useState({
     assign: false,
     deassign: false,
@@ -25,23 +26,17 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
 
   const allChecked = Object.values(checkboxes).every(Boolean);
 
-  // 🔹 Separate state for batch status (tutor suggestion)
+  //  Separate state for batch status (tutor suggestion)
   const [batchStatus, setBatchStatus] = useState(singleBatch?.status || "");
-
   const token = localStorage.getItem('token');
   const config = { headers: { Authorization: `Bearer ${token}` } };
 
   const handleClose = () => {
     setShow(false);
-    toast.success("Batch is successfully completed!", { autoClose: 2000 });
-      setTimeout(() => {
-        handleClose(); 
-      }, 500);
-
     navigate('/batchdata');
   };
 
-  // 🔹 Reset lock & checkboxes when opening for a new batch
+  //  Reset lock & checkboxes when opening for a new batch
   useEffect(() => {
     if (singleBatch?.startDate) {
       const diffDays =
@@ -63,7 +58,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     setBatchStatus(singleBatch?.status || "");
   }, [singleBatch]);
 
-  // 🔹 Validation Schema
+  //  Validation Schema
   const formSchema = Yup.object().shape({
     batchNumber: Yup.string().required("Mandatory Field !"),
     courseName: Yup.string().required("Mandatory Field !"),
@@ -75,7 +70,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     status: Yup.string(),
   });
 
-  // 🔹 Formik
+  //  Formik
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -98,10 +93,10 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     },
   });
 
-  // 🔹 Is Training Completed (from current status state)
+  //  Is Training Completed (from current status state)
   const isTrainingCompleted = batchStatus === "Training Completed" || "Batch Completed";
 
-  // 🔹 Update Batch API (full form save)
+  //  Update Batch API (full form save)
   const updateBatch = async (updatedBatch) => {
     try {
       const payload = {
@@ -114,10 +109,11 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
         payload,
         config
       );
-
+      console.log("updateBatch",res)
       if (res) {
         const refreshed = await axios.get(`${url}/allbatch`, config);
         setBatchData(refreshed.data.batchData);
+            toast.success("Batch is successfully completed!", { autoClose: 2000 });
         handleClose();
       }
     } catch (e) {
@@ -125,13 +121,13 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     }
   };
 
-  // 🔹 Checkbox handler
+  //  Checkbox handler
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setCheckboxes((prev) => ({ ...prev, [name]: checked }));
   };
 
-  // 🔹 Unified status logic: auto status from dates (up to Training Completed)
+  //  Unified status logic: auto status from dates (up to Training Completed)
   useEffect(() => {
     if (!singleBatch || !singleBatch.startDate) return;
 
@@ -157,7 +153,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleBatch]);
 
-  // 🔹 Tutor suggestion: when batchStatus changes, sync to DB
+  //  Tutor suggestion: when batchStatus changes, sync to DB
   useEffect(() => {
     if (!singleBatch?._id) return;
     if (!batchStatus) return;
@@ -180,7 +176,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [batchStatus]);
 
-  // 🔹 Save button logic
+  //  Save button logic
   // - If NOT locked → can always save
   // - If locked → only can save when we are finalizing to Batch Completed
   const canSave =
@@ -196,7 +192,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
       <Form onSubmit={formik.handleSubmit} className="px-2" style={{ fontSize: "13px" }}>
         <Modal.Body>
 
-          {/* 🔹 Checklist appears only if status = Training Completed */}
+          {/*  Checklist appears only if status = Training Completed */}
           {isTrainingCompleted && (
             <div className="mb-2 border rounded p-2 bg-light">
               <Row>
@@ -242,7 +238,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
             </div>
           )}
 
-          {/* 🔹 Main Form Fields */}
+          {/*  Main Form Fields */}
           <Row>
             <Col md={4}>
               <Form.Group className="mb-2">
@@ -257,7 +253,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
               </Form.Group>
             </Col>
 
-            {/* 🔹 Status (auto-calculated + manual Batch Completed) */}
+            {/*  Status (auto-calculated + manual Batch Completed) */}
             <Col md={4}>
               <Form.Group className="mb-2">
                 <Form.Label className="m-0">Status</Form.Label>

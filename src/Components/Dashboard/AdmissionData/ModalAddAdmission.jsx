@@ -172,7 +172,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
             await addAdmission(values);
             handleClose();
         }
-
     })
 
     const token = localStorage.getItem('token')

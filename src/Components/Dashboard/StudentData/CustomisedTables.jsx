@@ -178,8 +178,6 @@ useEffect(() => {
   }
 }, [studentData, admissionData, batchData]);
 
-
-
     // Create a map for fast lookup: courseId => course object
   const courseMap = useMemo(() => {
     const map = {};
@@ -188,8 +186,6 @@ useEffect(() => {
     });
     return map;
   }, [courseData]);
-
-
 
 const formatDateTime = (date) => {
   const d = new Date(date);

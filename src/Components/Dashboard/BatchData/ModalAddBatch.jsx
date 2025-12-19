@@ -61,8 +61,6 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
     const res = await axios.get(`${url}/allcourse`, config);
     setCourseData(res.data.courseData);
   };
-
- 
   useEffect(() => {
     getCourseData();
   }, []);

@@ -11,9 +11,10 @@ import { toast } from 'react-toastify';
 
 function ModalAddStudent({ show, setShow, setStudentData }) {
 
-    const notify = () => {
-      toast.success("Student added successfully !");
-    };
+    const handleClose = () => {
+        setShow(false)
+        navigate('/studentata')
+    }
 
 
   const formSchema = Yup.object().shape({
@@ -195,8 +196,6 @@ const addStudent = async (newStudent) => {
     ))}
   </div>
 </Col>
-
-
               </Row>
               <Row>
              {/* Phone No.*/}

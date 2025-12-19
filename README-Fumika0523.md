@@ -251,3 +251,8 @@ Check how many times of UseEffect triggering
 
 13. Add human icon in Action, and when you click this icon, the Modal (student Name, Asigned status, maximum 5) will shown and you can see all the student list and Add download button inside Modal, add simple search. when you type, the data should shown.
 
+//Add Google Button in frontend
+//add route there
+//where you going to display Google'name ??
+
+15. how to register roles when you signed up with googleOAuth

@@ -1,0 +1,85 @@
+Key Features
+
+Student
+DashBoard >>
+Profile >>
+Attendance>>
+Invoice Download >>
+
+ROLE BASED AUTHENTICATION 
+>Admin
+>Student 
+
+Admin Features
+
+Authentication
+Normal login/signup (email & password, bcrypt hashed).
+Google OAuth login.
+
+Student Management (CRUD)
+New student record auto-created when a student registers. >> very important
+Admin updates admission details, batch assignment, fees, and attendance. >> very important
+View all students and manage their records. (Table)
+
+Batch Management (CRUD with Restrictions)
+Auto-generated batch numbers (e.g., BATCH-001, BATCH-002).
+Create/update batches and link them with courses.
+Cannot delete a batch if students/admissions exist.
+View all batches with enrolled student count.
+
+Course Management (CRUD)
+Create, update, and delete courses.
+Link batches to courses.
+
+Admissions (Create/Update/Delete)
+Admit students into batches.
+Update admission details (batch transfer, status changes).
+Remove admission if a student withdraws.
+
+Search & Filter
+Search students by name, email, or student ID.
+Filter students by batch, course, or payment status.
+Filter batches by course or active/inactive status.
+
+Later All
+Attendance & Payments
+Mark student attendance batch-wise.
+Track attendance history.
+Manage payments (mark Paid/Unpaid).
+View dues and payment history.
+
+Reports & Exports
+Export student list, attendance reports, and payment history in Excel/PDF format.
+Generate batch-wise and course-wise reports.
+Download individual student records.
+
+👩‍🎓 Student Features
+
+Authentication
+Register/login via normal signup or Google OAuth.               <<<< In progress
+Auto-creation of student record at registration.                
+
+Profile Management  >> completed >> Google                       <<<< In progress
+Update own profile (name, contact details, profile picture).
+Cannot modify admin-controlled details (batch, fees, admissions).
+
+Batch & Course Access
+View assigned batch and course details.
+No modification rights.
+
+Attendance
+View personal attendance records.
+
+Payments
+View personal payment history and pending dues.
+
+Reports
+Download own attendance report and payment receipt.
+
+Rules & Restrictions
+A batch cannot be deleted if it has students/admissions.
+Batch numbers are auto-generated (BATCH-001, BATCH-002, …).
+When a student registers, only basic details are stored → Admin updates the rest.
+Students can only update personal profile, not academic/financial details.`
+
+DashBoard>>
