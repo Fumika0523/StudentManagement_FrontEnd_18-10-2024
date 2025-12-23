@@ -54,16 +54,21 @@ function SignUp() {
         }
     }
 
+    const handleGoogleSignUp=()=>{
+        console.log("Student Google signup")
+        window.location.href="http://localhost:8001/auth/google"
+    }
+
     return (
         <>
             <div className='signInStyle container-fluid d-flex justify-content-center min-vh-100 align-items-center' >
                 <div className='row justify-content-center align-items-center d-flex flex-column gap-3 gap-sm-4 w-100'>
                {/* 1st Card */}
-                <Form className=' signupCard col-11 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4' onSubmit={formik.handleSubmit} >
-                    <div className="row">
+                <Form className=' signupCard col-11 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4  ' onSubmit={formik.handleSubmit} >
+                    <div className="row ">
                     <h2 className="text-center pb-2 fs-2" ><FcReading style={{fontSize:"55px"}}/>Student Sign Up</h2>
                     </div>
-                    <div className="row" >             
+                    <div className="row " >             
                         {/* Username */}
                         <Form.Group className='col-lg-6 col-sm-6 col-md-6 mb-1 ' >
                             <Form.Label className='formLabel m-0'>Username</Form.Label>
@@ -131,27 +136,42 @@ function SignUp() {
                                 onChange={formik.handleChange} />
                         </Form.Group>
                         </div> 
-                        <div className="row p-1">  
-                        <div className='text-center'>
+                        <div className='text-center  border-warning border-3 row'>
                         <Button type="submit" variant="outline-*" className="sign-Btn  my-3 fw-bold text-white" style={{fontSize:"18px",width:"100%",outline:"none",border:"none"}}>SIGN UP</Button>
                         </div>
-                        </div> 
-                        <div className="row text-center mb-1">  
-                        <div className='message' >Or Sign Up Using</div>
-                        </div>
-                            <div className="row ">  
-                            <div className='gap-2 mt-2 d-flex' style={{ justifyContent: "center" }}>
-                                {/* Facebook */}
-                                <FacebookIcon className="socialIcons" sx={{ color: "navy" }} />
-                                {/* LinkedIn */}
-                                <LinkedInIcon className="socialIcons" sx={{ color: "#0077B5" }} />
-                                {/* GitHub */}
-                                <GitHubIcon className="socialIcons"  />
-                                {/* Google */}
-                                <GoogleIcon sx={{ color: "#ea4335"}} className='socialIcons'/>
-                            </div>
-                            </div> 
-                           
+             
+                            <div className="row mb-3  border-4">
+    <div className="d-flex align-items-center justify-content-center">
+        <div style={{ height: "1px", width: "35%", background: "#ddd" }} />
+        <span style={{ margin: "0 12px", fontSize: "14px", color: "#777" }}>
+            OR
+        </span>
+        <div style={{ height: "1px", width: "35%", background: "#ddd" }} />
+    </div>
+                                </div>
+
+                                {/* Google Sign Up */}
+                                <div className="row d-flex justify-content-center">
+                                    <Button
+                                        type="button"
+                                        className="google-btn d-flex align-items-center justify-content-center gap-2"
+                                        style={{
+                                            width: "100%",
+                                            backgroundColor: "#fff",
+                                            color: "#444",
+                                            border: "1px solid #ddd",
+                                            borderRadius: "8px",
+                                            padding: "10px 0",
+                                            fontWeight: "500",
+                                            boxShadow: "0 2px 6px rgba(0,0,0,0.08)"
+                                        }}
+                                        onClick={handleGoogleSignUp}
+                                    >
+                                        <GoogleIcon sx={{ color: "#ea4335", fontSize: 22 }} />
+                                        Sign up with Google
+                                    </Button>
+                                </div>
+                    
                             <div className="row d-flex justify-content-center">  
                     </div>
                 </Form>
