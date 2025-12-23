@@ -39,14 +39,7 @@ onSubmit: async (values) => {
     console.error(err);
   }
 }
-
-
 })
-
-
-
-
-
 
   return (
     <div className="signInStyle container-fluid min-vh-100 d-flex justify-content-center align-items-center">

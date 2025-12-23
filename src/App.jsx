@@ -140,6 +140,15 @@ return (
                   </>
                 ) : (
                   <>
+                       <Route
+                      path="/dashboard"
+                      element={
+                        <DashboardCard
+                          isAuthenticated={isAuthenticated}
+                          setIsAuthenticated={setIsAuthenticated}
+                        />
+                      }
+                    />
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/usernameform" element={<UserNameForm />} />
                     <Route path="/genderform" element={<GenderForm />} />

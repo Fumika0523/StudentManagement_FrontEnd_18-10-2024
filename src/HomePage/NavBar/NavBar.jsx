@@ -13,10 +13,41 @@ import SearchIcon from "@mui/icons-material/Search";
 import { MdMenu } from "react-icons/md";
 import Image from "react-bootstrap/Image";
 import "../NavBar/NavBar.css";
+import { useState, useEffect } from "react";
+
 
 export default function NavBar({ toggleSidebar }) {
   const navigate = useNavigate();
-  const username = localStorage.getItem("username");
+  const username = localStorage.getItem("username") || user?.name;
+  const [user, setUser] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+
+  const getGoogleProfile=async()=>{
+    try{
+      console.log("Google data is calling...");
+      const res = await fetch("http://localhost:8000/",{
+        method:"GET",
+        credentials:"include",
+      })
+      const data = await res.json()
+       console.log('getGoogleProfile', data);
+
+      setLoggedIn(res.data.loggedIn);
+
+      if (res.data.loggedIn) {
+        setUser(res.data.user);
+      }
+    }catch(e){
+      console.log("Error",e)
+      return resizeBy.send("Error",e)
+    }
+  }
+  
+  useEffect(() => {
+    getGoogleProfile();
+  }, []); // run once
+
 
   const UserMenu = (
     <>

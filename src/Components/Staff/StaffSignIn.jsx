@@ -13,13 +13,14 @@ import { url } from '../utils/constant';
 import { FcVoicePresentation } from "react-icons/fc";
 import { toast } from 'react-toastify';
 
+
 function StaffSignIn({ isAuthenticated, setIsAuthenticated }) {
 
 const searchParams = new URLSearchParams(window.location.search);
 const redirect = searchParams.get("redirect");
 const batchId = searchParams.get("batchId");
 
-// ⭐ If user is already logged in AND redirect params exist → redirect NOW
+// If user is already logged in AND redirect params exist → redirect NOW
 useEffect(() => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
@@ -27,7 +28,7 @@ useEffect(() => {
     if (token && (role === 'admin' || role === 'staff')) {
         if (redirect && batchId) {
             const targetUrl = `${redirect}?batchId=${batchId}`;
-            console.log("⭐ AUTO REDIRECT TO APPROVAL PAGE:", targetUrl);
+            console.log(" AUTO REDIRECT TO APPROVAL PAGE:", targetUrl);
             window.location.href = targetUrl;
         } else {
             window.location.href = '/studentdata';
@@ -56,23 +57,23 @@ useEffect(() => {
     const navigate = useNavigate()
 
     const postSignInUser = async (loginUser) => {
-        console.log('🔄 === Starting Login Process ===');
+        console.log('Calling Signin API');
         
         try {
-            console.log('🌐 Calling API:', `${url}/signin`);
+            console.log('Calling API:', `${url}/signin`);
             const res = await axios.post(`${url}/signin`, loginUser)
-            console.log('✅ Login API success:', res.data);
+            console.log(' Login API success:', res.data);
             
             // Save to localStorage
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('username', res.data.user.username)
             localStorage.setItem('role', res.data.role)
-            console.log('💾 Saved to localStorage');
+            console.log(' Saved to localStorage');
             
             if (res.data.token) {
                 toast.success(res.data.message);
                 setIsAuthenticated(true)
-                console.log('✅ Authentication state updated');
+                console.log(' Authentication state updated');
             }
 
             // Get redirect params
@@ -80,23 +81,23 @@ useEffect(() => {
             const redirect = searchParams.get("redirect");
             const batchId = searchParams.get("batchId");
 
-            console.log('🔍 === After Login - Checking Redirect ===');
-            console.log('🔍 Current URL:', window.location.href);
-            console.log('🔍 Search params:', window.location.search);
-            console.log('🔍 Redirect param:', redirect);
-            console.log('🔍 BatchId param:', batchId);
+            console.log(' === After Login - Checking Redirect ===');
+            console.log(' Current URL:', window.location.href);
+            console.log(' Search params:', window.location.search);
+            console.log(' Redirect param:', redirect);
+            console.log(' BatchId param:', batchId);
 
             // Redirect after successful login
             if (redirect && batchId) {
                 const targetUrl = `${redirect}?batchId=${batchId}`;
-                console.log('🚀 Redirecting to:', targetUrl);
+                console.log(' Redirecting to:', targetUrl);
                 
                 setTimeout(() => {
                     window.location.href = targetUrl;
                 }, 500);
             } else {
-                console.log('⚠️ No redirect params, going to default');
-                console.log('🚀 Redirecting to: /studentdata');
+                console.log(' No redirect params, going to default');
+                console.log(' Redirecting to: /studentdata');
                 
                 setTimeout(() => {
                     window.location.href = '/studentdata';
@@ -104,8 +105,8 @@ useEffect(() => {
             }
 
         } catch (e) {
-            console.error('❌ Login Error:', e);
-            console.error('❌ Error response:', e.response?.data);
+            console.error('Login Error:', e);
+            console.error('Error response:', e.response?.data);
             
             if (e.response?.data?.message) {
                 toast.error(e.response?.data?.message);
@@ -114,10 +115,16 @@ useEffect(() => {
             }
         }
         
-        console.log('🔄 === End of Login Process ===');
+        console.log(' === End of Login Process ===');
     }
 
-    console.log('🎨 Rendering StaffSignIn component');
+    console.log(' Rendering StaffSignIn component');
+
+    const handleGoogleLogin = () => {
+    console.log("Please login with Google")
+    window.location.href="http://localhost:8001/auth/google/"
+};
+
 
     return (
         <>
@@ -127,7 +134,7 @@ useEffect(() => {
                     <Form onSubmit={formik.handleSubmit} className='signinCard  col-12 col-sm-7 col-md-6 col-lg-4  px-4'>
                         <div className="row  ">
                             <h2 style={{ fontSize: "30px" }} className=" d-flex justify-content-center align-items-center" >
-                                <FcVoicePresentation className='mb-1' style={{ fontSize: "55px" }} /> Staff Sign In
+                                <FcVoicePresentation className='mb-1' style={{ fontSize: "55px" }} /> Staff / Admin
                             </h2>
                         </div>
                         {/* Username */}
@@ -164,24 +171,40 @@ useEffect(() => {
                                 SIGN IN
                             </Button>
                         </div>
-                        {/* or sign up */}
-                        <div className='row  p-1'>
-                            <div className='text-center message'>Or Sign Up Using</div>
+                    {/* Divider */}
+                    <div className="row my-3">
+                        <div className="d-flex align-items-center justify-content-center">
+                            <div style={{ height: "1px", width: "35%", background: "#ddd" }} />
+                            <span style={{ margin: "0 12px", fontSize: "14px", color: "#777" }}>
+                                OR
+                            </span>
+                            <div style={{ height: "1px", width: "35%", background: "#ddd" }} />
                         </div>
-                        {/* Icons */}
-                        <div className="row  p-1">
-                            <div className='gap-2 fs-5 mt-3 d-flex' style={{ justifyContent: "center" }}>
-                                {/* Facebook */}
-                                <FacebookIcon className="socialIcons" sx={{ color: "navy" }} />
-                                {/* LinkedIn */}
-                                <LinkedInIcon className="socialIcons" sx={{ color: "#0077B5" }} />
-                                {/* GitHub */}
-                                <GitHubIcon className="socialIcons" />
-                                {/* Google */}
-                                <GoogleIcon sx={{ color: "#ea4335" }} className="socialIcons" />
-                            </div>
-                        </div>
+                    </div>
+
+{/* Google Sign In */}
+<div className="row d-flex justify-content-center">
+    <Button
+        onClick={handleGoogleLogin}
+        className="google-btn d-flex align-items-center justify-content-center gap-2"
+        style={{
+            width: "94%",
+            backgroundColor: "#fff",
+            color: "#444",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            padding: "10px 0",
+            fontWeight: "500",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.08)"
+        }}
+    >
+        <GoogleIcon sx={{ color: "#ea4335", fontSize: 22 }} />
+        Continue with Google
+    </Button>
+</div>
+
                     </Form>
+                
 
                     <div className='signinCard2 col-12 col-sm-7 col-md-6 col-lg-4 d-flex  justify-content flex-row'>
                         <div className='text-center message' >Don't have account? &nbsp;</div>

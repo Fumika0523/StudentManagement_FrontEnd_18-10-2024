@@ -371,13 +371,13 @@ function SideBar({ isSidebarVisible = true }) {
              {/* PAGES */}
               <div className="row dashRow">    
                <FaFolder className="col-3 fs-3"/>
-               <div className="col-9" id="page">Page</div>
+               <div className="col-9" id="page">Attendance</div>
             </div>
 
                 {/* CHART */}
              <div className="row dashRow">
                  <FaChartArea className="col-3 fs-3"  />
-                 <div  className="col-9" id="chart">Charts</div>
+                 <div  className="col-9" id="chart">Certificate</div>
             </div>
             
                {/* Tables */}
