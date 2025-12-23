@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes,useLocation, useNavigate  } from 'react-router-dom';
 import './App.css';
 import { useEffect, useState } from 'react';
 import ProfileForm from './Components/Profile/ProfileForm';
@@ -31,16 +31,46 @@ import ApprovePage from './Components/Dashboard/BatchData/AdminApproval/ApproveP
 
 function App() {
   const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const role = localStorage.getItem("role");
+  console.log("role",role)
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  /**
+   * GOOGLE OAUTH SUCCESS HANDLER (STUDENT ONLY)
+   * Expected redirect:
+   * /oauth-success?token=JWT&role=student
+   */
+  useEffect(() => {
+    if (location.pathname !== "/oauth-success") return;
+
+    const params = new URLSearchParams(location.search);
+    const oauthToken = params.get("token");
+    const oauthRole = params.get("role");
+
+    //  Invalid OAuth response
+    if (!oauthToken || oauthRole !== "student") {
+      localStorage.clear();
+      navigate("/signin", { replace: true });
+      return;
+    }
+
+    //  Valid student login
+    localStorage.setItem("token", oauthToken);
+    localStorage.setItem("role", oauthRole);
+
+    // setIsAuthenticated(true);
+    navigate("/dashboard", { replace: true });
+  }, [location, navigate]);
   const [userData, setUserData] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   // Check if URL contains redirect params (approval link)
 const searchParams = new URLSearchParams(window.location.search);
 const redirect = searchParams.get("redirect");
 const batchId = searchParams.get("batchId");
+console.log(searchParams)
 
 const hasApprovalRedirect = redirect && batchId;
-
 
   //  State for sidebar visibility (mobile toggle)
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -61,7 +91,7 @@ const hasApprovalRedirect = redirect && batchId;
 
   useEffect(() => {
     if (token) {
-      setIsAuthenticated(true);
+      // setIsAuthenticated(true);
       getUserData();
     }
   }, []);
@@ -126,7 +156,7 @@ return (
                     <Route path="/batchdata" element={<ViewBatch />} />
                     <Route path="/coursedata" element={<ViewCourse />} />
                     <Route path="/admissiondata" element={<ViewAdmission />} />
-                    <Route
+                    {/* <Route
                       path="/dashboard"
                       element={
                         <DashboardCard
@@ -134,18 +164,17 @@ return (
                           setIsAuthenticated={setIsAuthenticated}
                         />
                       }
-                    />
-                    <Route path="/profile" element={<ProfileForm />} />
-                    <Route path="*" element={<Navigate to="/studentdata" />} />
+                    /> */}
+                    {/* <Route path="/profile" element={<ProfileForm />} /> */}
+                    {/* <Route path="*" element={<Navigate to="/dashboard" />} /> */}
                   </>
                 ) : (
                   <>
-                       <Route
-                      path="/dashboard"
-                      element={
+                       <Route path="/dashboard"  
+                       element={
                         <DashboardCard
-                          isAuthenticated={isAuthenticated}
-                          setIsAuthenticated={setIsAuthenticated}
+                          // isAuthenticated={isAuthenticated}
+                          // setIsAuthenticated={setIsAuthenticated}
                         />
                       }
                     />
@@ -155,7 +184,7 @@ return (
                     <Route path="/birthdateform" element={<BirthdateForm />} />
                     <Route path="/phonenumberform" element={<PhoneNumberForm />} />
                     <Route path="/passwordform" element={<PasswordForm />} />
-                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                    {/* <Route path="*" element={<Navigate to="/dashboard"  />} /> */}
                   </>
                 )}
               </Routes>
@@ -166,10 +195,11 @@ return (
     )}
 
     {/* Public routes remain the same */}
-    {(!token || hasApprovalRedirect) && (
+    {/* {(!token || hasApprovalRedirect) && (
       <>
         <Routes>
-          <Route path="/" element={<StudentOrStaff />} />
+            <Route path="/oauth-success" element={null} />
+          <Route path="/signin" element={<StudentOrStaff />} />
           <Route
             path="/student-signin"
             element={
@@ -193,7 +223,18 @@ return (
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </>
-    )}
+    )} */}
+<Routes>
+  {/* OAuth callback must always exist */}
+  <Route path="/oauth-success" element={null} />
+
+  {/* Public routes */}
+  <Route path="/signin" element={<StudentOrStaff />} />
+  <Route path="/student-signin" element={<StudentSignIn />} />
+  <Route path="/student-signup" element={<StudentSignUp />} />
+  <Route path="/staff-signin" element={<StaffSignIn />} />
+  <Route path="/staff-signup" element={<StaffSignUp />} />
+</Routes>
 
     <ToastContainer transition={Zoom} autoClose={2000} theme="light" draggable />
   </>

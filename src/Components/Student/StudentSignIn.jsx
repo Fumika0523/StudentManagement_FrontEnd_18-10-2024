@@ -10,7 +10,7 @@ import { url } from '../utils/constant'
 import { FcReading } from "react-icons/fc"
 import { toast } from 'react-toastify'
 
-function StudentSignIn({ isAuthenticated, setIsAuthenticated }) {
+function StudentSignIn() {
 
     const searchParams = new URLSearchParams(window.location.search)
     const redirect = searchParams.get("redirect")
@@ -44,7 +44,7 @@ function StudentSignIn({ isAuthenticated, setIsAuthenticated }) {
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
-            console.log('📝 Student login submit:', values)
+            console.log('Student login submit:', values)
             postSignInUser(values)
         }
     })
@@ -61,27 +61,10 @@ function StudentSignIn({ isAuthenticated, setIsAuthenticated }) {
             localStorage.setItem('username', res.data.user.username)
             localStorage.setItem('role', res.data.role)
 
-            if (res.data.token) {
-                toast.success(res.data.message)
-                setIsAuthenticated(true)
-            }
-
-            // Redirect logic (same as staff)
-            const searchParams = new URLSearchParams(window.location.search)
-            const redirect = searchParams.get("redirect")
-            const batchId = searchParams.get("batchId")
-
-            if (redirect && batchId) {
-                const targetUrl = `${redirect}?batchId=${batchId}`
-                setTimeout(() => {
-                    window.location.href = targetUrl
-                }, 500)
-            } else {
-                setTimeout(() => {
-                    window.location.href = '/studentdata'
-                }, 500)
-            }
-
+             if (res.data.token) {
+            toast.success(res.data.message)
+            navigate('/dashboard') // Add navigation here
+        }
         } catch (e) {
             console.error('Student login error:', e)
 
@@ -96,9 +79,10 @@ function StudentSignIn({ isAuthenticated, setIsAuthenticated }) {
     //  Google login
     const handleGoogleSignIn = () => {
         console.log("Student Google Login")
-        window.location.href = "http://localhost:8001/auth/google"
+        window.location.href = "http://localhost:8001/auth/google?role=student"
     }
 
+    
     return (
         <>
             <div className='signInStyle justify-content-center d-flex container-fluid min-vh-100 align-items-center'>

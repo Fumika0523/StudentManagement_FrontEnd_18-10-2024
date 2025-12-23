@@ -5,6 +5,7 @@ import {
   FaPowerOff,
 } from "react-icons/fa";
 import { FaSchoolFlag } from "react-icons/fa6";
+import { IoCalendarNumberSharp } from "react-icons/io5";
 
 import { FiTool } from "react-icons/fi";
 import { AiFillDashboard } from "react-icons/ai";
@@ -69,7 +70,7 @@ function SideBar({ isSidebarVisible = true }) {
       <div
         className="sideBarStyle"
         style={{
-           width: sidebarWidth,
+          width: sidebarWidth,
           transition: "all 0.9s ",
           left: screenWidth < 768 && !isSidebarVisible ? "-150px" : "0",
         }}
@@ -79,13 +80,13 @@ function SideBar({ isSidebarVisible = true }) {
           <div
             className="hamburger-icon text-white d-flex "
             style={{
-               zIndex: "10",
+              zIndex: "10",
               cursor: "pointer",
               // border:"2px solid red",
-              position:"absolute",
-              right:"0px",
-              top:"0px",
-          
+              position: "absolute",
+              right: "0px",
+              top: "0px",
+
               justifyContent: isSidebarOpen ? "end" : "center",
             }}
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -93,8 +94,8 @@ function SideBar({ isSidebarVisible = true }) {
             {isSidebarOpen ? (
               <MdKeyboardDoubleArrowLeft style={{ fontSize: "40px" }} />
             ) : (
-              <MdKeyboardDoubleArrowRight style={{ fontSize: "40px" }} 
-              className="d-none d-md-flex"/>
+              <MdKeyboardDoubleArrowRight style={{ fontSize: "40px" }}
+                className="d-none d-md-flex" />
             )}
           </div>
         </div>
@@ -186,7 +187,9 @@ function SideBar({ isSidebarVisible = true }) {
                   </>
                 ) : (
                   <div className="my-2">
-                    <div className="component-icon mx-4">Attendance</div>
+                    <div className="component-icon mx-4">
+                      <IoCalendarNumberSharp className="fs-3 text-black" />
+                      Attendance</div>
                   </div>
                 )}
               </div>
@@ -265,8 +268,8 @@ function SideBar({ isSidebarVisible = true }) {
               onClick={() => setOpen(!open)}
               aria-controls="collapse-full"
               aria-expanded={open}
-              className="d-flex align-items-center"
-              style={{ cursor: "pointer", color: "#bfbfbf", fontSize: "18px" }}
+              className="d-flex align-items-center "
+              style={{ cursor: "pointer", color: "#bfbfbf", fontSize: "18px" ,marginBottom:""}}
             >
               <IoSettings className="col-3 fs-4" />
               <div id="component" className="col-6">
@@ -282,109 +285,100 @@ function SideBar({ isSidebarVisible = true }) {
             <Collapse in={open}>
               <div
                 id="collapse-full"
-                className="mx-auto mt-1"
+                className="mx-auto"
                 style={{
                   borderRadius: "10px",
                   backgroundColor: "white",
-                  padding: "3% 8%",
+                  padding: "5% 8%",
                   width: "80%",
                 }}
               >
-                {role === "admin" || role === "staff" ? (
-                  <>
-                    <div
-                      className="sidebarItem d-flex align-items-center gap-2"
-                      onClick={() => navigate("/studentdata")}
-                    >
-                      <PiStudent className="fs-3" style={{ color: "#2050deff" }} />
-                      Student
-                    </div>
-                    <div
-                      className="sidebarItem d-flex align-items-center gap-2"
-                      onClick={() => navigate("/batchdata")}
-                    >
-                      <FaUsersViewfinder
-                        className="fs-3"
-                        style={{ color: "#2050deff" }}
-                      />
-                      Batch
-                    </div>
-                    <div
-                      className="sidebarItem d-flex align-items-center gap-2"
-                      onClick={() => navigate("/coursedata")}
-                    >
-                      <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
-                      Course
-                    </div>
-                    <div
-                      className="sidebarItem d-flex align-items-center gap-2"
-                      onClick={() => navigate("/admissiondata")}
-                    >
-                      <GiEntryDoor className="fs-3" style={{ color: "#2050deff" }} />
-                      Admission
-                    </div>
-                  </>
-                ) : (
-       <>
-                {/* STudent Login */}
-        <div
-          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
-          onClick={() => navigate("/")}
-        >
-          <span className="fs-3" style={{ color: "#2050deff" }}></span>
-          Attendance
-        </div>
+                {role === "admin" || role === "staff" ?
+                  (
+                    <>
+                      <div
+                        className="sidebarItem d-flex align-items-center gap-2"
+                        onClick={() => navigate("/studentdata")}
+                      >
+                        <PiStudent className="fs-3" style={{ color: "#2050deff" }} />
+                        Student
+                      </div>
+                      {/* Batch */}
+                      <div
+                        className="sidebarItem d-flex align-items-center gap-2"
+                        onClick={() => navigate("/batchdata")}
+                      >
+                        <FaUsersViewfinder
+                          className="fs-3"
+                          style={{ color: "#2050deff" }}
+                        />
+                        Batch
+                      </div>
+                      {/* Course */}
+                      <div
+                        className="sidebarItem d-flex align-items-center gap-2"
+                        onClick={() => navigate("/coursedata")}
+                      >
+                        <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
+                        Course
+                      </div>
+                      <div
+                        className="sidebarItem d-flex align-items-center gap-2"
+                        onClick={() => navigate("/admissiondata")}
+                      >
+                        <GiEntryDoor className="fs-3" style={{ color: "#2050deff" }} />
+                        Admission
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Student Login */}
+                      <div
+                        className="sidebarItem d-flex align-items-center  gap-2"
+                        onClick={() => navigate("/batchdata")}
+                      >
+                        <FaUsersViewfinder
+                          className="fs-3"
+                          style={{ color: "#2050deff" }}
+                        />
+                        Batch
+                      </div>
+                      <div
+                        className="sidebarItem d-flex align-items-center gap-2"
+                        onClick={() => navigate("/coursedata")}
+                      >
+                        <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
+                        Course
+                      </div>
+                    </>
+                  )}
+              </div>
+            </Collapse>
 
-        <div
-          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
-          onClick={() => navigate("/")}
-        >
-          <span className="fs-3" style={{ color: "#2050deff" }}></span>
-          Schedule
-        </div>
-
-        <div
-          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
-          onClick={() => navigate("/optionC")}
-        >
-          <span className="fs-3" style={{ color: "#2050deff" }}></span>
-          Progress
-        </div>
-
-        <div
-          className="sidebarItem d-flex align-items-center justify-content-start gap-2"
-          onClick={() => navigate("/optionD")}
-        >
-          <span className="fs-3" style={{ color: "#2050deff" }}></span>
-          Result        
-          </div>
-      </>
-    )}
-  </div>
-</Collapse>
-   {/* UTILITIES */}
-        <div className="row dashRow">
-        <FiTool className="col-3 fs-3" />
-         <div className="col-9" id="utilities">Utilities</div>
-          </div>
-
-             {/* PAGES */}
-              <div className="row dashRow">    
-               <FaFolder className="col-3 fs-3"/>
-               <div className="col-9" id="page">Attendance</div>
-            </div>
-
-                {/* CHART */}
-             <div className="row dashRow">
-                 <FaChartArea className="col-3 fs-3"  />
-                 <div  className="col-9" id="chart">Certificate</div>
-            </div>
-            
-               {/* Tables */}
+            {/* UTILITIES */}
             <div className="row dashRow">
-                <FaTable className="col-3 fs-3"/>
-                <div className="col-9" id="tables">Tables</div>
-                   <span className="mx-auto pt-3 my-0" style={{borderBottom:"1px solid #bfbfbf", width:"85%"}}></span>
+              <FiTool className="col-3 fs-3" />
+              <div className="col-9" id="utilities">Reports</div>
+            </div>
+
+            {/* PAGES */}
+            <div className="row dashRow">
+              <IoCalendarNumberSharp className="col-3 fs-3" />
+              <div className="col-9" id="page">
+                Attendance</div>
+            </div>
+
+            {/* CHART */}
+            <div className="row dashRow">
+              <FaChartArea className="col-3 fs-3" />
+              <div className="col-9" id="chart">Certificate</div>
+            </div>
+
+            {/* Tables */}
+            <div className="row dashRow">
+              <FaTable className="col-3 fs-3" />
+              <div className="col-9" id="tables">Payment</div>
+              <span className="mx-auto pt-3 my-0" style={{ borderBottom: "1px solid #bfbfbf", width: "85%" }}></span>
             </div>
             {/* Sign out */}
             <div

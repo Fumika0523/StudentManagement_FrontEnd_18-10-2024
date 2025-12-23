@@ -10,7 +10,6 @@ function ViewStudent(){
     const [courseData,setCourseData] = useState([])
     const [admissionData,setAdmissionData] = useState([])
     const [batchData,setBatchData] = useState([])
-    const [isAuthenticated,setIsAuthenticated]=useState(false)
     const [show, setShow] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState (true)
 

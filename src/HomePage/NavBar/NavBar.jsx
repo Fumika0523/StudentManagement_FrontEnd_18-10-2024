@@ -18,15 +18,16 @@ import { useState, useEffect } from "react";
 
 export default function NavBar({ toggleSidebar }) {
   const navigate = useNavigate();
-  const username = localStorage.getItem("username") || user?.name;
   const [user, setUser] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
+
+    const username = localStorage.getItem("username") || user?.name;
 
 
   const getGoogleProfile=async()=>{
     try{
       console.log("Google data is calling...");
-      const res = await fetch("http://localhost:8000/",{
+      const res = await fetch("http://localhost:8001/",{
         method:"GET",
         credentials:"include",
       })
@@ -40,7 +41,6 @@ export default function NavBar({ toggleSidebar }) {
       }
     }catch(e){
       console.log("Error",e)
-      return resizeBy.send("Error",e)
     }
   }
   
@@ -68,7 +68,7 @@ export default function NavBar({ toggleSidebar }) {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("role");
-    navigate("/");
+    navigate("/signin");
   };
 
   return (

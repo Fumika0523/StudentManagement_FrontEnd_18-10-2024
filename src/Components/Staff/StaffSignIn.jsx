@@ -14,7 +14,7 @@ import { FcVoicePresentation } from "react-icons/fc";
 import { toast } from 'react-toastify';
 
 
-function StaffSignIn({ isAuthenticated, setIsAuthenticated }) {
+function StaffSignIn() {
 
 const searchParams = new URLSearchParams(window.location.search);
 const redirect = searchParams.get("redirect");
@@ -72,7 +72,6 @@ useEffect(() => {
             
             if (res.data.token) {
                 toast.success(res.data.message);
-                setIsAuthenticated(true)
                 console.log(' Authentication state updated');
             }
 
