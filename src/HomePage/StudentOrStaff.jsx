@@ -25,16 +25,12 @@ function StudentOrStaff() {
                 </div>
 
                 {/* Staff*/}
-                <div className='d-flex col-md-6 flex-column '>
-                <Image className="mb-3 object-fit-cover mx-auto"src="https://media.istockphoto.com/id/1231898401/vector/%C3%B0%C3%B1%C3%B0%C3%B0%C3%B0%C3%B0%C3%B1%C3%B0%C2%B5-rgb.jpg?s=612x612&w=0&k=20&c=OpAH1-b7qULawK00Kia-uB9Y8IjBdQ9SuZ_hMph4VS4=" style={{height:"185px",width:"200px",}}  roundedCircle />
-                <Button className='fs-5 mb-3 mx-auto w-100'  onClick={()=>{navigate('/staff-signin')}}>Sign in as Staff or Admin</Button>
+                <div className='d-flex col-md-6 flex-column'>
+                <Image className="mb-3 object-fit-cover mx-auto"src="https://media.istockphoto.com/id/1231898401/vector/%C3%B0%C3%B1%C3%B0%C3%B0%C3%B0%C3%B0%C3%B1%C3%B0%C2%B5-rgb.jpg?s=612x612&w=0&k=20&c=OpAH1-b7qULawK00Kia-uB9Y8IjBdQ9SuZ_hMph4VS4=" style={{height:"180px",width:"200px",}}  roundedCircle />
+                <Button className='fs-5 mb-5 mx-auto w-100'  onClick={()=>{navigate('/staff-signin')}}>I am Staff</Button>
                 </div>
               </div>
-
-              {/* OR */}
-              <div className='text-center message mb-3' style={{fontSize:"16px"}} >Don't have account? </div>
-
-
+              <div className='text-center message mb-5' style={{fontSize:"18px"}} >Don't have account? </div>
               <div className='row mx-auto d-flex justify-content-evenly'>
               <div className='col-md-6 col-12 '>
               <Button variant="outline-primary" className='text-nowrap w-100 mb-sm-2 mb-2 mx-auto d-flex justify-content-center align-items-center ' to='/student-signup' onClick={()=>{navigate('/student-signup')}} ><FcReading className='fs-2'/>Create Student Account</Button>

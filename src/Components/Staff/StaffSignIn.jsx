@@ -134,7 +134,7 @@ useEffect(() => {
                     <Form onSubmit={formik.handleSubmit} className='signinCard  col-12 col-sm-7 col-md-6 col-lg-4  px-4'>
                         <div className="row  ">
                             <h2 style={{ fontSize: "30px" }} className=" d-flex justify-content-center align-items-center" >
-                                <FcVoicePresentation className='mb-1' style={{ fontSize: "55px" }} /> Staff / Admin
+                                <FcVoicePresentation className='mb-1' style={{ fontSize: "55px" }} /> Staff Sign In
                             </h2>
                         </div>
                         {/* Username */}
@@ -171,38 +171,23 @@ useEffect(() => {
                                 SIGN IN
                             </Button>
                         </div>
-                    {/* Divider */}
-                    <div className="row my-3">
-                        <div className="d-flex align-items-center justify-content-center">
-                            <div style={{ height: "1px", width: "35%", background: "#ddd" }} />
-                            <span style={{ margin: "0 12px", fontSize: "14px", color: "#777" }}>
-                                OR
-                            </span>
-                            <div style={{ height: "1px", width: "35%", background: "#ddd" }} />
+                        {/* or sign up */}
+                        <div className='row  p-1'>
+                            <div className='text-center message'>Or Sign Up Using</div>
                         </div>
-                    </div>
-
-{/* Google Sign In */}
-<div className="row d-flex justify-content-center">
-    <Button
-        onClick={handleGoogleLogin}
-        className="google-btn d-flex align-items-center justify-content-center gap-2"
-        style={{
-            width: "94%",
-            backgroundColor: "#fff",
-            color: "#444",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            padding: "10px 0",
-            fontWeight: "500",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.08)"
-        }}
-    >
-        <GoogleIcon sx={{ color: "#ea4335", fontSize: 22 }} />
-        Continue with Google
-    </Button>
-</div>
-
+                        {/* Icons */}
+                        <div className="row  p-1">
+                            <div className='gap-2 fs-5 mt-3 d-flex' style={{ justifyContent: "center" }}>
+                                {/* Facebook */}
+                                <FacebookIcon className="socialIcons" sx={{ color: "navy" }} />
+                                {/* LinkedIn */}
+                                <LinkedInIcon className="socialIcons" sx={{ color: "#0077B5" }} />
+                                {/* GitHub */}
+                                <GitHubIcon className="socialIcons" />
+                                {/* Google */}
+                                <GoogleIcon sx={{ color: "#ea4335" }} className="socialIcons" />
+                            </div>
+                        </div>
                     </Form>
                 
 
