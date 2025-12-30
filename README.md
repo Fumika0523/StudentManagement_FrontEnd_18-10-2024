@@ -57,26 +57,8 @@ Staff can add the number of courses, availability for the batches, create the ta
 
 --------------------
 1. When you signed in, Refreshing a page will auto-logout and re-direct to Signin page.    --->>> DONE : token was passed inside getUserData(). 
-2. SideBar mobile responsible
-3. Bar chart
-4. Student user access (student table should be visible?)
-5. Profile edit (only Staff can do it ?)
-6. Fix all Table design
-7. Utilities ?
-8. Page ??
-9. Charts?
-10. Tables?
-11. Email icon function?
-12. Notification icon function?
-13. Search function for search box
-14. When admin login , admin icon should show on profile
-15. when student login, student icon should show on profile
-16. Profile function ?
-17. change the backend to cloud url
 
-- Download the collection, upload to github                                                     ----> DONE
-- MongoDB Atlas URL                                                                             --->>> DONE
-- check importance of const [isAuthenticated,setIsAuthenticated]=useState(false) vs token
+--> check importance of const [isAuthenticated,setIsAuthenticated]=useState(false) vs token
 --> token = permanent credential, used for API requests.
 --> isAuthenticated = temporary UI state, allows immediate reactivity in React.
 
@@ -87,10 +69,6 @@ Student: when you add, admission date and course id is not showing
 Admission: everything is working 
 Course: everything is working 
 Batch: Working fine, maybe form need to be updated
-
-instead of eye icon >>>  key  --->>>>DONE
-select Course name and student name and automatically each ids shows  ----->> DONE
-
 
 Batch No. Auto generate.
 CourseName: Drop down 
@@ -128,8 +106,6 @@ if its Array, how will you update to Table ? check front-end
 
 
 QUESTIONS: student sign up should be studentData or userData?
-
-
 -- Role Based profile
 1.Update User Model --> 
     role:{
@@ -162,8 +138,6 @@ The lock icon should show in this batch and when you click icon, the message "pl
 <!-- 4. Student can assign only 1 batch By Admin, super Admin can assign multiple batches to student
 <<<<DONE>>>> -->
 
-5. Work on Search for Debounced 
-<<<<PENDING>>>>
 
 6. Batch start Date should be added manually and end date is auto calculated (30 days <<< This duration is coming from Course Data (Number of days) ), course Section  ,
  add "Daily Session Hours", auto calculation >> Number of Days
@@ -258,13 +232,16 @@ Create a state variable for the batch status, use the state variable whenever i 
 create 1 useEffect, here you do the put call - pass  the dependency array as a batch status and store in DB
 Check how many times of UseEffect triggering
 
-13. Add human icon in Action, and when you click this icon, the Modal (student Name, Asigned status, maximum 5) will shown and you can see all the student list and Add download button inside Modal, add simple search. when you type, the data should shown.
+13. Add human icon in Action, and when you click this icon, the Modal (student Name, Asigned status, maximum 5) will shown and you can see all the student list and Add download button inside Modal, add simple search. when you type, the data should shown.<<<Done>>>
 
->>Add Google Button in frontend
->>add route there
->>where you going to display Google'name ??
+>>Add Google Button in frontend <<<Done>>>
+>>add route there <<<Done>>>
+>>where you going to display Google'name ?? <<<Done>>> Profile
 
-15. how to register roles when you signed up with googleOAuth
+15. how to register roles when you signed up with googleOAuth <<<Done>>>
+
+
+------------------------------------
 
 Staff Login
 >> Side Bar >> Update attendance 

@@ -416,7 +416,7 @@ const handleViewStudents = (batch) => {
                   {/* Course Name - Autocomplete */}
                   <Autocomplete
                     size="small"
-                    options={[...new Set(batchData.map(b => b.courseName))]}
+                    options={[...new Set(batchData?.map(b => b.courseName))]}
                     value={filters.courseName || null}
                     onChange={(event, newValue) => handleFilterChange('courseName', newValue || '')}
                     renderInput={(params) => (

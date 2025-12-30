@@ -87,7 +87,7 @@ const [rowsPerPage, setRowsPerPage] = useState(16);
   };
 
   const handleEditClick = (student) => {
-    setShow(true);
+    setShowEdit(true)
     setSingleStudent(student);
   };
 
@@ -332,7 +332,7 @@ const formatDateTime = (date) => {
             </Box>
         </Box>
 
-            {/* Table */}
+        {/* Table */}
         {showTable && (
            <Box
               sx={{
@@ -444,7 +444,7 @@ const formatDateTime = (date) => {
             </Table>
           </TableContainer>
 
-                  <TablePagination
+          <TablePagination
                       component="div"
                       count={displayData.length}
                       page={page}
