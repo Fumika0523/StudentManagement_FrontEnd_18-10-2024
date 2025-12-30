@@ -190,7 +190,7 @@ Options for Assign/Deassigned
 Super Admin can have all access (including Deletion)
 If you want cancel the admission, Admission is cancelled (Staff, Admin, Super Admin)
 
-13. by default: Assigned, only if you are already assigned to batch, or initially empty >), when you assigned de-assigned from a batch, all the changes should be applied.once you de-assigned, then it should reflect as de-assigned too. only during 7 days from start date. after 7days, only Super-admin can edit.
+13. by default: Assigned, only if you are already assigned to batch, or initially empty >, when you assigned de-assigned from a batch, all the changes should be applied.once you de-assigned, then it should reflect as de-assigned too. only during 7 days from start date. after 7days, only Super-admin can edit.
 When you update(Edit), the Status should show on Modal(both Admission & student). not when you add the student initially in Add Admission.
 Once you deassigned the Batch, both Admission and Student table should show De-assigned.
 When its Deassigned, Batch count should reduce, and
@@ -204,12 +204,21 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 // When you select specific Month, the Line chart should show only specific month too - not full year
 // Initial loading - full year (current year)
 
-//3 accordion - Top one ->>>> Design: Table
+3.1 accordion - BatchData Top one ->>>> Design: Table <<<Above Admission Overview>>> , Yearly and Location wise
 
 //1.Batch Completion Status -- When all training are completed, go to Batch completed
 // 2.Training Completion --- currentData >= end Date 
 // 3. In-training Batches - Full Year -
 // currentData <= end Date 
+
+//3.2 accordion - student data same logic as 3.1
+>> Batch COmpleted
+>> Training Completed
+>> In-Progress
+
+3.3 Accordion - Admission Fee - How many student has completed pay / under due
+
+
 
 // Certificate
 // Drop out --> on a basis of attendance percentage less than 50 %
@@ -251,8 +260,37 @@ Check how many times of UseEffect triggering
 
 13. Add human icon in Action, and when you click this icon, the Modal (student Name, Asigned status, maximum 5) will shown and you can see all the student list and Add download button inside Modal, add simple search. when you type, the data should shown.
 
-//Add Google Button in frontend
-//add route there
-//where you going to display Google'name ??
+>>Add Google Button in frontend
+>>add route there
+>>where you going to display Google'name ??
 
 15. how to register roles when you signed up with googleOAuth
+
+Staff Login
+>> Side Bar >> Update attendance 
+>> Form  
+- 1. Batch Number > Drop down - Under training
+- 2. Date > Calender will open
+- 3. Mark Attendance >> Drop down : Absent / Present
+- Click Submit 
+>> Then you will get the all student name list Modal
+Form check boxes next to the student info
+Search option
+save and update 
+>> Search by Absent select check and save and update.
+The rest all should be marked as present automatically 
+
+studentModel : Attendance[{date,attendance}]
+Show attendance: tabular format
+
+>>Download option : 
+----------------------------
+Student Login
+SideBar: View attendance
+
+Batch Number|
+Date|Present|
+Date|Absent |
+
+
+Dashboard - Download report should be done in excel

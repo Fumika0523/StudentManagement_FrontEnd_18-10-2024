@@ -9,28 +9,30 @@ import axios from 'axios'
 import { url } from '../utils/constant'
 import { FcReading } from "react-icons/fc"
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom';
+
 
 function StudentSignIn() {
 
     const searchParams = new URLSearchParams(window.location.search)
     const redirect = searchParams.get("redirect")
     const batchId = searchParams.get("batchId")
-
+    const navigate = useNavigate()
     //  Auto-redirect if already logged in
-    useEffect(() => {
-        const token = localStorage.getItem('token')
-        const role = localStorage.getItem('role')
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token')
+    //     const role = localStorage.getItem('role')
 
-        if (token && role === 'student') {
-            if (redirect && batchId) {
-                const targetUrl = `${redirect}?batchId=${batchId}`
-                console.log(" AUTO REDIRECT (STUDENT):", targetUrl)
-                window.location.href = targetUrl
-            } else {
-                window.location.href = '/studentdata'
-            }
-        }
-    }, [])
+    //     if (token && role === 'student') {
+    //         if (redirect && batchId) {
+    //             const targetUrl = `${redirect}?batchId=${batchId}`
+    //             console.log(" AUTO REDIRECT (STUDENT):", targetUrl)
+    //             window.location.href = targetUrl
+    //         } else {
+    //             window.location.href = '/studentdata'
+    //         }
+    //     }
+    // }, [])
 
     const formSchema = Yup.object().shape({
         username: Yup.string().required(),
@@ -62,8 +64,8 @@ function StudentSignIn() {
             localStorage.setItem('role', res.data.role)
 
              if (res.data.token) {
-            toast.success(res.data.message)
             navigate('/dashboard') // Add navigation here
+            toast.success(res.data.message)
         }
         } catch (e) {
             console.error('Student login error:', e)

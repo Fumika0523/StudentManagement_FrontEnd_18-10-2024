@@ -52,7 +52,7 @@ function ViewStudent(){
 
     return(
         <>
-        <div className="">
+        <div className=" py-2 border-4 border-danger row mx-auto w-100">
         {/* Table */}
             {<CustomizedTables studentData = {studentData}
             setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData} batchData={batchData} setBatchData={setBatchData}

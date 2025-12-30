@@ -49,16 +49,12 @@ useEffect(() => {
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
-            console.log('📝 Form submitted with values:', values);
+           // console.log(' Form submitted with values:', values);
             postSignInUser(values)
         }
     })
 
-    const navigate = useNavigate()
-
-    const postSignInUser = async (loginUser) => {
-        console.log('Calling Signin API');
-        
+    const postSignInUser = async (loginUser) => {       
         try {
             console.log('Calling API:', `${url}/signin`);
             const res = await axios.post(`${url}/signin`, loginUser)
@@ -96,10 +92,10 @@ useEffect(() => {
                 }, 500);
             } else {
                 console.log(' No redirect params, going to default');
-                console.log(' Redirecting to: /studentdata');
+                console.log(' Redirecting to: /dashboard');
                 
                 setTimeout(() => {
-                    window.location.href = '/studentdata';
+                    window.location.href = '/dashboard';
                 }, 500);
             }
 
@@ -117,13 +113,7 @@ useEffect(() => {
         console.log(' === End of Login Process ===');
     }
 
-    console.log(' Rendering StaffSignIn component');
-
-    const handleGoogleLogin = () => {
-    console.log("Please login with Google")
-    window.location.href="http://localhost:8001/auth/google/"
-};
-
+    // console.log(' Rendering StaffSignIn component');
 
     return (
         <>

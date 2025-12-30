@@ -11,6 +11,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import { url } from '../utils/constant';
 import axios from 'axios';
 import { FcVoicePresentation } from "react-icons/fc";
+import { toast } from 'react-toastify';
 
 
 function SignUp() {
@@ -35,7 +36,7 @@ function SignUp() {
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
-            console.log(values)
+           // console.log(values)
             postSignUpUser(values)
         }
     })
@@ -44,14 +45,15 @@ function SignUp() {
 
     const postSignUpUser = async (newUser) => {
         try{
-         console.log("newUser",newUser)
+        //  console.log("newUser",newUser)
         const res = await axios.post(`${url}/signup`, newUser)
         if (res.status == 200) {
-            console.log("successfully signedup!")
-            navigate('/staff-signin')
+            // console.log("successfully signedup!",newUser)
+              navigate('/staff-signin')
+            toast.success("Use account is registered successfully!")
         }
         }catch(error){
-            console.log("Sign up Error:",error.response.data || error.message)
+            console.log("Sign up Error:",error.message)
         }
     }
 

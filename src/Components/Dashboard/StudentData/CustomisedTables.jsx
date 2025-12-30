@@ -213,280 +213,280 @@ const formatDateTime = (date) => {
   return (
     <>
       {/* Filters */}
-       <Box sx={{ width: '100%', maxWidth: '100%' }}>
-          <Box
-      sx={{display:'flex', flexDirection:{xs:'column',md:'row'},
-      justifyContent:'space-between',alignItems:'stretch'}}>
-        <Box>
-            {/* Filter Toggle */}
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => setOpenFilters(!openFilters)}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-              borderRadius: openFilters ? '4px 4px 0 0' : '4px'
-            }}
-          >
-            Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
-          </Button>
-          {/* Filter Panel */}
-          <Collapse in={openFilters}>
-           <Paper
-              sx={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                gap: 2,
-                maxWidth: '100%',
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0,
-                borderBottomLeftRadius: 4,
-                borderBottomRightRadius: 4,
-                boxShadow: 3,
-                p: 2,
-              }}
-            >
-              <Box
-              width={'100%'}
-              sx={{
-                  display:'flex',
-                  justifyContent:'start',
-                  flexWrap:'wrap',
-                  flexDirection:'row',
-                  alignItems:'center',
-                  gap:3
-              }        }>
-              {/* Gender */}
-              <FormControl size="small" sx={{ minWidth: 100 }}>
-                <span style={{ fontSize: "14px", fontWeight: 600 }}>Gender</span>
-                <Select
-                  value={genderFilter}
-                  displayEmpty
-                  onChange={(e) => setGenderFilter(e.target.value)}
-                >
-                  <MenuItem value="">--Select--</MenuItem>
-                  {uniqueGenders.map((g, i) => (
-                    <MenuItem key={i} value={g}>
-                      {g.charAt(0).toUpperCase() + g.slice(1)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              {/* Batch */}
-              <FormControl size="small" sx={{ minWidth: 150 }}>
-                <span style={{ fontSize: "14px", fontWeight: 600 }}>Batch.No</span>
-                <Select
-                  value={batchFilter}
-                  displayEmpty
-                  onChange={(e) => setBatchFilter(e.target.value)}
-                >
-                  <MenuItem value="">--Select--</MenuItem>
-                  {uniqueBatches.map((b, i) => (
-                    <MenuItem key={i} value={b}>{b}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              {/* Date */}
-              <FormControl size="small" sx={{ minWidth: 150 }}>
-                <span style={{ fontSize: "14px", fontWeight: 600 }}>Created By</span>
-                <Select
-                  value={dateFilter}
-                  displayEmpty
-                  onChange={(e) => setDateFilter(e.target.value)}
-                >
-                  <MenuItem value="">--Select--</MenuItem>
-                  <MenuItem value="today">Today</MenuItem>
-                  <MenuItem value="last7">Last 7 Days</MenuItem>
-                  <MenuItem value="last30">Last 30 Days</MenuItem>
-                  <MenuItem value="older">Older</MenuItem>
-                </Select>
-              </FormControl>
-              </Box>
-            
-              {/* Buttons */}
-              <Box 
-                display="flex"
-                alignItems="center"
-                justifyContent="flex-end"
-                gap={2}
-                width="100%">
-                <Button className='commonButton px-3'
-                size="small" onClick={handleApplyFilter}>Apply</Button>
-                <Button variant="outlined" className="px-3" size="small" onClick={handleResetFilter}>Reset</Button>
-              </Box>
-            </Paper>
-          </Collapse>
-        </Box>
-        <Box>
-          {/* ADD BUTTON */}
-            <button variant="outline-none" className="commonButton"
-            onClick={()=>setShowAdd(true)} 
-            >Add Student
-            </button>
-        </Box>
-      </Box>
-
-        {/* Table */}
-      {showTable && (
+    <div className='row  border-4 border-primary mx-auto'>
         <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-             width: "100%",
-                    maxWidth: "100%",marginTop:"10px"
+          sx={{display:'flex', flexDirection:{xs:'column',md:'row'},
+          justifyContent:'space-between',alignItems:'stretch'}}>
+            <Box>
+                {/* Filter Toggle */}
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => setOpenFilters(!openFilters)}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  borderRadius: openFilters ? '4px 4px 0 0' : '4px'
+                }}
+              >
+                Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
+              </Button>
+              {/* Filter Panel */}
+              <Collapse in={openFilters}>
+              <Paper
+                  sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    gap: 2,
+                    maxWidth: '100%',
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0,
+                    borderBottomLeftRadius: 4,
+                    borderBottomRightRadius: 4,
+                    boxShadow: 3,
+                    p: 2,
                   }}
                 >
-     <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>No.</StyledTableCell>
-              <StyledTableCell>Actions</StyledTableCell>
-              <StyledTableCell>Status</StyledTableCell>
-              <StyledTableCell>Batch No.</StyledTableCell>
-              <StyledTableCell>Session Time</StyledTableCell>
-              <StyledTableCell>Student ID</StyledTableCell>
-              <StyledTableCell>Student Name</StyledTableCell>
-              <StyledTableCell>Username</StyledTableCell>
-              <StyledTableCell>Email</StyledTableCell>
-              <StyledTableCell>Phone No.</StyledTableCell>
-              <StyledTableCell>Gender</StyledTableCell>
-              <StyledTableCell>Birthdate</StyledTableCell>
-              <StyledTableCell>Preferred Courses</StyledTableCell>
-              <StyledTableCell>Admission Fee</StyledTableCell>
-              <StyledTableCell>Admission Date</StyledTableCell>
-              <StyledTableCell>Mapped Course</StyledTableCell>
-              <StyledTableCell>Course ID</StyledTableCell>
-              <StyledTableCell>Session Type</StyledTableCell>
-              <StyledTableCell>Daily Session Hours</StyledTableCell>
-              <StyledTableCell>No. of Days</StyledTableCell>
-              <StyledTableCell>Created Date</StyledTableCell>
-            </TableRow>
-          </TableHead>
-           <TableBody>
-            {filteredData.map((student, index) => {
-              const course = courseMap[student.courseId] || {};
-              return (
-                <StyledTableRow key={student._id}>
-                  <StyledTableCell>{index + 1}</StyledTableCell>
-                 {/* Action */}
-                <StyledTableCell>
-  <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
-    {/* Edit */}
-    <FaEdit
-      className={role === "admin" ? "text-success" : "text-muted"}
-      style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
-      onClick={() => {
-        if (role === "admin") {
-          handleEditClick(student);
-        } else {
-          toast.error("To edit the information, please contact Admin", { autoClose: 2000 });
-        }
-      }}
-    />
-    {/* Delete */}
-    <MdDelete
-      className={role === "admin" ? "text-danger" : "text-muted"}
-      style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
-      onClick={() => {
-        if (role === "admin") {
-          handleDeleteClick(student._id);
-        } else {
-          toast.error("To delete the information, please contact Super-Admin", { autoClose: 2000 });
-        }
-      }}
-    />
-    {/* Lock */}
-    <FaKey
-      className="text-secondary"
-      style={{ cursor: 'pointer', fontSize: "16px" }}
-      onClick={() => handlePasswordClick(student.password)}
-    />
-  </div>
-</StyledTableCell>
-                  {/* Status */}
-                  <StyledTableCell>
-                  {studentBatchMap[student.studentName]?.batchNumber ? 'Assigned' : 'Not Assigned'}
-                </StyledTableCell>
-                  {/* BatchNumber */}
-                  <StyledTableCell>  {studentBatchMap[student.studentName]?.batchNumber || "Not assigned"}</StyledTableCell>
-                  
-                  <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "Not assigned"}</StyledTableCell>
-                  {/* Student ID */}
-                  <StyledTableCell>{student._id}</StyledTableCell>
-                  {/* Student Name */}
-                  <StyledTableCell>{student.studentName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</StyledTableCell>
-                  {/* Username */}
-                  <StyledTableCell>{student.username}</StyledTableCell>
-                  <StyledTableCell>{student.email}</StyledTableCell>
-                  <StyledTableCell>{student.phoneNumber}</StyledTableCell>
-                  <StyledTableCell>{student.gender}</StyledTableCell>
-                  <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
-                  <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
-                  <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
-                  <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
-                  <StyledTableCell>{course.courseName || "-"}</StyledTableCell>
-                  <StyledTableCell>{course._id || "-"}</StyledTableCell>
-                  <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
-                  <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
-                  <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
-                  <StyledTableCell>{formatDateTime(student.createdAt)}</StyledTableCell>
-                </StyledTableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-              <TablePagination
-                  component="div"
-                  count={displayData.length}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  rowsPerPage={rowsPerPage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  rowsPerPageOptions={[5, 10, 25, 50]}
+                  <Box
+                  width={'100%'}
                   sx={{
-                    boxShadow: 2,
-                    p: 1,
-                    width: "100%",
-                    maxWidth: "100%",
-                    display: 'flex',
-                    justifyContent: 'center',
-                  }}
-                />
-       </Box>
-      )}
+                      display:'flex',
+                      justifyContent:'start',
+                      flexWrap:'wrap',
+                      flexDirection:'row',
+                      alignItems:'center',
+                      gap:3
+                  }        }>
+                  {/* Gender */}
+                  <FormControl size="small" sx={{ minWidth: 100 }}>
+                    <span style={{ fontSize: "14px", fontWeight: 600 }}>Gender</span>
+                    <Select
+                      value={genderFilter}
+                      displayEmpty
+                      onChange={(e) => setGenderFilter(e.target.value)}
+                    >
+                      <MenuItem value="">--Select--</MenuItem>
+                      {uniqueGenders.map((g, i) => (
+                        <MenuItem key={i} value={g}>
+                          {g.charAt(0).toUpperCase() + g.slice(1)}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-     {showEdit && (
-        <EditStudentData
-          show={showEdit}
-          setShow={setShowEdit}
-          singleStudent={singleStudent}
-          setSingleStudent={setSingleStudent}
-          setStudentData={setStudentData}
-        />
-      )}
+                  {/* Batch */}
+                  <FormControl size="small" sx={{ minWidth: 150 }}>
+                    <span style={{ fontSize: "14px", fontWeight: 600 }}>Batch.No</span>
+                    <Select
+                      value={batchFilter}
+                      displayEmpty
+                      onChange={(e) => setBatchFilter(e.target.value)}
+                    >
+                      <MenuItem value="">--Select--</MenuItem>
+                      {uniqueBatches.map((b, i) => (
+                        <MenuItem key={i} value={b}>{b}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-      {viewPassword && (
-        <ModalShowPassword
-          viewPassword={viewPassword}
-          setViewPassword={setViewPassword}
-          password={password}
-          setPassword={setPassword}
+                  {/* Date */}
+                  <FormControl size="small" sx={{ minWidth: 150 }}>
+                    <span style={{ fontSize: "14px", fontWeight: 600 }}>Created By</span>
+                    <Select
+                      value={dateFilter}
+                      displayEmpty
+                      onChange={(e) => setDateFilter(e.target.value)}
+                    >
+                      <MenuItem value="">--Select--</MenuItem>
+                      <MenuItem value="today">Today</MenuItem>
+                      <MenuItem value="last7">Last 7 Days</MenuItem>
+                      <MenuItem value="last30">Last 30 Days</MenuItem>
+                      <MenuItem value="older">Older</MenuItem>
+                    </Select>
+                  </FormControl>
+                  </Box>
+                
+                  {/* Buttons */}
+                  <Box 
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                    gap={2}
+                    width="100%">
+                    <Button className='commonButton px-3'
+                    size="small" onClick={handleApplyFilter}>Apply</Button>
+                    <Button variant="outlined" className="px-3" size="small" onClick={handleResetFilter}>Reset</Button>
+                  </Box>
+                </Paper>
+              </Collapse>
+            </Box>
+            <Box>
+              {/* ADD BUTTON */}
+                <button variant="outline-none" className="commonButton"
+                onClick={()=>setShowAdd(true)} 
+                >Add Student
+                </button>
+            </Box>
+        </Box>
+
+            {/* Table */}
+        {showTable && (
+           <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                  maxWidth: "100%",marginTop:"10px"
+                      }}
+                    >
+        <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>No.</StyledTableCell>
+                  <StyledTableCell>Actions</StyledTableCell>
+                  <StyledTableCell>Status</StyledTableCell>
+                  <StyledTableCell>Batch No.</StyledTableCell>
+                  <StyledTableCell>Session Time</StyledTableCell>
+                  <StyledTableCell>Student ID</StyledTableCell>
+                  <StyledTableCell>Student Name</StyledTableCell>
+                  <StyledTableCell>Username</StyledTableCell>
+                  <StyledTableCell>Email</StyledTableCell>
+                  <StyledTableCell>Phone No.</StyledTableCell>
+                  <StyledTableCell>Gender</StyledTableCell>
+                  <StyledTableCell>Birthdate</StyledTableCell>
+                  <StyledTableCell>Preferred Courses</StyledTableCell>
+                  <StyledTableCell>Admission Fee</StyledTableCell>
+                  <StyledTableCell>Admission Date</StyledTableCell>
+                  <StyledTableCell>Mapped Course</StyledTableCell>
+                  <StyledTableCell>Course ID</StyledTableCell>
+                  <StyledTableCell>Session Type</StyledTableCell>
+                  <StyledTableCell>Daily Session Hours</StyledTableCell>
+                  <StyledTableCell>No. of Days</StyledTableCell>
+                  <StyledTableCell>Created Date</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredData.map((student, index) => {
+                  const course = courseMap[student.courseId] || {};
+                  return (
+                    <StyledTableRow key={student._id}>
+                      <StyledTableCell>{index + 1}</StyledTableCell>
+                    {/* Action */}
+                    <StyledTableCell>
+      <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
+        {/* Edit */}
+        <FaEdit
+          className={role === "admin" ? "text-success" : "text-muted"}
+          style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+          onClick={() => {
+            if (role === "admin") {
+              handleEditClick(student);
+            } else {
+              toast.error("To edit the information, please contact Admin", { autoClose: 2000 });
+            }
+          }}
         />
-      )}
-      
-       {showAdd && <ModalAddStudent show={showAdd} setShow={setShowAdd}
-                  setStudentData={setStudentData}
-                  />}
-</Box>
+        {/* Delete */}
+        <MdDelete
+          className={role === "admin" ? "text-danger" : "text-muted"}
+          style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+          onClick={() => {
+            if (role === "admin") {
+              handleDeleteClick(student._id);
+            } else {
+              toast.error("To delete the information, please contact Super-Admin", { autoClose: 2000 });
+            }
+          }}
+        />
+        {/* Lock */}
+        <FaKey
+          className="text-secondary"
+          style={{ cursor: 'pointer', fontSize: "16px" }}
+          onClick={() => handlePasswordClick(student.password)}
+        />
+      </div>
+    </StyledTableCell>
+                      {/* Status */}
+                      <StyledTableCell>
+                      {studentBatchMap[student.studentName]?.batchNumber ? 'Assigned' : 'Not Assigned'}
+                    </StyledTableCell>
+                      {/* BatchNumber */}
+                      <StyledTableCell>  {studentBatchMap[student.studentName]?.batchNumber || "Not assigned"}</StyledTableCell>
+                      
+                      <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "Not assigned"}</StyledTableCell>
+                      {/* Student ID */}
+                      <StyledTableCell>{student._id}</StyledTableCell>
+                      {/* Student Name */}
+                      <StyledTableCell>{student.studentName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</StyledTableCell>
+                      {/* Username */}
+                      <StyledTableCell>{student.username}</StyledTableCell>
+                      <StyledTableCell>{student.email}</StyledTableCell>
+                      <StyledTableCell>{student.phoneNumber}</StyledTableCell>
+                      <StyledTableCell>{student.gender}</StyledTableCell>
+                      <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
+                      <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
+                      <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
+                      <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
+                      <StyledTableCell>{course.courseName || "-"}</StyledTableCell>
+                      <StyledTableCell>{course._id || "-"}</StyledTableCell>
+                      <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
+                      <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
+                      <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
+                      <StyledTableCell>{formatDateTime(student.createdAt)}</StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+                  <TablePagination
+                      component="div"
+                      count={displayData.length}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      rowsPerPage={rowsPerPage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      rowsPerPageOptions={[5, 10, 25, 50]}
+                      sx={{
+                        boxShadow: 2,
+                        p: 1,
+                        width: "100%",
+                        maxWidth: "100%",
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    />
+          </Box>
+          )}
+
+        {showEdit && (
+            <EditStudentData
+              show={showEdit}
+              setShow={setShowEdit}
+              singleStudent={singleStudent}
+              setSingleStudent={setSingleStudent}
+              setStudentData={setStudentData}
+            />
+          )}
+
+          {viewPassword && (
+            <ModalShowPassword
+              viewPassword={viewPassword}
+              setViewPassword={setViewPassword}
+              password={password}
+              setPassword={setPassword}
+            />
+          )}
+          
+          {showAdd && <ModalAddStudent show={showAdd} setShow={setShowAdd}
+                      setStudentData={setStudentData}
+                      />}
+    </div>
 
     </>
   );

@@ -15,6 +15,8 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import ModalAddAdmission from './ModalAddAdmission'
 import TablePagination from '@mui/material/TablePagination';
 import { FormControl, Select, MenuItem, Button, Collapse, Box, Autocomplete, TextField } from "@mui/material";
+import { toast } from 'react-toastify'; 
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -111,7 +113,7 @@ const handleResetFilter = () => {
   setBatchStatus('');
   setDateField('');
   setFilteredData([]);
-  setShowTable(false); // ✅ hides the table
+  setShowTable(false); //  hides the table
   setPage(0);
 };
 
@@ -158,8 +160,30 @@ const handleResetFilter = () => {
     ? displayData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
     : [];
 
+const handleActionClick = (actionType, admission) => {
+    if (role === "staff") {
+      toast.error("You don't have permission for this action, please contact to super admin", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
+    }
+
+    // If not staff, proceed with normal logic
+    if (actionType === 'edit') {
+      handleEditClick(admission);
+    } else if (actionType === 'delete') {
+      setViewWarning(true);
+      setSingleAdmission(admission);
+    }
+  };
+
   return (
-    <Box sx={{ width: '100%', maxWidth: '100%' }}>
+    <Box className="border-4 border-danger row mx-auto w-100">
       {/* Filter Section */}
       <Box 
         sx={{ 
@@ -202,7 +226,7 @@ const handleResetFilter = () => {
                 borderBottomLeftRadius: 4,
                 borderBottomRightRadius: 4,
                 boxShadow: 3,
-                p: 2,
+                p: 1,
               }}
             >
               {/* Course Name */}
@@ -330,7 +354,7 @@ const handleResetFilter = () => {
                 {paginatedData.length > 0 ? (
                   paginatedData.map((admission) => (
                     <StyledTableRow key={admission._id}>
-                      <StyledTableCell>
+                      {/* <StyledTableCell>
                         <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
                           {role !== "staff" && (
                             <>
@@ -349,6 +373,31 @@ const handleResetFilter = () => {
                               />
                             </>
                           )}
+                        </Box>
+                      </StyledTableCell> */}
+                      <StyledTableCell>
+                        <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+                          {/* Edit Icon */}
+                          <FaEdit
+                            className={role === "staff" ? "text-muted" : "text-success"}
+                            style={{ 
+                              cursor: "pointer", 
+                              fontSize: "18px",
+                              opacity: role === "staff" ? 0.5 : 1 
+                            }}
+                            onClick={() => handleActionClick('edit', admission)}
+                          />
+                          
+                          {/* Delete Icon */}
+                          <MdDelete
+                            className={role === "staff" ? "text-muted" : "text-danger"}
+                            style={{ 
+                              cursor: "pointer", 
+                              fontSize: "18px",
+                              opacity: role === "staff" ? 0.5 : 1 
+                            }}
+                            onClick={() => handleActionClick('delete', admission)}
+                          />
                         </Box>
                       </StyledTableCell>
                       <StyledTableCell>

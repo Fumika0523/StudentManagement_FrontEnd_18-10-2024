@@ -10,7 +10,7 @@ import GenderForm from './Components/Profile/Edit/genderForm';
 import BirthdateForm from './Components/Profile/Edit/birthdateForm';
 import PhoneNumberForm from './Components/Profile/Edit/phoneNumberForm';
 import PasswordForm from './Components/Profile/Edit/passwordForm';
-import DashboardCard from './Components/Dashboard/dashboardCard';
+import DashboardCard from './Components/Dashboard/DashBoardPage/dashboardCard';
 import ViewStudent from './Components/Dashboard/StudentData/ViewStudent';
 import ViewBatch from './Components/Dashboard/BatchData/viewBatch';
 import ViewCourse from './Components/Dashboard/CourseData/ViewCourse';
@@ -22,7 +22,7 @@ import StudentSignIn from './Components/Student/StudentSignIn';
 import StudentSignUp from './Components/Student/StudentSignUp';
 import StaffSignUp from './Components/Staff/StaffSignUp';
 import SelectCourseModal from './Components/Dashboard/StudentData/SelectCourseModal';
-import ChartDisplay from './Components/Dashboard/SampleChart/ChartDisplay';
+import ChartDisplay from './Components/Dashboard/DashBoardPage/SecondRow/ChartDisplay';
 import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';
 import ApprovePage from './Components/Dashboard/BatchData/AdminApproval/ApprovePage';
@@ -134,7 +134,7 @@ return (
                 maxWidth: '100%',       //  Don't exceed parent
                 overflowX: 'hidden',    //  Hide horizontal overflow
                 overflowY: 'auto',      //  Allow vertical scroll
-                padding: 2,             //  Add some padding
+                //padding: 2,             //  Add some padding
               }}
             >
               <Routes>
@@ -156,16 +156,10 @@ return (
                     <Route path="/batchdata" element={<ViewBatch />} />
                     <Route path="/coursedata" element={<ViewCourse />} />
                     <Route path="/admissiondata" element={<ViewAdmission />} />
-                    {/* <Route
+                    <Route
                       path="/dashboard"
-                      element={
-                        <DashboardCard
-                          isAuthenticated={isAuthenticated}
-                          setIsAuthenticated={setIsAuthenticated}
-                        />
-                      }
-                    /> */}
-                    {/* <Route path="/profile" element={<ProfileForm />} /> */}
+                      element={ <DashboardCard/>}  />
+                    <Route path="/profile" element={<ProfileForm />} />
                     {/* <Route path="*" element={<Navigate to="/dashboard" />} /> */}
                   </>
                 ) : (

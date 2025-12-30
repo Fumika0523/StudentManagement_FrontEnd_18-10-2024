@@ -2,14 +2,10 @@ import { useNavigate } from "react-router-dom";
 import * as React from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { FaEnvelope, FaUser } from "react-icons/fa";
-import { IoMdNotifications } from "react-icons/io";
 import { PiSignOutBold } from "react-icons/pi";
-import SearchIcon from "@mui/icons-material/Search";
 import { MdMenu } from "react-icons/md";
 import Image from "react-bootstrap/Image";
 import "../NavBar/NavBar.css";
@@ -23,7 +19,6 @@ export default function NavBar({ toggleSidebar }) {
 
     const username = localStorage.getItem("username") || user?.name;
 
-
   const getGoogleProfile=async()=>{
     try{
       console.log("Google data is calling...");
@@ -32,17 +27,17 @@ export default function NavBar({ toggleSidebar }) {
         credentials:"include",
       })
       const data = await res.json()
-       console.log('getGoogleProfile', data);
+       console.log('getGoogleProfile',data);
+       
+  setLoggedIn(data.loggedIn);
 
-      setLoggedIn(res.data.loggedIn);
-
-      if (res.data.loggedIn) {
-        setUser(res.data.user);
-      }
-    }catch(e){
-      console.log("Error",e)
+    if (data.loggedIn) {
+      setUser(data.user);
     }
+  } catch (e) {
+    console.log("Error fetching Google profile:", e);
   }
+}
   
   useEffect(() => {
     getGoogleProfile();

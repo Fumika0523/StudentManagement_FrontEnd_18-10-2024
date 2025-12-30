@@ -43,8 +43,7 @@ const {username,email,password,phoneNumber,gender,birthdate}=userData
 
     return(
         <>   
-        <NavBar />
-           <div  className="py-4   border-4 col-lg-6 col-sm-10 mx-auto">
+           <div className="py-1  border-4 col-lg-7 col-sm-10 mx-auto">
               {/* Top Section */}
               <div className='fs-3 text-center  mb-2 ' style={{color:"#808084ff"}}>Personal info</div>
               <div  className="text-center fs-5 mb-4" > Info about you and your preferences across Student Management Service</div>

@@ -341,14 +341,20 @@ function SideBar({ isSidebarVisible = true }) {
                           className="fs-3"
                           style={{ color: "#2050deff" }}
                         />
-                        Batch
+                        View Batch
                       </div>
                       <div
                         className="sidebarItem d-flex align-items-center gap-2"
                         onClick={() => navigate("/coursedata")}
                       >
                         <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
-                        Course
+                        View Attendance
+                      </div>
+                        <div
+                        className="sidebarItem d-flex align-items-center gap-2"
+                        onClick={() => navigate("/coursedata")} >
+                        <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
+                       Submit Task
                       </div>
                     </>
                   )}
@@ -358,28 +364,29 @@ function SideBar({ isSidebarVisible = true }) {
             {/* UTILITIES */}
             <div className="row dashRow">
               <FiTool className="col-3 fs-3" />
-              <div className="col-9" id="utilities">Reports</div>
+              <div className="col-9" id="utilities">Task</div>
             </div>
 
-            {/* PAGES */}
+            {/* PAGES  Only for student */}
             <div className="row dashRow">
               <IoCalendarNumberSharp className="col-3 fs-3" />
               <div className="col-9" id="page">
-                Attendance</div>
+                Raise Query</div>
             </div>
 
-            {/* CHART */}
+            {/* Only for student */}
             <div className="row dashRow">
               <FaChartArea className="col-3 fs-3" />
-              <div className="col-9" id="chart">Certificate</div>
+              <div className="col-9" id="chart">Download Certificate</div>
             </div>
 
-            {/* Tables */}
+                 {/* Only for student */}
             <div className="row dashRow">
               <FaTable className="col-3 fs-3" />
-              <div className="col-9" id="tables">Payment</div>
+              <div className="col-9" id="tables">Invoice Download</div>
               <span className="mx-auto pt-3 my-0" style={{ borderBottom: "1px solid #bfbfbf", width: "85%" }}></span>
             </div>
+
             {/* Sign out */}
             <div
               className="row signOut dashRow pb-4"

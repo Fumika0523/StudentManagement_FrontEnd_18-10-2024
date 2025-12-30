@@ -3,14 +3,14 @@ import { ChartCard } from './ChartCard'
 import DonutCard from './DonutCard'
 import { useEffect, useState } from "react"
 import axios from "axios"
-import {url} from '../../utils/constant'
+import {url} from '../../../utils/constant'
 
 
-const ChartDisplay = () => {
+const ChartDisplay = ({earnings, setEarnings, year,setYear, month,setMonth,}) => {
     const [admissionData,setAdmmisionData] = useState([])
     const token = localStorage.getItem('token')
-    //I can pass it to the next component (EarningCard), where is the usage.
-    const [earnings,setEarnings] = useState([])
+    console.log("earnings from CHartDisplay",earnings)
+    console.log("month from ChartDisplay",month)
       let config = {
     headers:{
       Authorization:`Bearer ${token}`
@@ -19,10 +19,9 @@ const ChartDisplay = () => {
 
   const getAdmissionData = async() => {
     let res = await axios.get(`${url}/alladmission`,config)
-        // console.log("AdmissionData from ChartDisplay",res.data.admissionData)
+      console.log("AdmissionData from ChartDisplay",res.data.admissionData)
     setAdmmisionData(res.data.admissionData)
   }
-
 
     const getEarningData = async () => {
   try {
@@ -47,21 +46,22 @@ const ChartDisplay = () => {
         getEarningData()
       },[])   
 
-      // console.log("earnings",earnings)
-
-
   return (
     <>
-<div className="row w-100 border mx-auto justify-content-center">
-  <div className="col-11 col-lg-7 border-4">
+<div className="row w-100  mx-auto justify-content-center">
+  <div className="col-12 col-lg-7 border-4 mb-md-3">
     <ChartCard
+    month={month}
+    setMonth={setMonth}
+    year={year}
+    setYear={setYear}
       earnings={earnings}
       setEarnings={setEarnings}
       admissionData={admissionData}
       setAdmmisionData={setAdmmisionData}
     />
   </div>
-  <div className="col-11 col-lg-5 border-2">
+  <div className="col-12 col-lg-5 border-2">
     <DonutCard
       earnings={earnings}
       setEarnings={setEarnings}
