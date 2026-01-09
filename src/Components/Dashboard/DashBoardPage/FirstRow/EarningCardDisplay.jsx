@@ -95,7 +95,7 @@ const getEarningData = async (selectedMonth = month, selectedYear = year) => {
       </div>
 
       <div className="fs-4">MTD</div>
-        {earnings?.map((element, index) => (
+        {earnings.map((element, index) => (
           <React.Fragment key={index}>
             <EarningCard {...element}title={element.title.toUpperCase()} />
             {index === 3 && (

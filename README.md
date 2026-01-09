@@ -178,7 +178,9 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 // When you select specific Month, the Line chart should show only specific month too - not full year
 // Initial loading - full year (current year)
 
+
 3.1 accordion - BatchData Top one ->>>> Design: Table <<<Above Admission Overview>>> , Yearly and Location wise
+
 
 //1.Batch Completion Status -- When all training are completed, go to Batch completed
 // 2.Training Completion --- currentData >= end Date 
@@ -191,8 +193,6 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 >> In-Progress
 
 3.3 Accordion - Admission Fee - How many student has completed pay / under due
-
-
 
 // Certificate
 // Drop out --> on a basis of attendance percentage less than 50 %

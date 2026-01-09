@@ -20,6 +20,8 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import Collapse from '@mui/material/Collapse';
 import ModalAddStudent from './ModalAddStudent';
 import TablePagination from '@mui/material/TablePagination';
+import Papa from 'papaparse';
+
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -72,9 +74,9 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
   const [batchFilter, setBatchFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [openFilters, setOpenFilters] = useState(true);
-    const [showAdd, setShowAdd] = useState(false);
-      const [showTable, setShowTable] = useState(false);
-       const [showEdit, setShowEdit] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [showTable, setShowTable] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const uniqueBatches = [...new Set(admissionData.map(adm => adm.batchNumber))];
   const uniqueGenders = [...new Set(studentData.map(stu => stu.gender))];
 const [page, setPage] = useState(0)
@@ -172,9 +174,8 @@ useEffect(() => {
         };
       }
     });
-
     setStudentBatchMap(studentBatchMap);
-    console.log("studentBatchMap", studentBatchMap);
+    //console.log("studentBatchMap", studentBatchMap);
   }
 }, [studentData, admissionData, batchData]);
 
@@ -209,6 +210,33 @@ const formatDateTime = (date) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const handleBulkUpload = (event)=>{
+    const file = event.target.files[0];
+    if(file){
+      Papa.parse(file, {
+        header:true,
+        skipEmptyLines:true,
+        complete:async(results)=>{
+        //results.data will be an array of students objects
+        await uploadStudents(results.data)
+        }   
+      })
+    }
+  }
+
+  const uploadStudents = async(students)=>{
+    try{
+      const token = localStorage.getItem('token')
+      const config ={headers:{Authorization:`Bearer ${token}`}}
+
+      const res = await axios.post(`${url}/bulkaddsstudents`,{students},config)
+      setStudentData([...studentData, ...res.data.newStudents])
+      toast.success("Students uploaded successfully!")
+    }catch(e){
+      toast.error("Failed to upload students")
+    }
+  }
 
   return (
     <>
@@ -323,12 +351,16 @@ const formatDateTime = (date) => {
                 </Paper>
               </Collapse>
             </Box>
-            <Box>
+            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
               {/* ADD BUTTON */}
                 <button variant="outline-none" className="commonButton"
                 onClick={()=>setShowAdd(true)} 
                 >Add Student
                 </button>
+                  <button variant="outline-none" className="commonButton">
+                    Bulk Upload (CSV)
+                    <input type="file" accept=".csv" hidden onChange={handleBulkUpload}/>
+                  </button>
             </Box>
         </Box>
 
@@ -377,46 +409,45 @@ const formatDateTime = (date) => {
                       <StyledTableCell>{index + 1}</StyledTableCell>
                     {/* Action */}
                     <StyledTableCell>
-      <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
-        {/* Edit */}
-        <FaEdit
-          className={role === "admin" ? "text-success" : "text-muted"}
-          style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
-          onClick={() => {
-            if (role === "admin") {
-              handleEditClick(student);
-            } else {
-              toast.error("To edit the information, please contact Admin", { autoClose: 2000 });
-            }
-          }}
-        />
-        {/* Delete */}
-        <MdDelete
-          className={role === "admin" ? "text-danger" : "text-muted"}
-          style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
-          onClick={() => {
-            if (role === "admin") {
-              handleDeleteClick(student._id);
-            } else {
-              toast.error("To delete the information, please contact Super-Admin", { autoClose: 2000 });
-            }
-          }}
-        />
-        {/* Lock */}
-        <FaKey
-          className="text-secondary"
-          style={{ cursor: 'pointer', fontSize: "16px" }}
-          onClick={() => handlePasswordClick(student.password)}
-        />
-      </div>
-    </StyledTableCell>
+                      <div style={{ display: 'flex', justifyContent: "space-evenly", fontSize: "18px" }}>
+                        {/* Edit */}
+                        <FaEdit
+                          className={role === "admin" ? "text-success" : "text-muted"}
+                          style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+                          onClick={() => {
+                            if (role === "admin") {
+                              handleEditClick(student);
+                            } else {
+                              toast.error("To edit the information, please contact Admin", { autoClose: 2000 });
+                            }
+                          }}
+                        />
+                        {/* Delete */}
+                        <MdDelete
+                          className={role === "admin" ? "text-danger" : "text-muted"}
+                          style={{ cursor: 'pointer', opacity: role === "admin" ? 1 : 0.5 }}
+                          onClick={() => {
+                            if (role === "admin") {
+                              handleDeleteClick(student._id);
+                            } else {
+                              toast.error("To delete the information, please contact Super-Admin", { autoClose: 2000 });
+                            }
+                          }}
+                        />
+                        {/* Lock */}
+                        <FaKey
+                          className="text-secondary"
+                          style={{ cursor: 'pointer', fontSize: "16px" }}
+                          onClick={() => handlePasswordClick(student.password)}
+                        />
+                      </div>
+                    </StyledTableCell>
                       {/* Status */}
                       <StyledTableCell>
                       {studentBatchMap[student.studentName]?.batchNumber ? 'Assigned' : 'Not Assigned'}
                     </StyledTableCell>
                       {/* BatchNumber */}
                       <StyledTableCell>  {studentBatchMap[student.studentName]?.batchNumber || "Not assigned"}</StyledTableCell>
-                      
                       <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "Not assigned"}</StyledTableCell>
                       {/* Student ID */}
                       <StyledTableCell>{student._id}</StyledTableCell>
@@ -445,22 +476,22 @@ const formatDateTime = (date) => {
           </TableContainer>
 
           <TablePagination
-                      component="div"
-                      count={displayData.length}
-                      page={page}
-                      onPageChange={handleChangePage}
-                      rowsPerPage={rowsPerPage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                      rowsPerPageOptions={[5, 10, 25, 50]}
-                      sx={{
-                        boxShadow: 2,
-                        p: 1,
-                        width: "100%",
-                        maxWidth: "100%",
-                        display: 'flex',
-                        justifyContent: 'center',
-                      }}
-                    />
+            component="div"
+            count={displayData.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            sx={{
+            boxShadow: 2,
+            p: 1,
+            width: "100%",
+            maxWidth: "100%",
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+          />
           </Box>
           )}
 

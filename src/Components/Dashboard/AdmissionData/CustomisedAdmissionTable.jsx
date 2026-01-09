@@ -354,27 +354,6 @@ const handleActionClick = (actionType, admission) => {
                 {paginatedData.length > 0 ? (
                   paginatedData.map((admission) => (
                     <StyledTableRow key={admission._id}>
-                      {/* <StyledTableCell>
-                        <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
-                          {role !== "staff" && (
-                            <>
-                              <FaEdit
-                                className="text-success"
-                                style={{ cursor: "pointer", fontSize: "18px" }}
-                                onClick={() => handleEditClick(admission)}
-                              />
-                              <MdDelete
-                                className="text-danger"
-                                style={{ cursor: "pointer", fontSize: "18px" }}
-                                onClick={() => {
-                                  setViewWarning(true);
-                                  setSingleAdmission(admission);
-                                }}
-                              />
-                            </>
-                          )}
-                        </Box>
-                      </StyledTableCell> */}
                       <StyledTableCell>
                         <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                           {/* Edit Icon */}

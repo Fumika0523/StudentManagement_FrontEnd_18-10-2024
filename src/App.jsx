@@ -26,6 +26,7 @@ import ChartDisplay from './Components/Dashboard/DashBoardPage/SecondRow/ChartDi
 import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';
 import ApprovePage from './Components/Dashboard/BatchData/AdminApproval/ApprovePage';
+import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendance';
 
 
 
@@ -99,22 +100,17 @@ const hasApprovalRedirect = redirect && batchId;
 
 return (
   <>
-
     {/** Navbar & Sidebar appear only when logged in */}
     {token && (
       <>
-        <div 
-          className="d-flex flex-row" 
+        <div className="d-flex flex-row" 
           style={{ 
-            // border: "3px solid yellow",
             width: "100vw",           //  Add viewport width
             maxWidth: "100vw",        //  Prevent expansion
             overflow: "hidden",       // Hide overflow
             height: "100vh"           // Full viewport height
-          }} 
-        > 
+          }} > 
           <SideBar isSidebarVisible={isSidebarVisible} />
-          
           <div 
             className="backgroundDesign d-flex flex-column" 
             style={{
@@ -124,7 +120,6 @@ return (
             }}
           >
             <NavBar toggleSidebar={() => setIsSidebarVisible(prev => !prev)} />
-            
             <Box
               sx={{
                 flexGrow: 1,
@@ -156,9 +151,8 @@ return (
                     <Route path="/batchdata" element={<ViewBatch />} />
                     <Route path="/coursedata" element={<ViewCourse />} />
                     <Route path="/admissiondata" element={<ViewAdmission />} />
-                    <Route
-                      path="/dashboard"
-                      element={ <DashboardCard/>}  />
+                    <Route path="/dashboard" element={ <DashboardCard/>}  />
+                    <Route path="/attendance" element={ <UpdateAttendance/>}  />
                     <Route path="/profile" element={<ProfileForm />} />
                     {/* <Route path="*" element={<Navigate to="/dashboard" />} /> */}
                   </>

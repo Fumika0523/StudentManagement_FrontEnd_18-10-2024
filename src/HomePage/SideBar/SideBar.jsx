@@ -6,7 +6,7 @@ import {
 } from "react-icons/fa";
 import { FaSchoolFlag } from "react-icons/fa6";
 import { IoCalendarNumberSharp } from "react-icons/io5";
-
+import { MdDateRange } from "react-icons/md";
 import { FiTool } from "react-icons/fi";
 import { AiFillDashboard } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ function SideBar({ isSidebarVisible = true }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 📱 Adjust default state based on screen size
+  //  Adjust default state based on screen size
   useEffect(() => {
     if (screenWidth < 768) {
       setIsSidebarOpen(false); // mobile hidden by default
@@ -269,7 +269,7 @@ function SideBar({ isSidebarVisible = true }) {
               aria-controls="collapse-full"
               aria-expanded={open}
               className="d-flex align-items-center "
-              style={{ cursor: "pointer", color: "#bfbfbf", fontSize: "18px" ,marginBottom:""}}
+              style={{ cursor: "pointer", color: "#bfbfbf", fontSize: "18px", marginBottom: "" }}
             >
               <IoSettings className="col-3 fs-4" />
               <div id="component" className="col-6">
@@ -350,42 +350,54 @@ function SideBar({ isSidebarVisible = true }) {
                         <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
                         View Attendance
                       </div>
-                        <div
+                      <div
                         className="sidebarItem d-flex align-items-center gap-2"
                         onClick={() => navigate("/coursedata")} >
                         <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
-                       Submit Task
+                        Submit Task
                       </div>
                     </>
                   )}
               </div>
             </Collapse>
+            {role === "admin" || role === "staff" ? (
+              <>
+                {/* Task */}
+                <div className="row dashRow">
+                  <FiTool className="col-3 fs-3" />
+                  <div className="col-9" id="utilities">Task</div>
+                </div>
+                     {/* Update Attendance */}
+                <div className="row dashRow"
+                   onClick={() => navigate("/attendance")}>
+                  <MdDateRange className="col-3 fs-3" />
+                  <div className="col-9" id="utilities">Update Attendance</div>
+                </div>
+                
+                </>)
+              : (
+                <>
+                  {/* PAGES  Only for student */}
+                  <div className="row dashRow">
+                    <IoCalendarNumberSharp className="col-3 fs-3" />
+                    <div className="col-9" id="page">
+                      Raise Query</div>
+                  </div>
 
-            {/* UTILITIES */}
-            <div className="row dashRow">
-              <FiTool className="col-3 fs-3" />
-              <div className="col-9" id="utilities">Task</div>
-            </div>
+                  {/* Only for student */}
+                  <div className="row dashRow">
+                    <FaChartArea className="col-3 fs-3" />
+                    <div className="col-9" id="chart">Download Certificate</div>
+                  </div>
 
-            {/* PAGES  Only for student */}
-            <div className="row dashRow">
-              <IoCalendarNumberSharp className="col-3 fs-3" />
-              <div className="col-9" id="page">
-                Raise Query</div>
-            </div>
-
-            {/* Only for student */}
-            <div className="row dashRow">
-              <FaChartArea className="col-3 fs-3" />
-              <div className="col-9" id="chart">Download Certificate</div>
-            </div>
-
-                 {/* Only for student */}
-            <div className="row dashRow">
-              <FaTable className="col-3 fs-3" />
-              <div className="col-9" id="tables">Invoice Download</div>
-              <span className="mx-auto pt-3 my-0" style={{ borderBottom: "1px solid #bfbfbf", width: "85%" }}></span>
-            </div>
+                  {/* Only for student */}
+                  <div className="row dashRow">
+                    <FaTable className="col-3 fs-3" />
+                    <div className="col-9" id="tables">Invoice Download</div>
+                    <span className="mx-auto pt-3 my-0" style={{ borderBottom: "1px solid #bfbfbf", width: "85%" }}></span>
+                  </div>
+                </>
+              )}
 
             {/* Sign out */}
             <div

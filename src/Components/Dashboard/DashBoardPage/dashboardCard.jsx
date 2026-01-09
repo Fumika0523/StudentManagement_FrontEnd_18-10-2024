@@ -271,39 +271,65 @@ function DashboardCard() {
     headers: { Authorization: `Bearer ${token}` },
   }), [token]);
 
-  useEffect(() => {
-    const initializeDashboard = async () => {
-      try {
-        setLoading(true);
+const getEarnings = async () => {
+  const res = await axios.get(
+    `${url}/earnings?month=${month}&year=${year}`,
+    config
+  );
+  setEarnings(res.data);
+};
 
-        if (role === "student") {
-          // Student specific logic
-          const res = await axios.get(`${url}/allstudent`, config);
-          const student = res.data.studentData?.find(s => s.username === username);
-          if (!student?.preferredCourses?.length) setShowModal(true);
-        } else {
-          // Admin/Staff specific logic - Fetch all necessary data in parallel
-          const [earningsRes, admissionRes, studentRes, batchRes] = await Promise.all([
-            axios.get(`${url}/earnings?month=${month}&year=${year}`, config),
-            axios.get(`${url}/alladmission`, config),
-            axios.get(`${url}/allstudent`, config),
-            axios.get(`${url}/allbatch`, config)
-          ]);
+const getAllBatch = async () => {
+  const res = await axios.get(`${url}/allbatch`, config);
+  console.log("Batch API raw:", res.data.batchData);
+  setBatchData(res.data.batchData);
+};
 
-          setEarnings(earningsRes.data);
-          setAdmissionData(admissionRes.data.admissionData);
-          setStudentData(studentRes.data.studentData);
-          setBatchData(batchRes.data.batchData);
+const getAllStudent = async () => {
+  const res = await axios.get(`${url}/allstudent`, config);
+  console.log("getAllStudent",res.data.studentData)
+  setStudentData(res.data.studentData);
+};
+
+const getAllAdmission = async () => {
+  const res = await axios.get(`${url}/alladmission`, config);
+  console.log("getAllAdmissions",res.data.admissionData)
+  setAdmissionData(res.data.admissionData);
+};
+
+useEffect(() => {
+  const initializeDashboard = async () => {
+    try {
+      setLoading(true);
+
+      if (role === "student") {
+        const res = await axios.get(`${url}/allstudent`, config);
+        const student = res.data?.studentData?.find(
+          s => s.username === username
+        );
+
+        if (!student?.preferredCourses?.length) {
+          setShowModal(true);
         }
-      } catch (error) {
-        console.error("Dashboard Data Fetch Error:", error);
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
 
-    initializeDashboard();
-  }, [role, month, year, config, username]);
+      await Promise.all([
+        getEarnings(),
+        getAllAdmission(),
+        getAllStudent(),
+        getAllBatch()
+      ]);
+
+    } catch (error) {
+      console.error("Dashboard Data Fetch Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  initializeDashboard();
+}, [role, month, year, config, username]);
 
   if (loading) return <div className="text-center mt-5">Loading Dashboard...</div>;
 
@@ -324,6 +350,10 @@ function DashboardCard() {
             admissionData={admissionData} 
             studentData={studentData}
             batchData={batchData}
+            month={month}
+            year={year}
+            setMonth={setMonth}
+            setYear={setYear}
           />
         </>
       )}
