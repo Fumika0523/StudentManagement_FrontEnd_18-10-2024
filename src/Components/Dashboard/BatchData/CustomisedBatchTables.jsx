@@ -1,8 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaCircleCheck } from "react-icons/fa6";
-import {
-  TableRow, TableCell,  TableContainer,  TableHead,  TableBody,  Paper,  Button,  Collapse,  Box,  FormControl,  Table,  InputLabel,  Select,  MenuItem,  TextField,  Autocomplete,} from '@mui/material';
+import { TableRow, TableCell, TableContainer, TableHead, TableBody, Paper, Button, Collapse, Box, FormControl, Table, InputLabel, Select, MenuItem, TextField, Autocomplete, } from '@mui/material';
 import { FaUsers } from "react-icons/fa";
 import { MdOutlineRateReview } from "react-icons/md";
 import { styled } from '@mui/material/styles';
@@ -19,6 +18,8 @@ import { IoIosInformationCircle } from "react-icons/io";
 import { url } from '../../utils/constant';
 import axios from 'axios';
 import { ModalShowStudentsList } from './ModalShowStudentsList';
+import { PiCertificateFill } from "react-icons/pi";
+import ModalCertificate from '../Certificate/ModalCertificate';
 
 // Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -67,7 +68,6 @@ const dotStyle = `
 const computeStatus = (batch, course) => {
   // Final state always wins
   if (batch.status === "Batch Completed") return "Batch Completed";
-
   if (!batch.startDate || !course || !course.noOfDays) {
     // Fallback: use DB or default
     return batch.status || "Not Started";
@@ -82,7 +82,7 @@ const computeStatus = (batch, course) => {
   return "Training Completed";
 };
 
-function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseData, admissionData, studentData  }) {
+function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseData, admissionData, studentData }) {
   const [show, setShow] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [singleBatch, setSingleBatch] = useState(null);
@@ -92,9 +92,11 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
   const [showTable, setShowTable] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15); // show up to 15 per page
-  const [showStudentsModal, setShowStudentsModal]=useState(false)
-  const [selectedBatchStudents,setSelectedBatchStudents] = useState([])
-
+  const [showStudentsModal, setShowStudentsModal] = useState(false)
+   const [showCertificateModal, setShowCertificateModal] = useState(false)
+  const [selectedBatchStudents, setSelectedBatchStudents] = useState([])
+  const [openCertificate, setOpenCertificate] = useState(false);
+  const [certificateStudent, setCertificateStudent] = useState(null);
   // Local status map { batchId: statusString }
   const [statusMap, setStatusMap] = useState({});
 
@@ -115,28 +117,36 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
     setPage(0);
   };
 
-const handleViewStudents = (batch) => {
-  console.log("batch", batch); // selected batch details
-
-  // Get all students for this batch
-  const studentsInBatchNames  = admissionData
-  //.filter() collects all admissions matching the batchNumber
-    .filter(admission => admission.batchNumber === batch.batchNumber)
-  //,map() extracts just the studentName
-    .map(admission => admission.studentName);
-//the Resulting array studentsinBatch now contains all student names for that batch
-  console.log("studentsInBatchNames :", studentsInBatchNames );
-
-   // Find full student details from studentData
-  const studentsInBatch = studentData?.filter(student =>
-    studentsInBatchNames.includes(student.studentName)
-  );
-
-  console.log("All students in this batch:", studentsInBatch);
-
-  setSelectedBatchStudents(studentsInBatch);
-  setShowStudentsModal(true);
+  const handleOpenCertificate = (batch) => {
+  setOpenCertificate(true);
 };
+
+
+const handleCloseCertificate = () => {
+  setOpenCertificate(false);
+  setCertificateStudent(null);
+};
+
+  const handleViewStudents = (batch) => {
+    console.log("batch", batch); // selected batch details
+
+    // Get all students for this batch
+    const studentsInBatchNames = admissionData
+      //.filter() collects all admissions matching the batchNumber
+      .filter(admission => admission.batchNumber === batch.batchNumber)
+      //,map() extracts just the studentName
+      .map(admission => admission.studentName);
+    //the Resulting array studentsinBatch now contains all student names for that batch
+    console.log("studentsInBatchNames :", studentsInBatchNames);
+
+    // Find full student details from studentData
+    const studentsInBatch = studentData?.filter(student =>
+      studentsInBatchNames.includes(student.studentName)
+    );
+    console.log("All students in this batch:", studentsInBatch);
+    setSelectedBatchStudents(studentsInBatch);
+    setShowStudentsModal(true);
+  };
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -197,7 +207,6 @@ const handleViewStudents = (batch) => {
             const localStatus = statusMap[batch._id];
             if (!localStatus) return null;
             if (localStatus === batch.status) return null; // already in sync
-
             return axios
               .put(`${url}/updatebatch/${batch._id}`, { status: localStatus }, config)
               .then(() => {
@@ -317,7 +326,6 @@ const handleViewStudents = (batch) => {
         return true;
       });
     }
-
     setFilteredData(filtered);
     setShowTable(true);
   };
@@ -344,9 +352,9 @@ const handleViewStudents = (batch) => {
   };
 
   const isOlderThan7Days = (dateString) => {
-    const createdDate = new Date(dateString);
+    const startDate = new Date(dateString);
     const today = new Date();
-    const diffInDays = (today - createdDate) / (1000 * 60 * 60 * 24);
+    const diffInDays = (today - startDate) / (1000 * 60 * 60 * 24);
     return diffInDays > 7;
   };
 
@@ -368,24 +376,28 @@ const handleViewStudents = (batch) => {
       setBatchData((prev) =>
         prev.map((b) =>
           b._id === batch._id ? { ...b, approvalStatus: "pending" } : b
-        )
-      );
+        ));
     } catch (error) {
       console.log("ERROR:", error.response?.data || error.message);
       toast.error("Failed to send approval request");
     }
   };
 
-
-
   return (
     <>
       <style>{dotStyle}</style>
-
-      <Box sx={{ width: '100%', maxWidth: '100%' }}>
+      <Box className="border-4 border-danger row mx-auto w-100">
         {/* Filters and Add Button */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'stretch', gap: 3 }}>
-          <Box sx={{ width: '80%' }}>
+        <Box      
+        sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between', 
+          alignItems: 'stretch',
+          py: 2,
+          gap: 2,
+        }}>
+          <Box>
             <Button
               variant="contained"
               size="small"
@@ -401,7 +413,19 @@ const handleViewStudents = (batch) => {
               Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
             </Button>
             <Collapse in={openFilters}>
-              <Paper sx={{ p: 2, mb: 2 }}>
+              <Paper      sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: 2,
+                maxWidth: '100%',
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                borderBottomLeftRadius: 4,
+                borderBottomRightRadius: 4,
+                boxShadow: 3,
+                p: 1,
+              }}>
                 {/* Filter Grid */}
                 <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2} mb={2}>
                   {/* Batch Number */}
@@ -582,213 +606,181 @@ const handleViewStudents = (batch) => {
                           ? new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000)
                           : null;
 
-                        const isOld = isOlderThan7Days(batch.createdAt);
+                        const isOld = isOlderThan7Days(batch.startDate);
                         const approvalStatus = batch.approvalStatus || null;
-const renderActionIcons = () => {
-  // FINAL state
-  if (status === "Batch Completed") {
-    return (
-      <FaCircleCheck
-        className="text-success"
-        style={{ fontSize: "18px", cursor: "default" }}
-        title="Batch fully completed"
-      />
-    );
-  }
 
-  // NOT STARTED
-  if (status === "Not Started") {
-    if (isOld) {
-      return (
-        <FaLock
-          className="text-muted"
-          style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-          onClick={() =>
-            toast.error(
-              "This batch is locked (over 7 days old). Contact Super-Admin.",
-              { autoClose: 2000 }
-            )
-          }
-        />
-      );
-    }
-    return (
-      <FaEdit
-        className="text-success"
-        style={{ cursor: "pointer", fontSize: "17px" }}
-        onClick={() => handleEditClick(batch)}
-      />
-    );
-  }
+                        const renderActionIcons = () => {
+                            return (
+                              <div className="d-flex align-items-center gap-2">
+                                {/* ALWAYS visible */}
+                                <FaUsers
+                                  className="text-secondary"
+                                  style={{ fontSize: "19px", cursor: "pointer" }}
+                                  title="View batch users"
+                                  onClick={() => handleViewStudents(batch)}
+                                />
 
-  // IN PROGRESS
-  if (status === "In Progress") {
-    return (
-      <FaLock
-        className="text-muted"
-        style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-        onClick={() =>
-          toast.error("This batch is in progress. Editing is disabled.", {
-            autoClose: 2000,
-          })
-        }
-      />
-    );
-  }
+                                {/* FINAL state */}
+                                {status === "Batch Completed" && (
+                                  <>
+                                  <FaCircleCheck
+                                    className="text-success"
+                                    style={{ fontSize: "18px", cursor: "default" }}
+                                    title="Batch fully completed"
+                                  />
+                            <PiCertificateFill className='text-primary fs-5'
+                           title="Certificate" style={{ cursor: "pointer" }}
+                            onClick={() => handleOpenCertificate(batch)}/>
+                            </>
+                                )}
 
-  // TRAINING COMPLETED
-  if (status === "Training Completed") {
-    // ADMIN VIEW
-    if (role === "admin") {
-      if (approvalStatus === "pending") {
-        return (
-          <MdOutlineRateReview
-            className="text-primary"
-            style={{ fontSize: "20px", cursor: "pointer" }}
-            title="Approval request pending"
-            onClick={() => handleAdminReviewClick(batch)}
-          />
-        );
-      }
+                                {/* NOT STARTED */}
+                                {status === "Not Started" &&
+                                  (isOld ? (
+                                    <FaLock
+                                      className="text-muted"
+                                      style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                        title="This batch is locked (over 7 days old). Contact Super-Admin."
+                                      onClick={() =>
+                                        toast.error(
+                                          "This batch is locked (over 7 days old). Contact Super-Admin.",
+                                          { autoClose: 2000 }
+                                        )
+                                      }
+                                    />
+                                  ) : (
+                                    <FaEdit
+                                      className="text-success"
+                                      style={{ cursor: "pointer", fontSize: "17px" }}
+                                      onClick={() => handleEditClick(batch)}
+                                    />
+                                  ))}
 
-      if (isOld) {
-        return (
-          <FaLock
-            className="text-muted"
-            style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-            onClick={() =>
-              toast.error(
-                "This batch is locked (over 7 days old). Contact Super-Admin.",
-                { autoClose: 2000 }
-              )
-            }
-          />
-        );
-      }
+                                {/* IN PROGRESS */}
+                                {status === "In Progress" && (
+                                  <FaLock
+                                    className="text-muted"
+                                    style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                    onClick={() =>
+                                      toast.error("This batch is in progress. Editing is disabled.", {
+                                        autoClose: 2000,
+                                      })
+                                    }
+                                  />
+                                )}
 
-      return (
-        <FaEdit
-          className="text-success"
-          style={{ cursor: "pointer", fontSize: "17px" }}
-          onClick={() => handleEditClick(batch)}
-        />
-      );
-    }
+                                {/* TRAINING COMPLETED */}
+                                {status === "Training Completed" && role === "admin" && (
+                                  <>
+                                    {approvalStatus === "pending" && (
+                                      <MdOutlineRateReview
+                                        className="text-primary"
+                                        style={{ fontSize: "20px", cursor: "pointer" }}
+                                        title="Approval request pending"
+                                        onClick={() => handleAdminReviewClick(batch)}
+                                      />
+                                    )}
 
-    // STAFF VIEW
-    if (role === "staff") {
-      // No request yet → Lock + Info
-      if (!approvalStatus) {
-        return (
-          <>
-            <FaLock
-              className="text-muted"
-              style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-              onClick={() =>
-                toast.error(
-                  "This batch is locked to edit, please request approval from Admin.",
-                  { autoClose: 2000 }
-                )
-              }
-            />
-            <IoIosInformationCircle
-              className="text-primary fs-5"
-              style={{ cursor: "pointer" }}
-              onClick={() => handleSendApproval(batch)}
-              title="Send approval request to Admin"
-            />
-          </>
-        );
-      }
+                                    {!approvalStatus && !isOld && (
+                                      <>
+                                      <FaEdit
+                                        className="text-success"
+                                        style={{ cursor: "pointer", fontSize: "17px" }}
+                                        onClick={() => handleEditClick(batch)}
+                                      />
+                                     <PiCertificateFill className='text-primary fs-5'
+                           title="Certificate" style={{ cursor: "pointer" }}
+                            onClick={() => handleOpenCertificate(batch)}/>
+                            </>
+                                    )}
+                                  </>
+                                )}
 
-      // Pending
-      if (approvalStatus === "pending") {
-        return (
-          <>
-            <FaLock
-              className="text-muted"
-              style={{
-                cursor: "not-allowed",
-                opacity: 0.7,
-                fontSize: "16px",
-              }}
-            />
-            <IoIosInformationCircle
-              className="text-secondary fs-5"
-              style={{
-                cursor: "not-allowed",
-                opacity: 0.4,
-              }}
-              onClick={() =>
-                toast.info("Waiting for admin approval…", { autoClose: 2000 })
-              }
-              title="Waiting for admin approval"
-            />
-          </>
-        );
-      }
+                                {status === "Training Completed" && role === "staff" && (
+                                  <>
+                                    {!approvalStatus && (
+                                      <>
+                                        <FaLock
+                                          className="text-muted"
+                                          style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                          title="This batch is locked to edit, please request approval from Admin."
+                                          onClick={() =>
+                                            toast.error(
+                                              "This batch is locked to edit, please request approval from Admin.",
+                                              { autoClose: 2000 }
+                                            )
+                                          }
+                                        />
+                                        <IoIosInformationCircle
+                                          className="text-primary fs-5"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => handleSendApproval(batch)}
 
-      // Approved
-      if (approvalStatus === "approved") {
-        return (
-          <>
-            <span
-              className="live-dot"
-              title="Approved by Admin - please update this batch"
-            />
-            <FaEdit
-              className="text-success"
-              style={{ cursor: "pointer", fontSize: "17px" }}
-              onClick={() => handleEditClick(batch)}
-            />
-          </>
-        );
-      }
+                                          title="Send approval request to Admin"
+                                        />
+                                  <PiCertificateFill className='text-primary fs-5'
+                           title="Certificate" style={{ cursor: "pointer" }}
+                            onClick={() => handleOpenCertificate(batch)}/>
+                                      </>
+                                    )}
 
-      // Declined
-      if (approvalStatus === "declined") {
-        return (
-          <>
-            <FaLock
-              className="text-muted"
-              style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-              onClick={() =>
-                toast.error("Approval request was declined by Admin.", {
-                  autoClose: 2000,
-                })
-              }
-            />
-            <FaEdit
-              className="text-muted"
-              style={{
-                cursor: "not-allowed",
-                opacity: 0.4,
-                fontSize: "17px",
-              }}
-              onClick={() =>
-                toast.info(
-                  "Editing disabled. Approval request was declined.",
-                  { autoClose: 2000 }
-                )
-              }
-            />
-          </>
-        );
-      }
-    }
-  }
+                                    {approvalStatus === "pending" && (
+                                      <>
+                                        <FaLock className="text-muted" style={{ opacity: 0.7 }} />
+                                        <IoIosInformationCircle
+                                          className="text-secondary fs-5"
+                                          style={{ opacity: 0.4 }}
+                                          title="Admin approval is pending"
+                                          onClick={() =>
+                                            toast.info("Waiting for admin approval…", { autoClose: 2000 })
+                                          }
+                                        />
+                                  <PiCertificateFill className='text-primary fs-5'
+                           title="Certificate" style={{ cursor: "pointer" }}
+                            onClick={() => handleOpenCertificate(batch)}/>
+                                      </>
+                                    )}
 
-  // Fallback
-  return (
-    <FaLock
-      className="text-muted"
-      style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-      onClick={() => toast.error("This batch is locked.", { autoClose: 2000 })}
-    />
-  );
-};
+                                    {approvalStatus === "approved" && (
+                                      <>
+                                        <span className="live-dot" />
+                                        <FaEdit
+                                          className="text-success"
+                                          style={{ cursor: "pointer", fontSize: "17px" }}
+                                          onClick={() => handleEditClick(batch)}
+                                        />
+                                                       <PiCertificateFill className='text-primary fs-5'
+                           title="Certificate" style={{ cursor: "pointer" }}
+                            onClick={() => handleOpenCertificate(batch)}/>
+                                      </>
+                                    )}
 
-                        
+                                    {approvalStatus === "declined" && (
+                                      <>
+                                        <FaLock
+                                          className="text-muted"
+                                          style={{ cursor: "pointer", opacity: 0.7 }}
+                                          onClick={() =>
+                                            toast.error("Approval request was declined by Admin.", {
+                                              autoClose: 2000,
+                                            })
+                                          }
+                                        />
+                                        <FaEdit
+                                          className="text-muted"
+                                          style={{ cursor: "not-allowed", opacity: 0.4 }}
+                                        />
+                                                       <PiCertificateFill className='text-primary fs-5'
+                           title="Certificate" style={{ cursor: "pointer" }}
+                            onClick={() => handleOpenCertificate(batch)}/>
+                                      </>
+                                    )}
+                             
+                                  </>
+                                )}
+                              </div>
+                            );
+                          };
                         return (
                           <StyledTableRow key={batch._id}>
                             <StyledTableCell>{index + 1}</StyledTableCell>
@@ -848,8 +840,7 @@ const renderActionIcons = () => {
                                   display: "inline-block",
                                   minWidth: "110px",
                                   textAlign: "center",
-                                }}
-                              >
+                                }}>
                                 {status}
                               </span>
                             </StyledTableCell>
@@ -947,13 +938,17 @@ const renderActionIcons = () => {
 
         {showStudentsModal && (
           <ModalShowStudentsList
-          show={showStudentsModal}
-          setShow={setShowStudentsModal}
-          batchData={batchData}
-          selectedBatchStudents={selectedBatchStudents}
-          setSelectedBatchStudents={setSelectedBatchStudents}
+            show={showStudentsModal}
+            setShow={setShowStudentsModal}
+            batchData={batchData}
+            selectedBatchStudents={selectedBatchStudents}
+            setSelectedBatchStudents={setSelectedBatchStudents}
           />
         )}
+   
+        <ModalCertificate
+          open={openCertificate}
+          setOpen={setOpenCertificate} />
       </Box>
     </>
   );

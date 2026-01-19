@@ -77,7 +77,6 @@ const completedBatchStudents = studentData?.filter(
 console.log(completedBatchStudents)
 
 
-
     // --- BATCH DATA ---
     const bItems = [
       {
@@ -85,48 +84,53 @@ console.log(completedBatchStudents)
         value: batchData?.filter(b => isYearMatch(b.createdAt) && b.status === 'Batch Completed').length,
         rows: getTableRows(batchData, 'createdAt', b => b.status === 'Batch Completed', 'location')
       },
-      {
-        label: "Training Completed",
-        value: batchData?.filter(b => isYearMatch(b.createdAt) && b.status === 'Training Completed').length,
-        rows: getTableRows(batchData, 'createdAt', b => b.status === 'Training Completed', 'location')
-      },
-      {
-        label: "In-training Batch",
-        value: batchData?.filter(b => isYearMatch(b.createdAt) && b.status === 'In Progress').length,
-        rows: getTableRows(batchData, 'createdAt', b => b.status === 'In Progress', 'location')
-      }
+      // {
+      //   label: "Training Completed",
+      //   value: batchData?.filter(b => isYearMatch(b.createdAt) && b.status === 'Training Completed').length,
+      //   rows: getTableRows(batchData, 'createdAt', b => b.status === 'Training Completed', 'location')
+      // },
+      // {
+      //   label: "In-training Batch",
+      //   value: batchData?.filter(b => isYearMatch(b.createdAt) && b.status === 'In Progress').length,
+      //   rows: getTableRows(batchData, 'createdAt', b => b.status === 'In Progress', 'location')
+      // }
     ];
 
     // --- STUDENT DATA ---
     const sItems = [
-      {
-        label: "Batch Completed",
-        value: studentData?.filter(s => isYearMatch(s.createdAt) && s.status === 'Batch Completed').length || 0,
-        rows: getTableRows(batchData, 'createdAt', b => b.status === 'Training Completed', 'batchNumber')
-      },
+      // {
+      //   label: "Batch Completed",
+      //   value: studentData?.filter(s => isYearMatch(s.createdAt) && s.status === 'Batch Completed').length || 0,
+      //   rows: getTableRows(batchData, 'createdAt', b => b.status === 'Training Completed', 'batchNumber')
+      // },
       {
         label: "Training Completed",
         value: studentData?.filter(s => isYearMatch(s.createdAt) && s.status === 'Training Completed').length || 0,
-        rows: getTableRows(batchData, 'createdAt', b => b.status === 'Training Completed', 'batchNumber')
+        rows: getTableRows(batchData, 'createdAt', b => b.status === 'Training Completed', 'location')
       },
-      {
-        label: "In-training Batch",
-        value: studentData?.filter(s => isYearMatch(s.createdAt) && s.status === 'In Progress').length || 0,
-        rows: getTableRows(studentData, 'createdAt', s => s.status === 'In Progress', null)
-      }
+      // {
+      //   label: "In-training Batch",
+      //   value: studentData?.filter(s => isYearMatch(s.createdAt) && s.status === 'In Progress').length || 0,
+      //   rows: getTableRows(studentData, 'createdAt', s => s.status === 'In Progress', null)
+      // }
     ];
 
     // --- ADMISSION DATA ---
     const pItems = [
-      { 
-        label: "Fully Paid", 
-        value: admissionData?.filter(a => isYearMatch(a.admissionDate) && a.status === 'paid').length || 0,
-        rows: getTableRows(admissionData, 'admissionDate', a => a.status === 'paid', null)
-      },
-          { 
-        label: "Under Due", 
-        value: admissionData?.filter(a => isYearMatch(a.admissionDate) && a.status === 'paid').length || 0,
-        rows: getTableRows(admissionData, 'admissionDate', a => a.status === 'paid', null)
+      // { 
+      //   label: "Fully Paid", 
+      //   value: admissionData?.filter(a => isYearMatch(a.admissionDate) && a.status === 'paid').length || 0,
+      //   rows: getTableRows(admissionData, 'admissionDate', a => a.status === 'paid', null)
+      // },
+      //     { 
+      //   label: "Under Due", 
+      //   value: admissionData?.filter(a => isYearMatch(a.admissionDate) && a.status === 'paid').length || 0,
+      //   rows: getTableRows(admissionData, 'admissionDate', a => a.status === 'paid', null)
+      // }
+         {
+        label: "In-training Batch",
+        value: studentData?.filter(s => isYearMatch(s.createdAt) && s.status === 'In Progress').length || 0,
+        rows: getTableRows(studentData, 'createdAt', s => s.status === 'In Progress', location)
       }
     ];
 
@@ -138,9 +142,9 @@ console.log(completedBatchStudents)
     <div className="container mt-4">
       <h3 className="mb-4 text-secondary border-bottom pb-2">Statistics for {selectedYear}</h3>
       
-      <AccordionCard title="Batch Overview" items={batchItems} themeColor="#2c3e50" selectedYear={selectedYear} />
-      <AccordionCard title="Student Progress" items={studentItems} themeColor="#27ae60"  selectedYear={selectedYear}/>
-      <AccordionCard title="Admission Fee Status" items={paymentItems} themeColor="#e67e22" selectedYear={selectedYear} />
+      <AccordionCard title="" items={batchItems} themeColor="#2c3e50" selectedYear={selectedYear} />
+      <AccordionCard title="" items={studentItems} themeColor="#27ae60"  selectedYear={selectedYear}/>
+      <AccordionCard title="" items={paymentItems} themeColor="#e67e22" selectedYear={selectedYear} />
     </div>
   );
 };

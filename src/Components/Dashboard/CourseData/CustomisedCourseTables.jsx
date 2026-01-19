@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import ModalAddCourse from "./ModalAddCourse"
-
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, Button, Collapse, Box, TextField, Autocomplete
+  Paper, Button, Select, Box, TextField, Autocomplete
 } from '@mui/material';
 import  { tableCellClasses } from "@mui/material/TableCell";
 import { styled } from '@mui/material/styles';
@@ -13,6 +12,7 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import ModalEditCourse from './ModalEditCourse';
 import ModalDeleteCourse from './ModalDeleteCourse';
 import { FormControl } from '@mui/material';
+import TableFilter from '../TableFilter';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -85,7 +85,7 @@ export default function CourseTable({ courseData, setCourseData }) {
 
   return (
     <>
-    <Box sx={{ width: '100%', maxWidth: '100%'}}>
+    <Box sx={{ width: '100%', }}>
       <Box 
           sx={{ 
             display: 'flex', 
@@ -96,97 +96,46 @@ export default function CourseTable({ courseData, setCourseData }) {
             gap: 2,
           }}
         >
-          <Box className="" 
-                sx={{
-                width: '80%' ,
-              }}
-              >
-            {/* Filter Toggle */}
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => setOpenFilters(!openFilters)}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%' ,
-                borderRadius: openFilters ? '4px 4px 0 0' : '4px',
-              }}
-            >
-              Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
-            </Button>
+  <TableFilter
+  open={openFilters}
+  setOpen={setOpenFilters}
+  onApply={handleApplyFilter}
+  onReset={handleResetFilter}
+>
+  {/* Course Name */}
+  <Box sx={{ minWidth: 200 }}>
+    <span style={{ fontSize: 14, fontWeight: 600 }}>
+      Course Name
+    </span>
+    <Autocomplete
+      freeSolo
+      options={uniqueCourses}
+      value={selectedCourse}
+      inputValue={courseInput}
+      onInputChange={(e, v) => setCourseInput(v)}
+      onChange={(e, v) => setSelectedCourse(v)}
+      renderInput={(params) => (
+        <TextField {...params} size="small" />
+      )}
+    />
+  </Box>
 
-            {/* Filter Panel */}
-            <Collapse in={openFilters}>
-          <Paper
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              // gap: 3,
-              width: '100%',
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-              borderBottomLeftRadius: 4,
-              borderBottomRightRadius: 4,
-              boxShadow: 3,
-              p: 2,
-              mb: 2,
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                gap: 3,
-              }}
-            >
-              {/* Course Name */}
-              <Box sx={{ display: 'flex', flexDirection: 'column', width: 250 }}>
-                <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-                  Course Name
-                </span>
-                <Autocomplete
-                  freeSolo
-                  options={uniqueCourses}
-                  inputValue={courseInput}
-                  onInputChange={(e, newValue) => setCourseInput(newValue)}
-                  value={selectedCourse}
-                  onChange={(e, newValue) => setSelectedCourse(newValue)}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="Search..." size="small" />
-                  )}
-                />
-              </Box>
-            </Box>
+  {/* Batch Status */}
+  {/* <FormControl size="small" sx={{ minWidth: 200 }}>
+    <span style={{ fontSize: 14, fontWeight: 600 }}>
+      Batch Status
+    </span>
+    <Select
+      value={batchStatus}
+      onChange={(e) => setBatchStatus(e.target.value)}
+    >
+      <MenuItem value="">--Select--</MenuItem>
+      <MenuItem value="active">Active</MenuItem>
+      <MenuItem value="inactive">Inactive</MenuItem>
+    </Select>
+  </FormControl> */}
+</TableFilter>
 
-            {/* Buttons */}
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="flex-end"
-              gap={2}
-              width="100%"
-            >
-              <Button
-                variant="contained"
-                size="small"
-                onClick={handleApplyFilter}
-              >
-                Apply
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={handleResetFilter}
-              >
-                Reset
-              </Button>
-            </Box>
-          </Paper>
-        </Collapse>
-          </Box>
 
           {/* Add Button */}
           <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>

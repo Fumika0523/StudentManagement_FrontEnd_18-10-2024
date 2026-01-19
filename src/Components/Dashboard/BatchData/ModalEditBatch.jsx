@@ -94,7 +94,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
   });
 
   //  Is Training Completed (from current status state)
-  const isTrainingCompleted = batchStatus === "Training Completed" || "Batch Completed";
+  const isTrainingCompleted = batchStatus === "Training Completed" ;
 
   //  Update Batch API (full form save)
   const updateBatch = async (updatedBatch) => {
@@ -228,7 +228,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
                   <Form.Check
                     style={{ whiteSpace: "nowrap" }}
                     type="checkbox"
-                    label="Certificate Generated"
+                    label="ificate Generated"
                     name="certificate"
                     checked={checkboxes.certificate}
                     onChange={handleCheckboxChange}

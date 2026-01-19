@@ -160,23 +160,6 @@ useEffect(() => {
                                 SIGN IN
                             </Button>
                         </div>
-                        {/* or sign up */}
-                        <div className='row  p-1'>
-                            <div className='text-center message'>Or Sign Up Using</div>
-                        </div>
-                        {/* Icons */}
-                        <div className="row  p-1">
-                            <div className='gap-2 fs-5 mt-3 d-flex' style={{ justifyContent: "center" }}>
-                                {/* Facebook */}
-                                <FacebookIcon className="socialIcons" sx={{ color: "navy" }} />
-                                {/* LinkedIn */}
-                                <LinkedInIcon className="socialIcons" sx={{ color: "#0077B5" }} />
-                                {/* GitHub */}
-                                <GitHubIcon className="socialIcons" />
-                                {/* Google */}
-                                <GoogleIcon sx={{ color: "#ea4335" }} className="socialIcons" />
-                            </div>
-                        </div>
                     </Form>
                 
 

@@ -25,10 +25,19 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                 <thead className="table-light">
                   <tr>
                     {/* Changed Header from 'Metric' to '#' */}
-                    <th className="text-start" style={{width: '120px'}}>#</th>
-                    {monthHeaders.map(month => (
+                    <th className="text-start" style={{width: '100px'}}>#
+                    </th>
+                    {/* {monthHeaders.map(month => (
                         <th key={month} style={{fontSize: '0.85rem'}}>{month}</th>
-                    ))}
+                    ))} */}
+                    {/* Table Header : 1. Student Enrollment(),2 Dropout,3 Total Assigned(), 4Certificate generated, number of batch counts, deassigned,  */}
+                    <th>Student Enrolled</th>
+                    <th>De-Assigned</th>
+                    <th>Assigned</th>
+                    <th>Drop out</th>
+                    <th>Certificate Generated</th>
+                    <th>Total Batches</th>
+                    <th>Revenue Collected</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -40,7 +49,7 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                         <td className="text-start fw-bold text-muted">{row.label}</td>
                         
                         {/* The 12 monthly counts */}
-                        {row?.monthlyCounts?.map((count, cIndex) => (
+                        {/* {row?.monthlyCounts?.map((count, cIndex) => (
                           <td key={cIndex}>
                              {count > 0 ? (
                                <span style={{ fontWeight: 'bold', color: themeColor }}>{count}</span>
@@ -48,7 +57,7 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                                <span className="text-muted small">-</span>
                              )}
                           </td>
-                        ))}
+                        ))} */}
                       </tr>
                     ))
                   ) : (

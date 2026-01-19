@@ -142,16 +142,53 @@
   display: none !important;
 }
 
-
 .commonButton {
   background-color: #4e73df !important;
-  color: white !important;
-  /* margin: 10px 0px; */
-  border-radius:5px;
-  border:none;
-  padding:5px 10px;
-  text-align:center
+  color: #fff !important;
+  border-radius: 8px;
+  border: none;
+  padding: 8px 14px;
+  font-weight: 600;
+  font-size: 14px;
+
+  display: inline-flex;          /* keeps icon/text aligned */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  white-space: nowrap;           /* ✅ prevents wrapping */
+  line-height: 1;
+  cursor: pointer;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
 }
+
+.commonButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.commonButton:active {
+  transform: translateY(0px);
+  opacity: 0.95;
+}
+
+/* Secondary style for Bulk Upload if you want it different */
+.commonButton.secondary {
+  background-color: #e8f0ff !important;
+  color: #2b4aa0 !important;
+}
+
+/* Make the hidden file input clickable via label */
+.fileButtonLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
 
 .tableTitle {
   color: #4e73df;

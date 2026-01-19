@@ -179,18 +179,21 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 // Initial loading - full year (current year)
 
 
+
 3.1 accordion - BatchData Top one ->>>> Design: Table <<<Above Admission Overview>>> , Yearly and Location wise
+
+Table Header : 1. Student Enrollment(),2 Dropout,3 Total Assigned(), 4Certificate generated, number of batch counts, deassigned, 
+
+When you click year, the full total of this year' data will show.
+WHen you click the table data, the Modal will show and the details of the full year' Jan-December will show of that table header(student enrollment)
+
+Year and Month dropdown should stay when you scoll
 
 
 //1.Batch Completion Status -- When all training are completed, go to Batch completed
 // 2.Training Completion --- currentData >= end Date 
 // 3. In-training Batches - Full Year -
 // currentData <= end Date 
-
-//3.2 accordion - student data same logic as 3.1
->> Batch COmpleted
->> Training Completed
->> In-Progress
 
 3.3 Accordion - Admission Fee - How many student has completed pay / under due
 
@@ -271,3 +274,10 @@ Date|Absent |
 
 
 Dashboard - Download report should be done in excel
+
+
+in studentData Table, when training is completed the certificate icon should show and when you click the certificate should be downloaded
+
+assignment
+attendance
+task

@@ -15,7 +15,8 @@ import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import ModalAddAdmission from './ModalAddAdmission'
 import TablePagination from '@mui/material/TablePagination';
 import { FormControl, Select, MenuItem, Button, Collapse, Box, Autocomplete, TextField } from "@mui/material";
-import { toast } from 'react-toastify'; 
+import { toast } from 'react-toastify';
+import TableFilter from "../TableFilter";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -45,28 +46,80 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const CustomisedAdmissionTable = ({ 
-  admissionData,setAdmissionData, batchData,studentData, setStudentData 
+const CustomisedAdmissionTable = ({
+  admissionData, setAdmissionData, batchData, studentData, setStudentData
 }) => {
   const [showEdit, setShowEdit] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [singleAdmission, setSingleAdmission] = useState(null);
   const [viewWarning, setViewWarning] = useState(false);
   const [openFilters, setOpenFilters] = useState(true);
-  
+
   // Filter states
   const [courseInput, setCourseInput] = useState('');
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [dateField, setDateField] = useState('');
   const [batchStatus, setBatchStatus] = useState('');
   const [showTable, setShowTable] = useState(false);
-  
+
   // Pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15);
-  
-  const role = localStorage.getItem('role');
 
+  const role = localStorage.getItem('role');
+  //find the batch object that matched admission' batchNumber, then return its status
+  const getBatchStatusByBatchNumber = (batchNumber) => {
+    //1. if batchNumber is missing, return a safe fallback
+    if (!batchNumber) return "N/A";
+    //3. FInd the batch in batchData whose batchNumber matches
+    const matchedBatch = batchData.find((b) => b?.batchNumber === batchNumber)
+    //4. return the batch status if found, otherwise fallback
+    return matchedBatch?.status || "N/A"
+  }
+
+  //badge color
+  const StatusBadge = ({ status }) => {
+  const bg =
+    status === "Not Started"
+      ? "#fdecea"
+      : status === "In Progress"
+      ? "#faf3cdff"
+      : status === "Training Completed"
+      ? "#e6f4ea"
+      : status === "Batch Completed"
+      ? "#a1c5feff"
+      : "#eeeeee"; // fallback
+
+  const color =
+    status === "Not Started"
+      ? "#d32f2f"
+      : status === "In Progress"
+      ? "#e18b08ff"
+      : status === "Training Completed"
+      ? "#2e7d32"
+      : status === "Batch Completed"
+      ? "#042378ff"
+      : "#333"; // fallback
+
+  return (
+    <span
+      style={{
+        backgroundColor: bg,
+        color,
+        padding: "4px 8px",
+        borderRadius: "12px",
+        fontWeight: 600,
+        fontSize: "11px",
+        display: "inline-block",
+        minWidth: "110px",
+        textAlign: "center",
+      }}
+    >
+      {status || "N/A"}
+    </span>
+  );
+};
+  
   // Memoize unique courses
   const uniqueCourses = useMemo(() => {
     if (!Array.isArray(batchData)) return [];
@@ -81,7 +134,6 @@ const CustomisedAdmissionTable = ({
     }
 
     let filtered = [...admissionData];
-
     // Filter by course
     if (selectedCourse) {
       filtered = filtered.filter(admission =>
@@ -90,32 +142,39 @@ const CustomisedAdmissionTable = ({
     }
 
     // Filter by batch status (if applicable to admission)
-    if (batchStatus) {
-      filtered = filtered.filter(admission =>
-        admission?.status?.toLowerCase() === batchStatus.toLowerCase()
-      );
-    }
+    // if (batchStatus) {
+    //   filtered = filtered.filter(admission =>
+    //     admission?.status?.toLowerCase() === batchStatus.toLowerCase()
+    //   );
+    // }
+    // Filter by batch status (from batchData via batchNumber)
+if (batchStatus) {
+  filtered = filtered.filter((admission) => {
+    const status = getBatchStatusByBatchNumber(admission.batchNumber);
+    return status.toLowerCase() === batchStatus.toLowerCase();
+  });
+}
 
     // Filter by date field (if dateField is selected)
     // You can add date range filtering here if needed
     setPage(0); // Reset to first page
     setShowTable(true);
-    
+
     // Store filtered data (you'll need to add this state)
     setFilteredData(filtered);
   };
 
   const [filteredData, setFilteredData] = useState([]);
 
-const handleResetFilter = () => {
-  setCourseInput('');
-  setSelectedCourse(null);
-  setBatchStatus('');
-  setDateField('');
-  setFilteredData([]);
-  setShowTable(false); //  hides the table
-  setPage(0);
-};
+  const handleResetFilter = () => {
+    setCourseInput('');
+    setSelectedCourse(null);
+    setBatchStatus('');
+    setDateField('');
+    setFilteredData([]);
+    setShowTable(false); //  hides the table
+    setPage(0);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -156,11 +215,11 @@ const handleResetFilter = () => {
 
   // Data to display
   const displayData = showTable ? filteredData : admissionData;
-  const paginatedData = Array.isArray(displayData) 
+  const paginatedData = Array.isArray(displayData)
     ? displayData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
     : [];
 
-const handleActionClick = (actionType, admission) => {
+  const handleActionClick = (actionType, admission) => {
     if (role === "staff") {
       toast.error("You don't have permission for this action, please contact to super admin", {
         position: "top-right",
@@ -183,129 +242,63 @@ const handleActionClick = (actionType, admission) => {
   };
 
   return (
-    <Box className="border-4 border-danger row mx-auto w-100">
-      {/* Filter Section */}
-      <Box 
-        sx={{ 
-          display: 'flex', 
+    <Box className="row mx-auto w-100">
+      <Box
+        sx={{
+          display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-between', 
+          justifyContent: 'space-between',
           alignItems: 'stretch',
-          py: 2,
+          // py: 2,
           gap: 2,
         }}
       >
-        <Box >
-          {/* Filter Toggle */}
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => setOpenFilters(!openFilters)}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%' ,
-              borderRadius: openFilters ? '4px 4px 0 0' : '4px',
-            }}
-          >
-            Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
-          </Button>
+        {/* Filter Section */}
+        <TableFilter
+          open={openFilters}
+          setOpen={setOpenFilters}
+          onApply={handleApplyFilter}
+          onReset={handleResetFilter}
+        >
+          {/* Course Name */}
+          <Box sx={{ minWidth: 200 }}>
+            <span style={{ fontSize: 14, fontWeight: 600 }}>
+              Course Name
+            </span>
+            <Autocomplete
+              freeSolo
+              options={uniqueCourses}
+              value={selectedCourse}
+              inputValue={courseInput}
+              onInputChange={(e, v) => setCourseInput(v)}
+              onChange={(e, v) => setSelectedCourse(v)}
+              renderInput={(params) => (
+                <TextField {...params} size="small" />
+              )}
+            />
+          </Box>
 
-          {/* Filter Panel */}
-          <Collapse in={openFilters}>
-            <Paper
-              sx={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                gap: 2,
-                maxWidth: '100%',
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0,
-                borderBottomLeftRadius: 4,
-                borderBottomRightRadius: 4,
-                boxShadow: 3,
-                p: 1,
-              }}
+          {/* Batch Status */}
+          <FormControl size="small" sx={{ minWidth: 200 }}>
+            <span style={{ fontSize: 14, fontWeight: 600 }}>
+              Batch Status
+            </span>
+            <Select
+              value={batchStatus}
+              onChange={(e) => setBatchStatus(e.target.value)}
             >
-              {/* Course Name */}
-              <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 200, flex: 1 }}>
-                <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-                  Course Name
-                </span>
-                <Autocomplete
-                  freeSolo
-                  options={uniqueCourses}
-                  inputValue={courseInput}
-                  onInputChange={(e, newValue) => setCourseInput(newValue)}
-                  value={selectedCourse}
-                  onChange={(e, newValue) => setSelectedCourse(newValue)}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="Select or type" size="small" />
-                  )}
-                />
-              </Box>
-
-              {/* Date By */}
-              <FormControl size="small" sx={{ minWidth: 200, flex: 1 }}>
-                <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-                  Date By
-                </span>
-                <Select
-                  value={dateField}
-                  displayEmpty
-                  onChange={(e) => setDateField(e.target.value)}
-                >
-                  <MenuItem value="">--Select--</MenuItem>
-                  <MenuItem value="startDate">Start Date</MenuItem>
-                  <MenuItem value="endDate">End Date</MenuItem>
-                  <MenuItem value="updatedAt">Updated Date</MenuItem>
-                </Select>
-              </FormControl>
-
-              {/* Batch Status - Fixed label */}
-              <FormControl size="small" sx={{ minWidth: 200, flex: 1 }}>
-                <span style={{ fontSize: "14px", fontWeight: 600, marginBottom: "4px" }}>
-                  Batch Status
-                </span>
-                <Select
-                  value={batchStatus}
-                  displayEmpty
-                  onChange={(e) => setBatchStatus(e.target.value)}
-                >
-                  <MenuItem value="">--Select--</MenuItem>
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="inactive">Inactive</MenuItem>
-                </Select>
-              </FormControl>
-
-              {/* Action Buttons */}
-              <Box sx={{ display: 'flex', gap: 2, width: '100%', mt: 1 }}>
-                <Button 
-                  variant="contained" 
-                  size="small" 
-                  onClick={handleApplyFilter}
-                  sx={{ minWidth: 100 }}
-                >
-                  Apply
-                </Button>
-                <Button 
-                  variant="outlined" 
-                  size="small" 
-                  onClick={handleResetFilter}
-                  sx={{ minWidth: 100 }}
-                >
-                  Reset
-                </Button>
-              </Box>
-            </Paper>
-          </Collapse>
-        </Box>
-
+              <MenuItem value="">--Select--</MenuItem>
+              <MenuItem value="Batch Completed">Batch Completed</MenuItem>
+              <MenuItem value="Training Completed">Training Completed</MenuItem>
+              <MenuItem value="In Progress">In Progress</MenuItem>
+              <MenuItem value="Not Started">Not Started</MenuItem>
+            </Select>
+          </FormControl>
+        </TableFilter>
+        
         {/* Add Button */}
-        <Box sx={{ display: 'flex', alignItems: 'flex-start', mt: { xs: 0, md: 0 } }}>
-          <button 
+        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+          <button
             className="commonButton"
             onClick={() => setShowAdd(true)}
           >
@@ -315,18 +308,19 @@ const handleActionClick = (actionType, admission) => {
       </Box>
 
       {/* Table */}
-      {showTable  && (
+      {showTable && (
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "100%",
-            maxWidth: "100%",
+            // width: "100%",
+            // maxWidth: "100%",
+            marginTop: "10px"
           }}
         >
-          <TableContainer 
+          <TableContainer
             component={Paper}
-            sx={{ 
+            sx={{
               maxWidth: '100%',
               overflowX: 'auto',
             }}
@@ -359,28 +353,28 @@ const handleActionClick = (actionType, admission) => {
                           {/* Edit Icon */}
                           <FaEdit
                             className={role === "staff" ? "text-muted" : "text-success"}
-                            style={{ 
-                              cursor: "pointer", 
+                            style={{
+                              cursor: "pointer",
                               fontSize: "18px",
-                              opacity: role === "staff" ? 0.5 : 1 
+                              opacity: role === "staff" ? 0.5 : 1
                             }}
                             onClick={() => handleActionClick('edit', admission)}
                           />
-                          
+
                           {/* Delete Icon */}
                           <MdDelete
                             className={role === "staff" ? "text-muted" : "text-danger"}
-                            style={{ 
-                              cursor: "pointer", 
+                            style={{
+                              cursor: "pointer",
                               fontSize: "18px",
-                              opacity: role === "staff" ? 0.5 : 1 
+                              opacity: role === "staff" ? 0.5 : 1
                             }}
                             onClick={() => handleActionClick('delete', admission)}
                           />
                         </Box>
                       </StyledTableCell>
                       <StyledTableCell>
-                        {admission.batchNumber ? "Yes" : "No"}
+                      <StatusBadge status={getBatchStatusByBatchNumber(admission.batchNumber)} />
                       </StyledTableCell>
                       <StyledTableCell>{admission.batchNumber || 'N/A'}</StyledTableCell>
                       <StyledTableCell>{admission.courseId || 'N/A'}</StyledTableCell>
@@ -407,7 +401,7 @@ const handleActionClick = (actionType, admission) => {
             </Table>
           </TableContainer>
 
-          {/* Fixed Pagination - removed absolute positioning */}
+          {/* Pagination */}
           <TablePagination
             component="div"
             count={displayData.length}

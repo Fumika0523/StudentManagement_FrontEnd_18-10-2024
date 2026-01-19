@@ -14,16 +14,13 @@ import axios from 'axios';
 import EditStudentData from './EditStudentData';
 import ModalShowPassword from './ModalShowPassword';
 import { url } from '../../utils/constant';
-import { FormControl, Select, MenuItem, Box, Button } from "@mui/material";
 import { toast } from 'react-toastify';
-import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
-import Collapse from '@mui/material/Collapse';
 import ModalAddStudent from './ModalAddStudent';
 import TablePagination from '@mui/material/TablePagination';
 import Papa from 'papaparse';
+import TableFilter from '../TableFilter';
+import { FormControl, Select, MenuItem, Button, Collapse, Box, Autocomplete, TextField } from "@mui/material";
 
-
-// Styled components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#f3f4f6',
@@ -77,6 +74,7 @@ const CustomizedTables = ({ studentData, setStudentData, setAdmissionData, admis
   const [showAdd, setShowAdd] = useState(false);
   const [showTable, setShowTable] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const uniqueBatches = [...new Set(admissionData.map(adm => adm.batchNumber))];
   const uniqueGenders = [...new Set(studentData.map(stu => stu.gender))];
 const [page, setPage] = useState(0)
@@ -87,11 +85,20 @@ const [rowsPerPage, setRowsPerPage] = useState(16);
       Authorization: `Bearer ${token}`,
     },
   };
-
+    const [courseInput, setCourseInput] = useState('');
+    const [dateField, setDateField] = useState('');
+    const [batchStatus, setBatchStatus] = useState('');
+  
   const handleEditClick = (student) => {
     setShowEdit(true)
     setSingleStudent(student);
   };
+
+    // Memoize unique courses
+    const uniqueCourses = useMemo(() => {
+      if (!Array.isArray(batchData)) return [];
+      return [...new Set(batchData.map(b => b?.courseName).filter(Boolean))];
+    }, [batchData]);
 
   const handleDeleteClick = async (id) => {
     try {
@@ -163,21 +170,23 @@ const [rowsPerPage, setRowsPerPage] = useState(16);
 useEffect(() => {
   if (studentData.length && admissionData.length && batchData.length) {
     const studentBatchMap = {};
-
     admissionData.forEach(admission => {
       const batch = batchData.find(b => b.batchNumber === admission.batchNumber);
       if (batch) {
         studentBatchMap[admission.studentName] = {
           batchNumber: admission.batchNumber,
           sessionTime: batch.sessionTime,
-          source:admission.admissionSource
+          source:admission.admissionSource,
+          batchStatus:batch.status
         };
       }
     });
     setStudentBatchMap(studentBatchMap);
-    //console.log("studentBatchMap", studentBatchMap);
+   
   }
 }, [studentData, admissionData, batchData]);
+
+console.log("batchStatus",batchStatus)
 
     // Create a map for fast lookup: courseId => course object
   const courseMap = useMemo(() => {
@@ -232,7 +241,7 @@ const formatDateTime = (date) => {
 
       const res = await axios.post(`${url}/bulkaddsstudents`,{students},config)
       setStudentData([...studentData, ...res.data.newStudents])
-      toast.success("Students uploaded successfully!")
+      toast.success("Students added successfully!")
     }catch(e){
       toast.error("Failed to upload students")
     }
@@ -241,127 +250,82 @@ const formatDateTime = (date) => {
   return (
     <>
       {/* Filters */}
-    <div className='row  border-4 border-primary mx-auto'>
+    <div className='row  mx-auto '>
         <Box
           sx={{display:'flex', flexDirection:{xs:'column',md:'row'},
-          justifyContent:'space-between',alignItems:'stretch'}}>
-            <Box>
-                {/* Filter Toggle */}
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => setOpenFilters(!openFilters)}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  borderRadius: openFilters ? '4px 4px 0 0' : '4px'
-                }}
-              >
-                Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
-              </Button>
-              {/* Filter Panel */}
-              <Collapse in={openFilters}>
-              <Paper
-                  sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    gap: 2,
-                    maxWidth: '100%',
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                    borderBottomLeftRadius: 4,
-                    borderBottomRightRadius: 4,
-                    boxShadow: 3,
-                    p: 2,
-                  }}
-                >
-                  <Box
-                  width={'100%'}
-                  sx={{
-                      display:'flex',
-                      justifyContent:'start',
-                      flexWrap:'wrap',
-                      flexDirection:'row',
-                      alignItems:'center',
-                      gap:3
-                  }        }>
-                  {/* Gender */}
-                  <FormControl size="small" sx={{ minWidth: 100 }}>
-                    <span style={{ fontSize: "14px", fontWeight: 600 }}>Gender</span>
-                    <Select
-                      value={genderFilter}
-                      displayEmpty
-                      onChange={(e) => setGenderFilter(e.target.value)}
-                    >
-                      <MenuItem value="">--Select--</MenuItem>
-                      {uniqueGenders.map((g, i) => (
-                        <MenuItem key={i} value={g}>
-                          {g.charAt(0).toUpperCase() + g.slice(1)}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-
-                  {/* Batch */}
-                  <FormControl size="small" sx={{ minWidth: 150 }}>
-                    <span style={{ fontSize: "14px", fontWeight: 600 }}>Batch.No</span>
-                    <Select
-                      value={batchFilter}
-                      displayEmpty
-                      onChange={(e) => setBatchFilter(e.target.value)}
-                    >
-                      <MenuItem value="">--Select--</MenuItem>
-                      {uniqueBatches.map((b, i) => (
-                        <MenuItem key={i} value={b}>{b}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-
-                  {/* Date */}
-                  <FormControl size="small" sx={{ minWidth: 150 }}>
-                    <span style={{ fontSize: "14px", fontWeight: 600 }}>Created By</span>
-                    <Select
-                      value={dateFilter}
-                      displayEmpty
-                      onChange={(e) => setDateFilter(e.target.value)}
-                    >
-                      <MenuItem value="">--Select--</MenuItem>
-                      <MenuItem value="today">Today</MenuItem>
-                      <MenuItem value="last7">Last 7 Days</MenuItem>
-                      <MenuItem value="last30">Last 30 Days</MenuItem>
-                      <MenuItem value="older">Older</MenuItem>
-                    </Select>
-                  </FormControl>
-                  </Box>
-                
-                  {/* Buttons */}
-                  <Box 
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="flex-end"
-                    gap={2}
-                    width="100%">
-                    <Button className='commonButton px-3'
-                    size="small" onClick={handleApplyFilter}>Apply</Button>
-                    <Button variant="outlined" className="px-3" size="small" onClick={handleResetFilter}>Reset</Button>
-                  </Box>
-                </Paper>
-              </Collapse>
+          justifyContent:'space-between',alignItems:'start',mt:1,}}>
+          <TableFilter
+            open={openFilters}
+            setOpen={setOpenFilters}
+            onApply={handleApplyFilter}
+            onReset={handleResetFilter}
+          >
+            {/* Course Name */}
+            <Box sx={{ minWidth: 200 }}>
+              <span style={{ fontSize: 14, fontWeight: 600 }}>
+                Course Name
+              </span>
+              <Autocomplete
+                freeSolo
+                options={uniqueCourses}
+                value={selectedCourse}
+                inputValue={courseInput}
+                onInputChange={(e, v) => setCourseInput(v)}
+                onChange={(e, v) => setSelectedCourse(v)}
+                renderInput={(params) => (
+                  <TextField {...params} size="small" />
+                )}
+              />
             </Box>
-            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-              {/* ADD BUTTON */}
-                <button variant="outline-none" className="commonButton"
-                onClick={()=>setShowAdd(true)} 
-                >Add Student
-                </button>
-                  <button variant="outline-none" className="commonButton">
-                    Bulk Upload (CSV)
-                    <input type="file" accept=".csv" hidden onChange={handleBulkUpload}/>
-                  </button>
-            </Box>
+
+  {/* Batch Status */}
+  <FormControl size="small" sx={{ minWidth: 200 }}>
+    <span style={{ fontSize: 14, fontWeight: 600 }}>
+      Batch Status
+    </span>
+    <Select
+      value={batchStatus}
+      onChange={(e) => setBatchStatus(e.target.value)}
+    >
+      <MenuItem value="">--Select--</MenuItem>
+      <MenuItem value="active">Active</MenuItem>
+      <MenuItem value="inactive">Inactive</MenuItem>
+    </Select>
+  </FormControl>
+          </TableFilter>
+<Box
+  sx={{
+    display: "flex",
+    flexWrap: "wrap",         
+    gap: 1,
+    mb: 2,
+    mt: 1,
+    justifyContent: { xs: "flex-start", md: "flex-end" },
+  }}
+>
+  {/* ADD BUTTON */}
+  <button
+    type="button"
+    className="commonButton"
+    onClick={() => setShowAdd(true)}
+  >
+    Add Student
+  </button>
+
+  {/* BULK UPLOAD */}
+  <label htmlFor="bulkUploadCsv" className="commonButton secondary fileButtonLabel">
+    Bulk Upload (CSV)
+    <input
+      id="bulkUploadCsv"
+      type="file"
+      accept=".csv"
+      hidden
+      onChange={handleBulkUpload}
+    />
+  </label>
+</Box>
+
+
         </Box>
 
         {/* Table */}
@@ -440,6 +404,7 @@ const formatDateTime = (date) => {
                           style={{ cursor: 'pointer', fontSize: "16px" }}
                           onClick={() => handlePasswordClick(student.password)}
                         />
+                        
                       </div>
                     </StyledTableCell>
                       {/* Status */}
@@ -448,6 +413,7 @@ const formatDateTime = (date) => {
                     </StyledTableCell>
                       {/* BatchNumber */}
                       <StyledTableCell>  {studentBatchMap[student.studentName]?.batchNumber || "Not assigned"}</StyledTableCell>
+                      {/* session time */}
                       <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "Not assigned"}</StyledTableCell>
                       {/* Student ID */}
                       <StyledTableCell>{student._id}</StyledTableCell>
