@@ -657,8 +657,8 @@ const handleCloseCertificate = () => {
                                   ))}
 
                                 {/* IN PROGRESS */}
-                                {status === "In Progress" && (
-                                  <FaLock
+                                {status === "In Progress" &&  ( isOld?(
+                                    <FaLock
                                     className="text-muted"
                                     style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
                                     onClick={() =>
@@ -667,6 +667,15 @@ const handleCloseCertificate = () => {
                                       })
                                     }
                                   />
+                                ):
+                                (
+                                  <FaEdit
+                                      className="text-success"
+                                      style={{ cursor: "pointer", fontSize: "17px" }}
+                                      onClick={() => handleEditClick(batch)}
+                                    /> 
+                                )
+                                 
                                 )}
 
                                 {/* TRAINING COMPLETED */}
@@ -914,6 +923,7 @@ const handleCloseCertificate = () => {
             singleBatch={singleBatch}
             setSingleBatch={setSingleBatch}
             setBatchData={setBatchData}
+             courseData={courseData}  
           />
         )}
         {viewWarning && (

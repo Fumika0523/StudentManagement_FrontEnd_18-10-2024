@@ -11,7 +11,6 @@ import { MdDelete } from "react-icons/md";
 import ModalDeleteAdmission from "./ModalDeleteAdmission";
 import ModalEditAdmission from "./ModalEditAdmission";
 import { FaEdit } from "react-icons/fa";
-import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import ModalAddAdmission from './ModalAddAdmission'
 import TablePagination from '@mui/material/TablePagination';
 import { FormControl, Select, MenuItem, Button, Collapse, Box, Autocomplete, TextField } from "@mui/material";
@@ -47,7 +46,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const CustomisedAdmissionTable = ({
-  admissionData, setAdmissionData, batchData, studentData, setStudentData
+  admissionData, setAdmissionData, batchData, studentData, setStudentData, courseData, setCourseData
 }) => {
   const [showEdit, setShowEdit] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -68,14 +67,25 @@ const CustomisedAdmissionTable = ({
 
   const role = localStorage.getItem('role');
   //find the batch object that matched admission' batchNumber, then return its status
-  const getBatchStatusByBatchNumber = (batchNumber) => {
-    //1. if batchNumber is missing, return a safe fallback
-    if (!batchNumber) return "N/A";
-    //3. FInd the batch in batchData whose batchNumber matches
-    const matchedBatch = batchData.find((b) => b?.batchNumber === batchNumber)
-    //4. return the batch status if found, otherwise fallback
-    return matchedBatch?.status || "N/A"
-  }
+
+const batchStatusMap = useMemo(() => {
+  const map = {};
+  if (!Array.isArray(batchData)) return map;
+
+  batchData.forEach((b) => {
+    if (b?.batchNumber) {
+      map[b.batchNumber] = b.status || "N/A";
+    }
+  });
+
+  return map;
+}, [batchData]);
+
+const getBatchStatusByBatchNumber = (batchNumber) => {
+  if (!batchNumber) return "N/A";
+  return batchStatusMap[batchNumber] || "N/A";
+};
+
 
   //badge color
   const StatusBadge = ({ status }) => {
@@ -151,9 +161,10 @@ const CustomisedAdmissionTable = ({
 if (batchStatus) {
   filtered = filtered.filter((admission) => {
     const status = getBatchStatusByBatchNumber(admission.batchNumber);
-    return status.toLowerCase() === batchStatus.toLowerCase();
+    return status === batchStatus;
   });
 }
+
 
     // Filter by date field (if dateField is selected)
     // You can add date range filtering here if needed

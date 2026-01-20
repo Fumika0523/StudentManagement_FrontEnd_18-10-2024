@@ -10,8 +10,15 @@ import { Col, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
+const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData, courseData }) => {
   const navigate = useNavigate();
+const courses = Array.isArray(courseData) ? courseData : [];
+
+const course = courses.find(
+  (c) => c.courseName?.trim().toLowerCase() === singleBatch?.courseName?.trim().toLowerCase()
+);
+
+const courseDays = Number(course?.noOfDays || 0);
 
   //  Lock rule (older than 7 days from startDate)
   const [isLocked, setIsLocked] = useState(false);
@@ -27,7 +34,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
   const allChecked = Object.values(checkboxes).every(Boolean);
 
   //  Separate state for batch status (tutor suggestion)
-  const [batchStatus, setBatchStatus] = useState(singleBatch?.status || "");
+  const [batchStatus, setBatchStatus] = useState(singleBatch?.status );
   const token = localStorage.getItem('token');
   const config = { headers: { Authorization: `Bearer ${token}` } };
 
@@ -37,26 +44,68 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
   };
 
   //  Reset lock & checkboxes when opening for a new batch
+  // useEffect(() => {
+  //   if (singleBatch?.startDate) {
+  //     const diffDays =
+  //       (new Date() - new Date(singleBatch.startDate)) / (1000 * 60 * 60 * 24);
+  //     setIsLocked(diffDays > 7);
+  //   } else {
+  //     setIsLocked(false);
+  //   }
+
+  //   // reset checklist when switching batch
+  //   setCheckboxes({
+  //     assign: false,
+  //     deassign: false,
+  //     dropout: false,
+  //     certificate: false,
+  //   });
+
+  //   // initial batchStatus from prop
+  //   setBatchStatus(singleBatch?.status || "");
+  // }, [singleBatch]);
+
   useEffect(() => {
-    if (singleBatch?.startDate) {
-      const diffDays =
-        (new Date() - new Date(singleBatch.startDate)) / (1000 * 60 * 60 * 24);
-      setIsLocked(diffDays > 7);
-    } else {
-      setIsLocked(false);
-    }
+  if (!singleBatch?.startDate) return;
 
-    // reset checklist when switching batch
-    setCheckboxes({
-      assign: false,
-      deassign: false,
-      dropout: false,
-      certificate: false,
-    });
+  const startDate = new Date(singleBatch.startDate);
+  if (isNaN(startDate.getTime())) return;
 
-    // initial batchStatus from prop
-    setBatchStatus(singleBatch?.status || "");
-  }, [singleBatch]);
+  const courses = Array.isArray(courseData) ? courseData : [];
+  const course = courses.find(
+    (c) =>
+      c.courseName?.trim().toLowerCase() === singleBatch?.courseName?.trim().toLowerCase()
+  );
+
+  const days = Number(course?.noOfDays);
+  if (!Number.isFinite(days) || days <= 0) {
+    // If we don't know the duration yet, DO NOT auto override status
+    setBatchStatus(singleBatch.status || "");
+    formik.setFieldValue("status", singleBatch.status || "");
+    return;
+  }
+
+  const endDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
+  const today = new Date();
+
+  let newStatus = singleBatch.status || "";
+
+  // Keep final status
+  if (singleBatch.status === "Batch Completed") {
+    newStatus = "Batch Completed";
+  } else {
+    if (today < startDate) newStatus = "Not Started";
+    else if (today >= startDate && today < endDate) newStatus = "In Progress";
+    else newStatus = "Training Completed";
+  }
+
+  setBatchStatus(newStatus);
+  formik.setFieldValue("status", newStatus);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [singleBatch, courseData]);
+const isTrainingCompleted = batchStatus === "Training Completed";
+const canSelectBatchCompleted = isTrainingCompleted && allChecked;
+
 
   //  Validation Schema
   const formSchema = Yup.object().shape({
@@ -85,7 +134,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
       startDate: singleBatch?.startDate
         ? new Date(singleBatch.startDate).toISOString().split("T")[0]
         : "",
-      status: batchStatus || singleBatch?.status || "",
+      status: singleBatch?.status || "",
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
@@ -94,7 +143,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
   });
 
   //  Is Training Completed (from current status state)
-  const isTrainingCompleted = batchStatus === "Training Completed" ;
+  // const isTrainingCompleted = batchStatus === "Training Completed" ;
 
   //  Update Batch API (full form save)
   const updateBatch = async (updatedBatch) => {
@@ -193,7 +242,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
         <Modal.Body>
 
           {/*  Checklist appears only if status = Training Completed */}
-          {isTrainingCompleted && (
+          {canSelectBatchCompleted  && (
             <div className="mb-2 border rounded p-2 bg-light">
               <Row>
                 <Col lg={3} md={3} sm={6}>
@@ -258,7 +307,7 @@ const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData }) => {
               <Form.Group className="mb-2">
                 <Form.Label className="m-0">Status</Form.Label>
 
-                {isTrainingCompleted && allChecked ? (
+                {canSelectBatchCompleted  ? (
                   // Once all tasks are done → allow Training Completed / Batch Completed switch
                   <Form.Select
                     name="status"

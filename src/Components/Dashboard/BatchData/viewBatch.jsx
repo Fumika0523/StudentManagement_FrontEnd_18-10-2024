@@ -56,7 +56,9 @@ function viewBatch() {
         <>
 
             {<CustomisedBatchTables
-             setAdmissionData={setAdmissionData} admissionData={admissionData}  setBatchData={setBatchData} batchData={batchData} studentData={studentData} setStudentData={setStudentData}/>  
+             setAdmissionData={setAdmissionData} admissionData={admissionData}  setBatchData={setBatchData} batchData={batchData} studentData={studentData} setStudentData={setStudentData}
+             courseData={courseData} setCourseData={setCourseData}/>  
+
             }
 
 

@@ -58,7 +58,7 @@ const viewAdmission = () => {
 
   return (
     <>
-        {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} batchData = {batchData} courseData={courseData} studentData={studentData} setStudentData={setStudentData}/>  }
+        {<CustomisedAdmissionTable setAdmissionData={setAdmissionData} admissionData={admissionData} batchData = {batchData} courseData={courseData} setCourseData={setCourseData} studentData={studentData} setStudentData={setStudentData}/>  }
    </>
   )
 }
