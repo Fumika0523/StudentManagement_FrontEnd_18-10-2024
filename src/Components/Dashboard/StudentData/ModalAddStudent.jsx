@@ -65,7 +65,7 @@ const addStudent = async (newStudent) => {
       const updated = await axios.get(`${url}/allstudent`, config);
       setStudentData(updated.data.studentData);
         setTimeout(() => handleClose(), 1000);
-      toast.success("Batch added successfully!");
+      toast.success(`${newStudent.studentName} added successfully!`);
     }
   } catch (e) {
     toast.error("Failed to add course. Please try again.");

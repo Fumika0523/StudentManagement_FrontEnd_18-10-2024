@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo , useEffect} from "react";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -13,7 +13,7 @@ import ModalEditAdmission from "./ModalEditAdmission";
 import { FaEdit } from "react-icons/fa";
 import ModalAddAdmission from './ModalAddAdmission'
 import TablePagination from '@mui/material/TablePagination';
-import { FormControl, Select, MenuItem, Button, Collapse, Box, Autocomplete, TextField } from "@mui/material";
+import { FormControl, Select, MenuItem,  Box, Autocomplete, TextField } from "@mui/material";
 import { toast } from 'react-toastify';
 import TableFilter from "../TableFilter";
 
@@ -71,13 +71,11 @@ const CustomisedAdmissionTable = ({
 const batchStatusMap = useMemo(() => {
   const map = {};
   if (!Array.isArray(batchData)) return map;
-
   batchData.forEach((b) => {
     if (b?.batchNumber) {
       map[b.batchNumber] = b.status || "N/A";
     }
   });
-
   return map;
 }, [batchData]);
 
@@ -86,30 +84,20 @@ const getBatchStatusByBatchNumber = (batchNumber) => {
   return batchStatusMap[batchNumber] || "N/A";
 };
 
-
   //badge color
   const StatusBadge = ({ status }) => {
   const bg =
     status === "Not Started"
-      ? "#fdecea"
-      : status === "In Progress"
-      ? "#faf3cdff"
-      : status === "Training Completed"
-      ? "#e6f4ea"
-      : status === "Batch Completed"
-      ? "#a1c5feff"
-      : "#eeeeee"; // fallback
+      ? "#fdecea" : status === "In Progress"
+      ? "#faf3cdff" : status === "Training Completed"
+      ? "#e6f4ea" : status === "Batch Completed"
+      ? "#a1c5feff" : "#eeeeee"; 
 
-  const color =
-    status === "Not Started"
-      ? "#d32f2f"
-      : status === "In Progress"
-      ? "#e18b08ff"
-      : status === "Training Completed"
-      ? "#2e7d32"
-      : status === "Batch Completed"
-      ? "#042378ff"
-      : "#333"; // fallback
+  const color = status === "Not Started"
+      ? "#d32f2f" : status === "In Progress"
+      ? "#e18b08ff" : status === "Training Completed"
+      ? "#2e7d32" : status === "Batch Completed"
+      ? "#042378ff" : "#333"; 
 
   return (
     <span
@@ -151,21 +139,12 @@ const getBatchStatusByBatchNumber = (batchNumber) => {
       );
     }
 
-    // Filter by batch status (if applicable to admission)
-    // if (batchStatus) {
-    //   filtered = filtered.filter(admission =>
-    //     admission?.status?.toLowerCase() === batchStatus.toLowerCase()
-    //   );
-    // }
-    // Filter by batch status (from batchData via batchNumber)
 if (batchStatus) {
   filtered = filtered.filter((admission) => {
     const status = getBatchStatusByBatchNumber(admission.batchNumber);
     return status === batchStatus;
   });
 }
-
-
     // Filter by date field (if dateField is selected)
     // You can add date range filtering here if needed
     setPage(0); // Reset to first page
@@ -176,7 +155,6 @@ if (batchStatus) {
   };
 
   const [filteredData, setFilteredData] = useState([]);
-
   const handleResetFilter = () => {
     setCourseInput('');
     setSelectedCourse(null);
@@ -251,6 +229,14 @@ if (batchStatus) {
       setSingleAdmission(admission);
     }
   };
+
+      // Add this effect to sync filteredData whenever studentData updates
+  useEffect(() => {
+    if (showTable) {
+      handleApplyFilter();
+    }
+  }, [admissionData]); // Runs whenever studentData changes (like after adding a student)
+  
 
   return (
     <Box className="row mx-auto w-100">

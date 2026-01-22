@@ -93,7 +93,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15); // show up to 15 per page
   const [showStudentsModal, setShowStudentsModal] = useState(false)
-   const [showCertificateModal, setShowCertificateModal] = useState(false)
+  const [showCertificateModal, setShowCertificateModal] = useState(false)
   const [selectedBatchStudents, setSelectedBatchStudents] = useState([])
   const [openCertificate, setOpenCertificate] = useState(false);
   const [certificateStudent, setCertificateStudent] = useState(null);
@@ -118,14 +118,13 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
   };
 
   const handleOpenCertificate = (batch) => {
-  setOpenCertificate(true);
-};
+    setOpenCertificate(true);
+  };
 
-
-const handleCloseCertificate = () => {
-  setOpenCertificate(false);
-  setCertificateStudent(null);
-};
+  const handleCloseCertificate = () => {
+    setOpenCertificate(false);
+    setCertificateStudent(null);
+  };
 
   const handleViewStudents = (batch) => {
     console.log("batch", batch); // selected batch details
@@ -183,7 +182,6 @@ const handleCloseCertificate = () => {
   //  Build statusMap whenever batchData / courseData changes
   useEffect(() => {
     if (!batchData || batchData.length === 0) return;
-
     setStatusMap((prev) => {
       const updated = { ...prev };
       batchData.forEach((batch) => {
@@ -388,15 +386,15 @@ const handleCloseCertificate = () => {
       <style>{dotStyle}</style>
       <Box className="border-4 border-danger row mx-auto w-100">
         {/* Filters and Add Button */}
-        <Box      
-        sx={{ 
-          display: 'flex', 
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-between', 
-          alignItems: 'stretch',
-          py: 2,
-          gap: 2,
-        }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            justifyContent: 'space-between',
+            alignItems: 'stretch',
+            py: 2,
+            gap: 2,
+          }}>
           <Box>
             <Button
               variant="contained"
@@ -413,7 +411,7 @@ const handleCloseCertificate = () => {
               Filter {openFilters ? <AiOutlineMinus /> : <AiOutlinePlus />}
             </Button>
             <Collapse in={openFilters}>
-              <Paper      sx={{
+              <Paper sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
@@ -600,7 +598,9 @@ const handleCloseCertificate = () => {
                         const course = courseData?.find(c => c.courseName === batch.courseName);
                         const computedStatus = statusMap[batch._id] || computeStatus(batch, course);
                         const status = computedStatus;
-
+                        const actualAssignedCount = admissionData?.filter(
+                          (adm) => adm.batchNumber === batch.batchNumber
+                        ).length || 0;
                         const startDate = new Date(batch.startDate);
                         const endDate = course && course.noOfDays
                           ? new Date(startDate.getTime() + course.noOfDays * 24 * 60 * 60 * 1000)
@@ -610,186 +610,186 @@ const handleCloseCertificate = () => {
                         const approvalStatus = batch.approvalStatus || null;
 
                         const renderActionIcons = () => {
-                            return (
-                              <div className="d-flex align-items-center gap-2">
-                                {/* ALWAYS visible */}
-                                <FaUsers
-                                  className="text-secondary"
-                                  style={{ fontSize: "19px", cursor: "pointer" }}
-                                  title="View batch users"
-                                  onClick={() => handleViewStudents(batch)}
-                                />
+                          return (
+                            <div className="d-flex align-items-center gap-2">
+                              {/* ALWAYS visible */}
+                              <FaUsers
+                                className="text-secondary"
+                                style={{ fontSize: "19px", cursor: "pointer" }}
+                                title="View batch users"
+                                onClick={() => handleViewStudents(batch)}
+                              />
 
-                                {/* FINAL state */}
-                                {status === "Batch Completed" && (
-                                  <>
+                              {/* FINAL state */}
+                              {status === "Batch Completed" && (
+                                <>
                                   <FaCircleCheck
                                     className="text-success"
                                     style={{ fontSize: "18px", cursor: "default" }}
                                     title="Batch fully completed"
                                   />
-                            <PiCertificateFill className='text-primary fs-5'
-                           title="Certificate" style={{ cursor: "pointer" }}
-                            onClick={() => handleOpenCertificate(batch)}/>
-                            </>
-                                )}
+                                  <PiCertificateFill className='text-primary fs-5'
+                                    title="Certificate" style={{ cursor: "pointer" }}
+                                    onClick={() => handleOpenCertificate(batch)} />
+                                </>
+                              )}
 
-                                {/* NOT STARTED */}
-                                {status === "Not Started" &&
-                                  (isOld ? (
-                                    <FaLock
-                                      className="text-muted"
-                                      style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                        title="This batch is locked (over 7 days old). Contact Super-Admin."
-                                      onClick={() =>
-                                        toast.error(
-                                          "This batch is locked (over 7 days old). Contact Super-Admin.",
-                                          { autoClose: 2000 }
-                                        )
-                                      }
-                                    />
-                                  ) : (
-                                    <FaEdit
-                                      className="text-success"
-                                      style={{ cursor: "pointer", fontSize: "17px" }}
-                                      onClick={() => handleEditClick(batch)}
-                                    />
-                                  ))}
-
-                                {/* IN PROGRESS */}
-                                {status === "In Progress" &&  ( isOld?(
-                                    <FaLock
+                              {/* NOT STARTED */}
+                              {status === "Not Started" &&
+                                (isOld ? (
+                                  <FaLock
                                     className="text-muted"
                                     style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                    title="This batch is locked (over 7 days old). Contact Super-Admin."
                                     onClick={() =>
-                                      toast.error("This batch is in progress. Editing is disabled.", {
-                                        autoClose: 2000,
-                                      })
+                                      toast.error(
+                                        "This batch is locked (over 7 days old). Contact Super-Admin.",
+                                        { autoClose: 2000 }
+                                      )
                                     }
                                   />
-                                ):
+                                ) : (
+                                  <FaEdit
+                                    className="text-success"
+                                    style={{ cursor: "pointer", fontSize: "17px" }}
+                                    onClick={() => handleEditClick(batch)}
+                                  />
+                                ))}
+
+                              {/* IN PROGRESS */}
+                              {status === "In Progress" && (isOld ? (
+                                <FaLock
+                                  className="text-muted"
+                                  style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                  onClick={() =>
+                                    toast.error("This batch is in progress. Editing is disabled.", {
+                                      autoClose: 2000,
+                                    })
+                                  }
+                                />
+                              ) :
                                 (
                                   <FaEdit
-                                      className="text-success"
-                                      style={{ cursor: "pointer", fontSize: "17px" }}
-                                      onClick={() => handleEditClick(batch)}
-                                    /> 
+                                    className="text-success"
+                                    style={{ cursor: "pointer", fontSize: "17px" }}
+                                    onClick={() => handleEditClick(batch)}
+                                  />
                                 )
-                                 
-                                )}
 
-                                {/* TRAINING COMPLETED */}
-                                {status === "Training Completed" && role === "admin" && (
-                                  <>
-                                    {approvalStatus === "pending" && (
-                                      <MdOutlineRateReview
-                                        className="text-primary"
-                                        style={{ fontSize: "20px", cursor: "pointer" }}
-                                        title="Approval request pending"
-                                        onClick={() => handleAdminReviewClick(batch)}
-                                      />
-                                    )}
+                              )}
 
-                                    {!approvalStatus && !isOld && (
-                                      <>
+                              {/* TRAINING COMPLETED */}
+                              {status === "Training Completed" && role === "admin" && (
+                                <>
+                                  {approvalStatus === "pending" && (
+                                    <MdOutlineRateReview
+                                      className="text-primary"
+                                      style={{ fontSize: "20px", cursor: "pointer" }}
+                                      title="Approval request pending"
+                                      onClick={() => handleAdminReviewClick(batch)}
+                                    />
+                                  )}
+
+                                  {!approvalStatus && !isOld && (
+                                    <>
                                       <FaEdit
                                         className="text-success"
                                         style={{ cursor: "pointer", fontSize: "17px" }}
                                         onClick={() => handleEditClick(batch)}
                                       />
-                                     <PiCertificateFill className='text-primary fs-5'
-                           title="Certificate" style={{ cursor: "pointer" }}
-                            onClick={() => handleOpenCertificate(batch)}/>
-                            </>
-                                    )}
-                                  </>
-                                )}
+                                      <PiCertificateFill className='text-primary fs-5'
+                                        title="Certificate" style={{ cursor: "pointer" }}
+                                        onClick={() => handleOpenCertificate(batch)} />
+                                    </>
+                                  )}
+                                </>
+                              )}
 
-                                {status === "Training Completed" && role === "staff" && (
-                                  <>
-                                    {!approvalStatus && (
-                                      <>
-                                        <FaLock
-                                          className="text-muted"
-                                          style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                          title="This batch is locked to edit, please request approval from Admin."
-                                          onClick={() =>
-                                            toast.error(
-                                              "This batch is locked to edit, please request approval from Admin.",
-                                              { autoClose: 2000 }
-                                            )
-                                          }
-                                        />
-                                        <IoIosInformationCircle
-                                          className="text-primary fs-5"
-                                          style={{ cursor: "pointer" }}
-                                          onClick={() => handleSendApproval(batch)}
+                              {status === "Training Completed" && role === "staff" && (
+                                <>
+                                  {!approvalStatus && (
+                                    <>
+                                      <FaLock
+                                        className="text-muted"
+                                        style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                                        title="This batch is locked to edit, please request approval from Admin."
+                                        onClick={() =>
+                                          toast.error(
+                                            "This batch is locked to edit, please request approval from Admin.",
+                                            { autoClose: 2000 }
+                                          )
+                                        }
+                                      />
+                                      <IoIosInformationCircle
+                                        className="text-primary fs-5"
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => handleSendApproval(batch)}
 
-                                          title="Send approval request to Admin"
-                                        />
-                                  <PiCertificateFill className='text-primary fs-5'
-                           title="Certificate" style={{ cursor: "pointer" }}
-                            onClick={() => handleOpenCertificate(batch)}/>
-                                      </>
-                                    )}
+                                        title="Send approval request to Admin"
+                                      />
+                                      <PiCertificateFill className='text-primary fs-5'
+                                        title="Certificate" style={{ cursor: "pointer" }}
+                                        onClick={() => handleOpenCertificate(batch)} />
+                                    </>
+                                  )}
 
-                                    {approvalStatus === "pending" && (
-                                      <>
-                                        <FaLock className="text-muted" style={{ opacity: 0.7 }} />
-                                        <IoIosInformationCircle
-                                          className="text-secondary fs-5"
-                                          style={{ opacity: 0.4 }}
-                                          title="Admin approval is pending"
-                                          onClick={() =>
-                                            toast.info("Waiting for admin approval…", { autoClose: 2000 })
-                                          }
-                                        />
-                                  <PiCertificateFill className='text-primary fs-5'
-                           title="Certificate" style={{ cursor: "pointer" }}
-                            onClick={() => handleOpenCertificate(batch)}/>
-                                      </>
-                                    )}
+                                  {approvalStatus === "pending" && (
+                                    <>
+                                      <FaLock className="text-muted" style={{ opacity: 0.7 }} />
+                                      <IoIosInformationCircle
+                                        className="text-secondary fs-5"
+                                        style={{ opacity: 0.4 }}
+                                        title="Admin approval is pending"
+                                        onClick={() =>
+                                          toast.info("Waiting for admin approval…", { autoClose: 2000 })
+                                        }
+                                      />
+                                      <PiCertificateFill className='text-primary fs-5'
+                                        title="Certificate" style={{ cursor: "pointer" }}
+                                        onClick={() => handleOpenCertificate(batch)} />
+                                    </>
+                                  )}
 
-                                    {approvalStatus === "approved" && (
-                                      <>
-                                        <span className="live-dot" />
-                                        <FaEdit
-                                          className="text-success"
-                                          style={{ cursor: "pointer", fontSize: "17px" }}
-                                          onClick={() => handleEditClick(batch)}
-                                        />
-                                                       <PiCertificateFill className='text-primary fs-5'
-                           title="Certificate" style={{ cursor: "pointer" }}
-                            onClick={() => handleOpenCertificate(batch)}/>
-                                      </>
-                                    )}
+                                  {approvalStatus === "approved" && (
+                                    <>
+                                      <span className="live-dot" />
+                                      <FaEdit
+                                        className="text-success"
+                                        style={{ cursor: "pointer", fontSize: "17px" }}
+                                        onClick={() => handleEditClick(batch)}
+                                      />
+                                      <PiCertificateFill className='text-primary fs-5'
+                                        title="Certificate" style={{ cursor: "pointer" }}
+                                        onClick={() => handleOpenCertificate(batch)} />
+                                    </>
+                                  )}
 
-                                    {approvalStatus === "declined" && (
-                                      <>
-                                        <FaLock
-                                          className="text-muted"
-                                          style={{ cursor: "pointer", opacity: 0.7 }}
-                                          onClick={() =>
-                                            toast.error("Approval request was declined by Admin.", {
-                                              autoClose: 2000,
-                                            })
-                                          }
-                                        />
-                                        <FaEdit
-                                          className="text-muted"
-                                          style={{ cursor: "not-allowed", opacity: 0.4 }}
-                                        />
-                                                       <PiCertificateFill className='text-primary fs-5'
-                           title="Certificate" style={{ cursor: "pointer" }}
-                            onClick={() => handleOpenCertificate(batch)}/>
-                                      </>
-                                    )}
-                             
-                                  </>
-                                )}
-                              </div>
-                            );
-                          };
+                                  {approvalStatus === "declined" && (
+                                    <>
+                                      <FaLock
+                                        className="text-muted"
+                                        style={{ cursor: "pointer", opacity: 0.7 }}
+                                        onClick={() =>
+                                          toast.error("Approval request was declined by Admin.", {
+                                            autoClose: 2000,
+                                          })
+                                        }
+                                      />
+                                      <FaEdit
+                                        className="text-muted"
+                                        style={{ cursor: "not-allowed", opacity: 0.4 }}
+                                      />
+                                      <PiCertificateFill className='text-primary fs-5'
+                                        title="Certificate" style={{ cursor: "pointer" }}
+                                        onClick={() => handleOpenCertificate(batch)} />
+                                    </>
+                                  )}
+
+                                </>
+                              )}
+                            </div>
+                          );
+                        };
                         return (
                           <StyledTableRow key={batch._id}>
                             <StyledTableCell>{index + 1}</StyledTableCell>
@@ -867,7 +867,15 @@ const handleCloseCertificate = () => {
                             <StyledTableCell>{batch.location}</StyledTableCell>
                             <StyledTableCell>{batch.sessionTime}</StyledTableCell>
                             <StyledTableCell>{batch.fees}</StyledTableCell>
-                            <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell>
+                            {/* <StyledTableCell>{batch.assignedStudentCount}</StyledTableCell> */}
+                            <StyledTableCell
+                              style={{
+                                // fontWeight: 'bold', 
+                                color: actualAssignedCount >= batch.targetStudent ? 'red' : 'inherit'
+                              }}
+                            >
+                              {actualAssignedCount} / {batch.targetStudent}
+                            </StyledTableCell>
                             <StyledTableCell>{formatDateTime(batch.createdAt)}</StyledTableCell>
                             <StyledTableCell>{formatDateTime(batch.updatedAt)}</StyledTableCell>
                           </StyledTableRow>
@@ -923,7 +931,7 @@ const handleCloseCertificate = () => {
             singleBatch={singleBatch}
             setSingleBatch={setSingleBatch}
             setBatchData={setBatchData}
-             courseData={courseData}  
+            courseData={courseData}
           />
         )}
         {viewWarning && (
@@ -955,7 +963,7 @@ const handleCloseCertificate = () => {
             setSelectedBatchStudents={setSelectedBatchStudents}
           />
         )}
-   
+
         <ModalCertificate
           open={openCertificate}
           setOpen={setOpenCertificate} />

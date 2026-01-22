@@ -1,159 +1,201 @@
 import React, { useState, useEffect } from 'react';
 import { 
     FormControl, InputLabel, Select, MenuItem, Box, Typography, 
-    Paper, Button, Grid, TextField, Divider, Stack 
+    Paper, Button, Grid, TextField, Stack, Dialog, DialogTitle, 
+    DialogContent, DialogActions, Table, TableBody, TableCell, 
+    TableHead, TableRow, Checkbox
 } from "@mui/material";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { url } from '../utils/constant';
 import { FaUserClock } from "react-icons/fa";
 
-
 export const UpdateAttendance = () => {
     const [batchData, setBatchData] = useState([]);
     const [selectedBatch, setSelectedBatch] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [attendanceDate, setAttendanceDate] = useState('');
-    const [attendanceStatus, setAttendanceStatus] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().split('T')[0]);
+    const [attendanceStatus, setAttendanceStatus] = useState('present');
 
-    // Fetching token for authorization as seen in your other components
+    // Modal & Student States
+    const [openModal, setOpenModal] = useState(false);
+    const [students, setStudents] = useState([]);
+    const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+
     const token = localStorage.getItem('token');
+    const config = { headers: { Authorization: `Bearer ${token}` } };
 
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
+    const getBatchData = async () => {
+        try {
+            setLoading(true);
+            let res = await axios.get(`${url}/allbatch`, config);
+            const inProgressBatches = res.data.batchData.filter(batch => batch.status === "In Progress");
+            setBatchData(inProgressBatches);
+        } catch (error) {
+            toast.error("Failed to load batch data");
+        } finally {
+            setLoading(false);
         }
     };
 
-   const getBatchData = async () => {
-    try {
-        setLoading(true);
-        let res = await axios.get(`${url}/allbatch`, config)
-        const inProgressBatches = res.data.batchData.filter(
-      (batch) => batch.status === "In Progress"
-    );
-    console.log("inProgressBatches",inProgressBatches)
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to load batch data");
-  } finally {
-    setLoading(false); 
-  }
-};
-     useEffect(() => {
-         getBatchData()  
-        }, [])
+    useEffect(() => { getBatchData(); }, []);
 
-    const handleChange = (event) => {
-        setSelectedBatch(event.target.value);
+    // Step 1: Open Modal and Fetch Students
+    const handleSubmitClick = async () => {
+        if (!selectedBatch) return toast.warning("Please select a batch");
+        
+        try {
+            setLoading(true);
+            // Assuming you have an endpoint to get students by batch Number
+            const res = await axios.get(`${url}/allstudent/${selectedBatch}`, config);
+            setStudents(res.data.students);
+            
+            // Default: if global status is 'present', check all boxes
+            if (attendanceStatus === 'present') {
+                setSelectedStudentIds(res.data.students.map(s => s._id));
+            } else {
+                setSelectedStudentIds([]);
+            }
+            
+            setOpenModal(true);
+        } catch (error) {
+            toast.error("Error fetching students for this batch");
+        } finally {
+            setLoading(false);
+        }
     };
 
+    // Step 2: Toggle individual student checkbox
+    const handleToggleStudent = (id) => {
+        setSelectedStudentIds(prev => 
+            prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+        );
+    };
+
+    // Step 3: Final Save to Backend
+    const handleSaveAttendance = async () => {
+        try {
+            // Map students to the format the backend expects
+            const attendanceRecords = students.map(student => ({
+                studentId: student._id,
+                status: selectedStudentIds.includes(student._id) ? 'Present' : 'Absent'
+            }));
+
+            const payload = {
+                batchId: selectedBatch, // Use ID if your backend prefers ID over Number
+                date: attendanceDate,
+                attendanceRecords
+            };
+
+            await axios.post(`${url}/attendance`, payload, config);
+            toast.success("Attendance recorded successfully!");
+            setOpenModal(false);
+        } catch (error) {
+            toast.error("Failed to save attendance");
+        }
+    };
 
     return (
-   <Box sx={{ 
-            p: { xs: 2, sm: 3, md: 4 }, // Responsive padding
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center'
-        }}>
-            <Paper elevation={3} sx={{
-                p: { xs: 2, sm: 4 }, 
-                borderRadius: 2,
-                width: '100%',
-                maxWidth: { xs: '100%', sm: '600px', md: '800px' }, // Responsive width
-                mx: 'auto'
-            }}>
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+        <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+            <Paper elevation={3} sx={{ p: 4, borderRadius: 2, width: '100%', maxWidth: '800px' }}>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
                     <FaUserClock size={28} color="#4e73df" />
                     <Typography variant="h5" sx={{ fontWeight: 700, color: '#4e73df' }}>
                         Attendance Entry
                     </Typography>
                 </Stack>
-                    {/* Batch Dropdown */}
-                    <Grid container spacing={2}>
-                    {/* Batch Dropdown */}
-                    <Grid item xs={12} sm={6}>
+
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={4}>
                         <FormControl fullWidth>
-                        <InputLabel id="batch-select-label">
-                            Select Batch Number
-                        </InputLabel>
-                        <Select
-                            labelId="batch-select-label"
-                            id="batch-select"
-                            value={selectedBatch}
-                            label="Select Batch Number"
-                            onChange={(e) => setSelectedBatch(e.target.value)}
-                            disabled={loading}
-                        >
-                            {batchData.length > 0 ? (
-                            batchData.map((batch) => (
-                                <MenuItem key={batch._id} value={batch.batchNumber}>
-                                {batch.batchNumber} - {batch.courseName}
-                                </MenuItem>
-                            ))
-                            ) : (
-                            <MenuItem disabled>
-                                {loading ? "Loading..." : "No in-progress batches"}
-                            </MenuItem>
-                            )}
-                        </Select>
+                            <InputLabel>Select Batch</InputLabel>
+                            <Select 
+                                value={selectedBatch} 
+                                onChange={(e) => setSelectedBatch(e.target.value)}
+                                label="Select Batch"
+                            >
+                                {batchData.map((batch) => (
+                                    <MenuItem key={batch._id} value={batch.batchNumber}>
+                                        {batch.batchNumber}
+                                    </MenuItem>
+                                ))}
+                            </Select>
                         </FormControl>
                     </Grid>
 
-                    {/* Date Picker */}
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
-                        fullWidth
-                        label="Attendance Date"
-                        type="date"
-                        value={attendanceDate}
-                        onChange={(e) => setAttendanceDate(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
+                            fullWidth
+                            label="Date"
+                            type="date"
+                            value={attendanceDate}
+                            onChange={(e) => setAttendanceDate(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
                         />
                     </Grid>
 
-                    {/* Attendance */}
-                     <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                         <FormControl fullWidth>
-                        <InputLabel id="attendance-status-label">
-                            Mark Attendance
-                        </InputLabel>
-                        <Select
-                            labelId="attendance-status-label"
-                            value={attendanceStatus}
-                            label="Mark Attendance"
-                            onChange={(e) => setAttendanceStatus(e.target.value)}
-                        >
-                            <MenuItem value="present">Present</MenuItem>
-                            <MenuItem value="absent">Absent</MenuItem>
-                        </Select>
+                            <InputLabel>Default Status</InputLabel>
+                            <Select 
+                                value={attendanceStatus} 
+                                onChange={(e) => setAttendanceStatus(e.target.value)}
+                                label="Default Status"
+                            >
+                                <MenuItem value="present">All Present</MenuItem>
+                                <MenuItem value="absent">All Absent</MenuItem>
+                            </Select>
                         </FormControl>
                     </Grid>
-{/* Action Buttons */}
-                    <Grid item xs={12} sx={{ mt: 2 }}>
-                        <Stack direction="row" spacing={2} justifyContent="flex-end">
-                            <Button 
-                                variant="outlined" 
-                                color="inherit" 
-                                sx={{ borderRadius: '10px', px: 4 }}
-                            >
-                                Reset
-                            </Button>
-                            <Button 
-                                variant="contained" 
-                                sx={{ 
-                                    backgroundColor: '#4e73df', 
-                                    borderRadius: '10px', 
-                                    px: 5,
-                                    '&:hover': { backgroundColor: '#2e59d9' } 
-                                }}
-                            >
-                                Submit
-                            </Button>
-                        </Stack>
+
+                    <Grid item xs={12}>
+                        <Button 
+                            fullWidth 
+                            variant="contained" 
+                            onClick={handleSubmitClick}
+                            sx={{ mt: 2, backgroundColor: '#4e73df' }}
+                        >
+                            Submit & Open Student List
+                        </Button>
                     </Grid>
-                    </Grid>
+                </Grid>
             </Paper>
+
+            {/* --- ATTENDANCE MODAL --- */}
+            <Dialog open={openModal} onClose={() => setOpenModal(false)} maxWidth="md" fullWidth>
+                <DialogTitle>
+                    Mark Attendance - Batch {selectedBatch} ({attendanceDate})
+                </DialogTitle>
+                <DialogContent>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Student Name</TableCell>
+                                <TableCell align="right">Present?</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {students.map((student) => (
+                                <TableRow key={student._id}>
+                                    <TableCell>{student.name}</TableCell>
+                                    <TableCell align="right">
+                                        <Checkbox 
+                                            checked={selectedStudentIds.includes(student._id)}
+                                            onChange={() => handleToggleStudent(student._id)}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </DialogContent>
+                <DialogActions sx={{ p: 3 }}>
+                    <Button onClick={() => setOpenModal(false)} color="inherit">Cancel</Button>
+                    <Button onClick={handleSaveAttendance} variant="contained" color="primary">
+                        Save Attendance
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

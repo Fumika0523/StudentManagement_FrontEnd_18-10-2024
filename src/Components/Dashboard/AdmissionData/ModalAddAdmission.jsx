@@ -39,7 +39,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         getCourseData()
     }, [])
     //console.log(courseData)
-
     // courseData?.map((element) => console.log(element.courseName))
     // courseData?.map((element)=>console.log(element._id))
     const handleBatchNumber = (e) => {
@@ -95,6 +94,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
     useEffect(() => {
         getBatchData()
     }, [])
+
 
     const formSchema = Yup.object().shape({
         batchNumber: Yup.string().required("Please select Batch Number!"),
@@ -164,9 +164,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
                 });
                 return;
             }
-
-            // If all checks pass, submit admission
-            toast.success("Successfully assigned!", {
+            toast.success(`${values.studentName} is successfully assigned to ${values.batchNumber}!`, {
                 style: { textWrap: "wrap", width: "250px", textAlign: "left", color: "black" }
             });
             await addAdmission(values);
@@ -212,7 +210,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         try {
             console.log("Submitting admission data:", formik.values);
             const res = await axios.post(`${url}/addadmission`, admission, config)
-            //console.log("addAdmission", res.data)
             if (res) {
                 let res = await axios.get(`${url}/alladmission`, config)
                 // console.log("Successfully a new admission added to the DB!", admission)
@@ -247,7 +244,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         console.log(res)
         let month = res.month
         let year = res.year
-        console.log(month, year)
+        //console.log(month, year)
         console.log("e.target.value",e.target.value)
         formik.setFieldValue("admissionDate", e.target.value)
         formik.setFieldValue("admissionMonth", month)
@@ -263,7 +260,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
         return diffInDays > 7;
     };
-
     console.log("studentData", studentData);
 
     

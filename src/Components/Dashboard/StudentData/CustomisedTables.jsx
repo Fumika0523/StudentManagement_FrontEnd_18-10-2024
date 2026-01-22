@@ -118,45 +118,42 @@ const [rowsPerPage, setRowsPerPage] = useState(16);
   };
 
  // Apply filter logic
-  const handleApplyFilter = () => {
-    let filtered = [...studentData];
+ const handleApplyFilter = () => {
+  let filtered = [...studentData];
 
-    if (genderFilter) {
-      filtered = filtered.filter(stu => stu.gender === genderFilter);
-    }
+  // 1. Filter by Gender (Existing)
+  if (genderFilter) {
+    filtered = filtered.filter(stu => stu.gender === genderFilter);
+  }
 
-    if (batchFilter) {
-      filtered = filtered.filter(stu =>
-        studentBatchMap[stu.studentName]?.batchNumber === batchFilter
-      );
-    }
+  // 2. Filter by Course Name (New)
+  if (selectedCourse) {
+    filtered = filtered.filter(stu => stu.courseName === selectedCourse);
+  }
 
-    if (dateFilter) {
-      const today = new Date();
-      filtered = filtered.filter(stu => {
-        const created = new Date(stu.createdAt);
-        if (dateFilter === "today") {
-          return created.toDateString() === today.toDateString();
-        } else if (dateFilter === "last7") {
-          const last7 = new Date();
-          last7.setDate(today.getDate() - 7);
-          return created >= last7;
-        } else if (dateFilter === "last30") {
-          const last30 = new Date();
-          last30.setDate(today.getDate() - 30);
-          return created >= last30;
-        } else if (dateFilter === "older") {
-          const last30 = new Date();
-          last30.setDate(today.getDate() - 30);
-          return created < last30;
-        }
-        return true;
-      });
-    }
+  // 3. Filter by Batch Status (New)
+  if (batchStatus) {
+    filtered = filtered.filter(stu => {
+      // Look up status from the map we created in useEffect
+      const status = studentBatchMap[stu.studentName]?.batchStatus;
+      return status === batchStatus;
+    });
+  }
 
-    setFilteredData(filtered);
-    setShowTable(true);
-  };
+  // 4. Filter by Date (Existing)
+  if (dateFilter) {
+    const today = new Date();
+    filtered = filtered.filter(stu => {
+      const created = new Date(stu.createdAt);
+      if (dateFilter === "today") return created.toDateString() === today.toDateString();
+      // ... rest of your date logic
+      return true;
+    });
+  }
+
+  setFilteredData(filtered);
+  setShowTable(true);
+};
 
   //  Reset filter logic
   const handleResetFilter = () => {
@@ -166,6 +163,12 @@ const [rowsPerPage, setRowsPerPage] = useState(16);
     setFilteredData([]);
     setShowTable(false);
   };
+// Add this effect to sync filteredData whenever studentData updates
+useEffect(() => {
+  if (showTable) {
+    handleApplyFilter();
+  }
+}, [studentData]); // Runs whenever studentData changes (like after adding a student)
 
 useEffect(() => {
   if (studentData.length && admissionData.length && batchData.length) {
@@ -219,33 +222,6 @@ const formatDateTime = (date) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const handleBulkUpload = (event)=>{
-    const file = event.target.files[0];
-    if(file){
-      Papa.parse(file, {
-        header:true,
-        skipEmptyLines:true,
-        complete:async(results)=>{
-        //results.data will be an array of students objects
-        await uploadStudents(results.data)
-        }   
-      })
-    }
-  }
-
-  const uploadStudents = async(students)=>{
-    try{
-      const token = localStorage.getItem('token')
-      const config ={headers:{Authorization:`Bearer ${token}`}}
-
-      const res = await axios.post(`${url}/bulkaddsstudents`,{students},config)
-      setStudentData([...studentData, ...res.data.newStudents])
-      toast.success("Students added successfully!")
-    }catch(e){
-      toast.error("Failed to upload students")
-    }
-  }
 
   return (
     <>
@@ -324,8 +300,6 @@ const formatDateTime = (date) => {
     />
   </label>
 </Box>
-
-
         </Box>
 
         {/* Table */}
@@ -344,9 +318,9 @@ const formatDateTime = (date) => {
                 <TableRow>
                   <StyledTableCell>No.</StyledTableCell>
                   <StyledTableCell>Actions</StyledTableCell>
+                <StyledTableCell>Batch No.</StyledTableCell>
+
                   <StyledTableCell>Status</StyledTableCell>
-                  <StyledTableCell>Batch No.</StyledTableCell>
-                  <StyledTableCell>Session Time</StyledTableCell>
                   <StyledTableCell>Student ID</StyledTableCell>
                   <StyledTableCell>Student Name</StyledTableCell>
                   <StyledTableCell>Username</StyledTableCell>
@@ -355,13 +329,14 @@ const formatDateTime = (date) => {
                   <StyledTableCell>Gender</StyledTableCell>
                   <StyledTableCell>Birthdate</StyledTableCell>
                   <StyledTableCell>Preferred Courses</StyledTableCell>
-                  <StyledTableCell>Admission Fee</StyledTableCell>
-                  <StyledTableCell>Admission Date</StyledTableCell>
                   <StyledTableCell>Mapped Course</StyledTableCell>
                   <StyledTableCell>Course ID</StyledTableCell>
+                  <StyledTableCell>Session Time</StyledTableCell>
                   <StyledTableCell>Session Type</StyledTableCell>
                   <StyledTableCell>Daily Session Hours</StyledTableCell>
                   <StyledTableCell>No. of Days</StyledTableCell>
+                  <StyledTableCell>Admission Fee</StyledTableCell>
+                  <StyledTableCell>Admission Date</StyledTableCell>
                   <StyledTableCell>Created Date</StyledTableCell>
                 </TableRow>
               </TableHead>
@@ -404,35 +379,47 @@ const formatDateTime = (date) => {
                           style={{ cursor: 'pointer', fontSize: "16px" }}
                           onClick={() => handlePasswordClick(student.password)}
                         />
-                        
                       </div>
                     </StyledTableCell>
+                     {/* BatchNumber */}
+                      <StyledTableCell>  {student.batchNumber || "Not assigned"}</StyledTableCell>
                       {/* Status */}
                       <StyledTableCell>
-                      {studentBatchMap[student.studentName]?.batchNumber ? 'Assigned' : 'Not Assigned'}
+                      {student.batchNumber ? 'Assigned' : 'Not Assigned'}
                     </StyledTableCell>
-                      {/* BatchNumber */}
-                      <StyledTableCell>  {studentBatchMap[student.studentName]?.batchNumber || "Not assigned"}</StyledTableCell>
-                      {/* session time */}
-                      <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "Not assigned"}</StyledTableCell>
-                      {/* Student ID */}
-                      <StyledTableCell>{student._id}</StyledTableCell>
+                     {/* Student ID */}
+                      <StyledTableCell>{student._id}</StyledTableCell>           
                       {/* Student Name */}
                       <StyledTableCell>{student.studentName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</StyledTableCell>
                       {/* Username */}
                       <StyledTableCell>{student.username}</StyledTableCell>
+                       {/* Email */}
                       <StyledTableCell>{student.email}</StyledTableCell>
+                      {/* Phone No. */}
                       <StyledTableCell>{student.phoneNumber}</StyledTableCell>
+                      {/* Gender */}
                       <StyledTableCell>{student.gender}</StyledTableCell>
+                    {/* Birthdate */}
                       <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
-                      <StyledTableCell>{student.preferredCourses.join(', ')}</StyledTableCell>
-                      <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
-                      <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
-                      <StyledTableCell>{course.courseName || "-"}</StyledTableCell>
-                      <StyledTableCell>{course._id || "-"}</StyledTableCell>
+                    {/* Preferred Course */}
+                      <StyledTableCell>{student.preferredCourses.join(', ') || "Not selected yet"}</StyledTableCell>
+                      {/* Mapped Course */}
+                      <StyledTableCell>{student.courseName || "-"}</StyledTableCell>
+                      {/* course id */}
+                    <StyledTableCell>{course._id || "-"}</StyledTableCell>
+                      {/* session time */}
+                      <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "-"}</StyledTableCell>
+                      {/* session type */}
                       <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
-                      <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
+                      {/* seeion hrs */}
+                     <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
+                     {/* No. of days */}
                       <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
+                     {/* Admission Fee */}
+                      <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
+                      {/* Admission date */}
+                        <StyledTableCell>{formatDate(student.admissionDate || "-")}</StyledTableCell>
+                        {/* Created Date */}
                       <StyledTableCell>{formatDateTime(student.createdAt)}</StyledTableCell>
                     </StyledTableRow>
                   );

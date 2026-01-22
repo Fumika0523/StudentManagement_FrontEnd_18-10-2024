@@ -100,13 +100,11 @@ function SideBar({ isSidebarVisible = true }) {
           </div>
         </div>
 
-        {/* ================= Collapsed Sidebar (150px) ================= */}
         {!isSidebarOpen ? (
           <>
             <div className="portalIcon mx-3 py-1">
               <FaSchoolFlag />
             </div>
-
             <div
               className="mx-4 bgColor portalIcon"
               onClick={() => navigate("/dashboard")}
@@ -157,7 +155,7 @@ function SideBar({ isSidebarVisible = true }) {
                         className="component-icon mx-4"
                         onClick={() => navigate("/studentdata")}
                       >
-                        <PiStudent />
+                        <PiStudent title="Student data"/>
                       </div>
                     </div>
                     <div className="my-2">
@@ -165,7 +163,7 @@ function SideBar({ isSidebarVisible = true }) {
                         className="component-icon mx-4"
                         onClick={() => navigate("/batchdata")}
                       >
-                        <FaUsersViewfinder />
+                        <FaUsersViewfinder title="Batch data"/>
                       </div>
                     </div>
                     <div className="my-2">
@@ -173,7 +171,7 @@ function SideBar({ isSidebarVisible = true }) {
                         className="component-icon mx-4"
                         onClick={() => navigate("/coursedata")}
                       >
-                        <MdMenuBook />
+                        <MdMenuBook title="Course data"/>
                       </div>
                     </div>
                     <div className="my-2">
@@ -181,7 +179,7 @@ function SideBar({ isSidebarVisible = true }) {
                         className="component-icon mx-4"
                         onClick={() => navigate("/admissiondata")}
                       >
-                        <GiEntryDoor />
+                        <GiEntryDoor title="Admission data"/>
                       </div>
                     </div>
                   </>
@@ -195,34 +193,16 @@ function SideBar({ isSidebarVisible = true }) {
               </div>
             </Collapse>
 
-            {/* Other Menu Icons */}
-            <div
-              className="mx-4 bgColor portalIcon"
-              onClick={() => navigate("/chartdata")}
-            >
-              <FaChartArea />
-            </div>
+                {/* Task */}
+                <div  className="mx-4 bgColor portalIcon">
+                  <FiTool className="" title="Task" />
+                </div>
+                     {/* Update Attendance */}
+                <div className="mx-4 bgColor portalIcon"
+                   onClick={() => navigate("/attendance")}>
+                  <MdDateRange className=""  title="Update Attendance"/>
+                </div>
 
-            <div
-              className="mx-4 bgColor portalIcon"
-              onClick={() => navigate("/utilitiesdata")}
-            >
-              <FiTool />
-            </div>
-
-            <div
-              className="mx-4 bgColor portalIcon"
-              onClick={() => navigate("/pagedata")}
-            >
-              <FaFolder />
-            </div>
-
-            <div
-              className="mx-4 bgColor portalIcon"
-              onClick={() => navigate("/tabledata")}
-            >
-              <FaTable />
-            </div>
 
             <div className="mx-auto mb-3 signOut" onClick={handleSignOut}>
               <FaPowerOff className="fs-2" />
