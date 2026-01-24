@@ -149,18 +149,19 @@
 }
 
 .sidebarItem:hover {
-  color: rgba(53, 53, 57, 1)!important;
+  color: #2050deff !important;
+  background: rgba(221, 228, 247, 0.95) !important;
   cursor:pointer;
+  transform: scale(1.05);
+  transition-duration: 0.4s;
 }
-
-
 
 .sidebarItem {
   color: #5e5e67 !important;
-  height: 40px;
+  /* height: 30px; */
   font-size: 14px;
-  border-radius: 12px;
-  padding: 8px 10px;
+  /* border-radius: 12px; */
+  padding: 5px 10px;
   transition: background 150ms ease, transform 150ms ease, color 150ms ease;
 }
 
@@ -214,10 +215,10 @@
 
 
 .component-icon:hover {
-  background-color: #809ae7;
+  /* background-color: #809ae7; */
   border-radius: 5px;
   color: #2c51c1;
-  transition-duration: 1.1s !important;
+  transition-duration: 0.5s !important;
   transform: scale(1.1);
 }
 
@@ -306,8 +307,8 @@ height: 54px;
 /* Arrow: fixed position, fades in */
 .sb-miniArrow {
   position: absolute;
-  right: 5px;
-  top:25px;                     
+  right: 7px;
+  top:26px;                     
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;

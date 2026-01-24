@@ -17,22 +17,7 @@ Save
 </Button>
 </form>
 
-//phone number edit form
-//update password form >> when you updating need encrypting
-//navBar >> search bar + 2 icons
-//logout >> navigate to signup page <<<DONE>>>
-///dashboard create only 1 card
-// import 4 icons and 4 colours
 
-import { TfiBag } from "react-icons/tfi";
-<TfiBag />
-
-<!-- Bg color -->
-background-color: #4e73df;
-
-<!-- WHen  -->
-
-//create a drop down icon
 
 <!-- Breakpoint -->
 Extra Small   >>    None   >>       <576px

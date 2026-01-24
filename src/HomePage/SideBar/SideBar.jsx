@@ -100,7 +100,7 @@ function SideBar({ isSidebarVisible = true }) {
 
         {!isSidebarOpen ? (
           <>
-            <div className="portalIcon mx-3 py-1">
+            <div className="portalIcon bgColor mx-4 ">
               <FaSchoolFlag />
             </div>
             <div
@@ -264,7 +264,7 @@ function SideBar({ isSidebarVisible = true }) {
                         className="sidebarItem d-flex align-items-center gap-2"
                         onClick={() => navigate("/studentdata")}
                       >
-                        <PiStudent className="fs-3" style={{ color: "#2050deff" }} />
+                        <PiStudent className="fs-3"  />
                         Student
                       </div>
                       {/* Batch */}
@@ -274,7 +274,7 @@ function SideBar({ isSidebarVisible = true }) {
                       >
                         <FaUsersViewfinder
                           className="fs-3"
-                          style={{ color: "#2050deff" }}
+                       
                         />
                         Batch
                       </div>
@@ -283,14 +283,14 @@ function SideBar({ isSidebarVisible = true }) {
                         className="sidebarItem d-flex align-items-center gap-2"
                         onClick={() => navigate("/coursedata")}
                       >
-                        <MdMenuBook className="fs-3" style={{ color: "#2050deff" }} />
+                        <MdMenuBook className="fs-3" />
                         Course
                       </div>
                       <div
                         className="sidebarItem d-flex align-items-center gap-2"
                         onClick={() => navigate("/admissiondata")}
                       >
-                        <GiEntryDoor className="fs-3" style={{ color: "#2050deff" }} />
+                        <GiEntryDoor className="fs-3" />
                         Admission
                       </div>
                     </>

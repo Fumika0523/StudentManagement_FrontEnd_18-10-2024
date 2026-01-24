@@ -246,7 +246,7 @@ if (batchStatus) {
           flexDirection: { xs: 'column', md: 'row' },
           justifyContent: 'space-between',
           alignItems: 'stretch',
-          // py: 2,
+          mt:1,
           gap: 2,
         }}
       >
