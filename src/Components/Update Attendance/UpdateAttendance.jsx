@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    FormControl, InputLabel, Select, MenuItem, Box, Typography, 
-    Paper, Button, Grid, TextField, Stack, Dialog, DialogTitle, 
-    DialogContent, DialogActions, Table, TableBody, TableCell, 
+import {
+    FormControl, InputLabel, Select, MenuItem, Box, Typography,
+    Paper, Button, Grid, TextField, Stack, Dialog, DialogTitle,
+    DialogContent, DialogActions, Table, TableBody, TableCell,
     TableHead, TableRow, Checkbox
 } from "@mui/material";
 import axios from 'axios';
@@ -12,6 +12,9 @@ import { FaUserClock } from "react-icons/fa";
 
 export const UpdateAttendance = () => {
     const [batchData, setBatchData] = useState([]);
+    const [admissionData, setAdmissionData] = useState([])
+    const [studentData, setStudentData] = useState([])
+
     const [selectedBatch, setSelectedBatch] = useState('');
     const [loading, setLoading] = useState(false);
     const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().split('T')[0]);
@@ -38,41 +41,73 @@ export const UpdateAttendance = () => {
         }
     };
 
-    useEffect(() => { getBatchData(); }, []);
+    const getAdmissionData = async () => {
+        // console.log("Admission data is called....")
+        let res = await axios.get(`${url}/alladmission`, config)
+        // console.log("AdmissionData",res.data.admissionData)
+        setAdmissionData(res.data.admissionData)
+    }
+    const getStudentData = async () => {
+        let res = await axios.get(`${url}/allstudent`, config)
+        console.log("StudentData", res.data.studentData)
+        setStudentData(res.data.studentData)
+    }
 
-    // Step 1: Open Modal and Fetch Students
-    const handleSubmitClick = async () => {
+    useEffect(() => {
+        getBatchData();
+        getAdmissionData()
+        getStudentData()
+    }, []);
+
+    //  Open Modal and Fetch Students
+    const handleSubmitClick = () => {
         if (!selectedBatch) return toast.warning("Please select a batch");
-        
+
+        setLoading(true);
+
         try {
-            setLoading(true);
-            // Assuming you have an endpoint to get students by batch Number
-            const res = await axios.get(`${url}/allstudent/${selectedBatch}`, config);
-            setStudents(res.data.students);
-            
-            // Default: if global status is 'present', check all boxes
+            // 1. Get the names of students in this batch from admissionData
+            const studentsInBatchNames = admissionData
+                .filter(admission => admission.batchNumber === selectedBatch)
+                .map(admission => admission.studentName);
+
+            // 2. Filter studentData to get the full student objects (Source of Truth)
+            const batchStudents = studentData.filter(student =>
+                studentsInBatchNames.includes(student.username)
+            );
+            console.log("batchStudents", batchStudents)
+            if (batchStudents.length === 0) {
+                toast.info("No students found in this batch.");
+                setStudents([]);
+                return;
+            }
+
+            // 3. Set your local state for the modal
+            setStudents(batchStudents);
+
+            // 4. Handle default selection based on global status
             if (attendanceStatus === 'present') {
-                setSelectedStudentIds(res.data.students.map(s => s._id));
+                setSelectedStudentIds(batchStudents.map(s => s._id));
             } else {
                 setSelectedStudentIds([]);
             }
-            
+
             setOpenModal(true);
         } catch (error) {
-            toast.error("Error fetching students for this batch");
+            console.error("Filter error:", error);
+            toast.error("Error on fetching student data");
         } finally {
             setLoading(false);
         }
     };
-
-    // Step 2: Toggle individual student checkbox
+    // Toggle individual student checkbox
     const handleToggleStudent = (id) => {
-        setSelectedStudentIds(prev => 
+        setSelectedStudentIds(prev =>
             prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
         );
     };
 
-    // Step 3: Final Save to Backend
+    // Final Save to Backend
     const handleSaveAttendance = async () => {
         try {
             // Map students to the format the backend expects
@@ -86,7 +121,6 @@ export const UpdateAttendance = () => {
                 date: attendanceDate,
                 attendanceRecords
             };
-
             await axios.post(`${url}/attendance`, payload, config);
             toast.success("Attendance recorded successfully!");
             setOpenModal(false);
@@ -96,7 +130,7 @@ export const UpdateAttendance = () => {
     };
 
     return (
-        <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ p: 4, display: 'flex', justifyContent: 'center',  alignItems: "center", minHeight: "calc(100vh - 130px)",}} >
             <Paper elevation={3} sx={{ p: 4, borderRadius: 2, width: '100%', maxWidth: '800px' }}>
                 <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
                     <FaUserClock size={28} color="#4e73df" />
@@ -104,25 +138,31 @@ export const UpdateAttendance = () => {
                         Attendance Entry
                     </Typography>
                 </Stack>
-
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={4}>
                         <FormControl fullWidth>
                             <InputLabel>Select Batch</InputLabel>
-                            <Select 
-                                value={selectedBatch} 
+                            <Select
+                                value={selectedBatch}
                                 onChange={(e) => setSelectedBatch(e.target.value)}
                                 label="Select Batch"
                             >
-                                {batchData.map((batch) => (
-                                    <MenuItem key={batch._id} value={batch.batchNumber}>
-                                        {batch.batchNumber}
-                                    </MenuItem>
-                                ))}
+                                {/*  Filter added here to only show 'In Progress' batches */}
+                                {batchData
+                                    .filter(batch => batch.status === "In Progress")
+                                    .map((batch) => (
+                                        <MenuItem key={batch._id} value={batch.batchNumber}>
+                                            {batch.batchNumber}
+                                        </MenuItem>
+                                    ))
+                                }
+                                {/* Feedback if no batches are currently active */}
+                                {batchData.filter(batch => batch.status === "In Progress").length === 0 && (
+                                    <MenuItem disabled>No active batches found</MenuItem>
+                                )}
                             </Select>
                         </FormControl>
                     </Grid>
-
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
@@ -136,22 +176,22 @@ export const UpdateAttendance = () => {
 
                     <Grid item xs={12} sm={4}>
                         <FormControl fullWidth>
-                            <InputLabel>Default Status</InputLabel>
-                            <Select 
-                                value={attendanceStatus} 
+                            <InputLabel>Mark as</InputLabel>
+                            <Select
+                                value={attendanceStatus}
                                 onChange={(e) => setAttendanceStatus(e.target.value)}
                                 label="Default Status"
                             >
-                                <MenuItem value="present">All Present</MenuItem>
-                                <MenuItem value="absent">All Absent</MenuItem>
+                                <MenuItem value="present">Present</MenuItem>
+                                <MenuItem value="absent">Absent</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Button 
-                            fullWidth 
-                            variant="contained" 
+                        <Button
+                            fullWidth
+                            variant="contained"
                             onClick={handleSubmitClick}
                             sx={{ mt: 2, backgroundColor: '#4e73df' }}
                         >
@@ -171,15 +211,15 @@ export const UpdateAttendance = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Student Name</TableCell>
-                                <TableCell align="right">Present?</TableCell>
+                                <TableCell align="right">Present</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {students.map((student) => (
                                 <TableRow key={student._id}>
-                                    <TableCell>{student.name}</TableCell>
+                                    <TableCell>{student.username}</TableCell>
                                     <TableCell align="right">
-                                        <Checkbox 
+                                        <Checkbox
                                             checked={selectedStudentIds.includes(student._id)}
                                             onChange={() => handleToggleStudent(student._id)}
                                         />

@@ -54,7 +54,6 @@ Staff can >>  register staff, login (staff), add data for the student (admission
 
 Staff can add the number of courses, availability for the batches, create the task,
 
-
 --------------------
 1. When you signed in, Refreshing a page will auto-logout and re-direct to Signin page.    --->>> DONE : token was passed inside getUserData(). 
 
@@ -178,8 +177,6 @@ Question: De-assign >> if the batch is freezed, you are unable to de-assign ?
 // When you select specific Month, the Line chart should show only specific month too - not full year
 // Initial loading - full year (current year)
 
-
-
 3.1 accordion - BatchData Top one ->>>> Design: Table <<<Above Admission Overview>>> , Yearly and Location wise
 
 Table Header : 1. Student Enrollment(),2 Dropout,3 Total Assigned(), 4Certificate generated, number of batch counts, deassigned, 
@@ -188,7 +185,6 @@ When you click year, the full total of this year' data will show.
 WHen you click the table data, the Modal will show and the details of the full year' Jan-December will show of that table header(student enrollment)
 
 Year and Month dropdown should stay when you scoll
-
 
 //1.Batch Completion Status -- When all training are completed, go to Batch completed
 // 2.Training Completion --- currentData >= end Date 
@@ -216,7 +212,7 @@ Year and Month dropdown should stay when you scoll
 
 /// lock icon change to Edit icon when the batch is completed <<<Done>>>
 
------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 1. Edit icon will show within 7 days since Batch is created. <<<Done>>>
 2. When 7 days are passed, the Lock icon will show <<<Done>>>
 3. When the batch is completed the status shows "Training completed" from "In-Progress". <<<Done>>>
@@ -266,7 +262,7 @@ Show attendance: tabular format
 >>Download option : 
 ----------------------------
 Student Login
-SideBar: View attendance
+SideBar: View attendance  
 
 Batch Number|
 Date|Present|
@@ -281,3 +277,9 @@ in studentData Table, when training is completed the certificate icon should sho
 assignment
 attendance
 task
+
+
+Question: When you deassign on editAdmisssion, the batchNumber and courseName, courseId needs to be cleared too ? If so, how to keep the record everything on DashBoard. how about admission fee ?
+
+
+

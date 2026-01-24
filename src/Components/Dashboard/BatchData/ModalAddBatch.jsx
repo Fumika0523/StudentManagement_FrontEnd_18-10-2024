@@ -102,7 +102,7 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
       //console.log("res",res.data.batchData)
       setBatchData(res.data.batchData);
         setTimeout(() => handleClose(), 1000);
-      toast.success("Batch added successfully!");
+      toast.success(`${newBatch.batchNumber} is added successfully!`);
     } catch (e) {
      // console.error("Error Adding Batch:", e);
       toast.error("Failed to add batch.");

@@ -1,46 +1,169 @@
+/* ========= Modern Sidebar Base ========= */
 .sideBarStyle {
-  background-color: #4e73df;
-  text-align: start;
+    background: linear-gradient(180deg, #1f3fbf 0%, #1b2f7a 100%);
   height: 100vh;
+    /* padding: 14px 10px; */
   display: flex;
+    top: 0;
+  left: 0;
   flex-direction: column;
   justify-content: space-between;
-  overflow-y: hide;
-    /* z-index: 3000;  */
-  /* position:fixed */
+  overflow-y: auto;
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: width 320ms ease, left 320ms ease;
 }
+
+.sideBarStyle::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sideBarStyle::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  /* border-radius: 20px; */
+}
+.sideBarStyle::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ========= Toggle button ========= */
+.hamburger-icon {
+  padding: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  user-select: none;
+}
+.hamburger-icon:hover {
+  color: #fff;
+}
+
+/* ========= Logo/Portal Icon block ========= */
 
 .portalIcon {
-  text-align: center;
-  color: white;
-  font-size: 45px;
-  cursor: pointer;
-  justify-content: center;
   display: flex;
-  background-color: darkblue;
-  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  font-size: 38px;
+  height: 54px;
+  /* border-radius: 12px; */
+  /* background: rgba(86, 112, 124, 0.89); */
+  /* border: 1px solid rgba(255, 255, 255, 0.12); */
+  transition: transform 150ms ease, background 150ms ease, border 150ms ease;
 }
 
-/* Toggle button */
-.hamburger-icon {
-  cursor: pointer;
-  text-align: right;
-  padding: 10px;
-  color: white;
+.portalIcon:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.18);
+  /* border-color: rgba(255, 255, 255, 0.2); */
 }
+/* ========= Icon-only items (collapsed mode) ========= */
 
 .bgColor {
-  color: white;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.95) !important;
   font-size: 35px !important;
-  background: none !important;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 160ms ease, transform 160ms ease, color 160ms ease;
 }
+
 .bgColor:hover {
-  transform: scale(1.1);
-  transition: 1s;
-  background-color: #809ae7 !important;
-  border-radius: 5px;
-  color: #2c51c1;
+  /* transform: scale(1.1); */
+  /* transition: 1s; */
+  background: rgba(255, 255, 255, 0.16) !important;
+  /* border-radius: 5px; */
+  color: #ffffff !important;
+  transform: translateY(-1px);
 }
+
+/* ========= Section rows (expanded mode) ========= */
+
+.dashRow {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  padding: 10px 10px;
+  margin: 4px 6px;
+
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.78);
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.dashRow:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+/* Make icons consistent size in expanded mode */
+.dashRow svg {
+  opacity: 0.95;
+}
+
+/* ========= Component header (Settings row) ========= */
+#expandIcon {
+  padding: 10px 10px;
+
+  transition: background 160ms ease;
+}
+
+#expandIcon:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color:white !important;
+}
+
+#component {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* ========= Collapse panels (submenu) ========= */
+#collapse-full,
+#collapse-mini {
+  border-radius: 16px !important;
+  border: 1px solid rgba(20, 30, 60, 0.12);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
+}
+
+#collapse-full {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+#collapse-mini {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* ========= Sub items ========= */
+
+.sidebarIcons {
+  color: white;
+  /* font-size:28px; */
+}
+
+.sidebarItem:hover {
+  color: rgba(53, 53, 57, 1)!important;
+  cursor:pointer;
+}
+
+
+
+.sidebarItem {
+  color: #5e5e67 !important;
+  height: 40px;
+  font-size: 14px;
+  border-radius: 12px;
+  padding: 8px 10px;
+  transition: background 150ms ease, transform 150ms ease, color 150ms ease;
+}
+
 .logo-section {
   display: flex;
   align-items: center;
@@ -87,7 +210,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
 }
 
 
@@ -99,18 +221,7 @@
   transform: scale(1.1);
 }
 
-.dashRow {
-  cursor: pointer;
-  display:flex;
-  /* border-bottom: 1px solid #bfbfbf; */
-  color: #bfbfbf;
-  /* padding: 10.5% 2%; */
-  background-color: transparent;
-  font-size: 18px;
-}
-.dashRow:hover {
-  color: white !important;
-}
+
 /* Submenu */
 .submenu {
   background-color: white;
@@ -128,30 +239,6 @@
 }
 
 /* Special case: signout */
-.signOut {
-  color: rgb(127, 4, 4) !important;
-
-}
-.signOut:hover {
-  color: rgba(163, 7, 7, 1)  !important;
-}
-
-.sidebarIcons {
-  color: white;
-  /* font-size:28px; */
-}
-
-.sidebarItem:hover {
-  color: rgba(53, 53, 57, 1)!important;
-  cursor:pointer;
-}
-
-
-.sidebarItem{
-    color: #8c8c91ff !important;
-    height:40px;
-    font-size:15px;
-}
 
 .sideBarStyle::-webkit-scrollbar {
   display: none !important;             /* Chrome, Safari */
@@ -178,10 +265,64 @@
   background-color: #1030aa; /* darker on hover */
 }
 
-.signOut{
-  color:rgb(127, 4, 4)
+/* ========= Signout ========= */
+
+.signOut {
+  color: rgba(255, 80, 80, 0.95) !important;
+  margin: 10px auto;
+  padding: 10px;
+  transition: background 150ms ease, transform 150ms ease;
 }
 
-.signOut:hover{
-  color:rgba(159, 14, 14, 1)
+.signOut:hover {
+  background: transparent;
+    color: rgba(239, 6, 6, 0.95) !important;
+  transform: translateY(-1px);
+}
+
+/* Collapsed “Component” button */
+.sb-miniComponent {
+height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 45px !important;
+  position: relative;               
+  cursor: pointer;
+  transition: transform 150ms ease, background 150ms ease, border 150ms ease;
+}
+
+.sb-miniComponent:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+.sb-miniComponent svg {
+  font-size: 35px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Arrow: fixed position, fades in */
+.sb-miniArrow {
+  position: absolute;
+  right: 5px;
+  top:25px;                     
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  pointer-events: none;
+}
+
+.sb-miniComponent:hover .sb-miniArrow,
+.sb-miniArrow.show {
+  opacity: 1;
+}
+
+.sb-miniArrow svg {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
 }

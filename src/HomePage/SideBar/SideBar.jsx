@@ -55,7 +55,7 @@ function SideBar({ isSidebarVisible = true }) {
     navigate("/");
   };
 
-  // 📏 Sidebar width rules
+  //  Sidebar width rules
   let sidebarWidth = "0px";
   if (screenWidth < 768) {
     sidebarWidth = isSidebarVisible ? "150px" : "0px"; // mobile toggle via Navbar
@@ -78,15 +78,13 @@ function SideBar({ isSidebarVisible = true }) {
         {/* Toggle Button (← / →) */}
         <div className="position-relative ">
           <div
-            className="hamburger-icon text-white d-flex "
+            className="hamburger-icon"
             style={{
               zIndex: "10",
               cursor: "pointer",
-              // border:"2px solid red",
               position: "absolute",
               right: "0px",
               top: "0px",
-
               justifyContent: isSidebarOpen ? "end" : "center",
             }}
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -112,33 +110,19 @@ function SideBar({ isSidebarVisible = true }) {
               <AiFillDashboard />
             </div>
 
-            {/* Component Section */}
+            {/* Component Section - sidebar closed*/}
             <div
               onClick={() => setOpen(!open)}
               aria-controls="collapse-mini"
               aria-expanded={open}
               id="expandIcon"
-              style={{ cursor: "pointer", height: "25px" }}
+              // style={{  border:"2px solid red" }}
+               className="sb-miniComponent mx-4 bgColor "
             >
-              <div className="bgColor mx-4 portalIcon smallSidebarIcon">
                 <MdGridView />
-              </div>
-              <div
-                className="arrowIcon"
-                style={{
-                  position: "relative",
-                  top: "-32px",
-                  left: "70%",
-                  width: "30px",
-                }}
-
-              >
-                {open ? (
-                  <IoIosArrowDown className="text-white fs-5" />
-                ) : (
-                  <IoIosArrowForward className="text-white fs-5" />
-                )}
-              </div>
+            <span className={`sb-miniArrow ${open ? "show" : ""}`}>
+              {open ? <IoIosArrowDown /> : <IoIosArrowForward />}
+            </span>
             </div>
 
             {/* Collapsed Component Items */}
@@ -211,20 +195,20 @@ function SideBar({ isSidebarVisible = true }) {
         ) : (
           /* ================= Expanded Sidebar (350px) ================= */
           <>
-            <div className="d-flex portalIcon col-11 text-white align-items-end justify-content-center py-2 mx-auto">
+            <div className="d-flex portalIcon  align-items-end justify-content-center py-2 mx-auto w-100 gap-2">
               <FaSchoolFlag
-                className="d-flex border-danger text-end col-3"
+                className="d-flex border-danger text-end "
                 style={{ fontSize: "40px" }}
               />
               <div
-                className="col-9 p-0 text-start fw-bold"
+                className="p-0 text-start fw-bold"
                 style={{ fontSize: "23px", whiteSpace: "nowrap" }}
               >
                 Student Portal
               </div>
             </div>
 
-            <div className="dashRow row text-white">
+            <div className="dashRow row ">
               <AiFillDashboard className="col-3 fs-4" />
               <div
                 className="col-9 fw-bold"

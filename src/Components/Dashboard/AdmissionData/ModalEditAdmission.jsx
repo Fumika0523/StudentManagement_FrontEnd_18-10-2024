@@ -60,7 +60,8 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             ? new Date(singleAdmission.admissionDate).toISOString().split('T')[0]
         : "",
             admissionYear: singleAdmission?.admissionYear,
-            admissionMonth: singleAdmission?.admissionMonth
+            admissionMonth: singleAdmission?.admissionMonth,
+            status: singleAdmission?.status || "Assign"
         },
         validationSchema: formSchema,
         enableReinitialize: true,
@@ -99,7 +100,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
     //console.log(a.year)
 
     const updateAdmission = async (updatedAdmission) => {
-        try {
+       // try {
             let res = await axios.put(`${url}/updateadmission/${singleAdmission._id}`, updatedAdmission, config)
             console.log("updated studentName",res.data.updateAdmission.studentName)
             const updatedStudent = res.data.updateAdmission.studentName
@@ -120,9 +121,9 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             }, 1000)
                 handleClose()
             }
-        } catch (e) {
-            console.error("Error in Editting Admission:", e)
-        }
+        // } catch (e) {
+        //     console.error("Error in Editting Admission:", e)
+        // }
     }
     //Batch Data
       const getBatchData = async()=>{
@@ -165,6 +166,18 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
         }
     };
+
+    const handleStatusChange = (e) => {
+    const selectedStatus = e.target.value;
+    formik.setFieldValue("status", selectedStatus);
+
+    if (selectedStatus === "De-assign") {
+        // Option A: Clear the batch number so they don't count in totals
+        formik.setFieldValue("batchNumber", "De-assigned"); 
+        toast.info("Student will be marked as De-assigned.");
+    }
+};
+
     const handleCourseIdChange = (e) => {
         // formik.handleChange === e.target.value
         //console.log("handleCourseIdChange",e.target.value)
@@ -222,24 +235,24 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                                 {formik.errors.batchNumber && formik.touched.batchNumber && <div className="text-danger text-center" >{formik.errors.batchNumber}</div>}
                             </Form.Group>
                         </Col>
-                        <Col>
-                            {/* Select Batch Number */}
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Status</Form.Label>
-                                <select name="batchNumber" id="" className="form-select"
-                                    value={formik.values.batchNumber}
-                                    // onChange={formik.handleChange} //e.target.value
-                                    onChange={handleBatchChange}
-                                    onBlur={formik.handleBlur}
-                                >
-                                    <option >Assign</option>
-                                    
-                                    <option>De-assign</option>
-                                </select>
-                                {/* Error Message */}
-                                {formik.errors.batchNumber && formik.touched.batchNumber && <div className="text-danger text-center" >{formik.errors.batchNumber}</div>}
-                            </Form.Group>
-                        </Col>
+                       <Col>
+                    <Form.Group className='mt-3'>
+                        <Form.Label className='mb-0'>Assignment Status</Form.Label>
+                        <select 
+                            name="status" 
+                            className="form-select"
+                            value={formik.values.status}
+                            onChange={handleStatusChange}
+                            onBlur={formik.handleBlur}
+                        >
+                            <option value="Assign">Assign</option>
+                            <option value="De-assign">De-assign</option>
+                        </select>
+                        {formik.errors.status && formik.touched.status && (
+                            <div className="text-danger small">{formik.errors.status}</div>
+                        )}
+                    </Form.Group>
+                </Col>
                     </Row>
                     <Row>
                         <Col>

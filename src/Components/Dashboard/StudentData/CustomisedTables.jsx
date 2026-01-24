@@ -296,7 +296,7 @@ const formatDateTime = (date) => {
       type="file"
       accept=".csv"
       hidden
-      onChange={handleBulkUpload}
+      // onChange={handleBulkUpload}
     />
   </label>
 </Box>
