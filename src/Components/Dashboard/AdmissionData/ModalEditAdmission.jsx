@@ -100,7 +100,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
     //console.log(a.year)
 
     const updateAdmission = async (updatedAdmission) => {
-       // try {
+        try {
             let res = await axios.put(`${url}/updateadmission/${singleAdmission._id}`, updatedAdmission, config)
             console.log("updated studentName",res.data.updateAdmission.studentName)
             const updatedStudent = res.data.updateAdmission.studentName
@@ -121,21 +121,23 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             }, 1000)
                 handleClose()
             }
-        // } catch (e) {
-        //     console.error("Error in Editting Admission:", e)
-        // }
+        } catch (e) {
+            console.error("Error in Editting Admission:", e)
+        }
     }
+
     //Batch Data
       const getBatchData = async()=>{
         let res = await axios.get(`${url}/allbatch`,config)
         console.log("BatchData",res.data.batchData)
         setBatchData(res.data.batchData)
     }
+
     //student Data
     const getStudentData = async () => {
         console.log("Student data is called.")
         let res = await axios.get(`${url}/allstudent`, config)
-       // console.log("Student Data", res.data.studentData)
+        // console.log("Student Data", res.data.studentData)
         setStudentData(res.data.studentData)
     }
 
@@ -152,7 +154,6 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
             getBatchData()
         }, [])
         console.log(courseData)
- 
         const handleBatchChange = (e) => {
          console.log("handleBatchChange",e.target.value)
         const selectedBatchNumber = e.target.value;
@@ -161,7 +162,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
         const selectedBatch = batchData.find(
             (element) => element.batchNumber === selectedBatchNumber
         );
-               console.log("selected Batch",selectedBatch)
+            console.log("selected Batch",selectedBatch)
         if (selectedBatch) {
             formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
         }
@@ -170,14 +171,8 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
     const handleStatusChange = (e) => {
     const selectedStatus = e.target.value;
     formik.setFieldValue("status", selectedStatus);
-
-    if (selectedStatus === "De-assign") {
-        // Option A: Clear the batch number so they don't count in totals
-        formik.setFieldValue("batchNumber", "De-assigned"); 
-        toast.info("Student will be marked as De-assigned.");
-    }
+      toast.info("The stutatus is marked as De-assigned.");
 };
-
     const handleCourseIdChange = (e) => {
         // formik.handleChange === e.target.value
         //console.log("handleCourseIdChange",e.target.value)
@@ -186,7 +181,6 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
         const selectedCourse = courseData.find((element) => element._id == selectedCourseId)
         console.log(selectedCourse.courseName)
         console.log(selectedCourse.courseFee)
-
         formik.setFieldValue("courseId", selectedCourseId)
         formik.setFieldValue("courseName", selectedCourse.courseName)
         formik.setFieldValue("admissionFee", selectedCourse.courseFee)
@@ -202,18 +196,14 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
         formik.setFieldValue("studentName", (selectedStudent.studentName))
     }
 
-
-
     return (
-        <Modal show={show} onHide={handleClose}
-            size="lg">
-            <Modal.Header>
-                <Modal.Title className='ms-5'>Edit Admission</Modal.Title>
-            </Modal.Header>
-            <Form onSubmit={formik.handleSubmit} className='px-5'
-            >
-                <Modal.Body>
-                    <Row>
+    <Modal show={show} onHide={handleClose} size="lg">
+        <Modal.Header>
+            <Modal.Title className='ms-5'>Edit Admission</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={formik.handleSubmit} className='px-5' >
+        <Modal.Body>
+                <Row>
                          <Col>
                             {/* Select Batch Number */}
                             <Form.Group className='mt-3'>
@@ -245,16 +235,16 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                             onChange={handleStatusChange}
                             onBlur={formik.handleBlur}
                         >
-                            <option value="Assign">Assign</option>
-                            <option value="De-assign">De-assign</option>
+                            <option value="Assigned">Assign</option>
+                            <option value="De-assigned">De-assign</option>
                         </select>
                         {formik.errors.status && formik.touched.status && (
                             <div className="text-danger small">{formik.errors.status}</div>
                         )}
                     </Form.Group>
                 </Col>
-                    </Row>
-                    <Row>
+                </Row>
+                <Row>
                         <Col>
                             {/* Course ID << Editable*/}
                             <Form.Group>
@@ -286,8 +276,8 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                                 {formik.errors.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
                                 </Form.Group>
                         </Col>
-                    </Row>
-                    <Row>
+                </Row>
+                <Row>
                         {/* Student ID <<< NOT Editable but pre-filled*/}
                         <Col>
                             <Form.Group className='mt-3'>
@@ -317,8 +307,8 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                                 {formik.errors.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
                             </Form.Group>
                         </Col>
-                    </Row>
-                    <Row>
+                </Row>
+                <Row>
                         {/* Admission Date << Editable */}
                         <Col>
                             <Form.Group className='mt-3'>
@@ -357,8 +347,8 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                                 {formik.errors.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
                             </Form.Group>
                         </Col>
-                    </Row>
-                    <Row>
+                </Row>
+                <Row>
                         <Col>
                             {/* Admission Fee */}
                             <Form.Group className='mt-3'>
@@ -388,16 +378,16 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                                 {formik.errors.admissionSource && <div className="text-danger text-center">{formik.errors.admissionSource}</div>}
                             </Form.Group>
                         </Col>
-                    </Row>
-                </Modal.Body>
-                <Modal.Footer>
-                    {/* ADD BUTTON */}
-                    <Button type="submit" style={{ backgroundColor: "#4e73df" }}>Update Admission</Button>
-                    {/* CLOSE BUTTON*/}
-                    <Button variant="secondary" onClick={handleClose}>Close</Button>
-                </Modal.Footer>
-            </Form>
-        </Modal>
+                </Row>
+        </Modal.Body>
+        <Modal.Footer>
+            {/* ADD BUTTON */}
+            <Button type="submit" style={{ backgroundColor: "#4e73df" }}>Update Admission</Button>
+             {/* CLOSE BUTTON*/}
+            <Button variant="secondary" onClick={handleClose}>Close</Button>
+        </Modal.Footer>
+        </Form>
+    </Modal>
     )
 }
 

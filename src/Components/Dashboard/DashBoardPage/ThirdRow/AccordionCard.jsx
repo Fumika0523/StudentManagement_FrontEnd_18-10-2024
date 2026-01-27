@@ -12,7 +12,6 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
             <Accordion.Header>
               <div className="d-flex justify-content-between w-100 me-3 align-items-center">
                 <span style={{ fontWeight: '500' }}>{item.label}</span>
-             
               </div>
             </Accordion.Header>
             <Accordion.Body className="">
@@ -27,38 +26,56 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                     }
                   </tr>
                 </thead>
-                <tbody>
-     {item.rows && item.rows.length > 0 ? (
-          item.rows.map((row, rIndex) => (
+               <tbody>
+  {item.rows && item.rows.length > 0 ? (
+    item.rows.map((row, rIndex) => (
       <tr key={rIndex}>
-        {/* The Location Label */}
+        {/* Row header: Location */}
         <td className="text-start fw-bold text-muted">{row.label}</td>
 
-        {/* 1. Student Enrolled */}
+        {/* Student Enrolled */}
         <td>
-            <span style={{ fontWeight: 'bold', color: themeColor }}>
-                {row.studentEnrolled || 0}
-            </span>
+          <span style={{ fontWeight: "bold", color: themeColor }}>
+            {row.studentEnrolled || 0}
+          </span>
         </td>
 
-        {/* 2. Placeholder columns (De-assigned, Assigned, etc.) */}
-        <td>-</td> 
+        {/* De-Assigned */}
+        <td>
+          <span style={{ fontWeight: "bold", color: "#d32f2f" }}>
+            {row.deAssigned || 0}
+          </span>
+        </td>
+
+        {/* Assigned */}
+        <td>
+          <span style={{ fontWeight: "bold", color: "#2e7d32" }}>
+            {row.assigned || 0}
+          </span>
+        </td>
+
+        {/* Drop out (later) */}
         <td>-</td>
+
+        {/* Certificate Generated (later) */}
         <td>-</td>
- 
-        {/* 3. Total Batches */}
+
+        {/* Total Batches */}
         <td>{row.totalBatches || 0}</td>
 
-        {/* 4. Revenue Collected (Placeholder) */}
+        {/* Revenue Collected (later) */}
         <td>0</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="13" className="text-muted py-3">No records found for {selectedYear}</td>
-                    </tr>
-                  )}
-                </tbody>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="13" className="text-muted py-3">
+        No records found for {selectedYear}
+      </td>
+    </tr>
+  )}
+</tbody>
+
               </Table>
             </Accordion.Body>
           </Accordion.Item>

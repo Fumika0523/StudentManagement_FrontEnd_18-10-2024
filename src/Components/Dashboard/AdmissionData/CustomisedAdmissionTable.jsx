@@ -18,7 +18,7 @@ import { toast } from 'react-toastify';
 import TableFilter from "../TableFilter";
 
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#f3f4f6",
     color: "#5a5c69",
@@ -66,9 +66,8 @@ const CustomisedAdmissionTable = ({
   const [rowsPerPage, setRowsPerPage] = useState(15);
 
   const role = localStorage.getItem('role');
-  //find the batch object that matched admission' batchNumber, then return its status
-
-const batchStatusMap = useMemo(() => {
+  //find the batch object that matched admission' batchNumber, then return its statu
+  const batchStatusMap = useMemo(() => {
   const map = {};
   if (!Array.isArray(batchData)) return map;
   batchData.forEach((b) => {
@@ -77,12 +76,12 @@ const batchStatusMap = useMemo(() => {
     }
   });
   return map;
-}, [batchData]);
+  }, [batchData]);
 
-const getBatchStatusByBatchNumber = (batchNumber) => {
+  const getBatchStatusByBatchNumber = (batchNumber) => {
   if (!batchNumber) return "N/A";
   return batchStatusMap[batchNumber] || "N/A";
-};
+  };
 
   //badge color
   const StatusBadge = ({ status }) => {
@@ -229,7 +228,6 @@ if (batchStatus) {
       setSingleAdmission(admission);
     }
   };
-
       // Add this effect to sync filteredData whenever studentData updates
   useEffect(() => {
     if (showTable) {
@@ -237,7 +235,6 @@ if (batchStatus) {
     }
   }, [admissionData]); // Runs whenever studentData changes (like after adding a student)
   
-
   return (
     <Box className="row mx-auto w-100">
       <Box
@@ -282,8 +279,7 @@ if (batchStatus) {
             </span>
             <Select
               value={batchStatus}
-              onChange={(e) => setBatchStatus(e.target.value)}
-            >
+              onChange={(e) => setBatchStatus(e.target.value)}>
               <MenuItem value="">--Select--</MenuItem>
               <MenuItem value="Batch Completed">Batch Completed</MenuItem>
               <MenuItem value="Training Completed">Training Completed</MenuItem>
@@ -297,8 +293,7 @@ if (batchStatus) {
         <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
           <button
             className="commonButton"
-            onClick={() => setShowAdd(true)}
-          >
+            onClick={() => setShowAdd(true)}>
             Add Admission
           </button>
         </Box>
@@ -310,8 +305,6 @@ if (batchStatus) {
           sx={{
             display: "flex",
             flexDirection: "column",
-            // width: "100%",
-            // maxWidth: "100%",
             marginTop: "10px"
           }}
         >
@@ -371,7 +364,13 @@ if (batchStatus) {
                         </Box>
                       </StyledTableCell>
                       <StyledTableCell>
-                      <StatusBadge status={getBatchStatusByBatchNumber(admission.batchNumber)} />
+                      <StatusBadge
+                        status={
+                          admission.status === "Assigned"
+                            ? getBatchStatusByBatchNumber(admission.batchNumber)
+                            : admission.status
+                        }
+                      />
                       </StyledTableCell>
                       <StyledTableCell>{admission.batchNumber || 'N/A'}</StyledTableCell>
                       <StyledTableCell>{admission.courseId || 'N/A'}</StyledTableCell>
@@ -427,6 +426,7 @@ if (batchStatus) {
           singleAdmission={singleAdmission}
           setSingleAdmission={setSingleAdmission}
           setAdmissionData={setAdmissionData}
+          setStudentData={setStudentData}
         />
       )}
 

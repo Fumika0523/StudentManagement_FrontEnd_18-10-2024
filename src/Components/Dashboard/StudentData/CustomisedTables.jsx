@@ -149,7 +149,6 @@ const [rowsPerPage, setRowsPerPage] = useState(16);
       return true;
     });
   }
-
   setFilteredData(filtered);
   setShowTable(true);
 };
@@ -172,7 +171,8 @@ useEffect(() => {
 useEffect(() => {
   if (studentData.length && admissionData.length && batchData.length) {
     const studentBatchMap = {};
-    admissionData.forEach(admission => {
+    admissionData.filter(a => a.status === "Assigned")
+    .forEach(admission => {
       const batch = batchData.find(b => b.batchNumber === admission.batchNumber);
       if (batch) {
         studentBatchMap[admission.studentName] = {
@@ -184,13 +184,11 @@ useEffect(() => {
       }
     });
     setStudentBatchMap(studentBatchMap);
-   
   }
 }, [studentData, admissionData, batchData]);
-
 console.log("batchStatus",batchStatus)
 
-    // Create a map for fast lookup: courseId => course object
+   // Create a map for fast lookup: courseId => course object
   const courseMap = useMemo(() => {
     const map = {};
     courseData.forEach(course => {
@@ -220,6 +218,59 @@ const formatDateTime = (date) => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+ // --- NEW STATUS BADGE COMPONENT ---
+  const StatusBadge = ({ studentStatus, studentName }) => {
+    // 1. Get the Batch Status from your existing map
+    const batchStatus = studentBatchMap[studentName]?.batchStatus;
+
+    // 2. Determine what text to show
+    // If student is Assigned, show the Batch Status. Otherwise, show Student Status (e.g., De-assigned)
+    const displayStatus = studentStatus === "Assigned" ? (batchStatus || "Assigned") : studentStatus;
+
+    // 3. Define Colors based on the Display Status
+    let bg = "#eeeeee"; // Default Grey
+    let color = "#333";
+
+    switch (displayStatus) {
+      case "Not Started":
+        bg = "#fdecea"; color = "#d32f2f"; // Red/Pink
+        break;
+      case "In Progress":
+        bg = "#faf3cdff"; color = "#e18b08ff"; // Yellow/Orange
+        break;
+      case "Training Completed":
+        bg = "#e6f4ea"; color = "#2e7d32"; // Green
+        break;
+      case "Batch Completed":
+        bg = "#a1c5feff"; color = "#042378ff"; // Blue
+        break;
+      case "De-assigned":
+        bg = "#cfd8dc"; color = "#455a64"; // Blue-Grey (Distinct "Inactive" look)
+        break;
+      default:
+        bg = "#eeeeee"; color = "#333";
+    }
+
+    return (
+      <span
+        style={{
+          backgroundColor: bg,
+          color: color,
+          padding: "4px 8px",
+          borderRadius: "12px",
+          fontWeight: 600,
+          fontSize: "11px",
+          display: "inline-block",
+          minWidth: "110px",
+          textAlign: "center",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.05)" // Added subtle shadow for depth
+        }}
+      >
+        {displayStatus || "N/A"}
+      </span>
+    );
   };
 
   return (
@@ -263,19 +314,16 @@ const formatDateTime = (date) => {
       onChange={(e) => setBatchStatus(e.target.value)}
     >
       <MenuItem value="">--Select--</MenuItem>
-      <MenuItem value="active">Active</MenuItem>
-      <MenuItem value="inactive">Inactive</MenuItem>
+      <MenuItem value="In Progress">In Progress</MenuItem>
+      <MenuItem value="Training Completed">Training Completed</MenuItem>
+      <MenuItem value="Batch Completed">Batch Completed</MenuItem>
+      <MenuItem value="Not Started">Not Started</MenuItem>
     </Select>
   </FormControl>
-          </TableFilter>
+  </TableFilter>
 <Box
   sx={{
-    display: "flex",
-    flexWrap: "wrap",         
-    gap: 1,
-    mb: 2,
-    mt: 1,
-    justifyContent: { xs: "flex-start", md: "flex-end" },
+    display: "flex", flexWrap: "wrap", gap: 1, mb: 2, mt: 1,justifyItemsustifyContent: { xs: "flex-start", md: "flex-end" },
   }}
 >
   {/* ADD BUTTON */}
@@ -296,29 +344,24 @@ const formatDateTime = (date) => {
       accept=".csv"
       hidden
       // onChange={handleBulkUpload}
-    />
-  </label>
-</Box>
+/>
+    </label>
+      </Box>
         </Box>
 
         {/* Table */}
         {showTable && (
-           <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                  maxWidth: "100%",marginTop:"10px"
-                      }}
-                    >
+        <Box
+             sx={{
+                display: "flex", flexDirection: "column",   width: "100%", maxWidth: "100%",marginTop:"10px"
+                }} >
         <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
                   <StyledTableCell>No.</StyledTableCell>
                   <StyledTableCell>Actions</StyledTableCell>
-                <StyledTableCell>Batch No.</StyledTableCell>
-
+                  <StyledTableCell>Batch No.</StyledTableCell>
                   <StyledTableCell>Status</StyledTableCell>
                   <StyledTableCell>Student ID</StyledTableCell>
                   <StyledTableCell>Student Name</StyledTableCell>
@@ -381,11 +424,15 @@ const formatDateTime = (date) => {
                       </div>
                     </StyledTableCell>
                      {/* BatchNumber */}
-                      <StyledTableCell>  {student.batchNumber || "Not assigned"}</StyledTableCell>
+                      <StyledTableCell>  {student.batchNumber || "-"}</StyledTableCell>
                       {/* Status */}
-                      <StyledTableCell>
-                      {student.batchNumber ? 'Assigned' : 'Not Assigned'}
-                    </StyledTableCell>
+                     {/* Status with Badge */}
+                        <StyledTableCell>
+                          <StatusBadge 
+                            studentStatus={student.status} 
+                            studentName={student.studentName} 
+                          />
+                        </StyledTableCell>
                      {/* Student ID */}
                       <StyledTableCell>{student._id}</StyledTableCell>           
                       {/* Student Name */}
@@ -454,6 +501,7 @@ const formatDateTime = (date) => {
               singleStudent={singleStudent}
               setSingleStudent={setSingleStudent}
               setStudentData={setStudentData}
+              
             />
           )}
 
@@ -466,9 +514,7 @@ const formatDateTime = (date) => {
             />
           )}
           
-          {showAdd && <ModalAddStudent show={showAdd} setShow={setShowAdd}
-                      setStudentData={setStudentData}
-                      />}
+          {showAdd && <ModalAddStudent show={showAdd} setShow={setShowAdd} setStudentData={setStudentData}/>}
     </div>
 
     </>

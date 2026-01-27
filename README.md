@@ -224,7 +224,6 @@ Check how many times of UseEffect triggering
 
 15. how to register roles when you signed up with googleOAuth <<<Done>>>
 
-
 ------------------------------------
 
 Staff Login
@@ -256,7 +255,6 @@ Date|Absent |
 
 Dashboard - Download report should be done in excel
 
-
 in studentData Table, when training is completed the certificate icon should show and when you click the certificate should be downloaded
 
 assignment
@@ -265,6 +263,21 @@ task
 
 
 Question: When you deassign on editAdmisssion, the batchNumber and courseName, courseId needs to be cleared too ? If so, how to keep the record everything on DashBoard. how about admission fee ?
+>>> everything should Keep the record and only status should change including fee. - just removing from a batch
+>>> When you delete admission(super-admin), everything will be cancel.
 
 
+Question - 27/01/2026
+Student Enrolled counts is based on how many students are added in this month ? or how many students are assigned in that month.
+>> 
+
+
+Basic information for Modal.
+
+When you click the number, the modal should open and the details should show (eg: student Enrolled --> student name list)
+everywhere, has the hyperlink in table data - number.
+
+Total Batches - modal: batch No. , start - end date.
+
+Download button in assigned student - batchdata.
 
