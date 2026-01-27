@@ -33,7 +33,6 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
               <div
                 style={{
                   width: "100%",
-                  overflowX: "auto",
                   WebkitOverflowScrolling: "touch",
                   borderRadius: 8,
                 }}
@@ -43,7 +42,7 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                   bordered
                   hover
                   size="sm"
-                  className="text-center border-0"
+                  className="text-center "
                   style={{
                     minWidth: 950,
                     tableLayout: "auto",

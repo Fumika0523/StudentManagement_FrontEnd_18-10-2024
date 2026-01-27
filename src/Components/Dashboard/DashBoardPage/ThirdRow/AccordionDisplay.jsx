@@ -146,10 +146,6 @@ const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }
         },
       ],
     };
-
-
-
-
   }, [batchData, studentData, , admissionData, selectedYear, month]);
 
   return (
