@@ -5,6 +5,8 @@ const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }
   const selectedYear = Number(year);
 
   const itemsByStatus = useMemo(() => {
+
+
     // -----------------------------
     // 1) Helper: year/month filter
     // -----------------------------
@@ -39,59 +41,74 @@ const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }
     const buildRowsForBatchStatus = (targetBatchStatus) => {
       const rowsByLocation = {};
 
-      // A) Count batches for this status in the selected period
-      (batchData || []).forEach((b) => {
-        // choose which date to use: createdAt or startDate
-        // You said "total batch in selected month/year" -> createdAt is best
-        if (!inSelectedPeriod(b.createdAt)) return;
-        if (b.status !== targetBatchStatus) return;
+      const ensureRow = (loc) => {
+        const key = loc || "Unknown";
+        if (!rowsByLocation[key]) {
+          rowsByLocation[key] = {
+            label: key,
 
-        const loc = b.location || "Unknown";
+            // counts
+            studentEnrolled: 0,
+            assigned: 0,
+            deAssigned: 0,
+            totalBatches: 0,
 
-        rowsByLocation[loc] ||= {
-          label: loc,
-          studentEnrolled: 0,
-          assigned: 0,
-          deAssigned: 0,
-          totalBatches: 0,
-        };
+            // lists for modal
+            studentEnrolledList: [],
+            assignedList: [],
+            deAssignedList: [],
+            batchList: [],
+          };
+        }
+        return rowsByLocation[key];
+      };
 
-        rowsByLocation[loc].totalBatches += 1;
+      // 1) Filter batches in the selected period AND in this batch status
+      const batchesInScope = (batchData || []).filter((b) => {
+        if (!inSelectedPeriod(b.createdAt)) return false;
+        return b.status === targetBatchStatus;
       });
 
-      // B) Count students for this status in the selected period
-      (studentData || []).forEach((s) => {
-        // "Student Enrolled" = student created in selected month/year (your requirement)
-        if (!inSelectedPeriod(s.createdAt)) return;
+      // 2) batchNumber -> batch (only for this status + time period)
+      const batchByNumberInScope = {};
+      batchesInScope.forEach((b) => {
+        batchByNumberInScope[b.batchNumber] = b;
 
-        // get the student's batch by batchNumber
-        const batch = batchByNumber[s.batchNumber];
-        if (!batch) return; // no batch => cannot map to location row
-
-        // only count students whose batch status matches this accordion
-        if (batch.status !== targetBatchStatus) return;
-
-        const loc = batch.location || "Unknown";
-
-        rowsByLocation[loc] ||= {
-          label: loc,
-          studentEnrolled: 0,
-          assigned: 0,
-          deAssigned: 0,
-          totalBatches: 0,
-        };
-
-        // enrolled count
-        rowsByLocation[loc].studentEnrolled += 1;
-
-        // assigned/de-assigned counts (from student.status)
-        if (s.status === "Assigned") rowsByLocation[loc].assigned += 1;
-        if (s.status === "De-assigned") rowsByLocation[loc].deAssigned += 1;
+        // Total batches per location + list for modal
+        const row = ensureRow(b.location);
+        row.totalBatches += 1;
+        row.batchList.push(b);
       });
-console.log("DEBUG In Progress rows:", rowsByLocation);
+
+      // 3) Filter admissions in selected period (Student Enrolled based on admission.createdAt)
+      const admissionsInScope = (admissionData || []).filter((a) => {
+        return inSelectedPeriod(a.createdAt);
+      });
+
+      // 4) Count admissions per location BUT only if the admission's batch belongs to this accordion status
+      admissionsInScope.forEach((a) => {
+        const batch = batchByNumberInScope[a.batchNumber];
+        if (!batch) return; // admission not in a batch that matches this accordion status
+
+        const row = ensureRow(batch.location);
+
+        // Student Enrolled = admissions created in period
+        row.studentEnrolled += 1;
+        row.studentEnrolledList.push(a); // store admission object for modal
+
+        // Assigned / De-assigned based on admission.status
+        if (a.status === "Assigned") {
+          row.assigned += 1;
+          row.assignedList.push(a);
+        } else if (a.status === "De-assigned") {
+          row.deAssigned += 1;
+          row.deAssignedList.push(a);
+        }
+      });
 
       return Object.values(rowsByLocation);
     };
+
 
     // --------------------------------------------
     // 4) Build the 3 accordion tables (keep them)
@@ -129,14 +146,17 @@ console.log("DEBUG In Progress rows:", rowsByLocation);
         },
       ],
     };
-  }, [batchData, studentData, selectedYear, month]);
+
+
+
+
+  }, [batchData, studentData, , admissionData, selectedYear, month]);
 
   return (
-    <div className="container mt-4">
+    <div className="container-fluid mt-4 ">
       <h3 className="mb-4 text-secondary border-bottom pb-2">
         Statistics for {selectedYear} {month ? `(${month})` : "(Year Total)"}
       </h3>
-
       <AccordionCard title="" items={itemsByStatus.batchCompleted} themeColor="#2c3e50" selectedYear={selectedYear} />
       <AccordionCard title="" items={itemsByStatus.trainingCompleted} themeColor="#27ae60" selectedYear={selectedYear} />
       <AccordionCard title="" items={itemsByStatus.inProgress} themeColor="#e67e22" selectedYear={selectedYear} />

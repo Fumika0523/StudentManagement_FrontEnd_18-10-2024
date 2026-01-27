@@ -25,7 +25,7 @@ const ChartDisplay = ({earnings, setEarnings, year,setYear, month,setMonth,}) =>
 
     const getEarningData = async () => {
   try {
-    let res = await axios.get(`${url}/earnings`, config)
+  let res = await axios.get(`${url}/earnings?month=${month}&year=${year}`, config);
     // console.log("getEarningData ", res.data)
     setEarnings(res.data)
   } catch (error) {
@@ -41,14 +41,14 @@ const ChartDisplay = ({earnings, setEarnings, year,setYear, month,setMonth,}) =>
     }
   }
 }
-      useEffect(()=>{
-         getAdmissionData()
-        getEarningData()
-      },[])   
+ useEffect(() => {
+  getAdmissionData();
+  getEarningData();
+}, [month, year]);
 
   return (
     <>
-<div className="row w-100  mx-auto justify-content-center">
+<div className="row mx-auto justify-content-center">
   <div className="col-12 col-lg-7 border-4 mb-md-3">
     <ChartCard
     month={month}
@@ -63,6 +63,10 @@ const ChartDisplay = ({earnings, setEarnings, year,setYear, month,setMonth,}) =>
   </div>
   <div className="col-12 col-lg-5 border-2">
     <DonutCard
+     month={month}
+    setMonth={setMonth}
+    year={year}
+    setYear={setYear}
       earnings={earnings}
       setEarnings={setEarnings}
       admissionData={admissionData}

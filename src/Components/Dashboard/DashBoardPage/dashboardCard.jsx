@@ -81,7 +81,7 @@ useEffect(() => {
   if (loading) return <div className="text-center mt-5">Loading Dashboard...</div>;
 
   return (
-    <div className="dashboard-container">
+    <div className="container-fluid">
       {role !== "student" && (
         <>
           <EarningCardDisplay
