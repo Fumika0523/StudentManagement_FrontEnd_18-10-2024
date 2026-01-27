@@ -160,8 +160,8 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                   <th>Student Name</th>
                   <th>Status</th>
                   <th>Batch No.</th>
-                  <th>Course</th>
-                  <th>Created</th>
+                  <th>Course Name</th>
+                  <th>Date</th>
                 </tr>
               </thead>
               <tbody>
