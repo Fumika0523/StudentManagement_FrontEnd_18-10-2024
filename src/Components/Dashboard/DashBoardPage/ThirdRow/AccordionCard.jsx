@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from "react";
 import { Accordion, Table, Modal, Button } from "react-bootstrap";
-import { useState } from "react";
+import { MdFileDownload } from "react-icons/md";
 
 const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
   const [showModal, setShowModal] = useState(false);
@@ -13,23 +13,133 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
     setShowModal(true);
   };
 
+  const handleDownload = () => {
+    // NOTE: your current handleDownload has errors (item/rows not defined here)
+    // We can fix this later. For now, leave it.
+  };
+
+  //  ADD THIS FUNCTION HERE (inside component, before return)
+  const renderCellByLabel = (label, row) => {
+    switch (label) {
+      case "Student Enrolled":
+        return (
+          <button
+            type="button"
+            className="btn btn-link p-0"
+            onClick={() =>
+              openModal("Student Enrolled", row.label, row.studentEnrolledList)
+            }
+          >
+            {row.studentEnrolled || 0}
+          </button>
+        );
+
+      case "De-Assigned":
+        return (
+          <button
+            type="button"
+            className="btn btn-link p-0"
+            onClick={() => openModal("De-assigned", row.label, row.deAssignedList)}
+          >
+            {row.deAssigned || 0}
+          </button>
+        );
+
+      case "Assigned":
+        return (
+          <button
+            type="button"
+            className="btn btn-link p-0"
+            onClick={() => openModal("Assigned", row.label, row.assignedList)}
+          >
+            {row.assigned || 0}
+          </button>
+        );
+
+      case "Drop out":
+           return (
+          <button
+            type="button"
+            className="btn btn-link p-0"
+            onClick={() => openModal("Drop out", row.label, row.assignedList)}
+          >
+            {row.dropOutCount || 0}
+          </button>
+        );
+
+      case "Certificate Generated":
+        return (
+          <button
+            type="button"
+            className="btn btn-link p-0"
+            onClick={() => openModal("Certificate Generated", row.label, row.assignedList)}
+          >
+            {row.certificateCounts || 0}
+          </button>
+        );
+
+      case "Total Batches":
+        return (
+          <button
+            type="button"
+            className="btn btn-link p-0"
+            onClick={() => openModal("Total Batches", row.label, row.batchList)}
+          >
+            {row.totalBatches || 0}
+          </button>
+        );
+
+      case "Revenue Collected":
+       return (
+          <button
+            type="button"
+            className="btn btn-link p-0"
+            onClick={() => openModal("Revenue Collected", row.label, row.batchList)}
+          >
+            {row.revenueCollectedCount || 0}
+          </button>
+        );
+
+      default:
+        return "-";
+    }
+  };
+
+
   return (
-    <div className="mb-4 shadow-sm border rounded mx-3 p-2"
-      style={{ borderTop: `4px solid ${themeColor}` }} >
-      <h5 style={{ color: themeColor }} className="mb-3">{title}</h5>
-      <Accordion >
+    <div
+      className="mb-3 shadow-sm border rounded mx-3 p-2"
+      style={{ borderTop: `4px solid ${themeColor}` }}
+    >
+      <h5 style={{ color: themeColor }} className="mb-1">
+        {title}
+      </h5>
+
+      <Accordion>
         {items.map((item, index) => (
           <Accordion.Item eventKey={index.toString()} key={index}>
             <Accordion.Header>
               <div className="d-flex justify-content-between w-100 me-3 align-items-center">
-                <span style={{ fontWeight: '500' }}>{item.label}</span>
+                <span style={{ fontWeight: "500" }}>{item.label}</span>
+
+                <MdFileDownload
+                  title="Download"
+                  className="fs-4"
+                  style={{ color: "#3466fb" }}
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    handleDownload();
+                  }}
+                />
               </div>
             </Accordion.Header>
-            <Accordion.Body className=""
+
+            <Accordion.Body
               style={{
-                maxHeight: "60vh",  //  limit height relative to screen
-                overflowY: "auto",  //  scroll inside
-              }}>
+                maxHeight: "60vh",
+                overflowY: "auto",
+              }}
+            >
               <div
                 style={{
                   width: "100%",
@@ -42,19 +152,20 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                   bordered
                   hover
                   size="sm"
-                  className="text-center "
+                  className="text-center"
                   style={{
                     minWidth: 950,
                     tableLayout: "auto",
                   }}
                 >
-                  <thead className="table-light"
-                    style={{ position: "sticky", top: 0, zIndex: 5 }} >
+                  <thead
+                    className="table-light"
+                    style={{ position: "sticky", top: 0, zIndex: 5 }}
+                  >
                     <tr>
                       <th
                         className="text-start"
                         style={{
-                          position: "sticky",
                           left: 0,
                           zIndex: 3,
                           background: "#f8f9fa",
@@ -63,74 +174,41 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                       >
                         #
                       </th>
-                      {
-                        item.columnLabel?.map((element, index) => (
-                          <th>{element}</th>
-                        ))
-                      }
+
+                      {item.columnLabel?.map((element, i) => (
+                        <th key={i}>{element}</th>
+                      ))}
                     </tr>
                   </thead>
+
                   <tbody>
                     {item.rows && item.rows.length > 0 ? (
                       item.rows.map((row, rIndex) => (
                         <tr key={rIndex}>
-                          {/* Row header: Location */}
                           <td
                             className="text-start fw-bold text-muted"
                             style={{
-                              position: "sticky",
                               left: 0,
                               zIndex: 2,
                               background: "#fff",
                               minWidth: 140,
                             }}
                           >
-                            {row.label}</td>
-                          {/* Student Enrolled */}
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-link p-0"
-                              onClick={() => openModal("Student Enrolled", row.label, row.studentEnrolledList)}
-                            >
-                              {row.studentEnrolled || 0}
-                            </button>
+                            {row.label}
                           </td>
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-link p-0"
-                              onClick={() => openModal("De-assigned", row.label, row.deAssignedList)}
-                            >
-                              {row.deAssigned || 0}
-                            </button>
-                          </td>
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-link p-0"
-                              onClick={() => openModal("Assigned", row.label, row.assignedList)}
-                            >
-                              {row.assigned || 0}
-                            </button>
-                          </td>
-                          <td>-</td>
-                          <td>-</td>
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-link p-0"
-                              onClick={() => openModal("Total Batches", row.label, row.batchList)}
-                            >
-                              {row.totalBatches || 0}
-                            </button>
-                          </td>
-                          <td>0</td>
+
+                          {/* dynamic cells based on columnLabel */}
+                          {item.columnLabel?.map((col, i) => (
+                            <td key={i}>{renderCellByLabel(col, row)}</td>
+                          ))}
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="13" className="text-muted py-3">
+                        <td
+                          colSpan={(item.columnLabel?.length || 0) + 1}
+                          className="text-muted py-3"
+                        >
                           No records found for {selectedYear}
                         </td>
                       </tr>
@@ -178,8 +256,11 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
             </Table>
           )}
         </Modal.Body>
+
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

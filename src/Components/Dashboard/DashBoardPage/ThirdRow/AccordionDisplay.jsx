@@ -3,10 +3,28 @@ import AccordionCard from "./AccordionCard";
 
 const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }) => {
   const selectedYear = Number(year);
+  const getColumnLabel = (targetBatchStatus)=>{
+    const base =[
+    "Student Enrolled",
+    "De-Assigned",
+    "Assigned",
+    "Drop out",
+    "Total Batches",
+    "Revenue Collected"
+    ];
 
+    //only show these for completed statuses
+    if(targetBatchStatus == "In Progress"){
+      return base; // no Certificate Generated,
+    }    
+
+    return[
+      ...base.slice(0,6),
+      "Certificate Generated"
+    ]
+     }
+      
   const itemsByStatus = useMemo(() => {
-
-
     // -----------------------------
     // 1) Helper: year/month filter
     // -----------------------------
@@ -109,48 +127,36 @@ const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }
       return Object.values(rowsByLocation);
     };
 
-
-    // --------------------------------------------
-    // 4) Build the 3 accordion tables (keep them)
-    // --------------------------------------------
-    const columnLabel = [
-      "Student Enrolled",
-      "De-Assigned",
-      "Assigned",
-      "Drop out",
-      "Certificate Generated",
-      "Total Batches",
-      "Revenue Collected",
-    ];
-
     return {
       batchCompleted: [
         {
           label: "Batch Completed",
-          columnLabel,
+          columnLabel:getColumnLabel("Batch Completed"),
           rows: buildRowsForBatchStatus("Batch Completed"),
         },
       ],
       trainingCompleted: [
         {
           label: "Training Completed",
-          columnLabel,
+          columnLabel:getColumnLabel("Training Completed"),
           rows: buildRowsForBatchStatus("Training Completed"),
         },
       ],
       inProgress: [
         {
           label: "In-training Batch",
-          columnLabel,
+          columnLabel:getColumnLabel("In Progress"),
           rows: buildRowsForBatchStatus("In Progress"),
         },
       ],
     };
   }, [batchData, studentData, , admissionData, selectedYear, month]);
 
+  console.log(getColumnLabel("Training Completed"))
+
   return (
-    <div className="container-fluid mt-4 ">
-      <h3 className="mb-4 text-secondary border-bottom pb-2">
+    <div className="container-fluid mt-4 border border-4 border-warning">
+      <h3 className="mb-4 text-secondary pb-2">
         Statistics for {selectedYear} {month ? `(${month})` : "(Year Total)"}
       </h3>
       <AccordionCard title="" items={itemsByStatus.batchCompleted} themeColor="#2c3e50" selectedYear={selectedYear} />

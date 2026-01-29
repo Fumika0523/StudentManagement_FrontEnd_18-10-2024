@@ -271,7 +271,6 @@ Question - 27/01/2026
 Student Enrolled counts is based on how many students are added in this month ? or how many students are assigned in that month.
 >> 
 
-
 Basic information for Modal.
 
 When you click the number, the modal should open and the details should show (eg: student Enrolled --> student name list)
@@ -281,3 +280,9 @@ Total Batches - modal: batch No. , start - end date.
 
 Download button in assigned student - batchdata.
 
+
+---------------------------------
+
+Bulk Upload 
+
+BulkDownload
