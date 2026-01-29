@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Accordion, Table, Modal, Button } from "react-bootstrap";
 import { MdFileDownload } from "react-icons/md";
+import { toast } from "react-toastify";
+import * as XLSX from "xlsx";
 
-const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
+const AccordionCard = ({ title, items, themeColor, selectedYear,month }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalRows, setModalRows] = useState([]);
@@ -11,12 +13,95 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
     setModalTitle(`${type} • ${location}`);
     setModalRows(rows || []);
     setShowModal(true);
-  };
+  };const buildDataRows = (item) => {
+  return item.rows.map((row) => {
+    const values = (item.columnLabel || []).map((col) => {
+      switch (col) {
+        case "Student Enrolled": return row.studentEnrolled || 0;
+        case "De-Assigned": return row.deAssigned || 0;
+        case "Assigned": return row.assigned || 0;
+        case "Drop out": return row.dropOutCount || 0;
+        case "Certificate Generated": return row.certificateCounts || 0;
+        case "Total Batches": return row.totalBatches || 0;
+        case "Revenue Collected": return row.revenueCollectedCount || 0;
+        default: return "";
+      }
+    });
 
-  const handleDownload = () => {
-    // NOTE: your current handleDownload has errors (item/rows not defined here)
-    // We can fix this later. For now, leave it.
-  };
+    return [row.label, ...values];
+  });
+};
+
+const handleDownloadCSV = (item) => {
+  try {
+    if (!item?.rows?.length) return toast.info("No data to download");
+
+    const periodTitle = `The report for  ${selectedYear}${month ? `, ${month}` : ""}`;
+    const headers = ["Location", ...(item.columnLabel || [])];
+    const dataRows = buildDataRows(item);
+
+    const escapeCSV = (v) => {
+      const s = String(v ?? "");
+      if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+      return s;
+    };
+
+    const csv = [
+      [periodTitle],
+      [],
+      headers,
+      ...dataRows,
+    ]
+      .map((arr) => arr.map(escapeCSV).join(","))
+      .join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const safeMonth = month ? month.replace(/\s+/g, "_") : "Year_Total";
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${safeStatus}_${selectedYear}_${safeMonth}.csv`;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error(e);
+    toast.error("Some internal error, please contact super-admin");
+  }
+};
+
+const handleDownloadExcel = (item) => {
+  try {
+    if (!item?.rows?.length) return toast.info("No data to download");
+
+    const periodTitle = `Batch status - ${item.label} |  ${selectedYear}${month ? `,  ${month}` : ""}`;
+      const safeStatus = (item.label || "report").replace(/[^\w]+/g, "_");
+      const safeMonth = month ? month.replace(/\s+/g, "_") : "Year_Total";
+
+    const headers = ["Location", ...(item.columnLabel || [])];
+    const dataRows = buildDataRows(item);
+
+    // title row + blank row + table
+    const sheetData = [
+      [periodTitle],
+      [],
+      headers,
+      ...dataRows,
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Report");
+
+  XLSX.writeFile(wb, `${safeStatus}_${selectedYear}_${safeMonth}.xlsx`);
+
+  } catch (e) {
+    console.error(e);
+    toast.error("Some internal error, please contact super-admin");
+  }
+};
 
   //  ADD THIS FUNCTION HERE (inside component, before return)
   const renderCellByLabel = (label, row) => {
@@ -128,7 +213,7 @@ const AccordionCard = ({ title, items, themeColor, selectedYear }) => {
                   style={{ color: "#3466fb" }}
                   onClick={(e) => {
                     e.stopPropagation(); 
-                    handleDownload();
+                    handleDownloadExcel(item);
                   }}
                 />
               </div>

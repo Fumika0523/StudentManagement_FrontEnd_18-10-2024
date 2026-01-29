@@ -159,9 +159,9 @@ const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }
       <h3 className="mb-4 text-secondary pb-2">
         Statistics for {selectedYear} {month ? `(${month})` : "(Year Total)"}
       </h3>
-      <AccordionCard title="" items={itemsByStatus.batchCompleted} themeColor="#2c3e50" selectedYear={selectedYear} />
-      <AccordionCard title="" items={itemsByStatus.trainingCompleted} themeColor="#27ae60" selectedYear={selectedYear} />
-      <AccordionCard title="" items={itemsByStatus.inProgress} themeColor="#e67e22" selectedYear={selectedYear} />
+      <AccordionCard title=""   month={month}   items={itemsByStatus.batchCompleted} themeColor="#2c3e50" selectedYear={selectedYear} />
+      <AccordionCard title=""   month={month}   items={itemsByStatus.trainingCompleted} themeColor="#27ae60" selectedYear={selectedYear} />
+      <AccordionCard   month={month}    title="" items={itemsByStatus.inProgress} themeColor="#e67e22" selectedYear={selectedYear} />
     </div>
   );
 };
