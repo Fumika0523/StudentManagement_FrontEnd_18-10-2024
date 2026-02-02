@@ -13,6 +13,11 @@ import { toast } from 'react-toastify';
 const ModalEditBatch = ({ show, setShow, singleBatch, setBatchData, courseData }) => {
   const navigate = useNavigate();
 const courses = Array.isArray(courseData) ? courseData : [];
+const role = localStorage.getItem("role");
+const isAdmin = role === "admin";
+const isStaff = role === "staff";
+
+const approval = singleBatch?.approvalStatus ?? "none";
 
 const course = courses.find(
   (c) => c.courseName?.trim().toLowerCase() === singleBatch?.courseName?.trim().toLowerCase()
@@ -42,29 +47,6 @@ const courseDays = Number(course?.noOfDays || 0);
     setShow(false);
     navigate('/batchdata');
   };
-
-  //  Reset lock & checkboxes when opening for a new batch
-  // useEffect(() => {
-  //   if (singleBatch?.startDate) {
-  //     const diffDays =
-  //       (new Date() - new Date(singleBatch.startDate)) / (1000 * 60 * 60 * 24);
-  //     setIsLocked(diffDays > 7);
-  //   } else {
-  //     setIsLocked(false);
-  //   }
-
-  //   // reset checklist when switching batch
-  //   setCheckboxes({
-  //     assign: false,
-  //     deassign: false,
-  //     dropout: false,
-  //     certificate: false,
-  //   });
-
-  //   // initial batchStatus from prop
-  //   setBatchStatus(singleBatch?.status || "");
-  // }, [singleBatch]);
-
   useEffect(() => {
   if (!singleBatch?.startDate) return;
 
@@ -87,9 +69,7 @@ const courseDays = Number(course?.noOfDays || 0);
 
   const endDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
   const today = new Date();
-
   let newStatus = singleBatch.status || "";
-
   // Keep final status
   if (singleBatch.status === "Batch Completed") {
     newStatus = "Batch Completed";
@@ -98,14 +78,22 @@ const courseDays = Number(course?.noOfDays || 0);
     else if (today >= startDate && today < endDate) newStatus = "In Progress";
     else newStatus = "Training Completed";
   }
-
   setBatchStatus(newStatus);
   formik.setFieldValue("status", newStatus);
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [singleBatch, courseData]);
-const isTrainingCompleted = batchStatus === "Training Completed";
-const canSelectBatchCompleted = isTrainingCompleted && allChecked;
 
+const isTrainingCompleted = batchStatus === "Training Completed";
+const canSelectBatchCompleted =
+  isTrainingCompleted &&
+  allChecked &&
+  isStaff &&
+  approval === "approved";
+const canEditWhenTrainingCompleted =
+  isStaff && approval === "approved";
+
+const canEditFields =
+  !isTrainingCompleted || canEditWhenTrainingCompleted;
 
   //  Validation Schema
   const formSchema = Yup.object().shape({
@@ -119,7 +107,6 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
     status: Yup.string(),
   });
 
-  //  Formik
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -141,9 +128,6 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
       updateBatch(values);
     },
   });
-
-  //  Is Training Completed (from current status state)
-  // const isTrainingCompleted = batchStatus === "Training Completed" ;
 
   //  Update Batch API (full form save)
   const updateBatch = async (updatedBatch) => {
@@ -176,31 +160,31 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
     setCheckboxes((prev) => ({ ...prev, [name]: checked }));
   };
 
-  //  Unified status logic: auto status from dates (up to Training Completed)
-  useEffect(() => {
-    if (!singleBatch || !singleBatch.startDate) return;
+  // //  Unified status logic: auto status from dates (up to Training Completed)
+  // useEffect(() => {
+  //   if (!singleBatch || !singleBatch.startDate) return;
 
-    const startDate = new Date(singleBatch.startDate);
-    const courseDays = singleBatch.noOfDays || singleBatch.course?.noOfDays || 0;
-    const endDate = new Date(startDate.getTime() + courseDays * 24 * 60 * 60 * 1000);
-    const today = new Date();
+  //   const startDate = new Date(singleBatch.startDate);
+  //   const courseDays = singleBatch.noOfDays || singleBatch.course?.noOfDays || 0;
+  //   const endDate = new Date(startDate.getTime() + courseDays * 24 * 60 * 60 * 1000);
+  //   const today = new Date();
 
-    let newStatus = singleBatch.status || "";
+  //   let newStatus = singleBatch.status || "";
 
-    // If already manually completed → DO NOT override
-    if (singleBatch.status === "Batch Completed") {
-      newStatus = "Batch Completed";
-    } else {
-      // Auto-generate up to Training Completed
-      if (today < startDate) newStatus = "Not Started";
-      else if (today >= startDate && today < endDate) newStatus = "In Progress";
-      else newStatus = "Training Completed";
-    }
+  //   // If already manually completed → DO NOT override
+  //   if (singleBatch.status === "Batch Completed") {
+  //     newStatus = "Batch Completed";
+  //   } else {
+  //     // Auto-generate up to Training Completed
+  //     if (today < startDate) newStatus = "Not Started";
+  //     else if (today >= startDate && today < endDate) newStatus = "In Progress";
+  //     else newStatus = "Training Completed";
+  //   }
 
-    setBatchStatus(newStatus);
-    formik.setFieldValue("status", newStatus);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [singleBatch]);
+  //   setBatchStatus(newStatus);
+  //   formik.setFieldValue("status", newStatus);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [singleBatch]);
 
   //  Tutor suggestion: when batchStatus changes, sync to DB
   useEffect(() => {
@@ -242,7 +226,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
         <Modal.Body>
 
           {/*  Checklist appears only if status = Training Completed */}
-          {canSelectBatchCompleted  && (
+          {isTrainingCompleted   && (
             <div className="mb-2 border rounded p-2 bg-light">
               <Row>
                 <Col lg={3} md={3} sm={6}>
@@ -277,7 +261,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   <Form.Check
                     style={{ whiteSpace: "nowrap" }}
                     type="checkbox"
-                    label="ificate Generated"
+                    label="Certificate Generated"
                     name="certificate"
                     checked={checkboxes.certificate}
                     onChange={handleCheckboxChange}
@@ -297,7 +281,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="batchNumber"
                   value={formik.values.batchNumber}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 />
               </Form.Group>
             </Col>
@@ -341,7 +325,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="courseName"
                   value={formik.values.courseName}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 />
               </Form.Group>
             </Col>
@@ -356,7 +340,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="startDate"
                   value={formik.values.startDate}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 />
               </Form.Group>
             </Col>
@@ -368,7 +352,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="sessionType"
                   value={formik.values.sessionType}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 >
                   <option value="">Select Session Type</option>
                   <option value="Online">Online</option>
@@ -384,7 +368,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="sessionDay"
                   value={formik.values.sessionDay}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 >
                   <option value="">Select Session Day</option>
                   <option value="Weekday">Weekday</option>
@@ -403,7 +387,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="targetStudent"
                   value={formik.values.targetStudent}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 />
               </Form.Group>
             </Col>
@@ -416,7 +400,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="location"
                   value={formik.values.location}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 />
               </Form.Group>
             </Col>
@@ -430,7 +414,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="sessionTime"
                   value={formik.values.sessionTime}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 >
                   <option value="">Select Session Time</option>
                   <option value="Morning">Morning</option>
@@ -448,7 +432,7 @@ const canSelectBatchCompleted = isTrainingCompleted && allChecked;
                   name="fees"
                   value={formik.values.fees}
                   onChange={formik.handleChange}
-                  disabled={isLocked}
+                  disabled={!canEditFields}
                 />
               </Form.Group>
             </Col>

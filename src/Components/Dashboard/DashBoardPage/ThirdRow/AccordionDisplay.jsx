@@ -2,32 +2,35 @@ import React, { useMemo } from "react";
 import AccordionCard from "./AccordionCard";
 
 const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }) => {
-  const selectedYear = Number(year);
+  const selectedYear = Number(year); //Number(year) ensures numeric comparios works, It also converts "" (empty) → 0 (so your if (!selectedYear) check can treat it as “not selected”)
+  console.log("selectedYear",selectedYear) // "2026" -> 2026
+
   const getColumnLabel = (targetBatchStatus)=>{
-    const base =[
+   if(targetBatchStatus === "In Progress"){
+    return[
+      "Student Enrolled",
+      "De-Assigned",
+      "Assigned",
+      "Drop out",
+      "Total Batches",
+      "Revenue Collected",
+    ]
+   }
+   // Other statuses : include certificate in the middle
+     return [
     "Student Enrolled",
     "De-Assigned",
     "Assigned",
     "Drop out",
+    "Certificate Generated",
     "Total Batches",
-    "Revenue Collected"
-    ];
+    "Revenue Collected",
+  ];
+};
 
-    //only show these for completed statuses
-    if(targetBatchStatus == "In Progress"){
-      return base; // no Certificate Generated,
-    }    
-
-    return[
-      ...base.slice(0,6),
-      "Certificate Generated"
-    ]
-     }
-      
+//
   const itemsByStatus = useMemo(() => {
-    // -----------------------------
     // 1) Helper: year/month filter
-    // -----------------------------
     const inSelectedPeriod = (dateString) => {
       if (!dateString || !selectedYear) return false;
 
@@ -150,7 +153,7 @@ const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }
         },
       ],
     };
-  }, [batchData, studentData, , admissionData, selectedYear, month]);
+  }, [batchData, studentData,  admissionData, selectedYear, month]);
 
   console.log(getColumnLabel("Training Completed"))
 

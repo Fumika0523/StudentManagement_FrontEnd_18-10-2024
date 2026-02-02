@@ -197,3 +197,14 @@
   font-size: 20px;
   padding: 5px 10px;
 }
+
+.actionIcon {
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.85;
+  transition: 0.15s;
+}
+.actionIcon:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}

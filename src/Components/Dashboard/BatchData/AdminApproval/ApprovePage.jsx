@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import {url} from '../../../utils/constant'
+import { IoIosArrowRoundBack } from "react-icons/io";
+import { IoIosInformationCircle } from "react-icons/io";
+
 
 function ApprovePage() {
   const [batch, setBatch] = useState(null);
@@ -23,8 +26,6 @@ function ApprovePage() {
   window.location.href = `/staff-signin?redirect=/approve&batchId=${batchId}`;
   return null;
 }
-
-
   const searchParams = new URLSearchParams(window.location.search);
   const batchId = searchParams.get("batchId");
 
@@ -90,7 +91,6 @@ const handleDecision = async (action) => {
 
     toast.success(res.data.message);
 
-
     // Update UI
     setBatch((prev) => ({
       ...prev,
@@ -131,33 +131,18 @@ const handleDecision = async (action) => {
             style={primaryBtn}
             onClick={() => (window.location.href = "/batchdata")}
           >
-            Go to Batch Page
+          <IoIosArrowRoundBack />  Go to Batch Page
           </button>
         </div>
       </div>
     );
   }
 
-  // if (!batch) {
-  //   return (
-  //     <div style={wrapperStyle}>
-  //       <div style={cardStyle}>
-  //         <h2>No batch found for this link.</h2>
-  //         <button
-  //           style={primaryBtn}
-  //           onClick={() => (window.location.href = "/batchdata")}
-  //         >
-  //           Go to Batch Page
-  //         </button>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div style={wrapperStyle}>
       <div style={cardStyle}>
-        <h2 style={{ marginBottom: "10px" }}>Review Batch Approval Request</h2>
+        <h2 className="mb-3 text-center"> 
+          <IoIosInformationCircle/>Batch Approval Request</h2>
         <p style={{ color: "#6b7280", marginBottom: "20px" }}>
           Please review the batch details carefully before approving or declining.
         </p>
@@ -221,19 +206,19 @@ const handleDecision = async (action) => {
           </button>
         </div>
 
-        {/* ---------- BACK LINK ---------- */}
+        {/* Back button  */}
         <button
-          style={{ ...linkBtn, marginTop: "18px" }}
+          style={{ ...linkBtn, marginTop: "25px" }}
           onClick={() => (window.location.href = "/batchdata")}
         >
-          ← Back to Batch Page
+        <IoIosArrowRoundBack className="fs-4" />
+        Back to Batch Page
         </button>
       </div>
     </div>
   );
 }
 
-/* ---------- SIMPLE INLINE STYLES ---------- */
 const wrapperStyle = {
   textAlign: "center",
   paddingTop: "80px",
@@ -270,7 +255,7 @@ const primaryBtn = {
   padding: "10px 18px",
   border: "none",
   borderRadius: "6px",
-  backgroundColor: "#4e73df",
+  backgroundColor: "#2c51c1",
   color: "white",
   cursor: "pointer",
   fontSize: "14px",
@@ -280,7 +265,7 @@ const primaryBtn = {
 const secondaryBtn = {
   padding: "10px 18px",
   borderRadius: "6px",
-  border: "1px solid #dc2626",
+  border: "1.5px solid #dc2626",
   backgroundColor: "white",
   color: "#dc2626",
   cursor: "pointer",

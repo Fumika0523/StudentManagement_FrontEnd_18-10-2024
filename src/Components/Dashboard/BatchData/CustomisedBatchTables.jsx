@@ -128,7 +128,6 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
 
   const handleViewStudents = (batch) => {
     console.log("batch", batch); // selected batch details
-
     // Get all students for this batch
     const studentsInBatchNames = admissionData
       //.filter() collects all admissions matching the batchNumber
@@ -607,189 +606,255 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
                           : null;
 
                         const isOld = isOlderThan7Days(batch.startDate);
-                        const approvalStatus = batch.approvalStatus || null;
+                        const approval = batch.approvalStatus ?? "none";
+                        // approval is: "none" | "pending" | "approved" | "declined"
+
+                        const canShowCertificate = status === "Batch Completed";
+
+
+                        // Optional: set to true if you want Admin to be able to edit even when Training Completed
+                        const ADMIN_OVERRIDE_ON_TRAINING_COMPLETED = false;
+
+                        const isAdmin = role === "admin";
+                        const isStaff = role === "staff";
+
+                        const approval = approvalStatus || "none"; // none | pending | approved | declined
+
+                        const ViewUsersIcon = (
+                          <FaUsers
+                            className="text-secondary"
+                            style={{ fontSize: "19px", cursor: "pointer" }}
+                            title="View batch users"
+                            onClick={() => handleViewStudents(batch)}
+                          />
+                        );
+
+                        const CertificateIcon = (
+                          <PiCertificateFill
+                            className="text-primary fs-5"
+                            title="Certificate"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleOpenCertificate(batch)}
+                          />
+                        );
+
+                        const EditIcon = (
+                          <FaEdit
+                            className="text-success"
+                            style={{ cursor: "pointer", fontSize: "17px" }}
+                            title="Edit batch"
+                            onClick={() => handleEditClick(batch)}
+                          />
+                        );
+
+                        const LockIcon = (msg) => (
+                          <FaLock
+                            className="text-muted"
+                            style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                            title={msg}
+                            onClick={() => toast.error(msg, { autoClose: 2000 })}
+                          />
+                        );
+
+                        const ReviewIcon = (
+                          <MdOutlineRateReview
+                            className="text-primary"
+                            style={{ fontSize: "20px", cursor: "pointer" }}
+                            title="Review approval request"
+                            onClick={() => handleAdminReviewClick(batch)}
+                          />
+                        );
+
+                        const SendApprovalIcon = (
+                          <IoIosInformationCircle
+                            className="text-primary fs-5"
+                            style={{ cursor: "pointer" }}
+                            title="Send approval request to Admin"
+                            onClick={() => handleSendApproval(batch)}
+                          />
+                        );
+
+                        const ApprovedDot = <span className="live-dot" title="Approved - can edit" />;
+
 
                         const renderActionIcons = () => {
-                          return (
-                            <div className="d-flex align-items-center gap-2">
-                              {/* ALWAYS visible */}
-                              <FaUsers
-                                className="text-secondary"
-                                style={{ fontSize: "19px", cursor: "pointer" }}
-                                title="View batch users"
-                                onClick={() => handleViewStudents(batch)}
-                              />
+                          const isAdmin = role === "admin";
+                          const isStaff = role === "staff";
+                          const approval = approvalStatus || "none"; // none | pending | approved | declined
 
-                              {/* FINAL state */}
-                              {status === "Batch Completed" && (
-                                <>
-                                  <FaCircleCheck
-                                    className="text-success"
-                                    style={{ fontSize: "18px", cursor: "default" }}
-                                    title="Batch fully completed"
-                                  />
-                                  <PiCertificateFill className='text-primary fs-5'
-                                    title="Certificate" style={{ cursor: "pointer" }}
-                                    onClick={() => handleOpenCertificate(batch)} />
-                                </>
-                              )}
+                          const canShowCertificate = status === "Batch Completed"; // ✅ only final
 
-                              {/* NOT STARTED */}
-                              {status === "Not Started" &&
-                                (isOld ? (
+                          const ViewUsersIcon = (
+                            <FaUsers
+                              className="text-secondary"
+                              style={{ fontSize: "19px", cursor: "pointer" }}
+                              title="View batch users"
+                              onClick={() => handleViewStudents(batch)}
+                            />
+                          );
+
+                          const CertificateIcon = (
+                            <PiCertificateFill
+                              className="text-primary fs-5"
+                              title="Certificate"
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleOpenCertificate(batch)}
+                            />
+                          );
+
+                          const EditIcon = (
+                            <FaEdit
+                              className="text-success"
+                              style={{ cursor: "pointer", fontSize: "17px" }}
+                              title="Edit batch"
+                              onClick={() => handleEditClick(batch)}
+                            />
+                          );
+
+                          const LockIcon = (msg) => (
+                            <FaLock
+                              className="text-muted"
+                              style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+                              title={msg}
+                              onClick={() => toast.error(msg, { autoClose: 2000 })}
+                            />
+                          );
+
+                          const ReviewIcon = (
+                            <MdOutlineRateReview
+                              className="text-primary"
+                              style={{ fontSize: "20px", cursor: "pointer" }}
+                              title="Review approval request"
+                              onClick={() => handleAdminReviewClick(batch)}
+                            />
+                          );
+
+                          const SendApprovalIcon = (
+                            <IoIosInformationCircle
+                              className="text-primary fs-5"
+                              style={{ cursor: "pointer" }}
+                              title="Send approval request to Admin"
+                              onClick={() => handleSendApproval(batch)}
+                            />
+                          );
+
+                          const ApprovedDot = <span className="live-dot" title="Approved - can edit" />;
+
+                          // ✅ FINAL (Batch Completed): only users + check + certificate
+                          if (status === "Batch Completed") {
+                            return (
+                              <div className="d-flex align-items-center gap-2">
+                                {ViewUsersIcon}
+                                <FaCircleCheck
+                                  className="text-success"
+                                  style={{ fontSize: "18px", cursor: "default" }}
+                                  title="Batch fully completed"
+                                />
+                                {canShowCertificate && CertificateIcon}
+                              </div>
+                            );
+                          }
+
+                          // ✅ Not Started / In Progress
+                          if (status === "Not Started" || status === "In Progress") {
+                            const staffLocked = isStaff && isOld;
+
+                            return (
+                              <div className="d-flex align-items-center gap-2">
+                                {ViewUsersIcon}
+                                {staffLocked
+                                  ? LockIcon("This batch is locked (over 7 days old). Contact Admin.")
+                                  : EditIcon}
+                                {/* ❌ no certificate */}
+                              </div>
+                            );
+                          }
+
+                          // ✅ Training Completed
+                          if (status === "Training Completed") {
+                            // Staff
+                            if (isStaff) {
+                              if (approval === "approved") {
+                                return (
+                                  <div className="d-flex align-items-center gap-2">
+                                    {ViewUsersIcon}
+                                    {ApprovedDot}
+                                    {EditIcon}
+                                    {/* ❌ no certificate */}
+                                  </div>
+                                );
+                              }
+
+                              if (approval === "pending") {
+                                return (
+                                  <div className="d-flex align-items-center gap-2">
+                                    {ViewUsersIcon}
+                                    <FaLock className="text-muted" style={{ opacity: 0.7, fontSize: "16px" }} title="Pending" />
+                                    <IoIosInformationCircle
+                                      className="text-secondary fs-5"
+                                      style={{ opacity: 0.4, cursor: "pointer" }}
+                                      title="Admin approval is pending"
+                                      onClick={() => toast.info("Waiting for admin approval…", { autoClose: 2000 })}
+                                    />
+                                    {/* ❌ no certificate */}
+                                  </div>
+                                );
+                              }
+
+                              if (approval === "declined") {
+                                return (
+                                  <div className="d-flex align-items-center gap-2">
+                                    {ViewUsersIcon}
+                                    {LockIcon("Approval request was declined by Admin.")}
+                                    {/* ❌ no certificate */}
+                                  </div>
+                                );
+                              }
+
+                              // none
+                              return (
+                                <div className="d-flex align-items-center gap-2">
+                                  {ViewUsersIcon}
+                                  {LockIcon("Training completed. Request approval from Admin to edit.")}
+                                  {SendApprovalIcon}
+                                  {/* ❌ no certificate */}
+                                </div>
+                              );
+                            }
+
+                            // Admin
+                            if (isAdmin) {
+                              if (approval === "pending") {
+                                return (
+                                  <div className="d-flex align-items-center gap-2">
+                                    {ViewUsersIcon}
+                                    {ReviewIcon}
+                                    {/* ❌ no certificate */}
+                                  </div>
+                                );
+                              }
+
+                              // Admin locked by default on Training Completed (recommended)
+                              return (
+                                <div className="d-flex align-items-center gap-2">
+                                  {ViewUsersIcon}
                                   <FaLock
                                     className="text-muted"
-                                    style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                    title="This batch is locked (over 7 days old). Contact Super-Admin."
-                                    onClick={() =>
-                                      toast.error(
-                                        "This batch is locked (over 7 days old). Contact Super-Admin.",
-                                        { autoClose: 2000 }
-                                      )
-                                    }
+                                    style={{ opacity: 0.7, fontSize: "16px" }}
+                                    title="Training completed. Editing is locked."
                                   />
-                                ) : (
-                                  <FaEdit
-                                    className="text-success"
-                                    style={{ cursor: "pointer", fontSize: "17px" }}
-                                    onClick={() => handleEditClick(batch)}
-                                  />
-                                ))}
+                                  {/* ❌ no certificate */}
+                                </div>
+                              );
+                            }
 
-                              {/* IN PROGRESS */}
-                              {status === "In Progress" && (isOld ? (
-                                <FaLock
-                                  className="text-muted"
-                                  style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                  onClick={() =>
-                                    toast.error("This batch is in progress. Editing is disabled.", {
-                                      autoClose: 2000,
-                                    })
-                                  }
-                                />
-                              ) :
-                                (
-                                  <FaEdit
-                                    className="text-success"
-                                    style={{ cursor: "pointer", fontSize: "17px" }}
-                                    onClick={() => handleEditClick(batch)}
-                                  />
-                                )
+                            return <div className="d-flex align-items-center gap-2">{ViewUsersIcon}</div>;
+                          }
 
-                              )}
-
-                              {/* TRAINING COMPLETED */}
-                              {status === "Training Completed" && role === "admin" && (
-                                <>
-                                  {approvalStatus === "pending" && (
-                                    <MdOutlineRateReview
-                                      className="text-primary"
-                                      style={{ fontSize: "20px", cursor: "pointer" }}
-                                      title="Approval request pending"
-                                      onClick={() => handleAdminReviewClick(batch)}
-                                    />
-                                  )}
-
-                                  {!approvalStatus && !isOld && (
-                                    <>
-                                      <FaEdit
-                                        className="text-success"
-                                        style={{ cursor: "pointer", fontSize: "17px" }}
-                                        onClick={() => handleEditClick(batch)}
-                                      />
-                                      <PiCertificateFill className='text-primary fs-5'
-                                        title="Certificate" style={{ cursor: "pointer" }}
-                                        onClick={() => handleOpenCertificate(batch)} />
-                                    </>
-                                  )}
-                                </>
-                              )}
-
-                              {status === "Training Completed" && role === "staff" && (
-                                <>
-                                  {!approvalStatus && (
-                                    <>
-                                      <FaLock
-                                        className="text-muted"
-                                        style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
-                                        title="This batch is locked to edit, please request approval from Admin."
-                                        onClick={() =>
-                                          toast.error(
-                                            "This batch is locked to edit, please request approval from Admin.",
-                                            { autoClose: 2000 }
-                                          )
-                                        }
-                                      />
-                                      <IoIosInformationCircle
-                                        className="text-primary fs-5"
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => handleSendApproval(batch)}
-
-                                        title="Send approval request to Admin"
-                                      />
-                                      <PiCertificateFill className='text-primary fs-5'
-                                        title="Certificate" style={{ cursor: "pointer" }}
-                                        onClick={() => handleOpenCertificate(batch)} />
-                                    </>
-                                  )}
-
-                                  {approvalStatus === "pending" && (
-                                    <>
-                                      <FaLock className="text-muted" style={{ opacity: 0.7 }} />
-                                      <IoIosInformationCircle
-                                        className="text-secondary fs-5"
-                                        style={{ opacity: 0.4 }}
-                                        title="Admin approval is pending"
-                                        onClick={() =>
-                                          toast.info("Waiting for admin approval…", { autoClose: 2000 })
-                                        }
-                                      />
-                                      <PiCertificateFill className='text-primary fs-5'
-                                        title="Certificate" style={{ cursor: "pointer" }}
-                                        onClick={() => handleOpenCertificate(batch)} />
-                                    </>
-                                  )}
-
-                                  {approvalStatus === "approved" && (
-                                    <>
-                                      <span className="live-dot" />
-                                      <FaEdit
-                                        className="text-success"
-                                        style={{ cursor: "pointer", fontSize: "17px" }}
-                                        onClick={() => handleEditClick(batch)}
-                                      />
-                                      <PiCertificateFill className='text-primary fs-5'
-                                        title="Certificate" style={{ cursor: "pointer" }}
-                                        onClick={() => handleOpenCertificate(batch)} />
-                                    </>
-                                  )}
-
-                                  {approvalStatus === "declined" && (
-                                    <>
-                                      <FaLock
-                                        className="text-muted"
-                                        style={{ cursor: "pointer", opacity: 0.7 }}
-                                        onClick={() =>
-                                          toast.error("Approval request was declined by Admin.", {
-                                            autoClose: 2000,
-                                          })
-                                        }
-                                      />
-                                      <FaEdit
-                                        className="text-muted"
-                                        style={{ cursor: "not-allowed", opacity: 0.4 }}
-                                      />
-                                      <PiCertificateFill className='text-primary fs-5'
-                                        title="Certificate" style={{ cursor: "pointer" }}
-                                        onClick={() => handleOpenCertificate(batch)} />
-                                    </>
-                                  )}
-
-                                </>
-                              )}
-                            </div>
-                          );
+                          // fallback
+                          return <div className="d-flex align-items-center gap-2">{ViewUsersIcon}</div>;
                         };
+
                         return (
                           <StyledTableRow key={batch._id}>
                             <StyledTableCell>{index + 1}</StyledTableCell>
