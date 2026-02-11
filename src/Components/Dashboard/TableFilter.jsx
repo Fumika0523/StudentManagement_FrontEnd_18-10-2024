@@ -15,7 +15,7 @@ const TableFilter = ({
   onReset,
 }) => {
   return (
-    <Box sx={{  minWidth: 320,            maxWidth: 520,}}>
+    <Box sx={{  minWidth: 320,  maxWidth: 520,}}>
       {/* Toggle Button */}
       <Button
         variant="contained"
@@ -27,6 +27,7 @@ const TableFilter = ({
           justifyContent: "space-between",
           width: "100%",
           borderRadius: open ? "4px 4px 0 0" : "4px",
+          backgroundColor:"  #2c51c1",
         }}
       >
         Filter {open ? <AiOutlineMinus /> : <AiOutlinePlus />}
@@ -48,11 +49,12 @@ const TableFilter = ({
           {children}
 
           {/* Action Buttons */}
-          <Box sx={{ display: "flex", gap: 2, width: "100%", mt: 1 }}>
+          <Box sx={{ display: "flex", gap: 2, width: "100%", mt: 1,  }}>
             <Button
               variant="contained"
               size="small"
               onClick={onApply}
+              sx={{ backgroundColor:" #2c51c1"}}
             >
               Apply
             </Button>
@@ -60,6 +62,7 @@ const TableFilter = ({
               variant="outlined"
               size="small"
               onClick={onReset}
+              sx={{ borderColor:" #2c51c1", color:" #2c51c1"}}
             >
               Reset
             </Button>

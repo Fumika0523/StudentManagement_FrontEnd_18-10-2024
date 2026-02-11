@@ -39,48 +39,42 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         getCourseData()
     }, [])
     //console.log(courseData)
-    // courseData?.map((element) => console.log(element.courseName))
-    // courseData?.map((element)=>console.log(element._id))
-    const handleBatchNumber = (e) => {
-        const selectedBatchNumber = e.target.value;
-        setBatchValue(selectedBatchNumber);
 
-        const selectedBatch = batchData.find(
-            (element) => element.batchNumber === selectedBatchNumber
-        );
+   const handleBatchNumber = (e) => {
+  const selectedBatchNumber = e.target.value;
+  setBatchValue(selectedBatchNumber);
+  formik.setFieldValue("batchNumber", selectedBatchNumber);
 
-        if (!selectedBatch) {
-            // clear related fields if nothing selected
-            setBatchAssignedCount(0);
-            setBatchTargetNo(0);
-            formik.setFieldValue("batchNumber", "");
-            formik.setFieldValue("courseName", "");
-            formik.setFieldValue("courseId", "");
-            formik.setFieldValue("admissionFee", "");
-            return;
-        }
+  const selectedBatch = batchData.find((b) => b.batchNumber === selectedBatchNumber);
 
-        // set numbers (use fallback zero if missing)
-        setBatchAssignedCount(selectedBatch.assignedStudentCount ?? 0);
-        setBatchTargetNo(selectedBatch.targetStudent ?? 0);
+  if (!selectedBatch) {
+    setBatchAssignedCount(0);
+    setBatchTargetNo(0);
 
-        // populate formik and local state
-        formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
-        formik.setFieldValue("courseName", selectedBatch.courseName);
-        setCourseValue(selectedBatch.courseName);
+    setCourseValue("");
+    formik.setFieldValue("courseName", "");
+    formik.setFieldValue("courseId", "");
+    formik.setFieldValue("admissionFee", "");
+    return;
+  }
 
-        // find course to set courseId and admission fee
-        const selectedCourse = courseData.find(
-            (element) => element.courseName === selectedBatch.courseName
-        );
-        if (selectedCourse) {
-            formik.setFieldValue("courseId", selectedCourse._id);
-            formik.setFieldValue("admissionFee", selectedCourse.courseFee);
-        } else {
-            formik.setFieldValue("courseId", "");
-            formik.setFieldValue("admissionFee", "");
-        }
-    };
+  // capacity numbers
+  setBatchAssignedCount(selectedBatch.assignedStudentCount ?? 0);
+  setBatchTargetNo(selectedBatch.targetStudent ?? 0);
+
+  // courseName comes from batch
+  const cName = selectedBatch.courseName || "";
+  setCourseValue(cName);
+  formik.setFieldValue("courseName", cName);
+
+  // find course doc and set correct ID + fee
+  const selectedCourse = courseData.find((c) => c.courseName === cName);
+
+  // ✅ IMPORTANT: use course._id (most likely)
+  formik.setFieldValue("courseId", selectedCourse?._id || "");
+  formik.setFieldValue("admissionFee", selectedCourse?.courseFee ?? "");
+};
+
 
     //Get Batch Data
     const getBatchData = async () => {
@@ -260,8 +254,7 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
         const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
         return diffInDays > 7;
     };
-    console.log("studentData", studentData);
-
+   // console.log("studentData", studentData);
     
     return (
         <Modal show={show}

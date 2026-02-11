@@ -1,5 +1,4 @@
-import React, { useState, useMemo , useEffect} from "react";
-import TableRow from "@mui/material/TableRow";
+import React, { useState, useEffect, useMemo, useRef } from "react";import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Table from "@mui/material/Table";
@@ -13,9 +12,15 @@ import ModalEditAdmission from "./ModalEditAdmission";
 import { FaEdit } from "react-icons/fa";
 import ModalAddAdmission from './ModalAddAdmission'
 import TablePagination from '@mui/material/TablePagination';
-import { FormControl, Select, MenuItem,  Box, Autocomplete, TextField } from "@mui/material";
+import {  Box,  Button,  Menu,  MenuItem,  Divider,  ListItemIcon,ListItemText,  FormControl,  Select,  Autocomplete,  TextField,
+} from "@mui/material";
+
 import { toast } from 'react-toastify';
 import TableFilter from "../TableFilter";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { FiDownload, FiUpload, FiFileText } from "react-icons/fi";
+import AddIcon from "@mui/icons-material/Add";
+import axios from "axios";
 
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -228,26 +233,170 @@ if (batchStatus) {
       setSingleAdmission(admission);
     }
   };
-      // Add this effect to sync filteredData whenever studentData updates
+      // Add this effect to sync filteredData whenever admissionData updates
   useEffect(() => {
     if (showTable) {
       handleApplyFilter();
     }
-  }, [admissionData]); // Runs whenever studentData changes (like after adding a student)
+  }, [admissionData]); // Runs whenever admissionData changes (like after adding a admission)
   
+
+  //Excel bulkload
+   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const downloadTemplate = async () => {
+    try {
+      window.open("http://localhost:8001/api/excel/admission-template", "_blank");
+    } catch (e) {
+      toast.error("Downloading Excel Template failed");
+      console.error(e);
+    }
+  };
+
+  const uploadExcel = async () => {
+    if (!file) {
+      toast.error("Please choose an Excel file first");
+      console.log("Something went wrong")
+      return;
+    }
+    try {
+     console.log("Upload excel is clicked")
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axios.post(
+        "http://localhost:8001/api/excel/admission-import",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      console.log(res)
+      toast.success("Uploaded successfully!");
+     // try {
+        // const refreshed = await axios.get(`${url}/alladmission`, config);
+        // setAdmissionData(refreshed.data.admissionData);
+      // } catch (refreshErr) {
+      //   console.error("Refresh after upload failed:", refreshErr);
+      // }
+      setFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (e) {
+      toast.error("Upload failed");
+     console.log("Something went wrong")
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Dropdown state
+  const [actionsAnchorEl, setActionsAnchorEl] = useState(null);
+  const actionsOpen = Boolean(actionsAnchorEl);
+  const fileInputRef = useRef(null);
+
+  const openActionsMenu = (e) => setActionsAnchorEl(e.currentTarget);
+  const closeActionsMenu = () => setActionsAnchorEl(null);
+
+  const triggerFilePicker = () => {
+    closeActionsMenu();
+    fileInputRef.current?.click();
+  };
+
+  const onFilePicked = (e) => {
+    const f = e.target.files?.[0] || null;
+    setFile(f);
+  };
+
+
   return (
     <Box className="row mx-auto w-100">
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-between',
-          alignItems: 'stretch',
-          mt:1,
-          gap: 2,
-        }}
-      >
-        {/* Filter Section */}
+        {/* Actions Bar */}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1,
+            my: 1,
+            justifyContent: { xs: "flex-start", md: "flex-end" },
+            alignItems: "center",
+          }}
+        >
+          {/* Primary */}
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setShowAdd(true)}
+            sx={{ borderRadius: 2, backgroundColor:" #2c51c1" }}
+          >
+            Add Admission
+          </Button>
+
+          {/* Hidden File Input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".xlsx,.xls,.csv"
+            onChange={onFilePicked}
+            style={{ display: "none" }}
+          />
+
+          {/* Dropdown */}
+          <Button
+         variant="outlined"
+          startIcon={<MoreVertIcon size={18} />}
+          onClick={openActionsMenu}
+          sx={{ borderRadius: 2 , color:" #2c51c1", borderColor:" #2c51c1"}}
+          >
+            Actions
+          </Button>
+
+          <Menu
+            anchorEl={actionsAnchorEl}
+            open={actionsOpen}
+            onClose={closeActionsMenu}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            PaperProps={{ sx: { borderRadius: 2, minWidth: 260 } }}
+          >
+            <MenuItem
+              onClick={() => {
+                closeActionsMenu();
+                downloadTemplate();
+              }}
+            >
+              <ListItemIcon>
+                <FiDownload  size={18}  />
+              </ListItemIcon>
+              <ListItemText primary="Download Excel Template" />
+            </MenuItem>
+
+            <MenuItem onClick={triggerFilePicker}>
+              <ListItemIcon>
+                <FiFileText size={18}  />
+              </ListItemIcon>
+              <ListItemText
+                primary="Choose file…"
+                secondary={file?.name ? file.name : "No file selected"}
+              />
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem
+              disabled={loading || !file}
+              onClick={() => {
+                closeActionsMenu();
+                uploadExcel();
+              }}
+            >
+              <ListItemIcon>
+                <FiUpload  size={18}  />
+              </ListItemIcon>
+              <ListItemText primary={loading ? "Updating…" : "Upload Updated Excel"} />
+            </MenuItem>
+          </Menu>
+        </Box>
+
+            {/* Filter Section */}
         <TableFilter
           open={openFilters}
           setOpen={setOpenFilters}
@@ -288,16 +437,7 @@ if (batchStatus) {
             </Select>
           </FormControl>
         </TableFilter>
-        
-        {/* Add Button */}
-        <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-          <button
-            className="commonButton"
-            onClick={() => setShowAdd(true)}>
-            Add Admission
-          </button>
-        </Box>
-      </Box>
+   
 
       {/* Table */}
       {showTable && (

@@ -8,32 +8,16 @@ import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
-
-import {
-  Box,
-  Button,
-  Menu,
-  MenuItem,
-  Divider,
-  ListItemIcon,
-  ListItemText,
-  FormControl,
-  Select,
-  Autocomplete,
-  TextField,
+import {  Box,  Button,  Menu,  MenuItem,  Divider,  ListItemIcon,ListItemText,  FormControl,  Select,  Autocomplete,  TextField,
 } from "@mui/material";
-
 import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { FiMoreHorizontal, FiDownload, FiUpload, FiFileText } from "react-icons/fi";
-
+import { FiDownload, FiUpload, FiFileText } from "react-icons/fi";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { FaKey } from "react-icons/fa";
-
 import axios from "axios";
 import { toast } from "react-toastify";
-
 import EditStudentData from "./EditStudentData";
 import ModalShowPassword from "./ModalShowPassword";
 import ModalAddStudent from "./ModalAddStudent";
@@ -194,7 +178,6 @@ const CustomizedTables = ({
     setSelectedCourse(null);
     setCourseInput("");
     setBatchStatus("");
-
     setFilteredData([]);
     setShowTable(false);
     setPage(0);
@@ -304,9 +287,7 @@ const CustomizedTables = ({
     );
   };
 
-  // =========================
-  // Excel bulk upload (dropdown)
-  // =========================
+  // Excel bulk upload 
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -345,7 +326,6 @@ const CustomizedTables = ({
       } catch (refreshErr) {
         console.error("Refresh after upload failed:", refreshErr);
       }
-
       setFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (e) {
@@ -374,9 +354,8 @@ const CustomizedTables = ({
     setFile(f);
   };
 
-  // =========================
+
   // Table data + pagination
-  // =========================
   const displayData = showTable ? filteredData : studentData;
   const safeDisplayData = Array.isArray(displayData) ? displayData : [];
 
@@ -401,7 +380,7 @@ const CustomizedTables = ({
             display: "flex",
             flexWrap: "wrap",
             gap: 1,
-            mb: 1,
+            my: 1,
             justifyContent: { xs: "flex-start", md: "flex-end" },
             alignItems: "center",
           }}
@@ -411,7 +390,7 @@ const CustomizedTables = ({
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => setShowAdd(true)}
-            sx={{ borderRadius: 2 }}
+            sx={{ borderRadius: 2, backgroundColor:" #2c51c1" }}
           >
             Add Student
           </Button>
@@ -428,9 +407,9 @@ const CustomizedTables = ({
           {/* Dropdown */}
           <Button
          variant="outlined"
-          endIcon={<FiMoreHorizontal size={18} />}
+          startIcon={<MoreVertIcon size={18} />}
           onClick={openActionsMenu}
-          sx={{ borderRadius: 2 }}
+          sx={{ borderRadius: 2 , color:" #2c51c1", borderColor:" #2c51c1"}}
           >
             Actions
           </Button>
