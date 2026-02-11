@@ -27,7 +27,7 @@ import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';
 import ApprovePage from './Components/Dashboard/BatchData/AdminApproval/ApprovePage';
 import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendance';
-
+import BulkLoadButtons from './Components/Dashboard/BulkLoadButtons';
 
 
 function App() {
@@ -100,6 +100,7 @@ const hasApprovalRedirect = redirect && batchId;
 
 return (
   <>
+  
     {/** Navbar & Sidebar appear only when logged in */}
     {token && (
       <>
@@ -134,7 +135,7 @@ return (
             >
               <Routes>
                 {/* Your routes remain the same */}
-
+  <Route path="/buttons" element={<BulkLoadButtons />} />
                 <Route path="/chartdisplay" element={<ChartDisplay />} />
                 {role === 'admin' || role === 'staff' ? (
                   <>
@@ -182,36 +183,6 @@ return (
       </>
     )}
 
-    {/* Public routes remain the same */}
-    {/* {(!token || hasApprovalRedirect) && (
-      <>
-        <Routes>
-            <Route path="/oauth-success" element={null} />
-          <Route path="/signin" element={<StudentOrStaff />} />
-          <Route
-            path="/student-signin"
-            element={
-              <StudentSignIn
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-              />
-            }
-          />
-          <Route path="/student-signup" element={<StudentSignUp />} />
-          <Route
-        path="/staff-signin"
-        element={
-          <StaffSignIn
-            isAuthenticated={isAuthenticated}
-            setIsAuthenticated={setIsAuthenticated}
-          />
-            }
-          />
-          <Route path="/staff-signup" element={<StaffSignUp />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </>
-    )} */}
 <Routes>
   {/* OAuth callback must always exist */}
   <Route path="/oauth-success" element={null} />
@@ -222,6 +193,7 @@ return (
   <Route path="/student-signup" element={<StudentSignUp />} />
   <Route path="/staff-signin" element={<StaffSignIn />} />
   <Route path="/staff-signup" element={<StaffSignUp />} />
+
 </Routes>
 
     <ToastContainer transition={Zoom} autoClose={2000} theme="light" draggable />

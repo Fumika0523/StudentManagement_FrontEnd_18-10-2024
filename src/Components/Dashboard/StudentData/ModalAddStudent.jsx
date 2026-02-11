@@ -41,7 +41,7 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
     },
     //validationSchema: formSchema,
     onSubmit: (values) => {
-     // console.log(values)
+     console.log(values)
       addStudent(values)
     }
   })

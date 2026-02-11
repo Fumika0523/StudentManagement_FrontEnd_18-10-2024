@@ -47,41 +47,6 @@ const courseDays = Number(course?.noOfDays || 0);
     setShow(false);
     navigate('/batchdata');
   };
-  useEffect(() => {
-  if (!singleBatch?.startDate) return;
-
-  const startDate = new Date(singleBatch.startDate);
-  if (isNaN(startDate.getTime())) return;
-
-  const courses = Array.isArray(courseData) ? courseData : [];
-  const course = courses.find(
-    (c) =>
-      c.courseName?.trim().toLowerCase() === singleBatch?.courseName?.trim().toLowerCase()
-  );
-
-  const days = Number(course?.noOfDays);
-  if (!Number.isFinite(days) || days <= 0) {
-    // If we don't know the duration yet, DO NOT auto override status
-    setBatchStatus(singleBatch.status || "");
-    formik.setFieldValue("status", singleBatch.status || "");
-    return;
-  }
-
-  const endDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
-  const today = new Date();
-  let newStatus = singleBatch.status || "";
-  // Keep final status
-  if (singleBatch.status === "Batch Completed") {
-    newStatus = "Batch Completed";
-  } else {
-    if (today < startDate) newStatus = "Not Started";
-    else if (today >= startDate && today < endDate) newStatus = "In Progress";
-    else newStatus = "Training Completed";
-  }
-  setBatchStatus(newStatus);
-  formik.setFieldValue("status", newStatus);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [singleBatch, courseData]);
 
 const isTrainingCompleted = batchStatus === "Training Completed";
 const canSelectBatchCompleted =
@@ -128,6 +93,41 @@ const canEditFields =
       updateBatch(values);
     },
   });
+  useEffect(() => {
+  if (!singleBatch?.startDate) return;
+
+  const startDate = new Date(singleBatch.startDate);
+  if (isNaN(startDate.getTime())) return;
+
+  const courses = Array.isArray(courseData) ? courseData : [];
+  const course = courses.find(
+    (c) =>
+      c.courseName?.trim().toLowerCase() === singleBatch?.courseName?.trim().toLowerCase()
+  );
+
+  const days = Number(course?.noOfDays);
+  if (!Number.isFinite(days) || days <= 0) {
+    // If we don't know the duration yet, DO NOT auto override status
+    setBatchStatus(singleBatch.status || "");
+    formik.setFieldValue("status", singleBatch.status || "");
+    return;
+  }
+
+  const endDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
+  const today = new Date();
+  let newStatus = singleBatch.status || "";
+  // Keep final status
+  if (singleBatch.status === "Batch Completed") {
+    newStatus = "Batch Completed";
+  } else {
+    if (today < startDate) newStatus = "Not Started";
+    else if (today >= startDate && today < endDate) newStatus = "In Progress";
+    else newStatus = "Training Completed";
+  }
+  setBatchStatus(newStatus);
+  formik.setFieldValue("status", newStatus);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [singleBatch, courseData]);
 
   //  Update Batch API (full form save)
   const updateBatch = async (updatedBatch) => {
@@ -160,33 +160,8 @@ const canEditFields =
     setCheckboxes((prev) => ({ ...prev, [name]: checked }));
   };
 
-  // //  Unified status logic: auto status from dates (up to Training Completed)
-  // useEffect(() => {
-  //   if (!singleBatch || !singleBatch.startDate) return;
 
-  //   const startDate = new Date(singleBatch.startDate);
-  //   const courseDays = singleBatch.noOfDays || singleBatch.course?.noOfDays || 0;
-  //   const endDate = new Date(startDate.getTime() + courseDays * 24 * 60 * 60 * 1000);
-  //   const today = new Date();
 
-  //   let newStatus = singleBatch.status || "";
-
-  //   // If already manually completed → DO NOT override
-  //   if (singleBatch.status === "Batch Completed") {
-  //     newStatus = "Batch Completed";
-  //   } else {
-  //     // Auto-generate up to Training Completed
-  //     if (today < startDate) newStatus = "Not Started";
-  //     else if (today >= startDate && today < endDate) newStatus = "In Progress";
-  //     else newStatus = "Training Completed";
-  //   }
-
-  //   setBatchStatus(newStatus);
-  //   formik.setFieldValue("status", newStatus);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [singleBatch]);
-
-  //  Tutor suggestion: when batchStatus changes, sync to DB
   useEffect(() => {
     if (!singleBatch?._id) return;
     if (!batchStatus) return;
