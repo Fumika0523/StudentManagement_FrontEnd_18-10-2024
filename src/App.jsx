@@ -27,7 +27,7 @@ import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';
 import ApprovePage from './Components/Dashboard/BatchData/AdminApproval/ApprovePage';
 import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendance';
-import BulkLoadButtons from './Components/Dashboard/BulkLoadButtons';
+import BulkLoadButtons from './Components/Dashboard/Bulkload/TestBulkLoadButtons';
 
 
 function App() {

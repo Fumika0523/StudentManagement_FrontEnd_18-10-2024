@@ -14,7 +14,6 @@ function ModalShowPassword({viewPassword,setViewPassword,password,setPassword}){
     <Modal.Header closeButton>
           <Modal.Title  >Password</Modal.Title>
         </Modal.Header>
-    
             <Modal.Body>
            {password}  
             </Modal.Body>

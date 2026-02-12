@@ -15,9 +15,9 @@ function EarningCard({ title, total, icon, color }) {
 
   const borderStyle = {
     backgroundColor: "white",
-    width: "100%",              // ✅ not minWidth
+    width: "100%",              
     height: "100px",
-    borderLeft: "6px solid",    // ✅ consistent thickness
+    borderLeft: "6px solid",    
     borderColor: color,
   };
 

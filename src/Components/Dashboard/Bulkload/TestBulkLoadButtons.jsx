@@ -23,6 +23,8 @@ const BulkLoadButtons = () => {
        console.log("uploadExcel is clicked") 
        const formData = new FormData()
        formData.append("file",file)
+       console.log("formData",formData)
+
         const res = await axios.post("http://localhost:8001/api/excel/import",formData,{headers:{"Content-Type":"multipart/form-data"}})
         console.log(res.data)
         alert('Uploaded success!\nInserted:')
@@ -32,6 +34,7 @@ const BulkLoadButtons = () => {
         }
     }
 
+    //take 1 component. create 1 folder >> file.
 
   return (
     <>

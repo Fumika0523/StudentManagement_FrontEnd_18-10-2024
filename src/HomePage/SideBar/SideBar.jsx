@@ -58,11 +58,11 @@ function SideBar({ isSidebarVisible = true }) {
   //  Sidebar width rules
   let sidebarWidth = "0px";
   if (screenWidth < 768) {
-    sidebarWidth = isSidebarVisible ? "150px" : "0px"; // mobile toggle via Navbar
+    sidebarWidth = isSidebarVisible ? "100px" : "0px"; // mobile toggle via Navbar
   } else if (screenWidth >= 768 && screenWidth < 1024) {
-    sidebarWidth = isSidebarOpen ? "360px" : "150px"; // tablet toggle
+    sidebarWidth = isSidebarOpen ? "300px" : "100px"; // tablet toggle
   } else {
-    sidebarWidth = isSidebarOpen ? "300px" : "150px"; // desktop toggle
+    sidebarWidth = isSidebarOpen ? "270px" : "100px"; // desktop toggle
   }
 
   return (
@@ -116,7 +116,6 @@ function SideBar({ isSidebarVisible = true }) {
               aria-controls="collapse-mini"
               aria-expanded={open}
               id="expandIcon"
-              // style={{  border:"2px solid red" }}
                className="sb-miniComponent mx-4 bgColor "
             >
                 <MdGridView />
@@ -130,7 +129,7 @@ function SideBar({ isSidebarVisible = true }) {
               <div
                 id="collapse-mini"
                 className="bg-white mx-auto"
-                style={{ width: "100px", borderRadius: "15px" }}
+                style={{ width: "60px", borderRadius: "15px" }}
               >
                 {role === "admin" || role === "staff" ? (
                   <>

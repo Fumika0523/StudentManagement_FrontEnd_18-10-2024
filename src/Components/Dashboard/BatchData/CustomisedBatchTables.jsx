@@ -612,7 +612,7 @@ const approval = batch.approvalStatus ?? "none"; // "none" | "pending" | "approv
 const isAdmin = role === "admin";
 const isStaff = role === "staff";
 
-const canShowCertificate = status === "Batch Completed"; // ✅ only after Batch Completed
+const canShowCertificate = status === "Batch Completed"; // 
 
 const renderActionIcons = () => {
   const ViewUsersIcon = (
@@ -671,7 +671,7 @@ const renderActionIcons = () => {
 
   const ApprovedDot = <span className="live-dot" title="Approved - can edit" />;
 
-  // ✅ FINAL (Batch Completed): only users + check + certificate
+  // FINAL (Batch Completed): only users + check + certificate
   if (status === "Batch Completed") {
     return (
       <div className="d-flex align-items-center gap-2">
@@ -686,7 +686,7 @@ const renderActionIcons = () => {
     );
   }
 
-  // ✅ Not Started / In Progress
+  //  Not Started / In Progress
   if (status === "Not Started" || status === "In Progress") {
     // staff lock only (admin can edit until Batch Completed)
     if (isStaff && isOld) {
@@ -706,7 +706,7 @@ const renderActionIcons = () => {
     );
   }
 
-  // ✅ Training Completed
+  //  Training Completed
   if (status === "Training Completed") {
     // Staff flow
     if (isStaff) {

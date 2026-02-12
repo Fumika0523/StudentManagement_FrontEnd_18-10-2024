@@ -54,14 +54,14 @@ function viewBatch() {
 
     return (
         <>
+        {/* Header  */}
+        {/* Filter */}
+        {/* Table */}
 
             {<CustomisedBatchTables
              setAdmissionData={setAdmissionData} admissionData={admissionData}  setBatchData={setBatchData} batchData={batchData} studentData={studentData} setStudentData={setStudentData}
              courseData={courseData} setCourseData={setCourseData}/>  
-
             }
-
-
         </>
     )
 }

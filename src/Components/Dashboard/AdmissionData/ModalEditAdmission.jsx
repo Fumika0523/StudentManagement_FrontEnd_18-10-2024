@@ -235,8 +235,8 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
                             onChange={handleStatusChange}
                             onBlur={formik.handleBlur}
                         >
-                            <option value="Assigned">Assign</option>
-                            <option value="De-assigned">De-assign</option>
+                            <option value="Assigned">Assigned</option>
+                            <option value="De-assigned">De-assigned</option>
                         </select>
                         {formik.errors.status && formik.touched.status && (
                             <div className="text-danger small">{formik.errors.status}</div>

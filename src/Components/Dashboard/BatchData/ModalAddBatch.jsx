@@ -276,3 +276,10 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
 
 export default ModalAddBatch;
 
+
+//Folder: Create Batch
+// validation file
+//Header
+//Form
+//Modal
+//Add Batch file (Import in this file)

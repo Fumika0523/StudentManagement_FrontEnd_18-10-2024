@@ -1,22 +1,30 @@
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useFormik } from 'formik';
+import { Formik, useFormik } from 'formik';
 import * as Yup from "yup";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { url } from '../../../utils/constant';
 import axios from 'axios';
-import { url } from '../../utils/constant';
 import { Col, Row } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 
-function ModalAddStudent({ show, setShow, setStudentData }) {
+function EditStudentData({show,setShow,setSingleStudent,singleStudent,setStudentData}){
+  console.log(singleStudent._id)
+  console.log("singleStudent",singleStudent)
+ const token = localStorage.getItem('token')
+ let config = {
+     headers:{
+         Authorization:`Bearer ${token}`
+     }
+ }
+    const navigate = useNavigate()
 
     const handleClose = () => {
-        setShow(false)
-        navigate('/studentata')
+    setShow(false)
+    navigate('/studentdata')
     }
-
-
+  
   const formSchema = Yup.object().shape({
     studentName: Yup.string().required("Mandatory Field!"),
     password: Yup.string().required("Mandatory Field!"),
@@ -24,64 +32,60 @@ function ModalAddStudent({ show, setShow, setStudentData }) {
     email: Yup.string().required("Mandatory Field!"),
     phoneNumber: Yup.number().required("Mandatory Field!"),
     gender: Yup.string().required("Mandatory Field!"),
-    birthdate: Yup.date().required("Mandatory Field!"),
-    preferredCourses:Yup.string().required("Mandatory Field!"),
+    birthdate: Yup.date().required("Mandatory Field!")
   })
 
-  const formik = useFormik({
+//updating in a single data
+const formattedDate = singleStudent.birthdate
+? new Date(singleStudent.birthdate).toISOString().split('T')[0]
+:"";
+
+console.log("update birthdate",formattedDate)
+// 1 data need to update
+const formik = useFormik({
     initialValues: {
-      studentName: "",
-      username: "",
-      password: "",
-      email: "",
-      phoneNumber: "",
-      gender: "",
-      birthdate: "",
-      preferredCourses:"",
+        studentName:singleStudent?.studentName,
+        username: singleStudent?.username,
+        password: singleStudent?.password,
+        email: singleStudent?.email,
+        phoneNumber: singleStudent?.phoneNumber,
+        gender:singleStudent?.gender,
+        birthdate:formattedDate,
     },
-    //validationSchema: formSchema,
-    onSubmit: (values) => {
-     console.log(values)
-      addStudent(values)
-    }
-  })
-
-  const token = localStorage.getItem('token')
-  // console.log(token)
-
-  let config = {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }
-  
-// Adding student API
-const addStudent = async (newStudent) => {
-  try {
-    const res = await axios.post(`${url}/registerstudent`, newStudent, config);
-    if (res) {
-      //console.log("Successfully added a new student to the DB");
-      // Fetch latest data
-      const updated = await axios.get(`${url}/allstudent`, config);
-      setStudentData(updated.data.studentData);
-        setTimeout(() => handleClose(), 1000);
-      toast.success(`${newStudent.studentName} added successfully!`);
-    }
-  } catch (e) {
-    toast.error("Failed to add course. Please try again.");
-    //console.error("Error Adding Student:", e);
-  }
-};
-
-
-  return (
+    validationSchema:formSchema,
+    enableReinitialize: true, //if there is any update in my initial value, please make it update >> enable > true
+    onSubmit:(values)=>{
+        console.log(values)
+        updateStudent(values)
+ }})
+ console.log(singleStudent)
+ 
+ //update
+  const updateStudent = async(updatedStudent)=>{
+    console.log("student posted to the DB")
+    try{
+      let res = await axios.put(`${url}/updatestudent/${singleStudent._id}`,updatedStudent,config)
+      console.log(res)
+      if(res){
+        let res = await axios.get(`${url}/allstudent`,config)
+          console.log("updatedStudent:",updatedStudent)
+          setStudentData(res.data.studentData)
+          handleClose()
+      }
+    }catch(e){
+      console.error('Error Editing Student:',e)
+    }} 
+   
+    return(
     <>
-      <Modal
-        show={show} onHide={handleClose} size='lg'  >
+    <div>
+    <Modal
+    show={show} onHide={handleClose} size='lg'
+    style={{margin:"8% 0"}} >
         <Modal.Header closeButton>
-        <Modal.Title  >Add Student</Modal.Title>
+          <Modal.Title  >Edit Student Info</Modal.Title>
         </Modal.Header>
-        <Form onSubmit={formik.handleSubmit} className='px-3' style={{ fontSize: "" }}>
+        <Form onSubmit={formik.handleSubmit} className='px-5' style={{ fontSize: "80%" }}>
           <Modal.Body>
             <Row>
               <Col>
@@ -96,24 +100,25 @@ const addStudent = async (newStudent) => {
                     onBlur={formik.handleBlur} />
                     {/* Error Message */}
                     {formik.errors.studentName && formik.touched.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
-                  </Form.Group>
+                    </Form.Group>
               </Col>
               <Col>
                 {/* Username */}
                 <Form.Group className='my-3'>
                   <Form.Label className='m-0'>Username</Form.Label>
-                  <Form.Control type="text" placeholder='Type your Username' name="username"
+                  <Form.Control type="text" disabled placeholder='Type your Username' name="username"
                     value={formik.values.username}
                     onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur} />
+                    // onBlur={formik.handleBlur} />
+                    />
                     {/* Error Message */}
-                    {formik.errors.username && formik.touched.username && <div className="text-danger text-center">{formik.errors.username}</div>}
+                    {/* // {formik.errors.username && formik.touched.username && <div className="text-danger text-center">{formik.errors.username}</div>} */}
                 </Form.Group>
               </Col>
             </Row>
             <Row>
-              {/* Gender */}
-              <Col className='pt-4 pe-0 ' xs={6} md={6}>
+              <Col className='pt-4 pe-0'>
+                {/* Gender */}
                 <div>Gender</div>
                 <div className='form-check form-check-inline'>
                   <Form.Check style={{fontSize:"14px"}} type="radio" name="gender" label={`Male`}
@@ -124,23 +129,7 @@ const addStudent = async (newStudent) => {
                     value="female"
                     onChange={formik.handleChange} /></div>
               </Col>
-                 {/* Assign/De-assigned */}
-              {/* <Col className='pt-4 pe-0' xs={6} md={6}>
-                <div>Status</div>
-                <Form.Select
-                  name="status"
-                  value={formik.values.status || ""}
-                  onChange={formik.handleChange}
-                  style={{ fontSize: "14px" }}
-                >
-                  <option value="">-- Select Status --</option>
-                  <option value="Assigned">Assigned</option>
-                  <option value="De-assigned">De-assigned</option>
-                </Form.Select>
-              </Col> */}
-                </Row>
-              <Row>
-             <Col className='pt-4 pe-0' xs={6}>
+              <Col>
                 {/* Email */}
                 <Form.Group className='my-3'>
                   <Form.Label className='m-0'>Email Address</Form.Label>
@@ -152,7 +141,7 @@ const addStudent = async (newStudent) => {
                     {formik.errors.email && formik.touched.email && <div className="text-danger text-center">{formik.errors.email}</div>}
                 </Form.Group>
               </Col>
-             <Col className='pt-4 pe-0' xs={6} >
+              <Col>
                 {/* B-Date*/}
                 <Form.Group className='mt-3'>
                   <Form.Label className='m-0'>Birthdate</Form.Label>
@@ -166,40 +155,9 @@ const addStudent = async (newStudent) => {
               </Col>
             </Row>
             <Row>
-     <Col>
-  <Form.Label className='pt-4 m-0'>Preferred Courses</Form.Label>
-  <div
-    className="d-flex flex-wrap gap-3 mt-1"
-    style={{ fontSize: "14px" }}
-  >
-    {[
-      "HTML",
-      "CSS",
-      "Java Script",
-      "Redux",
-      "Node JS",
-      "Mongo DB",
-      "SQL",
-      "Bootstrap",
-    ].map((course, idx) => (
-      <Form.Check
-        key={idx}
-        inline={false} // we don’t need inline since flex-wrap will handle layout
-        label={course}
-        name="preferredCourses"
-        type="checkbox"
-        value={course}
-        id={`preferred-${course}`}
-        onChange={formik.handleChange}
-        checked={formik.values.preferredCourses?.includes(course) || false}
-      />
-    ))}
-  </div>
-</Col>
-              </Row>
-              <Row>
-             {/* Phone No.*/}
               <Col>
+
+                {/* Phone No.*/}
                 <Form.Group className='mt-3'>
                   <Form.Label className='m-0'>Phone No.</Form.Label>
                   <Form.Control type="number" placeholder="Type your Phone No." name="phoneNumber"
@@ -214,7 +172,7 @@ const addStudent = async (newStudent) => {
                 {/* Password*/}
                 <Form.Group className='mt-3'>
                   <Form.Label className='m-0'>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Type your Password" name="password"
+                  <Form.Control type="password" placeholder="Type your Password" name="password" disabled
                     value={formik.values.password}
                     onChange={formik.handleChange} 
                     onBlur={formik.handleBlur} />
@@ -226,7 +184,7 @@ const addStudent = async (newStudent) => {
           </Modal.Body>
           <Modal.Footer>
             <Button style={{ backgroundColor: "#4e73df" }} type="submit">
-              Add Student
+              Update 
             </Button>
             <Button variant="secondary" onClick={handleClose}>
               Close
@@ -234,7 +192,8 @@ const addStudent = async (newStudent) => {
           </Modal.Footer>
         </Form>
       </Modal>
+      </div>
     </>
-  )
+    )
 }
-export default ModalAddStudent
+export default EditStudentData

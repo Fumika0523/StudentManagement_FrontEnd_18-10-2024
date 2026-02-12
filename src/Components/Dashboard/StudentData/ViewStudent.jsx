@@ -3,7 +3,6 @@ import { useState } from "react"
 import { url } from "../../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./CustomisedTables"
-import ModalAddStudent from "../StudentData/ModalAddStudent"
 
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])

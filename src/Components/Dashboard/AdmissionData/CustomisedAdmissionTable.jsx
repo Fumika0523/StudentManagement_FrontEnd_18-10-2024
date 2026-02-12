@@ -14,13 +14,13 @@ import ModalAddAdmission from './ModalAddAdmission'
 import TablePagination from '@mui/material/TablePagination';
 import {  Box,  Button,  Menu,  MenuItem,  Divider,  ListItemIcon,ListItemText,  FormControl,  Select,  Autocomplete,  TextField,
 } from "@mui/material";
-
 import { toast } from 'react-toastify';
 import TableFilter from "../TableFilter";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { FiDownload, FiUpload, FiFileText } from "react-icons/fi";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
+import BulkUploadBtns from "../Bulkload/BulkUploadBtns";
+import { url } from "../../utils/constant";
+import ConfirmDeleteModal from "../Common/DeleteConfirmModal";
 
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -53,9 +53,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const CustomisedAdmissionTable = ({
   admissionData, setAdmissionData, batchData, studentData, setStudentData, courseData, setCourseData
 }) => {
+    const token = localStorage.getItem("token");
+      let config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
   const [showEdit, setShowEdit] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [singleAdmission, setSingleAdmission] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [viewWarning, setViewWarning] = useState(false);
   const [openFilters, setOpenFilters] = useState(true);
 
@@ -65,6 +73,7 @@ const CustomisedAdmissionTable = ({
   const [dateField, setDateField] = useState('');
   const [batchStatus, setBatchStatus] = useState('');
   const [showTable, setShowTable] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
 
   // Pagination
   const [page, setPage] = useState(0);
@@ -131,10 +140,9 @@ const CustomisedAdmissionTable = ({
   // Filter admissionData, not batchData
   const handleApplyFilter = () => {
     if (!Array.isArray(admissionData)) {
-      console.error('admissionData is not an array');
+      console.error(`admissionData is not an array`);
       return;
     }
-
     let filtered = [...admissionData];
     // Filter by course
     if (selectedCourse) {
@@ -158,7 +166,6 @@ if (batchStatus) {
     setFilteredData(filtered);
   };
 
-  const [filteredData, setFilteredData] = useState([]);
   const handleResetFilter = () => {
     setCourseInput('');
     setSelectedCourse(null);
@@ -233,79 +240,43 @@ if (batchStatus) {
       setSingleAdmission(admission);
     }
   };
-      // Add this effect to sync filteredData whenever admissionData updates
-  useEffect(() => {
-    if (showTable) {
-      handleApplyFilter();
-    }
-  }, [admissionData]); // Runs whenever admissionData changes (like after adding a admission)
+
+  const closeDelete = () => {
+  setViewWarning(false);
+  setSingleAdmission(null);
+  // navigate("/admissiondata"); // only if you truly need this
+};
+
+const confirmDeleteAdmission = async () => {
+  if (!singleAdmission?._id) return;
+
+  try {
+    setDeleting(true);
+
+    const del = await axios.delete(`${url}/deleteadmission/${singleAdmission._id}`, config);
+    const deletedName = del?.data?.deletedAdmission?.studentName || "Admission";
+
+    const all = await axios.get(`${url}/alladmission`, config);
+    setAdmissionData(all.data.admissionData);
+
+    toast.error(`Admission for ${deletedName} has been deleted successfully!`, {
+      style: { textWrap: "nowrap", textAlign: "center", fontSize: "14px", color: "black" },
+    });
+
+    closeDelete();
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to delete admission!");
+  } finally {
+    setDeleting(false);
+  }
+};
+
+  // Bulkload
+  //delete
+  //edit ---> update the change, auto update
   
-
-  //Excel bulkload
-   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const downloadTemplate = async () => {
-    try {
-      window.open("http://localhost:8001/api/excel/admission-template", "_blank");
-    } catch (e) {
-      toast.error("Downloading Excel Template failed");
-      console.error(e);
-    }
-  };
-
-  const uploadExcel = async () => {
-    if (!file) {
-      toast.error("Please choose an Excel file first");
-      console.log("Something went wrong")
-      return;
-    }
-    try {
-     console.log("Upload excel is clicked")
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await axios.post(
-        "http://localhost:8001/api/excel/admission-import",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      console.log(res)
-      toast.success("Uploaded successfully!");
-     // try {
-        // const refreshed = await axios.get(`${url}/alladmission`, config);
-        // setAdmissionData(refreshed.data.admissionData);
-      // } catch (refreshErr) {
-      //   console.error("Refresh after upload failed:", refreshErr);
-      // }
-      setFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (e) {
-      toast.error("Upload failed");
-     console.log("Something went wrong")
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Dropdown state
-  const [actionsAnchorEl, setActionsAnchorEl] = useState(null);
-  const actionsOpen = Boolean(actionsAnchorEl);
-  const fileInputRef = useRef(null);
-
-  const openActionsMenu = (e) => setActionsAnchorEl(e.currentTarget);
-  const closeActionsMenu = () => setActionsAnchorEl(null);
-
-  const triggerFilePicker = () => {
-    closeActionsMenu();
-    fileInputRef.current?.click();
-  };
-
-  const onFilePicked = (e) => {
-    const f = e.target.files?.[0] || null;
-    setFile(f);
-  };
-
+//validation will be last
 
   return (
     <Box className="row mx-auto w-100">
@@ -329,71 +300,17 @@ if (batchStatus) {
           >
             Add Admission
           </Button>
-
-          {/* Hidden File Input */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".xlsx,.xls,.csv"
-            onChange={onFilePicked}
-            style={{ display: "none" }}
-          />
-
-          {/* Dropdown */}
-          <Button
-         variant="outlined"
-          startIcon={<MoreVertIcon size={18} />}
-          onClick={openActionsMenu}
-          sx={{ borderRadius: 2 , color:" #2c51c1", borderColor:" #2c51c1"}}
-          >
-            Actions
-          </Button>
-
-          <Menu
-            anchorEl={actionsAnchorEl}
-            open={actionsOpen}
-            onClose={closeActionsMenu}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-            PaperProps={{ sx: { borderRadius: 2, minWidth: 260 } }}
-          >
-            <MenuItem
-              onClick={() => {
-                closeActionsMenu();
-                downloadTemplate();
-              }}
-            >
-              <ListItemIcon>
-                <FiDownload  size={18}  />
-              </ListItemIcon>
-              <ListItemText primary="Download Excel Template" />
-            </MenuItem>
-
-            <MenuItem onClick={triggerFilePicker}>
-              <ListItemIcon>
-                <FiFileText size={18}  />
-              </ListItemIcon>
-              <ListItemText
-                primary="Choose file…"
-                secondary={file?.name ? file.name : "No file selected"}
-              />
-            </MenuItem>
-
-            <Divider />
-
-            <MenuItem
-              disabled={loading || !file}
-              onClick={() => {
-                closeActionsMenu();
-                uploadExcel();
-              }}
-            >
-              <ListItemIcon>
-                <FiUpload  size={18}  />
-              </ListItemIcon>
-              <ListItemText primary={loading ? "Updating…" : "Upload Updated Excel"} />
-            </MenuItem>
-          </Menu>
+      
+  <BulkUploadBtns
+    templateUrl="http://localhost:8001/api/excel/admission-template"
+    importUrl="http://localhost:8001/api/excel/admission-import"
+    modalTitle="Bulk Upload Admissions"
+    axiosConfig={config}
+    onRefresh={async () => {
+      const refreshed = await axios.get(`${url}/alladmission`, config);
+      setAdmissionData(refreshed.data.admissionData);
+    }}
+  />
         </Box>
 
             {/* Filter Section */}
@@ -438,8 +355,7 @@ if (batchStatus) {
           </FormControl>
         </TableFilter>
    
-
-      {/* Table */}
+         {/* Table */}
       {showTable && (
         <Box
           sx={{
@@ -555,6 +471,8 @@ if (batchStatus) {
               justifyContent: 'center',
             }}
           />
+
+          
         </Box>
       )}
 
@@ -590,6 +508,17 @@ if (batchStatus) {
           setStudentData={setStudentData}
         />
       )}
+
+                                {/* <ConfirmDeleteModal
+  show={viewWarning}
+  onHide={closeDelete}
+  title="Are you sure you want to delete this admission?"
+  body={singleAdmission?.studentName ? `Student: ${singleAdmission.studentName}` : null}
+  confirmVariant="danger"
+  loading={deleting}
+  onConfirm={confirmDeleteAdmission}
+/> */}
+
     </Box>
   );
 };
