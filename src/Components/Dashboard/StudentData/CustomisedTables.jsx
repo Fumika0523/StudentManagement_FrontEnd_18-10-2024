@@ -17,7 +17,6 @@ import { toast } from "react-toastify";
 
 import EditStudentData from "./EditStudent/EditStudentData";
 import ModalShowPassword from "./ModalShowPassword";
-import Header from "./Header/Header";
 import { url } from "../../utils/constant";
 import usePagination from "../../utils/usePagination"; 
 
@@ -64,33 +63,13 @@ const CustomizedTables = ({
 
   const [viewPassword, setViewPassword] = useState(false);
   const [password, setPassword] = useState(null);
-
-  const [filteredData, setFilteredData] = useState([]);
-
   const role = localStorage.getItem("role");
-
-  // Filters
-  const [genderFilter, setGenderFilter] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
-  const [openFilters, setOpenFilters] = useState(true);
-
-  const [showTable, setShowTable] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
-
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [courseInput, setCourseInput] = useState("");
-  const [batchStatus, setBatchStatus] = useState("");
-
+   const [showEdit, setShowEdit] = useState(false);
   const token = localStorage.getItem("token");
   const config = useMemo(
     () => ({ headers: { Authorization: `Bearer ${token}` } }),
     [token]
   );
-
-  const uniqueCourses = useMemo(() => {
-    if (!Array.isArray(batchData)) return [];
-    return [...new Set(batchData.map((b) => b?.courseName).filter(Boolean))];
-  }, [batchData]);
 
   const handleEditClick = (student) => {
     setShowEdit(true);
@@ -114,50 +93,6 @@ const CustomizedTables = ({
     setViewPassword(true);
     setPassword(pwd);
   };
-
-  const handleApplyFilter = () => {
-    let filtered = Array.isArray(studentData) ? [...studentData] : [];
-
-    if (genderFilter) filtered = filtered.filter((stu) => stu.gender === genderFilter);
-    if (selectedCourse) filtered = filtered.filter((stu) => stu.courseName === selectedCourse);
-
-    if (batchStatus) {
-      filtered = filtered.filter((stu) => {
-        const status = studentBatchMap[stu.studentName]?.batchStatus;
-        return status === batchStatus;
-      });
-    }
-
-    if (dateFilter) {
-      const today = new Date();
-      filtered = filtered.filter((stu) => {
-        const created = new Date(stu.createdAt);
-        if (isNaN(created)) return false;
-        if (dateFilter === "today") return created.toDateString() === today.toDateString();
-        return true;
-      });
-    }
-
-    setFilteredData(filtered);
-    setShowTable(true);
-    resetPage(0);
-  };
-
-  const handleResetFilter = () => {
- setGenderFilter("");
-setDateFilter("");
-setSelectedCourse(null);
-setCourseInput("");
-setBatchStatus("");
-setFilteredData([]);
-setShowTable(false);
-resetPage();
-  };
-
-  useEffect(() => {
-    if (showTable) handleApplyFilter();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [studentData]);
 
   useEffect(() => {
     if (studentData?.length && admissionData?.length && batchData?.length) {
@@ -239,8 +174,6 @@ resetPage();
     );
   };
 
-  const displayData = showTable ? filteredData : studentData;
-
   const {
   page,
   rowsPerPage,
@@ -249,33 +182,11 @@ resetPage();
   handleChangePage,
   handleChangeRowsPerPage,
   resetPage,
-} = usePagination(displayData, { initialRowsPerPage: 10 });
+} = usePagination(studentData, { initialRowsPerPage: 10 });
 
   return (
-    <div className="row mx-auto">
-   
-   <Header
-        // for ActionBtns
-        config={config}
-        setStudentData={setStudentData}
-        urlBase={url}
-        //  for filters
-        openFilters={openFilters}
-        setOpenFilters={setOpenFilters}
-        onApply={handleApplyFilter}
-        onReset={handleResetFilter}
-        uniqueCourses={uniqueCourses}
-        selectedCourse={selectedCourse}
-        setSelectedCourse={setSelectedCourse}
-        courseInput={courseInput}
-        setCourseInput={setCourseInput}
-        batchStatus={batchStatus}
-        setBatchStatus={setBatchStatus}
-      />
-      {showTable && (
-        <Box sx={{ display: "flex", flexDirection: "column", width: "100%", mt: "5px", //backgroundColor:"#efeef2", padding:"5px",  boxShadow:2, borderRadius:3
-        }}>
-
+    <div className="">
+        <Box sx={{ display: "flex", flexDirection: "column", width: "100%", mt: "5px", }}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -340,10 +251,7 @@ resetPage();
                           />
                         </div>
                       </StyledTableCell>
-
                       <StyledTableCell>{student.batchNumber || "-"}</StyledTableCell>
-
-                      {/* ✅ FIXED: pass studentName */}
                       <StyledTableCell>
                         <StatusBadge studentStatus={student.status} studentName={student.studentName} />
                       </StyledTableCell>
@@ -387,24 +295,6 @@ resetPage();
               </TableBody>
             </Table>
           </TableContainer>
-{/* 
-       <TablePagination
-      component="div"
-      count={totalCount}
-      page={page}
-      onPageChange={handleChangePage}
-      rowsPerPage={rowsPerPage}
-      onRowsPerPageChange={handleChangeRowsPerPage}
-      rowsPerPageOptions={[5, 10, 25, 50]}
-      sx={{
-        boxShadow: 2,
-        p: 1,
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-      }}
-    /> */}
-
     <TablePagination
   component="div"
   count={totalCount}
@@ -439,10 +329,7 @@ resetPage();
     },
   }}
 />
-
       </Box>
-      )}
-
       {showEdit && (
         <EditStudentData
           show={showEdit}

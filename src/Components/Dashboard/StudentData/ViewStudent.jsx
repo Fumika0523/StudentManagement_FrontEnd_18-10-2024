@@ -1,8 +1,8 @@
-import { useEffect } from "react"
-import { useState } from "react"
+import React, { useState, useEffect, useMemo } from "react";
 import { url } from "../../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./CustomisedTables"
+import Header from "./Header/Header"
 
 function ViewStudent(){
     const [studentData,setStudentData] = useState([])
@@ -10,7 +10,15 @@ function ViewStudent(){
     const [admissionData,setAdmissionData] = useState([])
     const [batchData,setBatchData] = useState([])
     const [show, setShow] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState (true)
+    const [genderFilter, setGenderFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
+  const [openFilters, setOpenFilters] = useState(true);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [courseInput, setCourseInput] = useState("");
+  const [batchStatus, setBatchStatus] = useState("");
+  const [showTable, setShowTable] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
+
 
     const token = localStorage.getItem('token')
     let config = {
@@ -49,13 +57,59 @@ function ViewStudent(){
         setAdmissionData(res.data.admissionData)
     }
 
+     const uniqueCourses = useMemo(() => {
+    if (!Array.isArray(batchData)) return [];
+    return [...new Set(batchData.map((b) => b?.courseName).filter(Boolean))];
+  }, [batchData]);
+
+  const handleApplyFilter = () => {
+    let filtered = [...(studentData || [])];
+
+    if (genderFilter) filtered = filtered.filter((s) => s.gender === genderFilter);
+    if (selectedCourse) filtered = filtered.filter((s) => s.courseName === selectedCourse);
+
+    // batchStatus + dateFilter logic can stay here too
+    setFilteredData(filtered);
+    setShowTable(true);
+  };
+
+  const handleResetFilter = () => {
+    setGenderFilter("");
+    setDateFilter("");
+    setSelectedCourse(null);
+    setCourseInput("");
+    setBatchStatus("");
+    setFilteredData([]);
+    setShowTable(false);
+  };
+
+   const displayData = showTable ? filteredData : studentData;
+
     return(
         <>
         <div className=" py-2 border-4 border-danger row mx-auto w-100">
+         <Header
+        config={config}
+        setStudentData={setStudentData}
+        urlBase={url}
+        openFilters={openFilters}
+        setOpenFilters={setOpenFilters}
+        onApply={handleApplyFilter}
+        onReset={handleResetFilter}
+        uniqueCourses={uniqueCourses}
+        selectedCourse={selectedCourse}
+        setSelectedCourse={setSelectedCourse}
+        courseInput={courseInput}
+        setCourseInput={setCourseInput}
+        batchStatus={batchStatus}
+        setBatchStatus={setBatchStatus}
+      />
         {/* Table */}
-            {<CustomizedTables studentData = {studentData}
+        {showTable && (
+            <CustomizedTables studentData = {displayData }
             setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData} batchData={batchData} setBatchData={setBatchData}
-            />}
+            />
+        )}
         </div>
 
             {show && <ModalAddStudent show={show} setShow={setShow}
