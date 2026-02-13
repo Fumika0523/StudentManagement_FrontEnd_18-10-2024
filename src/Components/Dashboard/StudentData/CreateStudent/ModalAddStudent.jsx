@@ -1,237 +1,338 @@
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { useFormik } from 'formik';
-import * as Yup from "yup";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { url } from '../../../utils/constant';
-import { Col, Row } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import React from "react";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { Col, Row } from "react-bootstrap";
 
-function ModalAddStudent({ show, setShow, setStudentData }) {
-    const handleClose = () => {
-        setShow(false)
-        navigate('/studentata')
+import { useFormik } from "formik";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+import { url } from "../../../utils/constant";
+
+import {
+  PersonAdd, Person, Email, Phone, Lock, Cake, School,
+  AccountCircle,
+} from "@mui/icons-material";
+import { Box } from "@mui/material";
+
+import FormikField from "../../StudentData/CreateStudent/FormikField";
+import { studentInitialValues, studentSchema } from "./StudentSchema";
+
+function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseData }) {
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    setShow(false);
+    navigate("/studentdata");
+  };
+
+  const token = localStorage.getItem("token");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  const addStudent = async (newStudent) => {
+    try {
+      // newStudent.preferredCourses is array already
+      const res = await axios.post(`${url}/registerstudent`, newStudent, config);
+
+      if (res) {
+        const updated = await axios.get(`${url}/allstudent`, config);
+        setStudentData(updated.data.studentData);
+
+        toast.success(`${newStudent.studentName} added successfully!`);
+        setTimeout(() => handleClose(), 600);
+      }
+    } catch (e) {
+      toast.error("Failed to add student. Please try again.");
+      console.error("Error Adding Student:", e);
     }
-
-  const formSchema = Yup.object().shape({
-    studentName: Yup.string().required("Mandatory Field!"),
-    password: Yup.string().required("Mandatory Field!"),
-    username: Yup.string().required("Mandatory Field!"),
-    email: Yup.string().required("Mandatory Field!"),
-    phoneNumber: Yup.number().required("Mandatory Field!"),
-    gender: Yup.string().required("Mandatory Field!"),
-    birthdate: Yup.date().required("Mandatory Field!"),
-    preferredCourses:Yup.string().required("Mandatory Field!"),
-  })
+  };
 
   const formik = useFormik({
-    initialValues: {
-      studentName: "",
-      username: "",
-      password: "",
-      email: "",
-      phoneNumber: "",
-      gender: "",
-      birthdate: "",
-      preferredCourses:"",
-    },
-    validationSchema: formSchema,
-    onSubmit: (values) => {
-     console.log(values)
-      addStudent(values)
-    }
-  })
+    initialValues: studentInitialValues,
+    validationSchema: studentSchema,
+    onSubmit: addStudent,
+  });
 
-  const token = localStorage.getItem('token')
-  // console.log(token)
 
-  let config = {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }
-  
-// Adding student API
-const addStudent = async (newStudent) => {
-  try {
-    const res = await axios.post(`${url}/registerstudent`, newStudent, config);
-    if (res) {
-      //console.log("Successfully added a new student to the DB");
-      // Fetch latest data
-      const updated = await axios.get(`${url}/allstudent`, config);
-      setStudentData(updated.data.studentData);
-        setTimeout(() => handleClose(), 1000);
-      toast.success(`${newStudent.studentName} added successfully!`);
-    }
-  } catch (e) {
-    toast.error("Failed to add course. Please try again.");
-    //console.error("Error Adding Student:", e);
-  }
-};
+  // checkbox handler for array field
+  const toggleCourse = (course) => {
+    const current = formik.values.preferredCourses || [];
+    const next = current.includes(course)
+      ? current.filter((c) => c !== course)
+      : [...current, course];
+
+    formik.setFieldValue("preferredCourses", next);
+  };
+
+  const prefError =
+    formik.touched.preferredCourses && formik.errors.preferredCourses;
+
+  console.log("courseData in modal:", courseData);
+
 
   return (
-    <>
-      <Modal
-        show={show} onHide={handleClose} size='lg'  >
-        <Modal.Header closeButton>
-        <Modal.Title  >Add Student</Modal.Title>
-        </Modal.Header>
-        <Form onSubmit={formik.handleSubmit} className='px-3' style={{ fontSize: "" }}>
-          <Modal.Body>
-            <Row>
-              <Col>
-                {/* Studentname*/}
-                <Form.Group className='my-3'>
-                  <Form.Label className='m-0'>Student Name</Form.Label>
-                  <Form.Control type="text"
-                    placeholder='Type your Full Name'
-                    name="studentName"
-                    value={formik.values.studentName}
-                    onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur} />
-                    {/* Error Message */}
-                    {formik.errors.studentName && formik.touched.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
-                  </Form.Group>
-              </Col>
-              <Col>
-                {/* Username */}
-                <Form.Group className='my-3'>
-                  <Form.Label className='m-0'>Username</Form.Label>
-                  <Form.Control type="text" placeholder='Type your Username' name="username"
-                    value={formik.values.username}
-                    onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur} />
-                    {/* Error Message */}
-                    {formik.errors.username && formik.touched.username && <div className="text-danger text-center">{formik.errors.username}</div>}
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              {/* Gender */}
-              <Col className='pt-4 pe-0 ' xs={6} md={6}>
-                <div>Gender</div>
-                <div className='form-check form-check-inline'>
-                  <Form.Check style={{fontSize:"14px"}} type="radio" name="gender" label={`Male`}
-                    value="male"
-                    onChange={formik.handleChange} /></div>
-                <div className='form-check form-check-inline'>
-                  <Form.Check style={{fontSize:"14px"}} type="radio" name="gender" label={`Female`}
-                    value="female"
-                    onChange={formik.handleChange} /></div>
-              </Col>
-                 {/* Assign/De-assigned */}
-              {/* <Col className='pt-4 pe-0' xs={6} md={6}>
-                <div>Status</div>
-                <Form.Select
-                  name="status"
-                  value={formik.values.status || ""}
-                  onChange={formik.handleChange}
-                  style={{ fontSize: "14px" }}
+    <Modal
+      show={show}
+      onHide={handleClose}
+      size="lg"
+      centered
+      style={{ "--bs-modal-border-radius": "16px" }}
+    >
+      {/* Header */}
+      <Modal.Header
+        closeButton
+        style={{
+          background: "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
+          color: "white",
+          borderBottom: "none",
+          borderRadius: "16px 16px 0 0",
+          padding: "20px 24px",
+        }}
+      >
+        <Modal.Title
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            fontSize: "22px",
+            fontWeight: "600",
+          }}
+        >
+          <PersonAdd sx={{ fontSize: "32px" }} />
+          Add New Student
+        </Modal.Title>
+      </Modal.Header>
+
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Body style={{ padding: "20px", backgroundColor: "#f9fafb" }}>
+          {/* Row 1 */}
+          <Row className="g-2 mb-2">
+            <Col xs={12} md={4}>
+              <FormikField
+                formik={formik}
+                name="studentName"
+                label="Student Name"
+                Icon={Person}
+                placeholder="Full Name"
+              />
+            </Col>
+
+            <Col xs={12} md={4}>
+              <FormikField
+                formik={formik}
+                name="username"
+                label="Username"
+                Icon={AccountCircle}
+                placeholder="Username"
+              />
+            </Col>
+
+            <Col xs={12} md={4}>
+              <Form.Group>
+                <Form.Label
+                  style={{
+                    fontWeight: 600,
+                    fontSize: "12px",
+                    color: "#475569",
+                    marginBottom: "6px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
                 >
-                  <option value="">-- Select Status --</option>
-                  <option value="Assigned">Assigned</option>
-                  <option value="De-assigned">De-assigned</option>
-                </Form.Select>
-              </Col> */}
-                </Row>
-              <Row>
-             <Col className='pt-4 pe-0' xs={6}>
-                {/* Email */}
-                <Form.Group className='my-3'>
-                  <Form.Label className='m-0'>Email Address</Form.Label>
-                  <Form.Control type="email" placeholder='Type your Email Address' name="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur} />
-                    {/* Error Message */}
-                    {formik.errors.email && formik.touched.email && <div className="text-danger text-center">{formik.errors.email}</div>}
-                </Form.Group>
-              </Col>
-             <Col className='pt-4 pe-0' xs={6} >
-                {/* B-Date*/}
-                <Form.Group className='mt-3'>
-                  <Form.Label className='m-0'>Birthdate</Form.Label>
-                  <Form.Control type="date" placeholder="Type your Birthdate" name="birthdate"
-                    value={formik.values.birthdate}
-                    onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur} />
-                    {/* Error Message */}
-                    {formik.errors.birthdate && formik.touched.birthdate && <div className="text-danger text-center">{formik.errors.birthdate}</div>}
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-     <Col>
-  <Form.Label className='pt-4 m-0'>Preferred Courses</Form.Label>
-  <div
-    className="d-flex flex-wrap gap-3 mt-1"
-    style={{ fontSize: "14px" }}
-  >
-    {[
-      "HTML",
-      "CSS",
-      "Java Script",
-      "Redux",
-      "Node JS",
-      "Mongo DB",
-      "SQL",
-      "Bootstrap",
-    ].map((course, idx) => (
-      <Form.Check
-        key={idx}
-        inline={false} // we don’t need inline since flex-wrap will handle layout
-        label={course}
-        name="preferredCourses"
-        type="checkbox"
-        value={course}
-        id={`preferred-${course}`}
-        onChange={formik.handleChange}
-        checked={formik.values.preferredCourses?.includes(course) || false}
-      />
-    ))}
-  </div>
-</Col>
-              </Row>
-              <Row>
-             {/* Phone No.*/}
-              <Col>
-                <Form.Group className='mt-3'>
-                  <Form.Label className='m-0'>Phone No.</Form.Label>
-                  <Form.Control type="number" placeholder="Type your Phone No." name="phoneNumber"
-                    value={formik.values.phoneNumber}
-                    onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur} />
-                    {/* Error Message */}
-                    {formik.errors.phoneNumber && formik.touched.phoneNumber && <div className="text-danger text-center">{formik.errors.phoneNumber}</div>} 
-                </Form.Group>
-              </Col>
-              <Col>
-                {/* Password*/}
-                <Form.Group className='mt-3'>
-                  <Form.Label className='m-0'>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Type your Password" name="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur} />
-                    {/* Error Message */}
-                    {formik.errors.password && formik.touched.password && <div className="text-danger text-center">{formik.errors.password}</div>} 
-                </Form.Group>
-              </Col>
-            </Row>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button style={{ backgroundColor: "#4e73df" }} type="submit">
-              Add Student
-            </Button>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
-    </>
-  )
+                  <Person sx={{ fontSize: 14 }} />
+                  Gender
+                </Form.Label>
+
+                <Box sx={{ display: "flex", gap: 2, paddingTop: "6px" }}>
+                  <Form.Check
+                    type="radio"
+                    name="gender"
+                    label="Male"
+                    value="male"
+                    onChange={formik.handleChange}
+                    checked={formik.values.gender === "male"}
+                    style={{ fontSize: "13px" }}
+                  />
+                  <Form.Check
+                    type="radio"
+                    name="gender"
+                    label="Female"
+                    value="female"
+                    onChange={formik.handleChange}
+                    checked={formik.values.gender === "female"}
+                    style={{ fontSize: "13px" }}
+                  />
+                </Box>
+
+                {formik.touched.gender && formik.errors.gender ? (
+                  <div className="text-danger" style={{ fontSize: "11px", marginTop: "2px" }}>
+                    {formik.errors.gender}
+                  </div>
+                ) : null}
+              </Form.Group>
+            </Col>
+          </Row>
+
+          {/* Row 2 */}
+          <Row className="g-2 mb-2">
+            <Col xs={12} md={6}>
+              <FormikField
+                formik={formik}
+                name="email"
+                label="Email"
+                Icon={Email}
+                type="email"
+                placeholder="email@example.com"
+              />
+            </Col>
+
+            <Col xs={12} md={6}>
+              <FormikField
+                formik={formik}
+                name="birthdate"
+                label="Birthdate"
+                Icon={Cake}
+                type="date"
+              />
+            </Col>
+          </Row>
+
+          {/* Row 3 */}
+          <Row className="g-2 mb-2">
+            <Col xs={12} md={6}>
+              <FormikField
+                formik={formik}
+                name="phoneNumber"
+                label="Phone"
+                Icon={Phone}
+                type="text"
+                placeholder="Phone Number"
+              />
+            </Col>
+
+            <Col xs={12} md={6}>
+              <FormikField
+                formik={formik}
+                name="password"
+                label="Password"
+                Icon={Lock}
+                type="password"
+                placeholder="Password"
+              />
+            </Col>
+          </Row>
+
+          {/* Row 4 */}
+          <Row className="g-2">
+            <Col>
+              <Form.Group>
+                <Form.Label
+                  style={{
+                    fontWeight: 600,
+                    fontSize: "12px",
+                    color: "#475569",
+                    marginBottom: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                >
+                  <School sx={{ fontSize: 14 }} />
+                  Preferred Courses
+                </Form.Label>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 1.5,
+                    backgroundColor: "white",
+                    padding: "12px",
+                    borderRadius: "6px",
+                    border: "1px solid #e2e8f0",
+                  }}
+                >
+                  {(courseData || [])
+                    .filter((c) => c?.courseName) // safety
+
+                    .map((c) => {
+                      const courseName = String(c.courseName).trim();
+
+                      return (
+                        <Form.Check
+                          key={c._id || courseName}
+                          label={courseName}
+                          type="checkbox"
+                          id={`preferred-${c._id || courseName}`}
+                          checked={(formik.values.preferredCourses || []).includes(courseName)}
+                          onChange={() => toggleCourse(courseName)}
+                          onBlur={() => formik.setFieldTouched("preferredCourses", true)}
+                          style={{ fontSize: "13px" }}
+                        />
+                      );
+                    })}
+
+                </Box>
+
+                {prefError ? (
+                  <div className="text-danger" style={{ fontSize: "11px", marginTop: "2px" }}>
+                    {formik.errors.preferredCourses}
+                  </div>
+                ) : null}
+              </Form.Group>
+            </Col>
+          </Row>
+        </Modal.Body>
+
+        <Modal.Footer
+          style={{
+            borderTop: "1px solid #e5e7eb",
+            padding: "12px 20px",
+            backgroundColor: "#ffffff",
+            borderRadius: "0 0 16px 16px",
+            gap: "8px",
+          }}
+        >
+          <Button
+            variant="secondary"
+            onClick={handleClose}
+            style={{
+              backgroundColor: "transparent",
+              border: "1px solid #d1d5db",
+              color: "#6b7280",
+              fontWeight: "600",
+              fontSize: "13px",
+              padding: "7px 18px",
+              borderRadius: "6px",
+            }}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            type="submit"
+            disabled={formik.isSubmitting}
+            style={{
+              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+              border: "none",
+              fontWeight: "600",
+              fontSize: "13px",
+              padding: "7px 20px",
+              borderRadius: "6px",
+              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+            }}
+          >
+            Add Student
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </Modal>
+  );
 }
-export default ModalAddStudent
+
+export default ModalAddStudent;

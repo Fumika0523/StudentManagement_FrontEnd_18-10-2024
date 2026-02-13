@@ -22,9 +22,14 @@ const Header = ({
   setSelectedCourse,
   courseInput,
   setCourseInput,
-
+  courseData, setCourseData,
   batchStatus,
   setBatchStatus,
+  studentName, setStudentName,
+  emailSearch, setEmailSearch,
+  genderFilter, setGenderFilter,
+  datePreset, setDatePreset, dateRange, setDateRange,
+  sessionType, setSessionType,
 }) => {
   const [showAdd, setShowAdd] = useState(false);
 
@@ -62,6 +67,18 @@ const Header = ({
           setCourseInput={setCourseInput}
           batchStatus={batchStatus}
           setBatchStatus={setBatchStatus}
+          studentName={studentName}
+          setStudentName={setStudentName}
+          emailSearch={emailSearch}
+          setEmailSearch={setEmailSearch}
+          genderFilter={genderFilter}
+          setGenderFilter={setGenderFilter}
+          datePreset={datePreset}
+          setDatePreset={setDatePreset}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          sessionType={sessionType}
+          setSessionType={setSessionType}
         />
       </Box>
 
@@ -70,6 +87,7 @@ const Header = ({
         <ModalAddStudent
           show={showAdd}
           setShow={setShowAdd}
+          courseData={courseData}
           setStudentData={setStudentData}
         />
       )}

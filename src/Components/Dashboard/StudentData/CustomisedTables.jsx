@@ -60,7 +60,6 @@ const CustomizedTables = ({
 }) => {
   const [studentBatchMap, setStudentBatchMap] = useState({});
   const [singleStudent, setSingleStudent] = useState(null);
-
   const [viewPassword, setViewPassword] = useState(false);
   const [password, setPassword] = useState(null);
   const role = localStorage.getItem("role");
@@ -174,7 +173,7 @@ const CustomizedTables = ({
     );
   };
 
-  const {
+const {
   page,
   rowsPerPage,
   paginatedData,
@@ -183,6 +182,9 @@ const CustomizedTables = ({
   handleChangeRowsPerPage,
   resetPage,
 } = usePagination(studentData, { initialRowsPerPage: 10 });
+useEffect(() => {
+  resetPage();
+}, [studentData, resetPage]);
 
   return (
     <div className="">

@@ -69,8 +69,6 @@ const ModalAddAdmission = ({ show, setShow, setAdmissionData, admissionData, stu
 
   // find course doc and set correct ID + fee
   const selectedCourse = courseData.find((c) => c.courseName === cName);
-
-  // ✅ IMPORTANT: use course._id (most likely)
   formik.setFieldValue("courseId", selectedCourse?._id || "");
   formik.setFieldValue("admissionFee", selectedCourse?.courseFee ?? "");
 };
