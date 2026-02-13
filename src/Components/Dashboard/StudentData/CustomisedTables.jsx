@@ -184,7 +184,10 @@ const {
 } = usePagination(studentData, { initialRowsPerPage: 10 });
 useEffect(() => {
   resetPage();
-}, [studentData, resetPage]);
+}, [studentData]);
+
+console.log("page:", page, "rowsPerPage:", rowsPerPage, "total:", totalCount);
+
 
   return (
     <div className="">

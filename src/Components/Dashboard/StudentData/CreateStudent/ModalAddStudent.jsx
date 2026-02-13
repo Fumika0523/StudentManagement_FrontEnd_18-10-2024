@@ -71,9 +71,6 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseD
   const prefError =
     formik.touched.preferredCourses && formik.errors.preferredCourses;
 
-  console.log("courseData in modal:", courseData);
-
-
   return (
     <Modal
       show={show}

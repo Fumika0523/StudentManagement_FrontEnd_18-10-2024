@@ -1,15 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 
-/**
- * Reusable pagination hook for any array data.
- *
- * Usage:
- * const {
- *  page, rowsPerPage, setPage, setRowsPerPage,
- *  paginatedData, totalCount,
- *  handleChangePage, handleChangeRowsPerPage, resetPage
- * } = usePagination(data, { initialRowsPerPage: 16 });
- */
 export default function usePagination(data, options = {}) {
   const { initialPage = 0, initialRowsPerPage = 10 } = options;
 
@@ -25,29 +15,23 @@ export default function usePagination(data, options = {}) {
     return safeData.slice(start, start + rowsPerPage);
   }, [safeData, page, rowsPerPage]);
 
-  const handleChangePage = (event, newPage) => setPage(newPage);
+  const handleChangePage = useCallback((event, newPage) => {
+    setPage(newPage);
+  }, []);
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = useCallback((event) => {
     const next = parseInt(event.target.value, 10);
     setRowsPerPage(Number.isFinite(next) ? next : initialRowsPerPage);
     setPage(0);
-  };
+  }, [initialRowsPerPage]);
 
-  const resetPage = () => setPage(0);
+  const resetPage = useCallback(() => setPage(0), []);
 
   return {
-    // state
     page,
     rowsPerPage,
-    setPage,
-    setRowsPerPage,
-
-    // derived
     paginatedData,
     totalCount,
-    safeData,
-
-    // handlers
     handleChangePage,
     handleChangeRowsPerPage,
     resetPage,
