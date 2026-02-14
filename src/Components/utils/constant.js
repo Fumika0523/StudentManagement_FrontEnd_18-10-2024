@@ -12,7 +12,14 @@ import { PiStudent } from "react-icons/pi";
 import { FaUsersViewfinder } from "react-icons/fa6";
 import { MdMenuBook, MdGridView } from "react-icons/md";
 import { GiEntryDoor } from "react-icons/gi";
+import {
+ 
+  TableCell,
+  TableRow,
 
+} from '@mui/material';
+import { tableCellClasses } from "@mui/material/TableCell";
+import { styled } from '@mui/material/styles';
 //static data
 export const url = "http://localhost:8001"  
 export const earningCardList = [
@@ -69,3 +76,37 @@ export const studentMenuItems = [
 //     { title: "Download Certificate", icon: TfiBag, route: null },
 //     { title: "Invoice Download", icon: FaClipboardList, route: null },
 // ];
+
+export const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#f3f4f6",
+    color: "#5a5c69",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: "14.5px",
+    padding: "10px 15px",
+    whiteSpace: "nowrap",
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: "13px",
+    textAlign: "center",
+    padding: "10px 15px",
+    whiteSpace: "nowrap",
+  },
+}));
+
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  "&:hover": {
+    backgroundColor: "#b3e5fc",
+  },
+}));
+
+export const tableContainerStyles = {
+  boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+  borderRadius: "10px",
+  border: "1px solid #ebe5e7",
+  overflow: "hidden",
+};

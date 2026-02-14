@@ -15,12 +15,12 @@ import TablePagination from '@mui/material/TablePagination';
 import {  Box,  Button,  Menu,  MenuItem,  Divider,  ListItemIcon,ListItemText,  FormControl,  Select,  Autocomplete,  TextField,
 } from "@mui/material";
 import { toast } from 'react-toastify';
-import TableFilter from "../TableFilter";
+import TableFilter from "../Dashboard/TableFilter";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
-import BulkUploadBtns from "../Bulkload/BulkUploadBtns";
-import { url } from "../../utils/constant";
-import ConfirmDeleteModal from "../Common/DeleteConfirmModal";
+import BulkUploadBtns from "../Dashboard/Bulkload/BulkUploadBtns";
+import { url } from "../utils/constant";
+import ConfirmDeleteModal from "../Dashboard/Common/DeleteConfirmModal";
 
 
 const StyledTableCell = styled(TableCell)(() => ({

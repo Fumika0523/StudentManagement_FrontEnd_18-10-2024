@@ -1,7 +1,7 @@
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
-import { url } from '../../utils/constant';
+import { url } from '../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 

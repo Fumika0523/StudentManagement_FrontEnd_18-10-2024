@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { url } from '../../utils/constant';
+import { url } from '../utils/constant';
 import { Col } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import { toast } from 'react-toastify';

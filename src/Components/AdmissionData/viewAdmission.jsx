@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import SideBar from '../../../HomePage/SideBar/SideBar'
-import NavBar from '../../../HomePage/NavBar/NavBar'
+import SideBar from '../../HomePage/SideBar/SideBar'
+import NavBar from '../../HomePage/NavBar/NavBar'
 import CustomisedAdmissionTable from './CustomisedAdmissionTable'
 import { useEffect } from 'react'
 import axios from 'axios'
-import { url } from '../../utils/constant'
+import { url } from '../utils/constant'
 import ModalAddAdmission from './ModalAddAdmission'
 import { Button } from 'react-bootstrap'
 

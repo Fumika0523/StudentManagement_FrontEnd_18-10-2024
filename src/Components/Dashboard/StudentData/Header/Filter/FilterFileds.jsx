@@ -113,7 +113,7 @@ const FilterFields = ({
     <Box>
       <Grid container spacing={1.5}>
         {/* Student Name */}
-        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
+        <Grid xs={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
           <Typography sx={labelSx}>
             <Person sx={{ fontSize: 16 }} />
             Student Name
