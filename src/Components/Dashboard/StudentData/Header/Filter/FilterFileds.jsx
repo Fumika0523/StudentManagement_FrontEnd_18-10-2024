@@ -1,5 +1,5 @@
 import React from "react";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import {
   Typography,  TextField, Autocomplete, FormControl, Select, MenuItem, Box, InputAdornment, Chip,
 } from "@mui/material";

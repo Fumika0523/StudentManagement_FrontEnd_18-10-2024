@@ -1,6 +1,5 @@
 import { useEffect, useState, useMemo, useCallback  } from "react";
 import CustomisedCourseTables from "./CustomisedCourseTables";
-import ModalAddCourse from "./ModalAddCourse";
 import { url } from "../utils/constant";
 import axios from "axios";
 import Header from "../CourseData/Header/Header";

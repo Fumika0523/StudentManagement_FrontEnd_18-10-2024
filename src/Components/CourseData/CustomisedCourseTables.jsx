@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import ModalEditCourse from './ModalEditCourse';
-import ModalDeleteCourse  from './ModalDeleteCourse';
+import ModalEditCourse from './Modals/ModalEditCourse';
+import ModalDeleteCourse  from './Modals/ModalDeleteCourse';
 import {StyledTableCell, StyledTableRow, tableContainerStyles} from '../utils/constant'
 
 export default function CustomisedCourseTables({ courseData, setCourseData }) {

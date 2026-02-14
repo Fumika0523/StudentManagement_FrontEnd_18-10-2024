@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import ActionBtns from "./ActionBtns";
 import CourseFilter from "./Filter/CourseFilter";
-import ModalAddCourse from "../ModalAddCourse";
+import ModalAddCourse from "../Modals/ModalAddCourse";
 
 const Header = ({
   config,

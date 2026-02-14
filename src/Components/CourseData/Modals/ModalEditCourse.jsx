@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useFormik } from 'formik';
 import axios from 'axios';
-import { url } from '../utils/constant';
+import { url } from '../../utils/constant';
 import { toast } from 'react-toastify';
 import { Col, Row } from 'react-bootstrap';
 import { Edit, School, AttachMoney, Schedule, CalendarToday, AccessTime } from "@mui/icons-material";
@@ -18,7 +18,7 @@ import {
   disabledInputStyle,
   calculateNoOfDays,
   getAuthConfig
-} from './Modals/CourseValidation';
+} from './CourseValidation';
 
 const ModalEditCourse = ({ show, setShow, singleCourse, setCourseData }) => {
   const handleClose = () => {

@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { useNavigate } from 'react-router-dom';
-import { url } from '../../utils/constant';
+import { url } from '../../../utils/constant';
 import axios from 'axios';
 import { Col, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';

@@ -2,6 +2,14 @@ import React from "react";
 import { Box, Button, Collapse, Paper } from "@mui/material";
 import { FilterList, Close } from "@mui/icons-material";
 import FilterFields from "./FilterFileds";
+import {
+  filterToggleButtonStyles,
+  filterPanelStyles,
+  filterFieldsContainerStyles,
+  filterActionsContainerStyles,
+  resetButtonStyles,
+  applyButtonStyles,
+} from "../../../../utils/constant";
 
 const StudentFilter = ({
   openFilters,
@@ -35,38 +43,16 @@ const StudentFilter = ({
         variant="contained"
         onClick={() => setOpenFilters((v) => !v)}
         startIcon={openFilters ? <Close /> : <FilterList />}
-        sx={{
-          width: "100%",
-          borderRadius: openFilters ? "10px 10px 0 0" : "10px",
-          backgroundColor: openFilters ? "#3b82f6":"#1e40af"  ,
-          textTransform: "none",
-          fontWeight: 600,
-          fontSize: "14px",
-          px: 2.5,
-          py: 1,
-          boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
-          transition: "all 0.2s ease",
-          "&:hover": {
-            backgroundColor: "#1b50c2",
-          },
-        }}
+        sx={filterToggleButtonStyles(openFilters)}
       >
         {openFilters ? "Hide Filters" : "Show Filters"}
       </Button>
 
       {/* Filter Panel */}
       <Collapse in={openFilters} timeout={300} unmountOnExit>
-        <Paper
-          elevation={2}
-          sx={{
-            borderRadius: "0 0 10px 10px",
-            border: "1px solid #e5e7eb",
-            borderTop: "none",
-            overflow: "hidden",
-          }}
-        >
+        <Paper elevation={2} sx={filterPanelStyles}>
           {/* Filter Fields - Compact */}
-          <Box sx={{ p: 2, backgroundColor: "#f9fafb" }}>
+          <Box sx={filterFieldsContainerStyles}>
             <FilterFields
               uniqueCourses={uniqueCourses}
               selectedCourse={selectedCourse}
@@ -91,34 +77,12 @@ const StudentFilter = ({
           </Box>
 
           {/* Action Buttons - Compact */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 1.5,
-              px: 2,
-              py: 1.5,
-              backgroundColor: "#ffffff",
-              borderTop: "1px solid #e5e7eb",
-            }}
-          >
+          <Box sx={filterActionsContainerStyles}>
             <Button
               variant="outlined"
               onClick={onReset}
               size="small"
-              sx={{
-                borderColor: "#d1d5db",
-                color: "#6b7280",
-                fontWeight: 600,
-                textTransform: "none",
-                fontSize: "13px",
-                px: 2.5,
-                borderRadius: "7px",
-                "&:hover": {
-                  borderColor: "#9ca3af",
-                  backgroundColor: "#f9fafb",
-                },
-              }}
+              sx={resetButtonStyles}
             >
               Reset
             </Button>
@@ -127,17 +91,7 @@ const StudentFilter = ({
               variant="contained"
               onClick={onApply}
               size="small"
-              sx={{
-                backgroundColor: "#3b82f6",
-                fontWeight: 600,
-                textTransform: "none",
-                fontSize: "13px",
-                px: 3,
-                borderRadius: "7px",
-                "&:hover": {
-                  backgroundColor: "#2563eb",
-                },
-              }}
+              sx={applyButtonStyles}
             >
               Apply Filters
             </Button>

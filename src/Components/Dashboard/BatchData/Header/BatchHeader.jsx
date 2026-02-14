@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import BatchActionButtons from "./BatchActionButtons";
 import BatchFilter from "./Filter/BatchFilter";
-import ModalAddBatch from "../ModalAddBatch";
+import ModalAddBatch from "../Modals/ModalAddBatch";
 
 const BatchHeader = ({
   // Filter props

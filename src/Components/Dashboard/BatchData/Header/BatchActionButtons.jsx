@@ -1,8 +1,9 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
 import { GroupAdd } from "@mui/icons-material";
+import { primaryActionButtonStyles } from "../../../utils/constant";
 
-const ActionButtons = ({ setShowAdd }) => {
+const BatchActionButtons = ({ setShowAdd }) => {
   return (
     <Box
       sx={{
@@ -19,22 +20,7 @@ const ActionButtons = ({ setShowAdd }) => {
         variant="contained"
         startIcon={<GroupAdd />}
         onClick={() => setShowAdd(true)}
-        sx={{
-          backgroundColor: "#3b82f6",
-          textTransform: "none",
-          fontWeight: 600,
-          fontSize: "14px",
-          px: 2.5,
-          py: 1,
-          borderRadius: "8px",
-          boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
-          transition: "all 0.2s ease",
-          "&:hover": {
-            backgroundColor: "#2563eb",
-            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-            transform: "translateY(-1px)",
-          },
-        }}
+        sx={primaryActionButtonStyles}
       >
         Add Batch
       </Button>
@@ -42,4 +28,4 @@ const ActionButtons = ({ setShowAdd }) => {
   );
 };
 
-export default ActionButtons;
+export default BatchActionButtons;
