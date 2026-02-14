@@ -52,8 +52,6 @@ export default function CustomisedCourseTables({ courseData, setCourseData }) {
       {courseData.length > 0 ? (
         <Paper
           sx={{
-            // StyledTableCell, 
-            // StyledTableRow,
             tableContainerStyles
           }}
         >
