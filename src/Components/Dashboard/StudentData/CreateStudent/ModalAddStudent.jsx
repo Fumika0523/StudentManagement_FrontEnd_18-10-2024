@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -35,7 +35,6 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseD
 
   const addStudent = async (newStudent) => {
     try {
-      // newStudent.preferredCourses is array already
       const res = await axios.post(`${url}/registerstudent`, newStudent, config);
 
       if (res) {
@@ -46,8 +45,13 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseD
         setTimeout(() => handleClose(), 600);
       }
     } catch (e) {
-      toast.error("Failed to add student. Please try again.");
       console.error("Error Adding Student:", e);
+      //Handle specific error message from backend
+      if(e.response?.data?.message){
+        toast.error(e.response.data.message)
+      }else{
+        toast.error("Failed to add student. Please try again.")
+      }
     }
   };
 
@@ -57,6 +61,20 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseD
     onSubmit: addStudent,
   });
 
+  // Auto-fill username when studentName changes
+  useEffect(() => {
+    if (formik.values.studentName) {
+      // Convert studentName to username format (lowercase, no spaces)
+      const autoUsername = formik.values.studentName
+        .toLowerCase()
+        .replace(/\s+/g, ''); // Remove all spaces
+      
+      formik.setFieldValue("username", autoUsername);
+    } else {
+      // Clear username if studentName is empty
+      formik.setFieldValue("username", "");
+    }
+  }, [formik.values.studentName]);
 
   // checkbox handler for array field
   const toggleCourse = (course) => {
@@ -124,7 +142,8 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseD
                 name="username"
                 label="Username"
                 Icon={AccountCircle}
-                placeholder="Username"
+                placeholder=""
+                disabled={true}  // Make username disabled
               />
             </Col>
 
@@ -255,8 +274,7 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseD
                   }}
                 >
                   {(courseData || [])
-                    .filter((c) => c?.courseName) // safety
-
+                    .filter((c) => c?.courseName)
                     .map((c) => {
                       const courseName = String(c.courseName).trim();
 
@@ -273,7 +291,6 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseD
                         />
                       );
                     })}
-
                 </Box>
 
                 {prefError ? (

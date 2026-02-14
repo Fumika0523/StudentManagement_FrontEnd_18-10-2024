@@ -20,30 +20,8 @@ import axios from 'axios';
 import { ModalShowStudentsList } from './ModalShowStudentsList';
 import { PiCertificateFill } from "react-icons/pi";
 import ModalCertificate from '../Certificate/ModalCertificate';
+import {StyledTableCell,StyledTableRow, tableContainerStyles} from "../../utils/constant"
 
-// Styled components
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${theme.components?.MuiTableCell?.head || 'MuiTableCell-head'}`]: {
-    backgroundColor: '#f3f4f6',
-    color: '#5a5c69',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: '13.5px',
-    padding: '7.5px 10px',
-    textWrap: "noWrap",
-  },
-  [`&.${theme.components?.MuiTableCell?.body || 'MuiTableCell-body'}`]: {
-    fontSize: '13px',
-    textAlign: 'center',
-    padding: '7.5px 10px',
-    textWrap: "noWrap",
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': { backgroundColor: theme.palette.action.hover },
-  '&:hover': { backgroundColor: '#b3e5fc' },
-}));
 
 // Blinking red dot
 const dotStyle = `
@@ -562,7 +540,7 @@ function CustomisedBatchTables({ batchData, setBatchData, setCourseData, courseD
         {/* Table */}
         {showTable && (
           <Box sx={{ mt: 1 }}>
-            <TableContainer component={Paper}>
+            <TableContainer sx={{tableContainerStyles}}>
               <Table>
                 <TableHead>
                   <TableRow>

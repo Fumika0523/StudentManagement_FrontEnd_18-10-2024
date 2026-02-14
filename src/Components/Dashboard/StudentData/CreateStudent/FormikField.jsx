@@ -18,6 +18,13 @@ const inputStyle = {
   border: "1px solid #e2e8f0",
 };
 
+const disabledInputStyle = {
+  ...inputStyle,
+  backgroundColor: "#f3f4f6",
+  color: "#6b7280",
+  cursor: "not-allowed",
+};
+
 export default function FormikField({
   formik,
   name,
@@ -26,6 +33,7 @@ export default function FormikField({
   type = "text",
   placeholder,
   as, // optional for textarea etc
+  disabled = false, // Add disabled prop
 }) {
   const showError = formik.touched?.[name] && formik.errors?.[name];
 
@@ -44,7 +52,8 @@ export default function FormikField({
         value={formik.values[name]}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        style={inputStyle}
+        disabled={disabled}
+        style={disabled ? disabledInputStyle : inputStyle}
       />
 
       {showError ? (

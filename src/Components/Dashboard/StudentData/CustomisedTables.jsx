@@ -19,30 +19,8 @@ import EditStudentData from "./EditStudent/EditStudentData";
 import ModalShowPassword from "./ModalShowPassword";
 import { url } from "../../utils/constant";
 import usePagination from "../../utils/usePagination"; 
+import {StyledTableCell,StyledTableRow, tableContainerStyles} from "../../utils/constant"
 
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#f3f4f6",
-    color: "#5a5c69",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: "13.5px",
-    padding: "10px",
-    whiteSpace: "nowrap",
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: "13px",
-    textAlign: "center",
-    padding: "10px",
-    whiteSpace: "nowrap",
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": { backgroundColor: theme.palette.action.hover },
-  "&:hover": { backgroundColor: "#b3e5fc" },
-}));
 
 const formatDate = (dateString) => {
   if (!dateString) return "-";
@@ -191,8 +169,8 @@ console.log("page:", page, "rowsPerPage:", rowsPerPage, "total:", totalCount);
 
   return (
     <div className="">
-        <Box sx={{ display: "flex", flexDirection: "column", width: "100%", mt: "5px", }}>
-          <TableContainer component={Paper}>
+        <Box sx={{  width: "100%" }}>
+          <TableContainer sx={{tableContainerStyles}}>
             <Table>
               <TableHead>
                 <TableRow>
