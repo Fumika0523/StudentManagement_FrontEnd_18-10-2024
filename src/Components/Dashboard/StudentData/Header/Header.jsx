@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 
 import ActionBtns from "./ActionBtns";
 import StudentFilter from "./Filter/StudentFilter";
-import ModalAddStudent from "../CreateStudent/ModalAddStudent";
+import ModalAddStudent from "../Modals/CreateStudent/ModalAddStudent";
 
 const Header = ({
   // ActionBtns

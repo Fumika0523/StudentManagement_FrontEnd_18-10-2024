@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { url } from "../../utils/constant";
 import EarningCardDisplay from "./FirstRow/EarningCardDisplay";
-import SelectCourseModal from "../StudentData/SelectCourseModal";
+import SelectCourseModal from "../../Dashboard/StudentData/Modals/SelectCourseModal";
 import AccordionDisplay from "./ThirdRow/AccordionDisplay";
 
 function DashboardCard() {

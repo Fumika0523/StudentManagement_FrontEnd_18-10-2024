@@ -21,7 +21,7 @@ import StaffSignIn from './Components/Staff/StaffSignIn';
 import StudentSignIn from './Components/Student/StudentSignIn';
 import StudentSignUp from './Components/Student/StudentSignUp';
 import StaffSignUp from './Components/Staff/StaffSignUp';
-import SelectCourseModal from './Components/Dashboard/StudentData/SelectCourseModal';
+import SelectCourseModal from './Components/Dashboard/StudentData/Modals/SelectCourseModal';
 import ChartDisplay from './Components/Dashboard/DashBoardPage/SecondRow/ChartDisplay';
 import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';

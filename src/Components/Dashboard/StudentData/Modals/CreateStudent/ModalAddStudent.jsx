@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-import { url } from "../../../utils/constant";
+import { url } from "../../../../utils/constant";
 
 import {
   PersonAdd, Person, Email, Phone, Lock, Cake, School,
@@ -17,7 +17,7 @@ import {
 } from "@mui/icons-material";
 import { Box } from "@mui/material";
 
-import FormikField from "../../StudentData/CreateStudent/FormikField";
+import FormikField from "../FormikField";
 import { studentInitialValues, studentSchema } from "./StudentSchema";
 
 function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseData }) {

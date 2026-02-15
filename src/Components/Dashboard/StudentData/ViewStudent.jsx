@@ -5,7 +5,7 @@ import CustomizedTables from "./CustomisedTables"
 import Header from "./Header/Header"
 
 function ViewStudent() {
-  const [datePreset, setDatePreset] = useState(""); // "today" | "7d" | "30d" | "month" | "year" | ""
+  const [datePreset, setDatePreset] = useState("");
   const [dateRange, setDateRange] = useState({ from: null, to: null });
   const [studentData, setStudentData] = useState([])
   const [courseData, setCourseData] = useState([])
@@ -14,17 +14,17 @@ function ViewStudent() {
   const [show, setShow] = useState(false);
   const [openFilters, setOpenFilters] = useState(true);
   const [showTable, setShowTable] = useState(false);
-  //Filter status
+  
+  // Filter states
   const [studentName, setStudentName] = useState("");
   const [genderFilter, setGenderFilter] = useState("");
-
   const [sessionType, setSessionType] = useState("");
   const [batchStatus, setBatchStatus] = useState("");
-
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [courseInput, setCourseInput] = useState("");
 
   const [filteredData, setFilteredData] = useState([]);
+  
   const token = localStorage.getItem('token')
   let config = {
     headers: {
@@ -32,19 +32,16 @@ function ViewStudent() {
     }
   }
 
-  console.log("courseData in viewStudent:", courseData);
-
   const getBatchData = async () => {
     let res = await axios.get(`${url}/allbatch`, config)
-    // console.log("BatchData", res.data.batchData)
     setBatchData(res.data.batchData)
   }
 
   const getStudentData = async () => {
     let res = await axios.get(`${url}/allstudent`, config)
-    // console.log("StudentData", res.data.studentData)
     setStudentData(res.data.studentData)
   }
+  
   useEffect(() => {
     getStudentData()
     getCourseData()
@@ -54,17 +51,16 @@ function ViewStudent() {
 
   const getCourseData = async () => {
     let res = await axios.get(`${url}/allcourse`, config)
-    console.log("CourseData", res.data.courseData)
     setCourseData(res.data.courseData)
   }
 
   const getAdmissionData = async () => {
     let res = await axios.get(`${url}/alladmission`, config)
-    console.log("AdmissionData", res.data.admissionData)
     setAdmissionData(res.data.admissionData)
   }
 
   const norm = (v) => String(v ?? "").trim().toLowerCase();
+  
   const getPresetRange = (presetKey) => {
     if (!presetKey) return { from: null, to: null };
 
@@ -138,7 +134,6 @@ function ViewStudent() {
     const batchByNumber = {};
     (batchData || []).forEach(b => { if (b?.batchNumber) batchByNumber[b.batchNumber] = b; });
 
-    // studentName -> assigned batchNumber (from admissions)
     const assignedBatchByStudent = {};
     (admissionData || [])
       .filter(a => a?.status === "Assigned")
@@ -153,16 +148,16 @@ function ViewStudent() {
 
       return {
         ...s,
-        // values you want to filter by
-        computedBatchStatus: batch?.status || "",        // In Progress / Not Started etc
-        computedSessionType: course?.courseType || "",   // Online/Offline? (based on your data)
+        computedBatchStatus: batch?.status || "",
+        computedSessionType: course?.courseType || "",
         computedCreatedAt: s.createdAt || "",
       };
     });
   }, [studentData, courseData, admissionData, batchData]);
 
-  const handleApplyFilter = () => {
-    let filtered = [...computedRows];
+  // ✅ FIXED: Function to apply filters (can be called anytime)
+  const applyCurrentFilters = (dataToFilter) => {
+    let filtered = [...dataToFilter];
 
     // student name filter
     if (studentName?.trim()) {
@@ -196,7 +191,7 @@ function ViewStudent() {
       );
     }
 
-    //  created date filter (preset OR custom)
+    // created date filter (preset OR custom)
     const isCustom = datePreset === "custom";
     const presetRange = !isCustom ? getPresetRange(datePreset) : { from: null, to: null };
 
@@ -209,9 +204,23 @@ function ViewStudent() {
       );
     }
 
+    return filtered;
+  };
+
+  const handleApplyFilter = () => {
+    const filtered = applyCurrentFilters(computedRows);
     setFilteredData(filtered);
     setShowTable(true);
   };
+
+  // ✅ FIXED: Auto-refresh filtered data when studentData changes
+  useEffect(() => {
+    if (showTable) {
+      console.log("🔄 StudentData changed, re-applying filters...");
+      const filtered = applyCurrentFilters(computedRows);
+      setFilteredData(filtered);
+    }
+  }, [computedRows, showTable]);
 
   const handleResetFilter = () => {
     setStudentName("");
@@ -230,7 +239,7 @@ function ViewStudent() {
 
   return (
     <>
-      <div className=" py-2 border-4 border-danger row mx-auto w-100">
+      <div className="py-2 border-4 border-danger row mx-auto w-100">
         <Header
           config={config}
           datePreset={datePreset}
@@ -259,10 +268,18 @@ function ViewStudent() {
           sessionType={sessionType}
           setSessionType={setSessionType}
         />
-        {/* Table */}
+        
+        {/* Table - Always show if filters applied */}
         {showTable && (
-          <CustomizedTables studentData={displayData}
-            setStudentData={setStudentData} courseData={courseData} setCourseData={setCourseData} setAdmissionData={setAdmissionData} admissionData={admissionData} batchData={batchData} setBatchData={setBatchData}
+          <CustomizedTables 
+            studentData={displayData}
+            setStudentData={setStudentData} 
+            courseData={courseData} 
+            setCourseData={setCourseData} 
+            setAdmissionData={setAdmissionData} 
+            admissionData={admissionData} 
+            batchData={batchData} 
+            setBatchData={setBatchData}
           />
         )}
       </div>

@@ -1,13 +1,10 @@
-// Parent component: CustomizedTables.jsx
+// CustomizedTables.jsx - WITH HORIZONTAL SCROLLING FIX
 import React, { useState, useEffect, useMemo } from "react";
 import TableRow from "@mui/material/TableRow";
-import { styled } from "@mui/material/styles";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableBody from "@mui/material/TableBody";
-import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
 import { Box } from "@mui/material";
 import { FaEdit, FaKey } from "react-icons/fa";
@@ -15,8 +12,9 @@ import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-import EditStudentData from "./EditStudent/EditStudentData";
-import ModalShowPassword from "./ModalShowPassword";
+import EditStudentData from "./Modals/EditStudent/EditStudentData";
+import ModalShowPassword from "./Modals/ModalShowPassword";
+import ModalDeleteStudent from "./Modals/ModalDeleteStudent";
 import { url } from "../../utils/constant";
 import usePagination from "../../utils/usePagination"; 
 import {StyledTableCell,StyledTableRow, tableContainerStyles} from "../../utils/constant"
@@ -40,8 +38,11 @@ const CustomizedTables = ({
   const [singleStudent, setSingleStudent] = useState(null);
   const [viewPassword, setViewPassword] = useState(false);
   const [password, setPassword] = useState(null);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState(null);
+  
   const role = localStorage.getItem("role");
-   const [showEdit, setShowEdit] = useState(false);
   const token = localStorage.getItem("token");
   const config = useMemo(
     () => ({ headers: { Authorization: `Bearer ${token}` } }),
@@ -53,16 +54,40 @@ const CustomizedTables = ({
     setSingleStudent(student);
   };
 
-  const handleDeleteClick = async (id) => {
+  const handleDeleteClick = (student) => {
+    if (role === "admin") {
+      setStudentToDelete(student);
+      setShowDelete(true);
+    } else {
+      toast.error("To delete the information, please contact Super-Admin", { autoClose: 2000 });
+    }
+  };
+
+  const handleConfirmDelete = async (id) => {
+    const studentName = studentToDelete?.studentName || "Student";
+    
     try {
+      console.log("🗑️ Deleting student:", studentName);
       const res = await axios.delete(`${url}/deletestudent/${id}`, config);
+      
       if (res) {
         const refreshed = await axios.get(`${url}/allstudent`, config);
         setStudentData(refreshed.data.studentData);
+        
+        toast.success(`🗑️ ${studentName} has been deleted successfully!`, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        
+        console.log("✅ Student deleted successfully");
       }
     } catch (error) {
-      console.error("Error deleting student:", error);
-      toast.error("Delete failed");
+      console.error("❌ Error deleting student:", error);
+      const errorMessage = error.response?.data?.message || "Failed to delete student. Please try again.";
+      toast.error(`Delete Failed: ${errorMessage}`, {
+        position: "top-right",
+        autoClose: 4000,
+      });
     }
   };
 
@@ -151,168 +176,192 @@ const CustomizedTables = ({
     );
   };
 
-const {
-  page,
-  rowsPerPage,
-  paginatedData,
-  totalCount,
-  handleChangePage,
-  handleChangeRowsPerPage,
-  resetPage,
-} = usePagination(studentData, { initialRowsPerPage: 10 });
-useEffect(() => {
-  resetPage();
-}, [studentData]);
-
-console.log("page:", page, "rowsPerPage:", rowsPerPage, "total:", totalCount);
-
+  const {
+    page,
+    rowsPerPage,
+    paginatedData,
+    totalCount,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    resetPage,
+  } = usePagination(studentData, { initialRowsPerPage: 10 });
+  
+  useEffect(() => {
+    resetPage();
+  }, [studentData]);
 
   return (
     <div className="">
-        <Box sx={{  width: "100%" }}>
-          <TableContainer sx={{tableContainerStyles}}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>No.</StyledTableCell>
-                  <StyledTableCell>Actions</StyledTableCell>
-                  <StyledTableCell>Batch No.</StyledTableCell>
-                  <StyledTableCell>Status</StyledTableCell>
-                  <StyledTableCell>Student ID</StyledTableCell>
-                  <StyledTableCell>Student Name</StyledTableCell>
-                  <StyledTableCell>Username</StyledTableCell>
-                  <StyledTableCell>Email</StyledTableCell>
-                  <StyledTableCell>Phone No.</StyledTableCell>
-                  <StyledTableCell>Gender</StyledTableCell>
-                  <StyledTableCell>Birthdate</StyledTableCell>
-                  <StyledTableCell>Preferred Courses</StyledTableCell>
-                  <StyledTableCell>Mapped Course</StyledTableCell>
-                  <StyledTableCell>Course ID</StyledTableCell>
-                  <StyledTableCell>Session Time</StyledTableCell>
-                  <StyledTableCell>Session Type</StyledTableCell>
-                  <StyledTableCell>Daily Session Hours</StyledTableCell>
-                  <StyledTableCell>No. of Days</StyledTableCell>
-                  <StyledTableCell>Admission Fee</StyledTableCell>
-                  <StyledTableCell>Admission Date</StyledTableCell>
-                  <StyledTableCell>Created Date</StyledTableCell>
-                </TableRow>
-              </TableHead>
+      <Box sx={{ width: "100%", overflowX: "auto" }}>
+        {/* ✅ FIXED: Added proper horizontal scrolling */}
+        <TableContainer 
+          sx={{
+            ...tableContainerStyles,
+            maxWidth: "100%",
+            overflowX: "auto",
+            // Custom scrollbar styling
+            "&::-webkit-scrollbar": {
+              height: "10px",
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "#f1f1f1",
+              borderRadius: "10px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#888",
+              borderRadius: "10px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#555",
+            },
+          }}
+        >
+          <Table sx={{ minWidth: 2000 }}> {/* ✅ Set minimum width to force scrolling */}
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>No.</StyledTableCell>
+                <StyledTableCell>Actions</StyledTableCell>
+                <StyledTableCell>Batch No.</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell>Student ID</StyledTableCell>
+                <StyledTableCell>Student Name</StyledTableCell>
+                <StyledTableCell>Username</StyledTableCell>
+                <StyledTableCell>Email</StyledTableCell>
+                <StyledTableCell>Phone No.</StyledTableCell>
+                <StyledTableCell>Gender</StyledTableCell>
+                <StyledTableCell>Birthdate</StyledTableCell>
+                <StyledTableCell>Preferred Courses</StyledTableCell>
+                <StyledTableCell>Mapped Course</StyledTableCell>
+                <StyledTableCell>Course ID</StyledTableCell>
+                <StyledTableCell>Session Time</StyledTableCell>
+                <StyledTableCell>Session Type</StyledTableCell>
+                <StyledTableCell>Daily Session Hours</StyledTableCell>
+                <StyledTableCell>No. of Days</StyledTableCell>
+                <StyledTableCell>Admission Fee</StyledTableCell>
+                <StyledTableCell>Admission Date</StyledTableCell>
+                <StyledTableCell>Created Date</StyledTableCell>
+              </TableRow>
+            </TableHead>
 
-              <TableBody>
-                {paginatedData.map((student, index) => {
-                  const course = courseMap[student.courseId] || {};
-                  const rowNumber = page * rowsPerPage + index + 1;
+            <TableBody>
+              {paginatedData.map((student, index) => {
+                const course = courseMap[student.courseId] || {};
+                const rowNumber = page * rowsPerPage + index + 1;
 
-                  return (
-                    <StyledTableRow key={student._id}>
-                      <StyledTableCell>{rowNumber}</StyledTableCell>
+                return (
+                  <StyledTableRow key={student._id}>
+                    <StyledTableCell>{rowNumber}</StyledTableCell>
 
-                      <StyledTableCell>
-                        <div style={{ display: "flex", justifyContent: "space-evenly", fontSize: "18px" }}>
-                          <FaEdit
-                            className={role === "admin" ? "text-success" : "text-muted"}
-                            style={{ cursor: "pointer", opacity: role === "admin" ? 1 : 0.5 }}
-                            onClick={() => {
-                              if (role === "admin") handleEditClick(student);
-                              else toast.error("To edit the information, please contact Admin", { autoClose: 2000 });
-                            }}
-                          />
+                    <StyledTableCell>
+                      <div style={{ display: "flex", justifyContent: "space-evenly", fontSize: "18px" }}>
+                        <FaEdit
+                          className={role === "admin" ? "text-success" : "text-muted"}
+                          style={{ cursor: "pointer", opacity: role === "admin" ? 1 : 0.5 }}
+                          onClick={() => {
+                            if (role === "admin") handleEditClick(student);
+                            else toast.error("To edit the information, please contact Admin", { autoClose: 2000 });
+                          }}
+                          title="Edit Student"
+                        />
 
-                          <MdDelete
-                            className={role === "admin" ? "text-danger" : "text-muted"}
-                            style={{ cursor: "pointer", opacity: role === "admin" ? 1 : 0.5 }}
-                            onClick={() => {
-                              if (role === "admin") handleDeleteClick(student._id);
-                              else toast.error("To delete the information, please contact Super-Admin", { autoClose: 2000 });
-                            }}
-                          />
+                        <MdDelete
+                          className={role === "admin" ? "text-danger" : "text-muted"}
+                          style={{ cursor: "pointer", opacity: role === "admin" ? 1 : 0.5 }}
+                          onClick={() => handleDeleteClick(student)}
+                          title="Delete Student"
+                        />
 
-                          <FaKey
-                            className="text-secondary"
-                            style={{ cursor: "pointer", fontSize: "16px" }}
-                            onClick={() => handlePasswordClick(student.password)}
-                          />
-                        </div>
-                      </StyledTableCell>
-                      <StyledTableCell>{student.batchNumber || "-"}</StyledTableCell>
-                      <StyledTableCell>
-                        <StatusBadge studentStatus={student.status} studentName={student.studentName} />
-                      </StyledTableCell>
+                        <FaKey
+                          className="text-secondary"
+                          style={{ cursor: "pointer", fontSize: "16px" }}
+                          onClick={() => handlePasswordClick(student.password)}
+                          title="View Password"
+                        />
+                      </div>
+                    </StyledTableCell>
+                    
+                    <StyledTableCell>{student.batchNumber || "-"}</StyledTableCell>
+                    <StyledTableCell>
+                      <StatusBadge studentStatus={student.status} studentName={student.studentName} />
+                    </StyledTableCell>
 
-                      <StyledTableCell>{student._id}</StyledTableCell>
+                    <StyledTableCell>{student._id}</StyledTableCell>
 
-                      <StyledTableCell>
-                        {(student.studentName || "")
-                          .split(" ")
-                          .filter(Boolean)
-                          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                          .join(" ") || "-"}
-                      </StyledTableCell>
+                    <StyledTableCell>
+                      {(student.studentName || "")
+                        .split(" ")
+                        .filter(Boolean)
+                        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                        .join(" ") || "-"}
+                    </StyledTableCell>
 
-                      <StyledTableCell>{student.username || "-"}</StyledTableCell>
-                      <StyledTableCell>{student.email || "-"}</StyledTableCell>
-                      <StyledTableCell>{student.phoneNumber || "-"}</StyledTableCell>
-                      <StyledTableCell>{student.gender || "-"}</StyledTableCell>
-                      <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
+                    <StyledTableCell>{student.username || "-"}</StyledTableCell>
+                    <StyledTableCell>{student.email || "-"}</StyledTableCell>
+                    <StyledTableCell>{student.phoneNumber || "-"}</StyledTableCell>
+                    <StyledTableCell>{student.gender || "-"}</StyledTableCell>
+                    <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
 
-                      <StyledTableCell>
-                        {Array.isArray(student.preferredCourses) && student.preferredCourses.length
-                          ? student.preferredCourses.join(", ")
-                          : "Not selected yet"}
-                      </StyledTableCell>
+                    <StyledTableCell>
+                      {Array.isArray(student.preferredCourses) && student.preferredCourses.length
+                        ? student.preferredCourses.join(", ")
+                        : "Not selected yet"}
+                    </StyledTableCell>
 
-                      <StyledTableCell>{student.courseName || "-"}</StyledTableCell>
-                      <StyledTableCell>{course._id || "-"}</StyledTableCell>
+                    <StyledTableCell>{student.courseName || "-"}</StyledTableCell>
+                    <StyledTableCell>{course._id || "-"}</StyledTableCell>
 
-                      <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "-"}</StyledTableCell>
-                      <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
-                      <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
-                      <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
+                    <StyledTableCell>{studentBatchMap[student.studentName]?.sessionTime || "-"}</StyledTableCell>
+                    <StyledTableCell>{course.courseType || "-"}</StyledTableCell>
+                    <StyledTableCell>{course.dailySessionHrs || "-"}</StyledTableCell>
+                    <StyledTableCell>{course.noOfDays || "-"}</StyledTableCell>
 
-                      <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
-                      <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
-                      <StyledTableCell>{formatDateTime(student.createdAt)}</StyledTableCell>
-                    </StyledTableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-    <TablePagination
-  component="div"
-  count={totalCount}
-  page={page}
-  onPageChange={handleChangePage}
-  rowsPerPage={rowsPerPage}
-  onRowsPerPageChange={handleChangeRowsPerPage}
-  rowsPerPageOptions={[5, 10, 25, 50]}
-  sx={{
-    borderTop: "1px solid rgba(0,0,0,0.08)",
-    "& .MuiTablePagination-toolbar": {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexWrap: "wrap",
-      gap: 0,
-      py: 0,
-      px: 1,
-      minHeight: "unset",
-    },
-    "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows": {
-      m: 0,
-      whiteSpace: "nowrap",
-    },
-    "& .MuiTablePagination-actions": {
-      m: 0,
-      display: "flex",
-      alignItems: "center",
-    },
-    "& .MuiInputBase-root": {
-      mt: 0,
-    },
-  }}
-/>
+                    <StyledTableCell>{student.admissionFee || "-"}</StyledTableCell>
+                    <StyledTableCell>{formatDate(student.admissionDate)}</StyledTableCell>
+                    <StyledTableCell>{formatDateTime(student.createdAt)}</StyledTableCell>
+                  </StyledTableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <TablePagination
+          component="div"
+          count={totalCount}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 25, 50]}
+          sx={{
+            borderTop: "1px solid rgba(0,0,0,0.08)",
+            "& .MuiTablePagination-toolbar": {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 0,
+              py: 0,
+              px: 1,
+              minHeight: "unset",
+            },
+            "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows": {
+              m: 0,
+              whiteSpace: "nowrap",
+            },
+            "& .MuiTablePagination-actions": {
+              m: 0,
+              display: "flex",
+              alignItems: "center",
+            },
+            "& .MuiInputBase-root": {
+              mt: 0,
+            },
+          }}
+        />
       </Box>
+
+      {/* Edit Modal */}
       {showEdit && (
         <EditStudentData
           show={showEdit}
@@ -323,12 +372,23 @@ console.log("page:", page, "rowsPerPage:", rowsPerPage, "total:", totalCount);
         />
       )}
 
+      {/* Password Modal */}
       {viewPassword && (
         <ModalShowPassword
           viewPassword={viewPassword}
           setViewPassword={setViewPassword}
           password={password}
           setPassword={setPassword}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDelete && (
+        <ModalDeleteStudent
+          show={showDelete}
+          setShow={setShowDelete}
+          studentToDelete={studentToDelete}
+          onConfirmDelete={handleConfirmDelete}
         />
       )}
     </div>
