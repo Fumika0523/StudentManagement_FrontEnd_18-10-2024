@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   FormControl, InputLabel, Select, MenuItem, Box, Typography, Paper,
-  Button, Grid, TextField, Stack, Table,  TableBody,  TableCell,  TableHead,
-  TableRow, Checkbox,  Collapse,  Divider,} from "@mui/material";
+  Button, Grid, TextField, Stack, Table, TableBody, TableCell, TableHead,
+  TableRow, Checkbox, Collapse, Divider,
+} from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { url } from "../utils/constant";
@@ -116,6 +117,15 @@ export const UpdateAttendance = () => {
     else setSelectedStudentIds([]);
   };
 
+  const handleCancel = () => {
+    setShowStudentList(false);
+    setStudents([]);
+    setSelectedStudentIds([]);
+    setSelectedBatch("");
+    setAttendanceDate(new Date().toISOString().split("T")[0]);
+    setAttendanceStatus("present");
+  };
+
   const handleSaveAttendance = async () => {
     if (!students.length) return toast.warning("No students to save.");
 
@@ -150,27 +160,58 @@ export const UpdateAttendance = () => {
         justifyContent: "center",
         alignItems: "flex-start",
         minHeight: "calc(100vh - 130px)",
+        backgroundColor: "#f8f9fc",
       }}
     >
       <Paper
         elevation={3}
-        sx={{ p: 4, borderRadius: 2, width: "100%", maxWidth: "900px" }}
+        sx={{ 
+          p: 4, 
+          borderRadius: 3, 
+          width: "100%", 
+          maxWidth: "1000px",
+        }}
       >
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
-          <FaUserClock size={28} color="#4e73df" />
-          <Typography variant="h5" sx={{ fontWeight: 700, color: "#4e73df" }}>
-            Attendance Entry
-          </Typography>
+        <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3, pb: 3, borderBottom: "2px solid #e0e0e0" }}>
+          <Box
+            sx={{
+              width: 48,
+              height: 48,
+              borderRadius: 2,
+              background: "linear-gradient(135deg, #4e73df 0%, #224abe 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <FaUserClock size={24} color="#fff" />
+          </Box>
+          <Box>
+            <Typography variant="h5" sx={{ fontWeight: 700, color: "#2c3e50" }}>
+              Attendance Entry
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Mark student attendance for the selected batch
+            </Typography>
+          </Box>
         </Stack>
 
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth>
+        <Grid container spacing={4} sx={{ justifyContent: "end",
+    alignItems: "center",}} >
+          {/* First Row - Three Fields */}
+          <Grid item  size={{ sm: 6, md: 4 }}>
+            <FormControl fullWidth size="small">
               <InputLabel>Select Batch</InputLabel>
               <Select
                 value={selectedBatch}
                 onChange={(e) => setSelectedBatch(e.target.value)}
                 label="Select Batch"
+                sx={{
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#e0e0e0",
+                  },
+                }}
               >
                 {batchData.map((batch) => (
                   <MenuItem key={batch._id} value={batch.batchNumber}>
@@ -184,24 +225,39 @@ export const UpdateAttendance = () => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item  size={{ sm: 6, md: 4 }}>
             <TextField
               fullWidth
+              size="small"
               label="Date"
               type="date"
               value={attendanceDate}
               onChange={(e) => setAttendanceDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                  "& fieldset": {
+                    borderColor: "#e0e0e0",
+                  },
+                },
+              }}
             />
           </Grid>
 
-          <Grid item xs={12} sm={4}>
-            <FormControl fullWidth>
+          <Grid item  size={{ sm: 6, md: 4 }}>
+            <FormControl fullWidth size="small">
               <InputLabel>Mark as</InputLabel>
               <Select
                 value={attendanceStatus}
                 onChange={(e) => setAttendanceStatus(e.target.value)}
-                label="Default Status"
+                label="Mark as"
+                sx={{
+                  borderRadius: 2,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#e0e0e0",
+                  },
+                }}
               >
                 <MenuItem value="present">Present</MenuItem>
                 <MenuItem value="absent">Absent</MenuItem>
@@ -209,22 +265,38 @@ export const UpdateAttendance = () => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12}>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={handleSubmitClick}
-              disabled={loading}
-              sx={{ mt: 2, backgroundColor: "#4e73df" }}
-            >
-              {loading ? "Loading..." : "Submit & Show Student List"}
-            </Button>
+          {/* Second Row - Submit Button aligned right */}
+          <Grid item  size={{ xs: 12, md: 8 }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant="contained"
+                onClick={handleSubmitClick}
+                disabled={loading}
+                size="medium"
+                sx={{ 
+                  py: 1.2,
+                  px: 4,
+                  borderRadius: 2,
+                  backgroundColor: "#4e73df",
+                  textTransform: "none",
+                  fontSize: "0.95rem",
+                  fontWeight: 600,
+                  boxShadow: "0 2px 6px rgba(78, 115, 223, 0.3)",
+                  "&:hover": {
+                    backgroundColor: "#224abe",
+                    boxShadow: "0 4px 10px rgba(78, 115, 223, 0.4)",
+                  },
+                }}
+              >
+                {loading ? "Loading..." : "Submit & Show Student List"}
+              </Button>
+            </Box>
           </Grid>
         </Grid>
 
         {/*  Expandable section */}
         <Collapse in={showStudentList} timeout="auto" unmountOnExit>
-          <Divider sx={{ my: 3 }} />
+          <Divider sx={{ my: 4 }} />
 
           <Box
             sx={{
@@ -232,25 +304,41 @@ export const UpdateAttendance = () => {
               justifyContent: "space-between",
               alignItems: "center",
               gap: 2,
-              mb: 2,
+              mb: 3,
+              pb: 2,
+              borderBottom: "2px solid #e0e0e0",
               flexWrap: "wrap",
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: "#2c3e50" }}>
               Mark Attendance — Batch {selectedBatch} ({attendanceDate})
             </Typography>
-
+            <Typography variant="body2" sx={{ color: "#4e73df", fontWeight: 600 }}>
+              {selectedStudentIds.length} of {students.length} students marked present
+            </Typography>
           </Box>
 
-          <Box sx={{ overflowX: "auto" }}>
+          <Box 
+            sx={{ 
+              overflowX: "auto",
+              border: "1px solid #e0e0e0",
+              borderRadius: 2,
+            }}
+          >
             <Table size="small">
               <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 700 }}>Student Name</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 700 }}>
+                <TableRow sx={{ backgroundColor: "#f8f9fc" }}>
+                  <TableCell sx={{ fontWeight: 700, py: 2 }}>Student Name</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 700, py: 2 }}>
                     Present
                     <Checkbox
-                      sx={{ ml: 1 }}
+                      sx={{ 
+                        ml: 1,
+                        color: "#4e73df",
+                        "&.Mui-checked": {
+                          color: "#4e73df",
+                        },
+                      }}
                       checked={
                         students.length > 0 &&
                         selectedStudentIds.length === students.length
@@ -266,34 +354,83 @@ export const UpdateAttendance = () => {
               </TableHead>
 
               <TableBody>
-                {students.map((student) => (
-                  <TableRow key={student._id}>
-                    <TableCell>{student.username}</TableCell>
+                {students.map((student, index) => (
+                  <TableRow 
+                    key={student._id}
+                    sx={{
+                      backgroundColor: index % 2 === 0 ? "#fff" : "#fafbfc",
+                      "&:hover": {
+                        backgroundColor: "#f0f2f5",
+                      },
+                    }}
+                  >
+                    <TableCell sx={{ py: 2 }}>{student.username}</TableCell>
                     <TableCell align="right">
                       <Checkbox
                         checked={selectedStudentIds.includes(student._id)}
                         onChange={() => handleToggleStudent(student._id)}
+                        sx={{
+                          color: "#4e73df",
+                          "&.Mui-checked": {
+                            color: "#4e73df",
+                          },
+                        }}
                       />
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-             <Box sx={{ display: "flex", flexDirection:"row", justifyContent:"end", gap:"30px", marginTop:"3opx", paddingTop:"10px" }}>
-              <Button
-                variant="outlined"
-                onClick={() => setShowStudentList(false)}
-              >
-                Collapse
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handleSaveAttendance}
-                sx={{ backgroundColor: "#4e73df" }}
-              >
-                Save Attendance
-              </Button>
-            </Box>
+          </Box>
+
+          <Box 
+            sx={{ 
+              display: "flex", 
+              justifyContent: "flex-end", 
+              gap: 2, 
+              mt: 3,
+              pt: 3,
+              borderTop: "2px solid #e0e0e0",
+            }}
+          >
+            <Button
+              variant="outlined"
+              onClick={handleCancel}
+              sx={{
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+                borderColor: "#4e73df",
+                color: "#4e73df",
+                px: 4,
+                py: 1.5,
+                "&:hover": {
+                  borderColor: "#224abe",
+                  backgroundColor: "rgba(78, 115, 223, 0.05)",
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleSaveAttendance}
+              sx={{ 
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+                backgroundColor: "#4e73df",
+                px: 4,
+                py: 1.5,
+                boxShadow: "0 2px 6px rgba(78, 115, 223, 0.3)",
+                "&:hover": {
+                  backgroundColor: "#224abe",
+                  boxShadow: "0 4px 10px rgba(78, 115, 223, 0.4)",
+                },
+              }}
+            >
+              Save Attendance
+            </Button>
           </Box>
         </Collapse>
       </Paper>

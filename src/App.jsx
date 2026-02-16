@@ -12,7 +12,7 @@ import PhoneNumberForm from './Components/Profile/Edit/phoneNumberForm';
 import PasswordForm from './Components/Profile/Edit/passwordForm';
 import DashboardCard from './Components/Dashboard/DashBoardPage/dashboardCard';
 import ViewStudent from './Components/Dashboard/StudentData/ViewStudent';
-import ViewBatch from './Components/Dashboard/BatchData/viewBatch';
+import ViewBatch from './Components/BatchData/viewBatch';
 import ViewCourse from './Components/CourseData/ViewCourse';
 import { ToastContainer, Zoom } from 'react-toastify';
 import ViewAdmission from './Components/AdmissionData/viewAdmission';
@@ -25,7 +25,7 @@ import SelectCourseModal from './Components/Dashboard/StudentData/Modals/SelectC
 import ChartDisplay from './Components/Dashboard/DashBoardPage/SecondRow/ChartDisplay';
 import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';
-import ApprovePage from './Components/Dashboard/BatchData/AdminApproval/ApprovePage';
+import ApprovePage from './Components/BatchData/AdminApproval/ApprovePage';
 import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendance';
 import BulkLoadButtons from './Components/Dashboard/Bulkload/TestBulkLoadButtons';
 
