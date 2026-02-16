@@ -1,0 +1,223 @@
+import Button from "react-bootstrap/Button";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import React from "react";
+import Form from "react-bootstrap/Form";
+import GoogleIcon from "@mui/icons-material/Google";
+import { Link, useNavigate } from "react-router-dom";
+import { url } from "../../Components/utils/constant";
+import axios from "axios";
+import { FcReading } from "react-icons/fc";
+
+function SignUp() {
+  const navigate = useNavigate();
+
+  const formSchema = Yup.object().shape({
+    firstName: Yup.string().trim().required("First name is required"),
+    lastName: Yup.string().trim().required("Last name is required"),
+    username: Yup.string().trim().required("Username is required"),
+    email: Yup.string().trim().email("Invalid email").required("Email is required"),
+    phoneNumber: Yup.string()
+      .trim()
+      .matches(/^[0-9+() \-]*$/, "Invalid phone number")
+      .nullable(),
+    birthdate: Yup.date().required("Birthdate is required"),
+    gender: Yup.string(),
+    password: Yup.string().required("Password is required"),
+    role: Yup.string(),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      username: "",
+      password: "",
+      email: "",
+      phoneNumber: "",
+      birthdate: "",
+      gender: "",
+      role: "student",
+    },
+    validationSchema: formSchema,
+    onSubmit: async (values) => {
+      const payload = {
+        ...values,
+        firstName: values.firstName.trim(),
+        lastName: values.lastName.trim(),
+        username: values.username.trim(),
+        email: values.email.trim(),
+        phoneNumber: values.phoneNumber?.trim() || undefined,
+      };
+
+      const res = await axios.post(`${url}/signup`, payload);
+      console.log("res",res.data)
+      if (res.status === 200) navigate("/student-signin");
+    },
+  });
+
+  const handleGoogleSignUp = () => {
+    window.location.href = "http://localhost:8001/auth/google";
+  };
+
+  return (
+    <>
+      <div className="signInStyle container-fluid d-flex justify-content-center min-vh-100 align-items-center">
+        <div className="row justify-content-center align-items-center d-flex flex-column gap-3 gap-sm-4 w-100">
+          <Form
+            className="signupCard col-11 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4"
+            onSubmit={formik.handleSubmit}
+          >
+            <div className="row">
+              <h2 className="text-center pb-2 fs-2">
+                <FcReading style={{ fontSize: "55px" }} /> Student Sign Up
+              </h2>
+            </div>
+
+            {/* Row 1: First/Last */}
+            <div className="row">
+              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
+                <Form.Label className="formLabel m-0">First Name</Form.Label>
+                <Form.Control
+                  name="firstName"
+                  value={formik.values.firstName}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </Form.Group>
+
+              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
+                <Form.Label className="formLabel m-0">Last Name</Form.Label>
+                <Form.Control
+                  name="lastName"
+                  value={formik.values.lastName}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </Form.Group>
+            </div>
+
+            {/* Row 2: Username/Email */}
+            <div className="row">
+              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
+                <Form.Label className="formLabel m-0">Username</Form.Label>
+                <Form.Control
+                  name="username"
+                  value={formik.values.username}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </Form.Group>
+
+              <Form.Group className="col-md-6 col-lg-6 col-sm-6">
+                <Form.Label className="formLabel m-0">Email Address</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </Form.Group>
+            </div>
+
+            {/* Row 3: Gender/Birthdate */}
+            <div className="row align-items-center d-flex">
+              <div className="col-lg-6 col-md-6 col-sm-6 d-flex flex-column justify-content-start mb-1">
+                <div className="formLabel mb-1">Gender</div>
+                <div className="d-flex flex-row">
+                  <div className="form-check">
+                    <input className="form-check-input" type="radio" name="gender" value="male" onChange={formik.handleChange} />
+                    Male
+                  </div>
+                  <div className="form-check ms-3">
+                    <input className="form-check-input" type="radio" name="gender" value="female" onChange={formik.handleChange} />
+                    Female
+                  </div>
+                </div>
+              </div>
+
+              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
+                <Form.Label className="formLabel m-0">Birthdate</Form.Label>
+                <Form.Control type="date" name="birthdate" value={formik.values.birthdate} onChange={formik.handleChange} />
+              </Form.Group>
+            </div>
+
+            {/* Row 4: Phone (optional) / Password */}
+            <div className="row mb-2">
+              <Form.Group className="col-lg-6 col-sm-6 col-md-6">
+                <Form.Label className="formLabel m-0">Phone (optional)</Form.Label>
+                <Form.Control
+                  name="phoneNumber"
+                  value={formik.values.phoneNumber}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </Form.Group>
+
+              <Form.Group className="col-lg-6 col-sm-6 col-md-6">
+                <Form.Label className="formLabel m-0">Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </Form.Group>
+            </div>
+
+            <div className="row">
+              <Button
+                type="submit"
+                variant="outline-*"
+                className="sign-Btn my-3 fw-bold text-white"
+                style={{ fontSize: "18px", width: "100%", outline: "none", border: "none" }}
+              >
+                SIGN UP
+              </Button>
+            </div>
+
+            <div className="row mb-3">
+              <div className="d-flex align-items-center justify-content-center">
+                <div style={{ height: "1px", width: "35%", background: "#ddd" }} />
+                <span style={{ margin: "0 12px", fontSize: "14px", color: "#777" }}>OR</span>
+                <div style={{ height: "1px", width: "35%", background: "#ddd" }} />
+              </div>
+            </div>
+
+            <div className="row d-flex justify-content-center">
+              <Button
+                type="button"
+                className="google-btn d-flex align-items-center justify-content-center gap-2"
+                style={{
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  color: "#444",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  padding: "10px 0",
+                  fontWeight: "500",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+                }}
+                onClick={handleGoogleSignUp}
+              >
+                <GoogleIcon sx={{ color: "#ea4335", fontSize: 22 }} />
+                Sign up with Google
+              </Button>
+            </div>
+          </Form>
+
+          <div className="signinCard2 col-11 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4 d-flex justify-content flex-row">
+            <div className="text-center message">Or already have an account? &nbsp;</div>
+            <Link className="link-underline link-underline-opacity-0 text-center" to="/student-signin">
+              Sign in
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default SignUp;

@@ -166,7 +166,7 @@ export const UpdateAttendance = () => {
       <Paper
         elevation={3}
         sx={{ 
-          p: 4, 
+          p: 3, 
           borderRadius: 3, 
           width: "100%", 
           maxWidth: "1000px",

@@ -111,18 +111,18 @@ function SideBar({ isSidebarVisible = true }) {
             </div>
 
             {/* Component Section - sidebar closed*/}
-            <div
-              onClick={() => setOpen(!open)}
-              aria-controls="collapse-mini"
-              aria-expanded={open}
-              id="expandIcon"
-               className="sb-miniComponent mx-4 bgColor "
-            >
-                <MdGridView />
+           <div
+            onClick={() => setOpen(!open)}
+            aria-controls="collapse-mini"
+            aria-expanded={open}
+            id="expandIcon"
+            className="sb-miniComponent mx-4 bgColor"
+          >
+            <MdGridView />
             <span className={`sb-miniArrow ${open ? "show" : ""}`}>
               {open ? <IoIosArrowDown /> : <IoIosArrowForward />}
             </span>
-            </div>
+          </div>
 
             {/* Collapsed Component Items */}
             <Collapse in={open}>
@@ -298,8 +298,7 @@ function SideBar({ isSidebarVisible = true }) {
                       {/* Student Login */}
                       <div
                         className="sidebarItem d-flex align-items-center  gap-2"
-                        onClick={() => navigate("/batchdata")}
-                      >
+                        onClick={() => navigate("/batchdata")}   >
                         <FaUsersViewfinder
                           className="fs-3"
                           style={{ color: "#2050deff" }}
@@ -341,8 +340,10 @@ function SideBar({ isSidebarVisible = true }) {
               : (
                 <>
                   {/* PAGES  Only for student */}
-                  <div className="row dashRow">
-                    <IoCalendarNumberSharp className="col-3 fs-3" />
+                  <div className="row dashRow"
+                  onClick={() => navigate("/raise-query")} >
+                    <IoCalendarNumberSharp className="col-3 fs-3"
+                    />
                     <div className="col-9" id="page">
                       Raise Query</div>
                   </div>

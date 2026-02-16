@@ -16,11 +16,11 @@ import ViewBatch from './Components/BatchData/viewBatch';
 import ViewCourse from './Components/CourseData/ViewCourse';
 import { ToastContainer, Zoom } from 'react-toastify';
 import ViewAdmission from './Components/AdmissionData/viewAdmission';
-import StudentOrStaff from './HomePage/StudentOrStaff';
-import StaffSignIn from './Components/Staff/StaffSignIn';
-import StudentSignIn from './Components/Student/StudentSignIn';
-import StudentSignUp from './Components/Student/StudentSignUp';
-import StaffSignUp from './Components/Staff/StaffSignUp';
+import StudentOrStaff from './Signin-Singup/StudentOrStaff';
+import StaffSignIn from './Signin-Singup/Staff/StaffSignIn';
+import StudentSignIn from './Signin-Singup/Student/StudentSignIn';
+import StudentSignUp from './Signin-Singup/Student/StudentSignUp';
+import StaffSignUp from './Signin-Singup/Staff/StaffSignUp';
 import SelectCourseModal from './Components/Dashboard/StudentData/Modals/SelectCourseModal';
 import ChartDisplay from './Components/Dashboard/DashBoardPage/SecondRow/ChartDisplay';
 import NavBar from './HomePage/NavBar/NavBar';
@@ -28,7 +28,7 @@ import SideBar from './HomePage/SideBar/SideBar';
 import ApprovePage from './Components/BatchData/AdminApproval/ApprovePage';
 import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendance';
 import BulkLoadButtons from './Components/Dashboard/Bulkload/TestBulkLoadButtons';
-
+import RaiseQuery from './Components/StudentPage/RaiseQuery';
 
 function App() {
   const token = localStorage.getItem('token');
@@ -135,7 +135,7 @@ return (
             >
               <Routes>
                 {/* Your routes remain the same */}
-  <Route path="/buttons" element={<BulkLoadButtons />} />
+                <Route path="/buttons" element={<BulkLoadButtons />} />
                 <Route path="/chartdisplay" element={<ChartDisplay />} />
                 {role === 'admin' || role === 'staff' ? (
                   <>
@@ -143,10 +143,7 @@ return (
                     <Route
                       path="/studentdata"
                       element={
-                        <ViewStudent
-                          // isAuthenticated={isAuthenticated}
-                          // setIsAuthenticated={setIsAuthenticated}
-                        />
+                        <ViewStudent />
                       }
                     />
                     <Route path="/batchdata" element={<ViewBatch />} />
@@ -164,9 +161,8 @@ return (
                         <DashboardCard
                           // isAuthenticated={isAuthenticated}
                           // setIsAuthenticated={setIsAuthenticated}
-                        />
-                      }
-                    />
+                        />}/>
+                        <Route path="/raise-query" element={<RaiseQuery/>} />
                     <Route path="/profile" element={<ProfileForm />} />
                     <Route path="/usernameform" element={<UserNameForm />} />
                     <Route path="/genderform" element={<GenderForm />} />

@@ -41,9 +41,7 @@ return (
   <div className="container-fluid px-2 px-md-4">
     {/* Sticky top controls */}
     <div
-      className="position-sticky top-0 z-3"
-      style={{ backgroundColor: "#f0f1f4" }}
-    >
+      className="position-sticky top-0 z-3 "    >
       <div className="d-flex justify-content-end align-items-center gap-3 py-2">
         <Form.Select
           size="sm"

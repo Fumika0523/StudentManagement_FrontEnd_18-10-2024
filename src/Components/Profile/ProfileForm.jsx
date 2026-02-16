@@ -1,138 +1,178 @@
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { url } from "../utils/constant"
-import { useNavigate } from "react-router-dom"
-import { Button } from "react-bootstrap"
-import "../Profile/ProfileForm.css"
-import NavBar from "../../HomePage/NavBar/NavBar"
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { url } from "../utils/constant";
+import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import { Box, Paper, Typography, Divider, Stack } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField
+} from "@mui/material";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import PersonIcon from "@mui/icons-material/Person";
+import CakeIcon from "@mui/icons-material/Cake";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import WcIcon from "@mui/icons-material/Wc";
+import LockIcon from "@mui/icons-material/Lock";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import ProfileRow from "./Edit/ProfileRow";
+import ProfileCard from "./Edit/ProfileCard";
+import ProfileEditDialog from "./Edit/ProfileEditDialog";
+import ProfileSections from "./Sections/ProfileSections";
 
 
-function ProfileForm(){
-const navigate = useNavigate()
-//dateString is a parameter, its accpeting the birthdate
-const formatDate = (dateString) => {
-    const date = new Date(dateString); 
-    const options = { year: 'numeric', month: 'long', day: 'numeric' }; // showing only year, month, day in number
-    return date.toLocaleDateString('en-US', options); // show in US date style
-    };
 
-const [userData,setUserData] = useState([])
+function ProfileForm() {
+const navigate = useNavigate();
+const [openBirthModal, setOpenBirthModal] = useState(false);
+const [openPhoneModal, setOpenPhoneModal] = useState(false);
 
-const token = localStorage.getItem('token')
-console.log(token)
+  const [userData, setUserData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const {
+    username = "-",
+    email = "-",
+    phoneNumber = "-",
+    gender = "-",
+    birthdate,
+    role="-"
+  } = userData || {};
 
-let config = {
-    headers:{
-        Authorization: `Bearer ${token}`
+  const token = localStorage.getItem("token");
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const d = new Date(dateString);
+    if (isNaN(d)) return "-";
+    return d.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  //API : get user data
+  const getUserData = async () => {
+    console.log("Api call from getuserdata")
+    try {
+      setLoading(true);
+      const res = await axios.get(`${url}/users/profile`, config);
+      console.log("response Get user data from profile form:",res.data.userData)
+      setUserData(res.data.userData || {});
+    } finally {
+      setLoading(false);
     }
+  };
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  //birthdate formika
+  const birthFormik = useFormik({
+  initialValues: {
+    birthdate: birthdate
+      ? new Date(birthdate).toISOString().split("T")[0]
+      : "",
+  },
+  enableReinitialize: true,
+  validationSchema: Yup.object({
+    birthdate: Yup.date().required("Required"),
+  }),
+  onSubmit: async (values) => {
+    await axios.put(`${url}/users/profile`, values, config);
+    setOpenBirthModal(false);
+    getUserData(); // refresh profile without reload
+  },
+});
+
+//phonenumber
+const phoneFormik = useFormik({
+  initialValues: {
+    phoneNumber: phoneNumber || "",
+  },
+  enableReinitialize: true,
+  validationSchema: Yup.object({
+    phoneNumber: Yup.number().required("Required"),
+  }),
+  onSubmit: async (values) => {
+    await axios.put(`${url}/users/profile`, values, config);
+    setOpenPhoneModal(false);
+    getUserData(); // refresh profile
+  },
+});
+
+
+  const initials = (username)
+    .toString()
+    .trim()
+    .slice(0, 2)
+    .toUpperCase();
+
+ return (
+  <Box
+    sx={{
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    px: { xs: 1.5, sm: 3 },
+    alignItems: { xs: "flex-start", md: "center" },
+    py: { xs: 2, md: 0 },
+    // overflowY: { xs: "auto", md: "visible" },
+  }}
+>
+    <Box sx={{ width: "100%", maxWidth: 980 }}>
+      <ProfileSections
+        navigate={navigate}
+        loading={loading}
+        username={username}
+        email={email}
+        role={role}
+        phoneNumber={phoneNumber}
+        gender={gender}
+        birthdateFormatted={formatDate(birthdate)}
+        initials={initials}
+        setOpenBirthModal={setOpenBirthModal}
+        setOpenPhoneModal={setOpenPhoneModal}
+        icons={{
+          PersonIcon,
+          CakeIcon,
+          EmailIcon,
+          PhoneIcon,
+          WcIcon,
+          LockIcon,
+          PhotoCameraIcon,
+        }}
+      />
+
+      <ProfileEditDialog
+        open={openBirthModal}
+        onClose={() => setOpenBirthModal(false)}
+        title="Update Birthday"
+        description="Your birthday may be used for account security and personalization."
+        formik={birthFormik}
+        fieldName="birthdate"
+        type="date"
+      />
+
+      <ProfileEditDialog
+        open={openPhoneModal}
+        onClose={() => setOpenPhoneModal(false)}
+        title="Update Phone Number"
+        description="Your phone number helps us keep your account secure."
+        formik={phoneFormik}
+        fieldName="phoneNumber"
+        label="Phone Number"
+      />
+    </Box>
+  </Box>
+);
+
 }
 
-const getUserData=async()=>{
-    // console.log("User Data is called...")
-    let res = await axios.get(`${url}/users/profile`,config)
-    console.log(res.data.userData)
-    setUserData(res.data.userData)
-}
-useEffect(()=>{
-    getUserData()
-},[]) // API call has to be made inside useEffect() only
-console.log(userData)
-
-//destructuring of the object
-const {username,email,password,phoneNumber,gender,birthdate}=userData
-
-    return(
-        <>   
-           <div className="py-1  border-4 col-lg-7 col-sm-10 mx-auto">
-              {/* Top Section */}
-              <div className='fs-3 text-center  mb-2 ' style={{color:"#808084ff"}}>Personal info</div>
-              <div  className="text-center fs-5 mb-4" > Info about you and your preferences across Student Management Service</div>
-
-              {/* 2nd Section */}
-              <div className='d-flex  border-warning border-4 align-items-center justify-content-center mx-auto'>
-                {/* left */}
-              <div className=' d-flex flex-column col-md-7  ' >
-                <div className="d-flex flex-row align-items-start justify-content-between fs-3">Your profile info in Student Manag. Services
-            <div className=" d-md-none d-flex">
-              <img src="https://www.gstatic.com/identity/boq/accountsettingsmobile/profile_spot_visible_128x128_3d54fe9136457d65321e6fbf2f18be96.png" alt="" className=" h-auto" style={{width:"80px"}} />
-              </div>
-                </div>
-       
-                <span className="fs-6 mt-2">Personal info and options to manage it. You can make some of this info, like your contact details, visible to others so they can reach you easily. You can also see a summary of your profiles.</span>
-              </div>
-              {/* RIGHT */}
-              <div className="col-md-5  d-md-block d-none">
-              <img src="https://www.gstatic.com/identity/boq/accountsettingsmobile/profile_scene_visible_720x256_ee5ae234eb96dc206b79c851f41a6f69.png" alt=""  className="w-100 " />
-              </div>
-              </div>
-      
-              {/* Basic Info */}
-              <div className='border border-secondary-subtle rounded my-3' >
-                  <div className='p-3 fs-4'>Basic Info</div>
-                  <div className='px-3 py-1 text-secondary fs-6'>Some info may be visible to other people using Student Management services.</div>
-              <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
-                 <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Profile picture</div>
-                  <div  className="fs-6 text-black" style={{width:"60%"}} >Add a profile picture to personalize your account</div>
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrwa1p11xv_cq1ewqCn-67LO9-s41ocGYbdTILrcGusD5B_f8xO5-hkW8&s" alt="" style={{width:"7%"}} className='rounded-circle pb-1'/>
-            </div>
-            
-            {/* Username */}
-         <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
-                <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Username</div>
-                
-                <div className="fs-6 text-black" onClick={()=>{navigate('/usernameform')}} >{username}</div>
-            </div>
-
-            {/* Birthday */}
-              <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
-                  <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Birthday</div>
-                   {/*  calling formatDate() function */}
-                  <div className="fs-6 text-black" onClick={()=>{navigate('/birthdateform')}}>{formatDate(birthdate)}</div> 
-                  </div>
-
-            {/* Gender*/}
-            <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
-            <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Gender</div>
-            <div className="fs-6 text-black" onClick={()=>{navigate('/genderform')}} >{gender}</div>
-            </div>
-        </div>
-      
-              {/* Contact info */}
-            <div className=' mt-4 border border-secondary-subtle rounded' >
-                <div className='p-3  fs-4'>Contact info</div>
-                <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
-                    <div className="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Email</div>
-                    <div className="text-black fs-6" style={{width:"70%"}} >{email}</div>
-                  </div>
-
-             <div className='personalInfoStyle border-bottom border-secondary-subtle d-flex align-items-center text-secondary py-3'>
-            <div class="ps-3" style={{width:"30%",fontSize:"14.5px"}}>Phone</div>
-            <div className="text-black fs-6" style={{width:"70%"}} onClick={()=>{navigate('/phonenumberform')}}>{phoneNumber}</div>
-            </div>
-            </div>
-
-              {/* Other info */}
-            <div  className="py-4 px-2 d-flex">
-            <div>
-              <div style={{fontSize:"160%"}}> Other info and preferences</div>
-                <div className="py-1"> Ways to verify it’s you and settings for the web</div></div>
-                <img src="https://www.gstatic.com/identity/boq/accountsettingsmobile/profile_scene_preferences_720x256_b83e731b89910d1e55bbe298246b0a12.png" alt="" style={{width:"45%"}}/>
-                </div>
-                                
-                {/* Password */}
-              <div className="border border-secondary-subtle rounded p-3">
-                  <div
-                  onClick={()=>{navigate('/passwordform')}} className="fs-5">Password</div>
-                  <div className="text-secondary" style={{fontSize:"80%"}}>A secure password helps protect your Student Management Account</div>
-                  <div style={{fontSize:"70%"}}>Last changed Jul 19,2023</div>
-              </div>
-              <Button className="mt-4  px-4"  onClick={()=>navigate('/dashboard')} >Back</Button>
-        </div>
-     
-        </>
-    )
-}
-
-export default ProfileForm
-
-//|Profile info , Profile image, basic info contact info, password
+export default ProfileForm;

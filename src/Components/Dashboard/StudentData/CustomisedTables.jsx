@@ -78,10 +78,10 @@ const CustomizedTables = ({
           autoClose: 3000,
         });
         
-        console.log("✅ Student deleted successfully");
+        console.log(" Student deleted successfully");
       }
     } catch (error) {
-      console.error("❌ Error deleting student:", error);
+      console.error(" Error deleting student:", error);
       const errorMessage = error.response?.data?.message || "Failed to delete student. Please try again.";
       toast.error(`Delete Failed: ${errorMessage}`, {
         position: "top-right",
@@ -215,7 +215,7 @@ const CustomizedTables = ({
             },
           }}
         >
-          <Table sx={{ minWidth: 2000 }}> {/* ✅ Set minimum width to force scrolling */}
+          <Table sx={{ minWidth: 2000 }}> {/*  Set minimum width to force scrolling */}
             <TableHead>
               <TableRow>
                 <StyledTableCell>No.</StyledTableCell>

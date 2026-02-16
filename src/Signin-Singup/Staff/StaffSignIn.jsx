@@ -9,7 +9,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
-import { url } from '../utils/constant';
+import { url } from '../../Components/utils/constant';
 import { FcVoicePresentation } from "react-icons/fc";
 import { toast } from 'react-toastify';
 

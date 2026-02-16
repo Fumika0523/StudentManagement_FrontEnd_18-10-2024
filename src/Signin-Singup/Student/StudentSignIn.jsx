@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import GoogleIcon from '@mui/icons-material/Google'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { url } from '../utils/constant'
+import { url } from '../../Components/utils/constant'
 import { FcReading } from "react-icons/fc"
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
@@ -53,8 +53,7 @@ function StudentSignIn() {
 
     const postSignInUser = async (loginUser) => {
         console.log('Calling Student Signin API')
-
-        try {
+       try {
             const res = await axios.post(`${url}/signin`, loginUser)
             console.log(' Student login success:', res.data)
 
@@ -62,6 +61,7 @@ function StudentSignIn() {
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('username', res.data.user.username)
             localStorage.setItem('role', res.data.role)
+            localStorage.setItem("studentId", res.data.user._id);
 
              if (res.data.token) {
             navigate('/dashboard') // Add navigation here

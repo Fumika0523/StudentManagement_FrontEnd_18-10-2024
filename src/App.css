@@ -133,7 +133,7 @@
 
 .backgroundDesign {
   width: 100%;
-  background-color: #efeff5;
+  /* background-color: #fefeff; */
   display: flex;
   flex-direction: column;
 }
