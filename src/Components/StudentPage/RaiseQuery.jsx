@@ -177,8 +177,6 @@ const RaiseQuery = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 fullWidth
-                               
-
                 placeholder="e.g. Attendance marked absent by mistake"
                 sx={{
                   "& .MuiOutlinedInput-root": {

@@ -15,10 +15,12 @@ function StudentOrStaff() {
             {/* Main Card */}
             <div className="col-12 col-sm-10 col-md-9 col-lg-7 col-xl-6">
               <div className="studentLogin p-3 p-sm-4 p-md-5">
-                <div className="text-center mb-4 fs-3 fw-bold">
-                  Sign into Your Account
+                <div className="text-center mb-1 fs-3 fw-bold">
+                  Welcome Back
                 </div>
-
+                <div className="text-center text-muted mb-4" style={{ fontSize: "15px" }}>
+  Please select your role to continue
+</div>
                 {/* Student + Staff columns */}
                 <div className="row g-4 align-items-stretch">
                   {/* Student */}
@@ -34,7 +36,7 @@ function StudentOrStaff() {
                         className="fs-5 w-100 mt-auto"
                         onClick={() => navigate("/student-signin")}
                       >
-                        Sign in as Student
+                       Continue as Student
                       </Button>
                     </div>
                   </div>
@@ -52,7 +54,7 @@ function StudentOrStaff() {
                         className="fs-5 w-100 mt-auto"
                         onClick={() => navigate("/staff-signin")}
                       >
-                        I am Staff
+                        Continue as Staff
                       </Button>
                     </div>
                   </div>
@@ -60,7 +62,7 @@ function StudentOrStaff() {
 
                 {/* Create account section */}
                 <div className="text-center message mt-4 mb-3" style={{ fontSize: "18px" }}>
-                  Don't have account?
+                  New here?
                 </div>
 
                 <div className="row g-3">
@@ -71,7 +73,8 @@ function StudentOrStaff() {
                       onClick={() => navigate("/student-signup")}
                     >
                       <FcReading className="fs-2" />
-                      Create Student Account
+                      Register as Student
+
                     </Button>
                   </div>
 
@@ -82,7 +85,7 @@ function StudentOrStaff() {
                       onClick={() => navigate("/staff-signup")}
                     >
                       <FcVoicePresentation className="fs-2" />
-                      Create Staff Account
+                      Register as Staff
                     </Button>
                   </div>
                 </div>
