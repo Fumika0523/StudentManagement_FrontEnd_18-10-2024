@@ -91,7 +91,6 @@ function StudentOrStaff() {
                 </div>
               </div>
             </div>
-            {/* End card */}
           </div>
         </div>
       </div>

@@ -44,7 +44,8 @@ const ActionBtns = ({ setShowAdd, config, setStudentData, urlBase }) => {
       {/* Bulk Upload */}
       <BulkUploadBtns
         templateUrl="http://localhost:8001/api/excel/student-template"
-        importUrl="http://localhost:8001/api/excel/student-import"
+        importUrl="http://localhost:8001/api/excel/student-add-update"
+        deleteUrl="http://localhost:8001/api/excel/student-delete" 
         modalTitle="Bulk Upload Students"
         axiosConfig={config}
         onRefresh={async () => {
