@@ -29,6 +29,8 @@ import ApprovePage from './Components/BatchData/AdminApproval/ApprovePage';
 import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendance';
 import BulkLoadButtons from './Components/Dashboard/Bulkload/TestBulkLoadButtons';
 import RaiseQuery from './Components/StudentPage/RaiseQuery';
+import ViewTask from './Components/Task/ViewTask'
+
 
 function App() {
   const token = localStorage.getItem('token');
@@ -152,6 +154,7 @@ return (
                     <Route path="/dashboard" element={ <DashboardCard/>}  />
                     <Route path="/attendance" element={ <UpdateAttendance/>}  />
                     <Route path="/profile" element={<ProfileForm />} />
+                        <Route path="/task" element={<ViewTask />} />
                     {/* <Route path="*" element={<Navigate to="/dashboard" />} /> */}
                   </>
                 ) : (

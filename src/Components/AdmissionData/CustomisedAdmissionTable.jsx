@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";import TableRow from "@mui/material/TableRow";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Table from "@mui/material/Table";
@@ -10,7 +11,7 @@ import { MdDelete } from "react-icons/md";
 import ModalDeleteAdmission from "./ModalDeleteAdmission";
 import ModalEditAdmission from "./ModalEditAdmission";
 import { FaEdit } from "react-icons/fa";
-import ModalAddAdmission from './ModalAddAdmission'
+import ModalAddAdmission from './Modal/CreateAdmission/ModalAddAdmission'
 import TablePagination from '@mui/material/TablePagination';
 import {  Box,  Button,  Menu,  MenuItem,  Divider,  ListItemIcon,ListItemText,  FormControl,  Select,  Autocomplete,  TextField,
 } from "@mui/material";
@@ -19,36 +20,9 @@ import TableFilter from "../Dashboard/TableFilter";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import BulkUploadBtns from "../Dashboard/Bulkload/BulkUploadBtns";
-import { url } from "../utils/constant";
+import { url, StyledTableCell, StyledTableRow } from "../utils/constant";
 import ConfirmDeleteModal from "../Dashboard/Common/DeleteConfirmModal";
 
-
-const StyledTableCell = styled(TableCell)(() => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#f3f4f6",
-    color: "#5a5c69",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: "14.5px",
-    padding: "10px 15px",
-    whiteSpace: "nowrap",
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: "13px",
-    textAlign: "center",
-    padding: "10px 15px",
-    whiteSpace: "nowrap",
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  "&:hover": {
-    backgroundColor: "#b3e5fc",
-  },
-}));
 
 const CustomisedAdmissionTable = ({
   admissionData, setAdmissionData, batchData, studentData, setStudentData, courseData, setCourseData
@@ -200,18 +174,6 @@ if (batchStatus) {
     });
   };
 
-  const formatDateTime = (isoString) => {
-    if (!isoString) return 'N/A';
-    const date = new Date(isoString);
-    return date
-      .toLocaleString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour12: true,
-      })
-      .replace("at", "");
-  };
 
   // Data to display
   const displayData = showTable ? filteredData : admissionData;
@@ -398,10 +360,9 @@ const confirmDeleteAdmission = async () => {
                         <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                           {/* Edit Icon */}
                           <FaEdit
-                            className={role === "staff" ? "text-muted" : "text-success"}
+                            className={role === "staff" ? "text-muted fs-5" : "text-success fs-5"}
                             style={{
                               cursor: "pointer",
-                              fontSize: "18px",
                               opacity: role === "staff" ? 0.5 : 1
                             }}
                             onClick={() => handleActionClick('edit', admission)}
@@ -409,10 +370,9 @@ const confirmDeleteAdmission = async () => {
 
                           {/* Delete Icon */}
                           <MdDelete
-                            className={role === "staff" ? "text-muted" : "text-danger"}
+                            className={role === "staff" ? "text-muted fs-5" : "text-danger fs-5"}
                             style={{
                               cursor: "pointer",
-                              fontSize: "18px",
                               opacity: role === "staff" ? 0.5 : 1
                             }}
                             onClick={() => handleActionClick('delete', admission)}
@@ -438,8 +398,8 @@ const confirmDeleteAdmission = async () => {
                       <StyledTableCell>{formatDate(admission.admissionDate)}</StyledTableCell>
                       <StyledTableCell>{admission.admissionMonth || 'N/A'}</StyledTableCell>
                       <StyledTableCell>{admission.admissionYear || 'N/A'}</StyledTableCell>
-                      <StyledTableCell>{formatDateTime(admission.createdAt)}</StyledTableCell>
-                      <StyledTableCell>{formatDateTime(admission.updatedAt)}</StyledTableCell>
+                      <StyledTableCell>{formatDate(admission.createdAt)}</StyledTableCell>
+                      <StyledTableCell>{formatDate(admission.updatedAt)}</StyledTableCell>
                     </StyledTableRow>
                   ))
                 ) : (

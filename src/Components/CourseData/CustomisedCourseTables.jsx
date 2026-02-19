@@ -46,6 +46,16 @@ export default function CustomisedCourseTables({ courseData, setCourseData }) {
     page * rowsPerPage + rowsPerPage
   );
 
+  const formatDate = (dateString)=>{
+    if(!dateString)
+      return "N/A";
+    const date = new Date(dateString)
+    return date.toLocaleDateString("en-US",{
+      day:"numeric",
+      month:"short",
+      year:"numeric"
+    })
+  }
   return (
     <Box sx={{ width: '100%' }}>
       {/* Table */}
@@ -68,6 +78,8 @@ export default function CustomisedCourseTables({ courseData, setCourseData }) {
                   <StyledTableCell>Total Hours</StyledTableCell>
                   <StyledTableCell>Daily Session Hours</StyledTableCell>
                   <StyledTableCell>No. of Days</StyledTableCell>
+                  <StyledTableCell>Created Date</StyledTableCell>
+                  <StyledTableCell>Updated Date</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -98,6 +110,8 @@ export default function CustomisedCourseTables({ courseData, setCourseData }) {
                     <StyledTableCell>{course.courseDuration}</StyledTableCell>
                     <StyledTableCell>{course.dailySessionHrs}</StyledTableCell>
                     <StyledTableCell>{course.noOfDays}</StyledTableCell>
+                     <StyledTableCell>{formatDate(course.createdAt)}</StyledTableCell>
+                      <StyledTableCell>{formatDate(course.updatedAt)}</StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>

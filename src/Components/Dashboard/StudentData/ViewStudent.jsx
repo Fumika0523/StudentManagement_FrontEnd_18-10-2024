@@ -11,7 +11,6 @@ function ViewStudent() {
   const [courseData, setCourseData] = useState([])
   const [admissionData, setAdmissionData] = useState([])
   const [batchData, setBatchData] = useState([])
-  const [show, setShow] = useState(false);
   const [openFilters, setOpenFilters] = useState(true);
   const [showTable, setShowTable] = useState(false);
   
@@ -155,7 +154,7 @@ function ViewStudent() {
     });
   }, [studentData, courseData, admissionData, batchData]);
 
-  // ✅ FIXED: Function to apply filters (can be called anytime)
+  // Function to apply filters (can be called anytime)
   const applyCurrentFilters = (dataToFilter) => {
     let filtered = [...dataToFilter];
 
@@ -213,10 +212,10 @@ function ViewStudent() {
     setShowTable(true);
   };
 
-  // ✅ FIXED: Auto-refresh filtered data when studentData changes
+  // Auto-refresh filtered data when studentData changes
   useEffect(() => {
     if (showTable) {
-      console.log("🔄 StudentData changed, re-applying filters...");
+      console.log("StudentData changed, re-applying filters...");
       const filtered = applyCurrentFilters(computedRows);
       setFilteredData(filtered);
     }

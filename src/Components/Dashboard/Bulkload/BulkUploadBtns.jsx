@@ -80,8 +80,6 @@ const token = localStorage.getItem("token");
     }
   };
 
-  console.log("POST:", importUrl);
-console.log("TOKEN:", localStorage.getItem("token"));
 
   const deleteExcel = async () => {
     if (!file) return toast.error("Please choose an Excel file first");

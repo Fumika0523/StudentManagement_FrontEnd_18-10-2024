@@ -257,8 +257,8 @@ function CustomisedBatchTables({
 
     const EditIcon = (
       <FaEdit
-        className="text-success"
-        style={{ cursor: "pointer", fontSize: "17px" }}
+        className="text-success fs-5"
+        style={{ cursor: "pointer"}}
         title="Edit batch"
         onClick={() => handleEditClick(batch)}
       />
@@ -266,8 +266,8 @@ function CustomisedBatchTables({
 
     const LockIcon = (msg) => (
       <FaLock
-        className="text-muted"
-        style={{ cursor: "pointer", opacity: 0.7, fontSize: "16px" }}
+        className="text-muted fs-5"
+        style={{ cursor: "pointer", opacity: 0.7,  }}
         title={msg}
         onClick={() => toast.error(msg, { autoClose: 2000 })}
       />
@@ -299,8 +299,8 @@ function CustomisedBatchTables({
         <div className="d-flex align-items-center gap-2">
           {ViewUsersIcon}
           <FaCircleCheck
-            className="text-success"
-            style={{ fontSize: "18px", cursor: "default" }}
+            className="text-success fs-5"
+            style={{ cursor: "default" }}
             title="Batch fully completed"
           />
           {CertificateIcon}
@@ -387,8 +387,8 @@ function CustomisedBatchTables({
           <div className="d-flex align-items-center gap-2">
             {ViewUsersIcon}
             <FaLock
-              className="text-muted"
-              style={{ opacity: 0.7, fontSize: "16px" }}
+              className="text-muted fs-5"
+              style={{ opacity: 0.7, }}
               title="Training completed. Editing is locked."
             />
           </div>
@@ -458,8 +458,8 @@ function CustomisedBatchTables({
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
                             {renderActionIcons(batch, status)}
                             <MdDelete
-                              className={role === "admin" ? "text-danger" : "text-muted"}
-                              style={{ cursor: "pointer", fontSize: "18px", opacity: role === "admin" ? 1 : 0.5 }}
+                              className={role === "admin" ? "text-danger fs-5" : "fs-5 text-muted"}
+                              style={{ cursor: "pointer",  opacity: role === "admin" ? 1 : 0.5 }}
                               onClick={() => handleDelete(batch)}
                             />
                           </div>

@@ -47,18 +47,14 @@ const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }
       return m === month;
     };
 
-    // -------------------------------------------------------
     // 2) Build a quick lookup: batchNumber -> batch object
-    // -------------------------------------------------------
     const batchByNumber = {};
     (batchData || []).forEach((b) => {
       if (b?.batchNumber) batchByNumber[b.batchNumber] = b;
     });
 
-    // -------------------------------------------------------
     // 3) This builds ONE table for ONE batch status
     //    (ex: "In Progress", "Training Completed", "Batch Completed")
-    // -------------------------------------------------------
     const buildRowsForBatchStatus = (targetBatchStatus) => {
       const rowsByLocation = {};
 
@@ -158,8 +154,8 @@ const AccordionDisplay = ({ admissionData, batchData, studentData, year, month }
   console.log(getColumnLabel("Training Completed"))
 
   return (
-    <div className="container-fluid mt-4 border border-4 border-warning">
-      <h3 className="mb-4 text-secondary pb-2">
+    <div className="container-fluid mt-4">
+      <h3 className="mb-2 text-secondary">
         Statistics for {selectedYear} {month ? `(${month})` : "(Year Total)"}
       </h3>
       <AccordionCard title=""   month={month}   items={itemsByStatus.batchCompleted} themeColor="#2c3e50" selectedYear={selectedYear} />

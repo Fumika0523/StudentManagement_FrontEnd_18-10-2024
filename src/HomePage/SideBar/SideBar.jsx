@@ -182,7 +182,7 @@ function SideBar({ isSidebarVisible = true }) {
                 </div>
                      {/* Update Attendance */}
                 <div className="mx-4 bgColor portalIcon"
-                   onClick={() => navigate("/attendance")}>
+                   onClick={() => navigate("/task")}>
                   <MdDateRange className=""  title="Update Attendance"/>
                 </div>
 
@@ -325,7 +325,8 @@ function SideBar({ isSidebarVisible = true }) {
             {role === "admin" || role === "staff" ? (
               <>
                 {/* Task */}
-                <div className="row dashRow">
+                <div className="row dashRow"
+                 onClick={() => navigate("/task")}>
                   <FiTool className="col-3 fs-3" />
                   <div className="col-9" id="utilities">Task</div>
                 </div>

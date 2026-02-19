@@ -252,9 +252,9 @@ const CustomizedTables = ({
                     <StyledTableCell>{rowNumber}</StyledTableCell>
 
                     <StyledTableCell>
-                      <div style={{ display: "flex", justifyContent: "space-evenly", fontSize: "18px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-evenly" , alignItems:"center"}}>
                         <FaEdit
-                          className={role === "admin" ? "text-success" : "text-muted"}
+                          className={role === "admin" ? "text-success fs-5" : "text-muted fs-5"}
                           style={{ cursor: "pointer", opacity: role === "admin" ? 1 : 0.5 }}
                           onClick={() => {
                             if (role === "admin") handleEditClick(student);
@@ -264,15 +264,15 @@ const CustomizedTables = ({
                         />
 
                         <MdDelete
-                          className={role === "admin" ? "text-danger" : "text-muted"}
+                          className={role === "admin" ? "text-danger fs-5" : "text-muted fs-5"}
                           style={{ cursor: "pointer", opacity: role === "admin" ? 1 : 0.5 }}
                           onClick={() => handleDeleteClick(student)}
                           title="Delete Student"
                         />
 
                         <FaKey
-                          className="text-secondary"
-                          style={{ cursor: "pointer", fontSize: "16px" }}
+                          className="text-secondary fs-6"
+                          style={{ cursor: "pointer", }}
                           onClick={() => handlePasswordClick(student.password)}
                           title="View Password"
                         />
