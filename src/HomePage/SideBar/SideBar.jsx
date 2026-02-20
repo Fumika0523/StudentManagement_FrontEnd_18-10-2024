@@ -177,12 +177,13 @@ function SideBar({ isSidebarVisible = true }) {
             </Collapse>
 
                 {/* Task */}
-                <div  className="mx-4 bgColor portalIcon">
+                <div  className="mx-4 bgColor portalIcon"
+                  onClick={() => navigate("/task")}>
                   <FiTool className="" title="Task" />
                 </div>
                      {/* Update Attendance */}
                 <div className="mx-4 bgColor portalIcon"
-                   onClick={() => navigate("/task")}>
+                   onClick={() => navigate("/attendance")}>
                   <MdDateRange className=""  title="Update Attendance"/>
                 </div>
 

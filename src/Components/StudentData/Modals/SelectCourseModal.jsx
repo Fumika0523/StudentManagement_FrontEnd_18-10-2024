@@ -3,7 +3,7 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import { url } from '../../../utils/constant';
+import { url } from '../../utils/constant';
 
 function SelectCourseModal({ show, setShow }) {
   const courses = ['HTML','CSS','JavaScript','Redux','Node JS','MongoDB','SQL','Bootstrap'];

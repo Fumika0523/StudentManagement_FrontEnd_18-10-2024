@@ -15,9 +15,8 @@ import { toast } from "react-toastify";
 import EditStudentData from "./Modals/EditStudent/EditStudentData";
 import ModalShowPassword from "./Modals/ModalShowPassword";
 import ModalDeleteStudent from "./Modals/ModalDeleteStudent";
-import { url } from "../../utils/constant";
-import usePagination from "../../utils/usePagination"; 
-import {StyledTableCell,StyledTableRow, tableContainerStyles} from "../../utils/constant"
+import usePagination from "../utils/usePagination"; 
+import {StyledTableCell,StyledTableRow, tableContainerStyles, url} from "../utils/constant"
 
 const formatDate = (dateString) => {
   if (!dateString) return "-";
@@ -192,7 +191,7 @@ const CustomizedTables = ({
   return (
     <div className="">
       <Box sx={{ width: "100%", overflowX: "auto" }}>
-        {/* ✅ FIXED: Added proper horizontal scrolling */}
+        {/* Added proper horizontal scrolling */}
         <TableContainer 
           sx={{
             ...tableContainerStyles,

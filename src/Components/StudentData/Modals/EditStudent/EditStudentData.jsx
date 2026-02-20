@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { url } from "../../../../utils/constant";
+import { url } from "../../../utils/constant";
 import { editStudentSchema } from "./editStudentSchema";
 import FormikField from "../FormikField";
 
@@ -50,7 +50,7 @@ function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setSt
         updatedStudent,
         config
       );
-      console.log("✅ Update response:", res.data);
+      console.log(" Update response:", res.data);
 
       if (res) {
         const refreshed = await axios.get(`${url}/allstudent`, config);

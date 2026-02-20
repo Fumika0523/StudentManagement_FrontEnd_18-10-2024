@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 
 import ActionBtns from "./ActionBtns";
-import StudentFilter from "./Filter/StudentFilter";
-import ModalAddStudent from "../Modals/CreateStudent/ModalAddStudent";
+import AdmissionFilter from "./Filter/AdmissionFilter";
+
 
 const Header = ({
   // ActionBtns
@@ -37,10 +37,9 @@ const Header = ({
     <div>
       {/* Top actions */}
       <ActionBtns
+      showAdd={showAdd}
         setShowAdd={setShowAdd}
         config={config}
-        setStudentData={setStudentData}
-        urlBase={urlBase}
       />
 
       {/* Filters */}
@@ -55,7 +54,7 @@ const Header = ({
           width: "100%",
         }}
       >
-        <StudentFilter
+        <AdmissionFilter
           openFilters={openFilters}
           setOpenFilters={setOpenFilters}
           onApply={onApply}
@@ -82,15 +81,7 @@ const Header = ({
         />
       </Box>
 
-      {/* Add Student modal */}
-      {showAdd && (
-        <ModalAddStudent
-          show={showAdd}
-          setShow={setShowAdd}
-          courseData={courseData}
-          setStudentData={setStudentData}
-        />
-      )}
+    
     </div>
   );
 };

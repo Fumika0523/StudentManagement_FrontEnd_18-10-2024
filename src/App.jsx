@@ -11,7 +11,7 @@ import BirthdateForm from './Components/Profile/Edit/birthdateForm';
 import PhoneNumberForm from './Components/Profile/Edit/phoneNumberForm';
 import PasswordForm from './Components/Profile/Edit/passwordForm';
 import DashboardCard from './Components/Dashboard/DashBoardPage/dashboardCard';
-import ViewStudent from './Components/Dashboard/StudentData/ViewStudent';
+import ViewStudent from './Components/StudentData/ViewStudent';
 import ViewBatch from './Components/BatchData/viewBatch';
 import ViewCourse from './Components/CourseData/ViewCourse';
 import { ToastContainer, Zoom } from 'react-toastify';
@@ -21,13 +21,12 @@ import StaffSignIn from './Signin-Singup/Staff/StaffSignIn';
 import StudentSignIn from './Signin-Singup/Student/StudentSignIn';
 import StudentSignUp from './Signin-Singup/Student/StudentSignUp';
 import StaffSignUp from './Signin-Singup/Staff/StaffSignUp';
-import SelectCourseModal from './Components/Dashboard/StudentData/Modals/SelectCourseModal';
 import ChartDisplay from './Components/Dashboard/DashBoardPage/SecondRow/ChartDisplay';
 import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';
 import ApprovePage from './Components/BatchData/AdminApproval/ApprovePage';
 import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendance';
-import BulkLoadButtons from './Components/Dashboard/Bulkload/TestBulkLoadButtons';
+import BulkLoadButtons from './Components/Bulkload/TestBulkLoadButtons';
 import RaiseQuery from './Components/StudentPage/RaiseQuery';
 import ViewTask from './Components/Task/ViewTask'
 

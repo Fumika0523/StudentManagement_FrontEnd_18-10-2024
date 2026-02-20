@@ -16,10 +16,8 @@ import TablePagination from '@mui/material/TablePagination';
 import {  Box,  Button,  Menu,  MenuItem,  Divider,  ListItemIcon,ListItemText,  FormControl,  Select,  Autocomplete,  TextField,
 } from "@mui/material";
 import { toast } from 'react-toastify';
-import TableFilter from "../Dashboard/TableFilter";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
-import BulkUploadBtns from "../Dashboard/Bulkload/BulkUploadBtns";
 import { url, StyledTableCell, StyledTableRow } from "../utils/constant";
 import ConfirmDeleteModal from "../Dashboard/Common/DeleteConfirmModal";
 
@@ -174,7 +172,6 @@ if (batchStatus) {
     });
   };
 
-
   // Data to display
   const displayData = showTable ? filteredData : admissionData;
   const paginatedData = Array.isArray(displayData)
@@ -242,83 +239,8 @@ const confirmDeleteAdmission = async () => {
 
   return (
     <Box className="row mx-auto w-100">
-        {/* Actions Bar */}
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 1,
-            my: 1,
-            justifyContent: { xs: "flex-start", md: "flex-end" },
-            alignItems: "center",
-          }}
-        >
-          {/* Primary */}
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setShowAdd(true)}
-            sx={{ borderRadius: 2, backgroundColor:" #2c51c1" }}
-          >
-            Add Admission
-          </Button>
-      
-  <BulkUploadBtns
-    templateUrl="http://localhost:8001/api/excel/admission-template"
-    importUrl="http://localhost:8001/api/excel/admission-import"
-    modalTitle="Bulk Upload Admissions"
-    axiosConfig={config}
-    onRefresh={async () => {
-      const refreshed = await axios.get(`${url}/alladmission`, config);
-      setAdmissionData(refreshed.data.admissionData);
-    }}
-  />
-        </Box>
 
-            {/* Filter Section */}
-        <TableFilter
-          open={openFilters}
-          setOpen={setOpenFilters}
-          onApply={handleApplyFilter}
-          onReset={handleResetFilter}
-        >
-          {/* Course Name */}
-          <Box sx={{ minWidth: 200 }}>
-            <span style={{ fontSize: 14, fontWeight: 600 }}>
-              Course Name
-            </span>
-            <Autocomplete
-              freeSolo
-              options={uniqueCourses}
-              value={selectedCourse}
-              inputValue={courseInput}
-              onInputChange={(e, v) => setCourseInput(v)}
-              onChange={(e, v) => setSelectedCourse(v)}
-              renderInput={(params) => (
-                <TextField {...params} size="small" />
-              )}
-            />
-          </Box>
-
-          {/* Batch Status */}
-          <FormControl size="small" sx={{ minWidth: 200 }}>
-            <span style={{ fontSize: 14, fontWeight: 600 }}>
-              Batch Status
-            </span>
-            <Select
-              value={batchStatus}
-              onChange={(e) => setBatchStatus(e.target.value)}>
-              <MenuItem value="">--Select--</MenuItem>
-              <MenuItem value="Batch Completed">Batch Completed</MenuItem>
-              <MenuItem value="Training Completed">Training Completed</MenuItem>
-              <MenuItem value="In Progress">In Progress</MenuItem>
-              <MenuItem value="Not Started">Not Started</MenuItem>
-            </Select>
-          </FormControl>
-        </TableFilter>
-   
          {/* Table */}
-      {showTable && (
         <Box
           sx={{
             display: "flex",
@@ -434,7 +356,6 @@ const confirmDeleteAdmission = async () => {
 
           
         </Box>
-      )}
 
       {/* Modals */}
       {showEdit && (

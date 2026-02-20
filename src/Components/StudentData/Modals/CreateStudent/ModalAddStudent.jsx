@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-import { url } from "../../../../utils/constant";
+import { url } from "../../../utils/constant";
 
 import {
   PersonAdd, Person, Email, Phone, Lock, Cake, School,

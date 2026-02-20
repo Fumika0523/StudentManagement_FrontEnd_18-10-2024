@@ -9,9 +9,9 @@ import {
   filterActionsContainerStyles,
   resetButtonStyles,
   applyButtonStyles,
-} from "../../../../utils/constant";
+} from "../../../utils/constant";
 
-const StudentFilter = ({
+const AdmissionFilter = ({
   openFilters,
   setOpenFilters,
   onApply,
@@ -102,4 +102,4 @@ const StudentFilter = ({
   );
 };
 
-export default StudentFilter;
+export default AdmissionFilter;

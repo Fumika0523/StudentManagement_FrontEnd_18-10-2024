@@ -9,7 +9,7 @@ import {
   filterActionsContainerStyles,
   resetButtonStyles,
   applyButtonStyles,
-} from "../../../../utils/constant";
+} from "../../../utils/constant";
 
 const StudentFilter = ({
   openFilters,

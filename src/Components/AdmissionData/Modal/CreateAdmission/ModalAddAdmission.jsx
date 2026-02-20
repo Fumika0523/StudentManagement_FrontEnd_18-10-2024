@@ -10,7 +10,7 @@ import { url } from "../../../utils/constant";
 import { Col } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import { toast } from "react-toastify";
-import { admissionInitialValues, studentSchema } from "../AdmissionSchema";
+import { admissionInitialValues, studentSchema } from "./AdmissionSchema";
 
 const ModalAddAdmission = ({
   show,

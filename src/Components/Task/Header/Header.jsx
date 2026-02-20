@@ -1,8 +1,22 @@
-import React from 'react'
+import AddTaskButton from './ActionButton/AddTaskButton'
+import React, { useState } from "react";
+import { Box } from "@mui/material";
+
 
 const Header = () => {
+    const [showAdd, setShowAdd] = useState(false);
+  
+
   return (
-    <div>Header</div>
+   <>
+    <Box sx={{ mb: 2 }}>
+
+        <AddTaskButton 
+        setShowAdd={setShowAdd}
+        showAdd={setShowAdd}/>
+
+       </Box>
+   </>
   )
 }
 

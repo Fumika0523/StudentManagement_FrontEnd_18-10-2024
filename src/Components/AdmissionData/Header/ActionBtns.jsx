@@ -3,8 +3,9 @@ import { Box, Button } from "@mui/material";
 import { PersonAdd, FileUpload, FileDownload } from "@mui/icons-material";
 import axios from "axios";
 import BulkUploadBtns from "../../Bulkload/BulkUploadBtns";
+import ModalAddAdmission from '../Modal/CreateAdmission/ModalAddAdmission'
 
-const ActionBtns = ({ setShowAdd, config, setStudentData, urlBase }) => {
+const ActionBtns = ({ setShowAdd,courseData, config, setStudentData, urlBase ,showAdd  }) => {
   return (
     <Box
       sx={{
@@ -16,7 +17,7 @@ const ActionBtns = ({ setShowAdd, config, setStudentData, urlBase }) => {
         alignItems: "center",
       }}
     >
-      {/* Add Student Button */}
+      {/* Add Admission Button */}
       <Button
         variant="contained"
         startIcon={<PersonAdd />}
@@ -38,22 +39,31 @@ const ActionBtns = ({ setShowAdd, config, setStudentData, urlBase }) => {
           },
         }}
       >
-        Add Student
+        Add Admission
       </Button>
 
       {/* Bulk Upload */}
-      <BulkUploadBtns
-        templateUrl="http://localhost:8001/api/excel/student-template"
-        importUrl="http://localhost:8001/api/excel/student-add-update"
-        deleteUrl="http://localhost:8001/api/excel/student-delete" 
-        modalTitle="Bulk Upload Students"
-        axiosConfig={config}
-        onRefresh={async () => {
-          const refreshed = await axios.get(`${urlBase}/allstudent`, config);
-          setStudentData(refreshed.data.studentData);
-        }}
-      />
+    <BulkUploadBtns
+    templateUrl="http://localhost:8001/api/excel/admission-template"
+    importUrl="http://localhost:8001/api/excel/admission-import"
+    modalTitle="Bulk Upload Admissions"
+    axiosConfig={config}
+    onRefresh={async () => {
+      const refreshed = await axios.get(`${url}/alladmission`, config);
+      setAdmissionData(refreshed.data.admissionData);
+    }}
+  />
+   {/* Add Admission modal */}
+      {showAdd && (
+        <ModalAddAdmission
+          show={showAdd}
+          setShow={setShowAdd}
+          courseData={courseData}
+          setStudentData={setStudentData}
+        />
+      )}
     </Box>
+   
   );
 };
 

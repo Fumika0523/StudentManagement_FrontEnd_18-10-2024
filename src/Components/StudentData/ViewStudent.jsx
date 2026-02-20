@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { url } from "../../utils/constant"
+import { url } from "../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./CustomisedTables"
 import Header from "./Header/Header"
