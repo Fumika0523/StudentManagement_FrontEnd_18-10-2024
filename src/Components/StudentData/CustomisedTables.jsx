@@ -1,4 +1,3 @@
-// CustomizedTables.jsx - WITH HORIZONTAL SCROLLING FIX
 import React, { useState, useEffect, useMemo } from "react";
 import TableRow from "@mui/material/TableRow";
 import Table from "@mui/material/Table";
