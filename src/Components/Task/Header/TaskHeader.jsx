@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import AddTaskButton from "./ActionButton/AddTaskButton";
 import TaskFilter from "./Filter/TaskFilter";
-// import ModalAddTask from "../../Task/Table/ModalAssignTask"; // adjust path if needed
+import ModalAddTask from "../../Task/Header/ActionButton/CreateTask/ModalAddTask"; // adjust path if needed
 
 const TaskHeader = ({
   // AddTaskButton
@@ -15,7 +15,8 @@ const TaskHeader = ({
   setOpenFilters,
   onApply,
   onReset,
-
+  courseData,
+  setCourseData,
   uniqueCourses,
   selectedCourse,
   setSelectedCourse,
@@ -29,7 +30,7 @@ const TaskHeader = ({
   setDateRange,
 }) => {
   const [showAdd, setShowAdd] = useState(false);
-
+console.log("course data from taskHeader", courseData)
   return (
     <div>
       {/* Top actions */}
@@ -77,6 +78,7 @@ const TaskHeader = ({
           show={showAdd}
           setShow={setShowAdd}
           setTaskData={setTaskData}
+          courseData={courseData}
         />
       )}
     </div>

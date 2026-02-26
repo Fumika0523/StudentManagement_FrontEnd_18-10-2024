@@ -189,6 +189,8 @@ export default function ViewTask() {
         dateRange={dateRange}
         setDateRange={setDateRange}
         urlBase={url}
+        courseData={courseData}
+        setCourseData={setCourseData}
         uniqueCourses={uniqueCourses}
         selectedCourse={selectedCourse}
         setSelectedCourse={setSelectedCourse}

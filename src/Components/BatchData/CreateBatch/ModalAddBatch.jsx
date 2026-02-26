@@ -13,7 +13,6 @@ import { toast } from 'react-toastify';
 import { batchInitialValues, formSchema } from './BatchSchema';
 import { Box } from '@mui/material';
 
-// Material-UI Icons
 import {
   GroupAdd,
   School,
@@ -157,7 +156,7 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
       <Modal.Header
         closeButton
         style={{
-          background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+          background: "linear-gradient(180deg, #1f3fbf 0%, #1b2f7a 100%)",
           color: "white",
           borderBottom: "none",
           borderRadius: "16px 16px 0 0",

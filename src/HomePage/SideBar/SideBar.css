@@ -1,10 +1,10 @@
-/* ========= Modern Sidebar Base ========= */
+========= Modern Sidebar Base =========
 .sideBarStyle {
-    background: linear-gradient(180deg, #1f3fbf 0%, #1b2f7a 100%);
+    background: linear-gradient(180deg, #1c3dc0 0%, #020d35 100%);
   height: 100vh;
-    /* padding: 14px 10px; */
+    /* padding: 100px 10px; */
   display: flex;
-    top: 0;
+    top:0;
   left: 0;
   flex-direction: column;
   justify-content: space-between;
@@ -319,4 +319,64 @@
 .sb-miniArrow svg {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.95);
+}
+
+
+// Work design  when you expand SideBar
+// Course + Task put together
+//
+
+
+/* Layout: top content + bottom pinned signout */
+.sb-top {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 65px; /* space for your toggle icon */
+}
+
+.sb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sb-bottom {
+  margin-top: auto;
+  padding-bottom: 12px;
+}
+
+/* Brand row (expanded) */
+.sb-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 6px 16px;
+}
+
+.sb-brandText {
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+/* Expanded rows become consistent without bootstrap columns */
+.sb-leftIcon {
+  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sb-label {
+  flex: 1;
+  font-weight: 600;
+}
+
+.sb-right {
+  width: 24px;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0.9;
 }

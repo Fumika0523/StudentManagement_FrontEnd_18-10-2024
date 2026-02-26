@@ -46,8 +46,21 @@ const ModalAssignTask = ({ show, onClose, task, batchData, onConfirm }) => {
   const noBatches = courseName && filteredBatches.length === 0;
 
   return (
-    <Modal show={show} onHide={onClose} centered backdrop="static">
-      <Modal.Header closeButton style={{ borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
+    <Modal show={show} 
+    onHide={onClose} 
+    centered  
+    size="lg"
+      style={{ "--bs-modal-border-radius": "16px" }}>
+         <Modal.Header
+        closeButton
+        style={{
+          background: "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
+          color: "white",
+          borderBottom: "none",
+          borderRadius: "16px 16px 0 0",
+          padding: "20px 24px",
+        }}
+      >
         <Modal.Title className="d-flex align-items-center gap-2">
           <FiClipboard />
           Assign Task
@@ -126,3 +139,7 @@ const ModalAssignTask = ({ show, onClose, task, batchData, onConfirm }) => {
 };
 
 export default ModalAssignTask;
+
+
+//Only inprogress batch should show
+//Improve the UI

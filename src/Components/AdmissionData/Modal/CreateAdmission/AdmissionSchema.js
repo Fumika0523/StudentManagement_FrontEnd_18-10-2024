@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 export const admissionInitialValues = {
    batchNumber: "",
-      courseId: "",
+   courseId: "",
       studentId: "",
       studentName: "",
       courseName: "",
