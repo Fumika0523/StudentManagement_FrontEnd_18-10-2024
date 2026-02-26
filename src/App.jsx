@@ -112,7 +112,9 @@ return (
             overflow: "hidden",       // Hide overflow
             height: "100vh"           // Full viewport height
           }} > 
-          <SideBar isSidebarVisible={isSidebarVisible} />
+          <SideBar isSidebarVisible={isSidebarVisible}
+            onClose={() => setIsSidebarVisible(false)} 
+/>
           <div 
             className="backgroundDesign d-flex flex-column" 
             style={{
