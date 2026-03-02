@@ -12,49 +12,44 @@ import { FcReading } from "react-icons/fc";
 function SignUp() {
   const navigate = useNavigate();
 
-  const formSchema = Yup.object().shape({
-    firstName: Yup.string().trim().required("First name is required"),
-    lastName: Yup.string().trim().required("Last name is required"),
-    username: Yup.string().trim().required("Username is required"),
-    email: Yup.string().trim().email("Invalid email").required("Email is required"),
-    phoneNumber: Yup.string()
-      .trim()
-      .matches(/^[0-9+() \-]*$/, "Invalid phone number")
-      .nullable(),
-    birthdate: Yup.date().required("Birthdate is required"),
-    gender: Yup.string(),
-    password: Yup.string().required("Password is required"),
-    role: Yup.string(),
-  });
+const formSchema = Yup.object().shape({
+  firstName: Yup.string().trim().required("First name is required"),
+  lastName: Yup.string().trim().required("Last name is required"),
+  email: Yup.string().trim().email("Invalid email").required("Email is required"),
+  phoneNumber: Yup.string()
+    .trim()
+    .matches(/^[0-9+() \-]*$/, "Invalid phone number")
+    .nullable(),
+  birthdate: Yup.date().required("Birthdate is required"),
+  gender: Yup.string(),
+  password: Yup.string().required("Password is required"),
+});
 
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      username: "",
-      password: "",
-      email: "",
-      phoneNumber: "",
-      birthdate: "",
-      gender: "",
-      role: "student",
-    },
-    validationSchema: formSchema,
-    onSubmit: async (values) => {
-      const payload = {
-        ...values,
-        firstName: values.firstName.trim(),
-        lastName: values.lastName.trim(),
-        username: values.username.trim(),
-        email: values.email.trim(),
-        phoneNumber: values.phoneNumber?.trim() || undefined,
-      };
+const formik = useFormik({
+  initialValues: {
+    firstName: "",
+    lastName: "",
+    password: "",
+    email: "",
+    phoneNumber: "",
+    birthdate: "",
+    gender: "",
+    role: "student",
+  },
+  validationSchema: formSchema,
+  onSubmit: async (values) => {
+    const payload = {
+      ...values,
+      firstName: values.firstName.trim(),
+      lastName: values.lastName.trim(),
+      email: values.email.trim().toLowerCase(),
+      phoneNumber: values.phoneNumber?.trim() || undefined,
+    };
 
-      const res = await axios.post(`${url}/signup`, payload);
-      console.log("res",res.data)
-      if (res.status === 200) navigate("/student-signin");
-    },
-  });
+    const res = await axios.post(`${url}/signup`, payload);
+    if (res.status === 200) navigate("/student-signin");
+  },
+});
 
   const handleGoogleSignUp = () => {
     window.location.href = "http://localhost:8001/auth/google";
@@ -97,29 +92,24 @@ function SignUp() {
               </Form.Group>
             </div>
 
-            {/* Row 2: Username/Email */}
-            <div className="row">
-              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
-                <Form.Label className="formLabel m-0">Username</Form.Label>
-                <Form.Control
-                  name="username"
-                  value={formik.values.username}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </Form.Group>
-
-              <Form.Group className="col-md-6 col-lg-6 col-sm-6">
-                <Form.Label className="formLabel m-0">Email Address</Form.Label>
-                <Form.Control
-                  type="email"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </Form.Group>
-            </div>
+           {/* Row 2: Email */}
+<div className="row">
+  <Form.Group className="col-12 mb-1">
+    <Form.Label className="formLabel m-0">Email Address</Form.Label>
+    <Form.Control
+      type="email"
+      name="email"
+      value={formik.values.email}
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+    />
+    {formik.touched.email && formik.errors.email ? (
+      <div className="text-danger" style={{ fontSize: 12 }}>
+        {formik.errors.email}
+      </div>
+    ) : null}
+  </Form.Group>
+</div>
 
             {/* Row 3: Gender/Birthdate */}
             <div className="row align-items-center d-flex">

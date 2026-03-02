@@ -62,19 +62,23 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData, setCourseD
   });
 
   // Auto-fill username when studentName changes
-  useEffect(() => {
-    if (formik.values.studentName) {
-      // Convert studentName to username format (lowercase, no spaces)
-      const autoUsername = formik.values.studentName
-        .toLowerCase()
-        .replace(/\s+/g, ''); // Remove all spaces
-      
-      formik.setFieldValue("username", autoUsername);
-    } else {
-      // Clear username if studentName is empty
-      formik.setFieldValue("username", "");
-    }
-  }, [formik.values.studentName]);
+// Auto-fill username when email changes
+useEffect(() => {
+  const email = (formik.values.email || "").trim().toLowerCase();
+
+  if (email && email.includes("@")) {
+    // take part before @, remove spaces, keep safe characters
+    const localPart = email.split("@")[0];
+
+    const autoUsername = localPart
+      .replace(/\s+/g, "")
+      .replace(/[^a-z0-9._-]/g, ""); // keep it username-safe
+
+    formik.setFieldValue("username", autoUsername);
+  } else {
+    formik.setFieldValue("username", "");
+  }
+}, [formik.values.email]);
 
   // checkbox handler for array field
   const toggleCourse = (course) => {

@@ -1,7 +1,7 @@
 // sidebar.styles.js
 export const COLORS = {
-  DARKER: "#030920",
-  DARK: "#1734a8",
+  DARKER: "#05113f",
+  DARK: "#1b3dc7",
   TEXT: "rgba(255,255,255,0.78)",
   MUTED: "rgba(255,255,255,0.38)",
 };
@@ -79,7 +79,6 @@ export const S = {
     overflow: "hidden",
   },
 
-  // ✅ full-width divider so it aligns with logo border
   divider: {
     borderBottom: "1px solid rgba(255,255,255,0.10)",
     margin: "10px 0",
@@ -90,8 +89,8 @@ export const S = {
     display: "flex",
     alignItems: "center",
     cursor: "pointer",
-    fontSize: "13.5px",
-    fontWeight: 500,
+    fontSize: "14.5px",
+    fontWeight: 600,
     borderRadius: "9px",
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -113,8 +112,8 @@ export const S = {
     display: "flex",
     alignItems: "center",
     cursor: "pointer",
-    color: "#f87171",
-    fontSize: "13.5px",
+    color: "#f96f6f",
+    fontSize: "15px",
     fontWeight: 500,
     borderTop: "1px solid rgba(255,255,255,0.08)",
     whiteSpace: "nowrap",

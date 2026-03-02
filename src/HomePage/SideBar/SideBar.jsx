@@ -2,9 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import { FaPowerOff } from "react-icons/fa";
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-
 import { COLORS, ANIM, S } from "./SideBarStyles";
-import { ICONS, getAcademicItems } from "./SideBar";
+import { ICONS, getAcademicItems } from "./SideBarData";
+
+const renderIcon = (iconKey) => {
+  const icon = ICONS[iconKey];
+  if (!icon) return null;
+
+  const { name, size } = icon;
+  return (
+    <img
+      width={size}
+      height={size}
+      src={`https://img.icons8.com/color/${size * 2}/${name}.png`}
+      alt={name}
+      style={{ display: "block", flexShrink: 0, margin: "0 auto" }}
+    />
+  );
+};
 
 function NavItem({ icon, label, onClick, isCollapsed, labelVisible, widthDuration, labelDuration }) {
   const [hovered, setHovered] = useState(false);
@@ -30,7 +45,7 @@ function NavItem({ icon, label, onClick, isCollapsed, labelVisible, widthDuratio
         padding: isCollapsed ? "8px 0" : "8px 12px",
         margin: isCollapsed ? "2px 6px" : "2px 8px",
         justifyContent: isCollapsed ? "center" : "flex-start",
-        transition: `background 0.18s, color 0.18s,
+        transition: `background 0.28s, color 0.18s,
           padding ${widthDuration}ms cubic-bezier(0.4,0,0.2,1),
           margin  ${widthDuration}ms cubic-bezier(0.4,0,0.2,1)`,
       }}
@@ -61,7 +76,6 @@ function NavItem({ icon, label, onClick, isCollapsed, labelVisible, widthDuratio
 }
 
 function SectionLabel({ label, isCollapsed, labelVisible, labelDuration }) {
-  // ✅ collapsed shows only a divider (no “ACADEMIC” text)
   if (isCollapsed) return <div style={S.divider} />;
   return (
     <div
@@ -160,7 +174,7 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
           gap: isCollapsed ? 0 : "10px",
         }}
       >
-        <span style={S.iconWrap}>{ICONS.logo()}</span>
+        <span style={S.iconWrap}>{renderIcon("logo", ICONS)}</span>
 
         <span
           style={{
@@ -177,7 +191,7 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
 
       <div style={S.nav}>
         <NavItem
-          icon={ICONS.dashboard()}
+          icon={renderIcon("dashboard", ICONS)}
           label="Dashboard"
           onClick={() => handleNav("/dashboard")}
           isCollapsed={isCollapsed}
@@ -186,28 +200,28 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
           labelDuration={ANIM.LABEL_DURATION}
         />
 
-        {/* ✅ Prevent double divider when collapsed */}
+        {/*  Prevent double divider when collapsed */}
         {!isCollapsed && <div style={S.divider} />}
         <SectionLabel label="ACADEMIC" isCollapsed={isCollapsed} labelVisible={effectiveLabelVisible} labelDuration={ANIM.LABEL_DURATION} />
 
-        {academicItems.map((item) => (
-          <NavItem
-            key={item.label}
-            icon={item.icon}
-            label={item.label}
-            onClick={() => handleNav(item.path)}
-            isCollapsed={isCollapsed}
-            labelVisible={effectiveLabelVisible}
-            widthDuration={ANIM.WIDTH_DURATION}
-            labelDuration={ANIM.LABEL_DURATION}
-          />
-        ))}
+    {academicItems.map((item) => (
+      <NavItem
+        key={item.label}
+        icon={renderIcon(item.iconKey, ICONS)}
+        label={item.label}
+        onClick={() => handleNav(item.path)}
+        isCollapsed={isCollapsed}
+        labelVisible={effectiveLabelVisible}
+        widthDuration={ANIM.WIDTH_DURATION}
+        labelDuration={ANIM.LABEL_DURATION}
+      />
+    ))}
 
         {!isCollapsed && <div style={S.divider} />}
         <SectionLabel label="SETTINGS" isCollapsed={isCollapsed} labelVisible={effectiveLabelVisible} labelDuration={ANIM.LABEL_DURATION} />
 
         <NavItem
-          icon={ICONS.settings()}
+          icon={renderIcon("settings", ICONS)}
           label="Account Settings"
           onClick={() => handleNav("/settings")}
           isCollapsed={isCollapsed}

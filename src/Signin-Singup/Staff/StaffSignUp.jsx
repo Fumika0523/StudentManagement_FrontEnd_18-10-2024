@@ -1,25 +1,74 @@
+import React, { useEffect, useMemo, useState } from "react";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React from "react";
-import Form from "react-bootstrap/Form";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { url } from "../../Components/utils/constant";
+import { FcVoicePresentation } from "react-icons/fc";
+import { toast } from "react-toastify";
+
+// social icons (UI only)
+import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
-import { Link, useNavigate } from "react-router-dom";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import { url } from "../../Components/utils/constant";
-import axios from "axios";
-import { FcVoicePresentation } from "react-icons/fc";
-import { toast } from "react-toastify";
 
 function SignUp() {
   const navigate = useNavigate();
 
+  // ----------------------------
+  // Country dropdown (API fetch)
+  // ----------------------------
+  const [countries, setCountries] = useState([]);
+  const [countryLoading, setCountryLoading] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+
+    const loadCountries = async () => {
+      setCountryLoading(true);
+      try {
+        // REST Countries (no key)
+        const res = await axios.get("https://restcountries.com/v3.1/all?fields=name,cca2");
+        const list = (res.data || [])
+          .map((c) => ({
+            code: (c.cca2 || "").toUpperCase(),
+            name: c?.name?.common || "",
+          }))
+          .filter((c) => c.code && c.name)
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        if (alive) setCountries(list);
+      } catch (e) {
+        // fallback: minimal common list
+        if (alive) {
+          setCountries([
+            { code: "JP", name: "Japan" },
+            { code: "GB", name: "United Kingdom" },
+            { code: "US", name: "United States" },
+            { code: "CA", name: "Canada" },
+            { code: "AU", name: "Australia" },
+            { code: "DE", name: "Germany" },
+            { code: "FR", name: "France" },
+          ]);
+        }
+      } finally {
+        if (alive) setCountryLoading(false);
+      }
+    };
+
+    loadCountries();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  // Option A: Email + Password login (no username)
   const formSchema = Yup.object().shape({
     firstName: Yup.string().trim().required("First name is required"),
     lastName: Yup.string().trim().required("Last name is required"),
-    username: Yup.string().trim().required("Username is required"),
     email: Yup.string().trim().email("Invalid email").required("Email is required"),
     phoneNumber: Yup.string()
       .trim()
@@ -31,25 +80,30 @@ function SignUp() {
 
   const formik = useFormik({
     initialValues: {
+      title: "",
       firstName: "",
       lastName: "",
-      username: "",
-      password: "",
       email: "",
       phoneNumber: "",
-      birthdate: "",
       gender: "",
+      birthdate: "",
+      country: "",
       role: "",
+      password: "",
     },
     validationSchema: formSchema,
     onSubmit: async (values) => {
       const payload = {
-        ...values,
+        title: values.title || "",
         firstName: values.firstName.trim(),
         lastName: values.lastName.trim(),
-        username: values.username.trim(),
-        email: values.email.trim(),
-        phoneNumber: values.phoneNumber?.trim() || undefined, 
+        email: values.email.trim().toLowerCase(),
+        phoneNumber: values.phoneNumber?.trim() || undefined,
+        gender: values.gender || undefined,
+        birthdate: values.birthdate || undefined,
+        country: values.country || undefined, // ISO2 code
+        role: values.role,
+        password: values.password,
       };
 
       try {
@@ -59,230 +113,236 @@ function SignUp() {
           navigate("/staff-signin");
         }
       } catch (error) {
-        console.log("Sign up Error:", error.message);
-        toast.error("Sign up failed");
+        toast.error(error?.response?.data?.message || "Sign up failed");
       }
     },
   });
 
+  const FieldError = ({ name }) => {
+    if (!formik.touched[name] || !formik.errors[name]) return null;
+    return (
+      <div className="text-danger" style={{ fontSize: 12 }}>
+        {formik.errors[name]}
+      </div>
+    );
+  };
+
+  // ----------------------------
+  // Layout sizing (fix md too big)
+  // ----------------------------
+  // Use a centered wrapper and cap width so md/lg doesn't look massive.
+  const cardStyle = useMemo(
+    () => ({
+      width: "100%",
+      maxWidth: 520, // ✅ key fix for medium screens
+      borderRadius: 16,
+      padding: "18px 18px",
+    }),
+    []
+  );
+
+  const titleRowStyle = useMemo(
+    () => ({
+      marginBottom: 8,
+    }),
+    []
+  );
+
   return (
-    <>
-      <div className="signInStyle container-fluid d-flex justify-content-center min-vh-100 align-items-center">
-        <div className="row justify-content-center align-items-center d-flex flex-column gap-4 w-100">
-          <Form
-            className="signupCard col-10 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4"
-            onSubmit={formik.handleSubmit}
-          >
-            <div className="row">
-              <h2 className="d-flex justify-content-center align-items-center pb-2 fs-2">
-                <FcVoicePresentation style={{ fontSize: "55px" }} /> Staff Sign Up
-              </h2>
+    <div className="signInStyle container-fluid d-flex justify-content-center min-vh-100 align-items-center">
+      <div className="d-flex flex-column align-items-center w-100" style={{ gap: 14 }}>
+        <Form
+          className="signupCard px-3"
+          style={cardStyle}
+          onSubmit={formik.handleSubmit}
+        >
+          {/* Title */}
+          <div style={titleRowStyle}>
+            <h2 className="d-flex justify-content-center align-items-center fs-3 mb-1">
+              <FcVoicePresentation style={{ fontSize: 52 }} />{" "}
+              <span className="ms-2">Staff Sign Up</span>
+            </h2>
+            <div className="text-center" style={{ fontSize: 13, color: "#6b7280" }}>
+              Create an account using email & password
             </div>
-
-            {/* Row 1: First/Last */}
-            <div className="row">
-              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
-                <Form.Label className="formLabel m-0">First Name</Form.Label>
-                <Form.Control
-                  name="firstName"
-                  value={formik.values.firstName}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.firstName && formik.errors.firstName ? (
-                  <div className="text-danger" style={{ fontSize: 12 }}>
-                    {formik.errors.firstName}
-                  </div>
-                ) : null}
-              </Form.Group>
-
-              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
-                <Form.Label className="formLabel m-0">Last Name</Form.Label>
-                <Form.Control
-                  name="lastName"
-                  value={formik.values.lastName}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.lastName && formik.errors.lastName ? (
-                  <div className="text-danger" style={{ fontSize: 12 }}>
-                    {formik.errors.lastName}
-                  </div>
-                ) : null}
-              </Form.Group>
-            </div>
-
-            {/* Row 2: Username/Email */}
-            <div className="row">
-              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
-                <Form.Label className="formLabel m-0">Username</Form.Label>
-                <Form.Control
-                  name="username"
-                  value={formik.values.username}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.username && formik.errors.username ? (
-                  <div className="text-danger" style={{ fontSize: 12 }}>
-                    {formik.errors.username}
-                  </div>
-                ) : null}
-              </Form.Group>
-
-              <Form.Group className="col-md-6 col-lg-6 col-sm-6">
-                <Form.Label className="formLabel m-0">Email Address</Form.Label>
-                <Form.Control
-                  type="email"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.email && formik.errors.email ? (
-                  <div className="text-danger" style={{ fontSize: 12 }}>
-                    {formik.errors.email}
-                  </div>
-                ) : null}
-              </Form.Group>
-            </div>
-
-            {/* Row 3: Gender/Birthdate */}
-            <div className="row align-items-center d-flex">
-              <div className="col-lg-6 col-md-6 col-sm-6 d-flex flex-column justify-content-start mb-1">
-                <div className="formLabel mb-1">Gender</div>
-                <div className="d-flex flex-row">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="gender"
-                      value="male"
-                      onChange={formik.handleChange}
-                    />
-                    Male
-                  </div>
-                  <div className="form-check ms-3">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="gender"
-                      value="female"
-                      onChange={formik.handleChange}
-                    />
-                    Female
-                  </div>
-                </div>
-              </div>
-
-              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
-                <Form.Label className="formLabel m-0">Birthdate</Form.Label>
-                <Form.Control
-                  type="date"
-                  name="birthdate"
-                  value={formik.values.birthdate}
-                  onChange={formik.handleChange}
-                />
-              </Form.Group>
-            </div>
-
-            {/* Row 4: Phone/Role */}
-            <div className="row mb-2">
-              <Form.Group className="col-lg-6 col-sm-6 col-md-6 mb-1">
-                <Form.Label className="formLabel m-0">Phone (optional)</Form.Label>
-                <Form.Control
-                  name="phoneNumber"
-                  value={formik.values.phoneNumber}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                  <div className="text-danger" style={{ fontSize: 12 }}>
-                    {formik.errors.phoneNumber}
-                  </div>
-                ) : null}
-              </Form.Group>
-
-              <Form.Group className="col-lg-6 col-sm-6 col-md-6">
-                <Form.Label className="formLabel m-0">Role</Form.Label>
-                <Form.Select
-                  name="role"
-                  value={formik.values.role}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                >
-                  <option value="">Select Role</option>
-                  <option value="admin">Admin</option>
-                  <option value="staff">Staff</option>
-                  <option value="user">User</option>
-                  <option value="manager">Manager</option>
-                  <option value="supportTeam">Support Team</option>
-                  <option value="testingTeam">Testing Team</option>
-                  <option value="guest">Guest</option>
-                  <option value="student">Student</option>
-                </Form.Select>
-                {formik.touched.role && formik.errors.role ? (
-                  <div className="text-danger" style={{ fontSize: 12 }}>
-                    {formik.errors.role}
-                  </div>
-                ) : null}
-              </Form.Group>
-            </div>
-
-            {/* Row 5: Password */}
-            <div className="row mb-2">
-              <Form.Group className="col-lg-12">
-                <Form.Label className="formLabel m-0">Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="password"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.password && formik.errors.password ? (
-                  <div className="text-danger" style={{ fontSize: 12 }}>
-                    {formik.errors.password}
-                  </div>
-                ) : null}
-              </Form.Group>
-            </div>
-
-            <div className="row p-1">
-              <div className="text-center">
-                <Button
-                  type="submit"
-                  variant="outline-*"
-                  className="sign-Btn my-3 fw-bold text-white"
-                  style={{ fontSize: "18px", width: "100%", outline: "none", border: "none" }}
-                >
-                  SIGN UP
-                </Button>
-              </div>
-            </div>
-
-            <div className="row text-center mb-1">
-              <div className="message">Or Sign Up Using</div>
-            </div>
-
-            <div className="row">
-              <div className="gap-2 mt-2 d-flex" style={{ justifyContent: "center" }}>
-                <FacebookIcon className="socialIcons" sx={{ color: "navy" }} />
-                <LinkedInIcon className="socialIcons" sx={{ color: "#0077B5" }} />
-                <GitHubIcon className="socialIcons" />
-                <GoogleIcon sx={{ color: "#ea4335" }} className="socialIcons" />
-              </div>
-            </div>
-          </Form>
-
-          <div className="signinCard2 col-11 col-sm-10 col-md-6 col-lg-5 col-xl-5 col-xxl-4 px-4 d-flex justify-content flex-row">
-            <div className="text-center message">Or already have an account? &nbsp;</div>
-            <Link className="link-underline link-underline-opacity-0 text-center" to="/staff-signin">
-              Sign in
-            </Link>
           </div>
+
+          {/* Row: Title / Country */}
+          <div className="row g-2 mt-2">
+            <Form.Group className="col-12 col-md-5">
+              <Form.Label className="formLabel m-0">Title</Form.Label>
+              <Form.Select name="title" value={formik.values.title} onChange={formik.handleChange}>
+                <option value="">Select</option>
+                <option value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Mx">Mx</option>
+                <option value="Dr">Dr</option>
+                <option value="Prof">Prof</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="col-12 col-md-7">
+              <Form.Label className="formLabel m-0">Country</Form.Label>
+              <Form.Select
+                name="country"
+                value={formik.values.country}
+                onChange={formik.handleChange}
+                disabled={countryLoading}
+              >
+                <option value="">
+                  {countryLoading ? "Loading countries..." : "Select country"}
+                </option>
+                {countries.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.name} ({c.code})
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          </div>
+
+          {/* Row: First / Last */}
+          <div className="row g-2 mt-1">
+            <Form.Group className="col-12 col-md-6">
+              <Form.Label className="formLabel m-0">First Name</Form.Label>
+              <Form.Control
+                name="firstName"
+                value={formik.values.firstName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="First name"
+              />
+              <FieldError name="firstName" />
+            </Form.Group>
+
+            <Form.Group className="col-12 col-md-6">
+              <Form.Label className="formLabel m-0">Last Name</Form.Label>
+              <Form.Control
+                name="lastName"
+                value={formik.values.lastName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="Last name"
+              />
+              <FieldError name="lastName" />
+            </Form.Group>
+          </div>
+
+          {/* Email (full width) */}
+          <div className="row g-2 mt-1">
+            <Form.Group className="col-12">
+              <Form.Label className="formLabel m-0">Email Address</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="email@example.com"
+              />
+              <FieldError name="email" />
+            </Form.Group>
+          </div>
+
+          {/* Phone / Role */}
+          <div className="row g-2 mt-1">
+            <Form.Group className="col-12 col-md-6">
+              <Form.Label className="formLabel m-0">Phone (optional)</Form.Label>
+              <Form.Control
+                name="phoneNumber"
+                value={formik.values.phoneNumber}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="+81..."
+              />
+              <FieldError name="phoneNumber" />
+            </Form.Group>
+
+            <Form.Group className="col-12 col-md-6">
+              <Form.Label className="formLabel m-0">Role</Form.Label>
+              <Form.Select
+                name="role"
+                value={formik.values.role}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                <option value="">Select Role</option>
+                <option value="admin">Admin</option>
+                <option value="staff">Staff</option>
+                <option value="manager">Manager</option>
+                <option value="supportTeam">Support Team</option>
+                <option value="testingTeam">Testing Team</option>
+                <option value="user">User</option>
+                <option value="guest">Guest</option>
+              </Form.Select>
+              <FieldError name="role" />
+            </Form.Group>
+          </div>
+
+          {/* Password */}
+          <div className="row g-2 mt-1">
+            <Form.Group className="col-12">
+              <Form.Label className="formLabel m-0">Password</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="Password"
+              />
+              <FieldError name="password" />
+            </Form.Group>
+          </div>
+
+          {/* Submit */}
+          <div className="mt-3">
+            <Button
+              type="submit"
+              className="sign-Btn fw-bold text-white"
+              style={{
+                width: "100%",
+                border: "none",
+                fontSize: 16,
+                padding: "10px 0",
+                borderRadius: 10,
+              }}
+            >
+              SIGN UP
+            </Button>
+          </div>
+
+          {/* Social */}
+          <div className="text-center mt-3" style={{ fontSize: 13, color: "#6b7280" }}>
+            Or sign up using
+          </div>
+
+          <div className="d-flex justify-content-center gap-2 mt-2">
+            <FacebookIcon className="socialIcons" sx={{ color: "navy" }} />
+            <LinkedInIcon className="socialIcons" sx={{ color: "#0077B5" }} />
+            <GitHubIcon className="socialIcons" />
+            <GoogleIcon sx={{ color: "#ea4335" }} className="socialIcons" />
+          </div>
+        </Form>
+
+        {/* Footer */}
+        <div
+          className="signinCard2 d-flex justify-content-center align-items-center px-4"
+          style={{
+            width: "100%",
+            maxWidth: 520, // ✅ match form width
+            borderRadius: 14,
+            padding: "10px 12px",
+          }}
+        >
+          <div className="text-center message">Already have an account?&nbsp;</div>
+          <Link className="link-underline link-underline-opacity-0 text-center" to="/staff-signin">
+            Sign in
+          </Link>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
