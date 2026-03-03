@@ -24,6 +24,8 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 };
 
+
+
 const CustomizedTables = ({
   studentData,
   setStudentData,
@@ -222,7 +224,6 @@ const CustomizedTables = ({
                 <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Student ID</StyledTableCell>
                 <StyledTableCell>Student Name</StyledTableCell>
-                <StyledTableCell>Username</StyledTableCell>
                 <StyledTableCell>Email</StyledTableCell>
                 <StyledTableCell>Phone No.</StyledTableCell>
                 <StyledTableCell>Gender</StyledTableCell>
@@ -291,8 +292,6 @@ const CustomizedTables = ({
                         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                         .join(" ") || "-"}
                     </StyledTableCell>
-
-                    <StyledTableCell>{student.username || "-"}</StyledTableCell>
                     <StyledTableCell>{student.email || "-"}</StyledTableCell>
                     <StyledTableCell>{student.phoneNumber || "-"}</StyledTableCell>
                     <StyledTableCell>{student.gender || "-"}</StyledTableCell>
@@ -388,8 +387,11 @@ const CustomizedTables = ({
           onConfirmDelete={handleConfirmDelete}
         />
       )}
+
+      
     </div>
   );
 };
 
 export default CustomizedTables;
+

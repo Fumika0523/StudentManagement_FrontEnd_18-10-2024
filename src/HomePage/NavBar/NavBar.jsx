@@ -17,13 +17,15 @@ export default function NavBar({ toggleSidebar }) {
   const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
 
-    // const username = localStorage.getItem("username") || user?.name;
+  const firstName = localStorage.getItem("firstName") 
+    console.log("firstName",firstName)
   //display on Navbar
 const navName =
   user?.firstName ||
   user?.name?.split(" ")?.[0] || // fallback if old data only has name
   user?.email?.split("@")?.[0] ||
   "";
+  console.log("user",user)
   
   const getGoogleProfile=async()=>{
     try{
@@ -53,7 +55,7 @@ const navName =
   const UserMenu = (
     <>
     <span className='d-flex flex-row align-items-center text-secondary'>
-      {navName }
+      {firstName }
     <Image
       src={'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
       alt="UserName profile image"

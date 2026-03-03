@@ -41,11 +41,11 @@ function NavItem({ icon, label, onClick, isCollapsed, labelVisible, widthDuratio
       style={{
         ...S.item,
         color: hovered ? "#fff" : COLORS.TEXT,
-        background: hovered ? "rgba(255,255,255,0.1)" : "transparent",
+        background: hovered ? "rgba(64, 155, 240, 0.36)" : "transparent",
         padding: isCollapsed ? "8px 0" : "8px 12px",
         margin: isCollapsed ? "2px 6px" : "2px 8px",
         justifyContent: isCollapsed ? "center" : "flex-start",
-        transition: `background 0.28s, color 0.18s,
+        transition: `background 0.38s, color 0.18s,
           padding ${widthDuration}ms cubic-bezier(0.4,0,0.2,1),
           margin  ${widthDuration}ms cubic-bezier(0.4,0,0.2,1)`,
       }}
@@ -246,6 +246,7 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
         onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
         title={isCollapsed ? "Sign Out" : ""}
       >
+        {/* Sign out */}
         <span style={S.iconWrap}>
           <FaPowerOff style={{ fontSize: "17px", color: "#f87171" }} />
         </span>

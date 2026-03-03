@@ -12,23 +12,30 @@ import axios from "axios";
 import { url } from "../../../utils/constant";
 import { editStudentSchema } from "./editStudentSchema";
 import FormikField from "../FormikField";
-
+import { FieldGroup, Section, inputStyle, panelStyle } from "../CreateStudent/studentFormStyle";
+import { studentSchema, studentInitialValues } from "../CreateStudent/StudentSchema";
+import useCountryCode from "../CreateStudent/CountryCode";
 import {
-  Edit as EditIcon,
+  PersonAdd,
   Person,
   Email,
   Phone,
   Lock,
   Cake,
-  AccountCircle,
+  School,
+  PublicOutlined,
+  WcOutlined,
+  Edit as EditIcon,
 } from "@mui/icons-material";
-import { Box } from "@mui/material";
 
-function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setStudentData }) {
+
+
+function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setStudentData, courseData }) {
   const token = localStorage.getItem("token");
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
+const { countries, countryLoading } = useCountryCode();
 
   const handleClose = () => {
     setShow(false);
@@ -107,6 +114,20 @@ function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setSt
     }
   }, [formik.values.studentName, singleStudent?.studentName]);
 
+  const F = formik;
+
+  const toggleCourse = (course) => {
+    const current = Array.isArray(F.values.preferredCourses)
+      ? F.values.preferredCourses
+      : [];
+
+    const next = current.includes(course)
+      ? current.filter((c) => c !== course)
+      : [...current, course];
+
+    F.setFieldValue("preferredCourses", next, true);
+    F.setFieldTouched("preferredCourses", true, false);
+  };
   return (
     <Modal
       show={show}
@@ -116,14 +137,14 @@ function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setSt
       style={{ "--bs-modal-border-radius": "16px" }}
     >
       {/* Header with gradient */}
-      <Modal.Header
+    <Modal.Header
         closeButton
         style={{
-          background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+          background: "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
           color: "white",
           borderBottom: "none",
           borderRadius: "16px 16px 0 0",
-          padding: "20px 24px",
+          padding: "16px 22px",
         }}
       >
         <Modal.Title
@@ -140,137 +161,254 @@ function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setSt
         </Modal.Title>
       </Modal.Header>
 
-      <Form onSubmit={formik.handleSubmit}>
-        <Modal.Body style={{ padding: "20px", backgroundColor: "#f9fafb" }}>
-          {/* Row 1: Student Name, Username, Gender */}
-          <Row className="g-2 mb-2">
-            <Col xs={12} md={4}>
-              <FormikField
-                formik={formik}
-                name="studentName"
-                label="Student Name"
-                Icon={Person}
-                placeholder="Full Name"
-              />
-            </Col>
+    <Form onSubmit={F.handleSubmit}>
+        <Modal.Body style={{ padding: "16px 18px", backgroundColor: "#f1f5f9" }}>
+          <div style={panelStyle}>
+            <Row className="g-1">
+              <Col xs={12} md={3}>
+                <FieldGroup label="Title" icon={<Person />}>
+                  <Form.Select
+                    size="sm"
+                    name="title"
+                    value={F.values.title}
+                    onChange={F.handleChange}
+                    style={inputStyle}
+                  >
+                    {["", "Mr", "Ms", "Mrs", "Mx", "Dr", "Prof"].map((t) => (
+                      <option key={t} value={t}>
+                        {t || "—"}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FieldGroup>
+              </Col>
 
-            <Col xs={12} md={4}>
-              <FormikField
-                formik={formik}
-                name="username"
-                label="Username"
-                Icon={AccountCircle}
-                placeholder="Username"
-                disabled={true}
-              />
-            </Col>
-
-            <Col xs={12} md={4}>
-              <Form.Group>
-                <Form.Label
-                  style={{
-                    fontWeight: 600,
-                    fontSize: "12px",
-                    color: "#475569",
-                    marginBottom: "6px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                  }}
+              <Col xs={12} md={4}>
+                <FieldGroup
+                  label="First Name"
+                  icon={<Person />}
+                  required
+                  error={F.touched.firstName && F.errors.firstName}
                 >
-                  <Person sx={{ fontSize: 14 }} />
-                  Gender
-                </Form.Label>
-
-                <Box sx={{ display: "flex", gap: 2, paddingTop: "6px" }}>
-                  <Form.Check
-                    type="radio"
-                    name="gender"
-                    label="Male"
-                    value="male"
-                    onChange={formik.handleChange}
-                    checked={formik.values.gender === "male"}
-                    style={{ fontSize: "13px" }}
+                  <Form.Control
+                    size="sm"
+                    name="firstName"
+                    value={F.values.firstName}
+                    onChange={F.handleChange}
+                    onBlur={F.handleBlur}
+                    placeholder="e.g. John"
+                    style={inputStyle}
                   />
-                  <Form.Check
-                    type="radio"
-                    name="gender"
-                    label="Female"
-                    value="female"
-                    onChange={formik.handleChange}
-                    checked={formik.values.gender === "female"}
-                    style={{ fontSize: "13px" }}
-                  />
-                </Box>
+                </FieldGroup>
+              </Col>
 
-                {formik.touched.gender && formik.errors.gender ? (
-                  <div className="text-danger" style={{ fontSize: "11px", marginTop: "2px" }}>
-                    {formik.errors.gender}
+              <Col xs={12} md={5}>
+                <FieldGroup
+                  label="Last Name"
+                  icon={<Person />}
+                  required
+                  error={F.touched.lastName && F.errors.lastName}
+                >
+                  <Form.Control
+                    size="sm"
+                    name="lastName"
+                    value={F.values.lastName}
+                    onChange={F.handleChange}
+                    onBlur={F.handleBlur}
+                    placeholder="e.g. Doe"
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
+
+              <Col xs={12}>
+                <FieldGroup label="Gender" icon={<WcOutlined />}>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                    {["male", "female", "Rather not say"].map((g) => {
+                      const checked = F.values.gender === g;
+                      return (
+                        <label
+                          key={g}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            cursor: "pointer",
+                            padding: "8px 12px",
+                            borderRadius: 999,
+                            border: `1px solid ${checked ? "#93c5fd" : "#e2e8f0"}`,
+                            background: checked ? "#eff6ff" : "#fff",
+                            color: checked ? "#1d4ed8" : "#334155",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            userSelect: "none",
+                          }}
+                        >
+                          <input
+                            type="radio"
+                            name="gender"
+                            value={g}
+                            checked={checked}
+                            onChange={F.handleChange}
+                            style={{ accentColor: "#2563eb" }}
+                          />
+                          {g === "Rather not say"
+                            ? "Rather not say"
+                            : g[0].toUpperCase() + g.slice(1)}
+                        </label>
+                      );
+                    })}
                   </div>
-                ) : null}
-              </Form.Group>
-            </Col>
-          </Row>
+                </FieldGroup>
+              </Col>
+            </Row>
 
-          {/* Row 2: Email, Birthdate */}
-          <Row className="g-2 mb-2">
-            <Col xs={12} md={6}>
-              <FormikField
-                formik={formik}
-                name="email"
-                label="Email"
-                Icon={Email}
-                type="email"
-                placeholder="email@example.com"
-              />
-            </Col>
+            <Row className="g-1">
+              <Col xs={12} md={7}>
+                <FieldGroup
+                  label="Email"
+                  icon={<Email />}
+                  required
+                  error={F.touched.email && F.errors.email}
+                >
+                  <Form.Control
+                    size="sm"
+                    type="email"
+                    name="email"
+                    value={F.values.email}
+                    onChange={F.handleChange}
+                    onBlur={F.handleBlur}
+                    placeholder="email@example.com"
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
 
-            <Col xs={12} md={6}>
-              <FormikField
-                formik={formik}
-                name="birthdate"
-                label="Birthdate"
-                Icon={Cake}
-                type="date"
-              />
-            </Col>
-          </Row>
+              <Col xs={12} md={5}>
+                <FieldGroup
+                  label="Phone"
+                  icon={<Phone />}
+                  error={F.touched.phoneNumber && F.errors.phoneNumber}
+                >
+                  <Form.Control
+                    size="sm"
+                    name="phoneNumber"
+                    value={F.values.phoneNumber}
+                    onChange={F.handleChange}
+                    onBlur={F.handleBlur}
+                    placeholder="+81 90-0000-0000"
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
 
-          {/* Row 3: Phone, Password */}
-          <Row className="g-2">
-            <Col xs={12} md={6}>
-              <FormikField
-                formik={formik}
-                name="phoneNumber"
-                label="Phone Number"
-                Icon={Phone}
-                type="text"
-                placeholder="Phone Number"
-              />
-            </Col>
+              <Col xs={12} md={6}>
+                <FieldGroup label="Birthdate" icon={<Cake />}>
+                  <Form.Control
+                    size="sm"
+                    type="date"
+                    name="birthdate"
+                    value={F.values.birthdate}
+                    onChange={F.handleChange}
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
 
-            <Col xs={12} md={6}>
-              <FormikField
-                formik={formik}
-                name="password"
-                label="Password"
-                Icon={Lock}
-                type="password"
-                placeholder="Password"
-                disabled={true}
-              />
-            </Col>
-          </Row>
+              <Col xs={12} md={6}>
+                <FieldGroup label="Country" icon={<PublicOutlined />}>
+                  <Form.Select
+                    size="sm"
+                    name="country"
+                    value={F.values.country}
+                    onChange={F.handleChange}
+                    disabled={countryLoading}
+                    style={inputStyle}
+                  >
+                    <option value="">
+                      {countryLoading ? "Loading countries…" : "Select country"}
+                    </option>
+                    {countries?.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name} ({c.code})
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FieldGroup>
+              </Col>
+
+              <Col xs={12} md={6}>
+                <FieldGroup
+                  label="Password"
+                  icon={<Lock />}
+                  required
+                  error={F.touched.password && F.errors.password}
+                >
+                  <Form.Control
+                    size="sm"
+                    type="password"
+                    name="password"
+                    value={F.values.password}
+                    onChange={F.handleChange}
+                    onBlur={F.handleBlur}
+                    placeholder="••••••••"
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
+            </Row>
+
+            <Section title="Preferred Courses" icon={<School />}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {(courseData || [])
+                  .filter((c) => c?.courseName)
+                  .map((c) => {
+                    const name = String(c.courseName).trim();
+                    const selected = (F.values.preferredCourses || []).includes(name);
+
+                    return (
+                      <button
+                        key={c._id || name}
+                        type="button"
+                        onClick={() => toggleCourse(name)}
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 600,
+                          padding: "5px 13px",
+                          borderRadius: 20,
+                          cursor: "pointer",
+                          transition: "all 0.15s",
+                          border: `1.5px solid ${selected ? "#2563eb" : "#cbd5e1"}`,
+                          backgroundColor: selected ? "#eff6ff" : "#fff",
+                          color: selected ? "#1d4ed8" : "#64748b",
+                        }}
+                      >
+                        {selected ? "✓ " : ""}
+                        {name}
+                      </button>
+                    );
+                  })}
+              </div>
+
+              {F.touched.preferredCourses && F.errors.preferredCourses && (
+                <p style={{ fontSize: 11, color: "#ef4444", marginTop: 6, marginBottom: 0 }}>
+                  {F.errors.preferredCourses}
+                </p>
+              )}
+            </Section>
+          </div>
         </Modal.Body>
 
-        {/* Footer with styled buttons */}
         <Modal.Footer
           style={{
             borderTop: "1px solid #e5e7eb",
-            padding: "12px 20px",
-            backgroundColor: "#ffffff",
+            padding: "12px 16px",
+            backgroundColor: "#fff",
             borderRadius: "0 0 16px 16px",
-            gap: "8px",
+            gap: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
           }}
         >
           <Button
@@ -280,10 +418,10 @@ function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setSt
               backgroundColor: "transparent",
               border: "1px solid #d1d5db",
               color: "#6b7280",
-              fontWeight: "600",
-              fontSize: "13px",
-              padding: "7px 18px",
-              borderRadius: "6px",
+              fontWeight: 900,
+              fontSize: 13,
+              padding: "8px 16px",
+              borderRadius: 10,
             }}
           >
             Cancel
@@ -291,18 +429,18 @@ function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setSt
 
           <Button
             type="submit"
-            disabled={formik.isSubmitting}
+            disabled={F.isSubmitting}
             style={{
-              background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
               border: "none",
-              fontWeight: "600",
-              fontSize: "13px",
-              padding: "7px 20px",
-              borderRadius: "6px",
-              boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+              fontWeight: 900,
+              fontSize: 13,
+              padding: "8px 18px",
+              borderRadius: 10,
+              boxShadow: "0 10px 22px rgba(37, 99, 235, 0.22)",
             }}
           >
-            {formik.isSubmitting ? "Updating..." : "Update Student"}
+            Add Student
           </Button>
         </Modal.Footer>
       </Form>

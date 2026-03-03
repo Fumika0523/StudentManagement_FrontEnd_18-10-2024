@@ -134,41 +134,33 @@ function SignUp() {
   const cardStyle = useMemo(
     () => ({
       width: "100%",
-      maxWidth: 520, // ✅ key fix for medium screens
+      maxWidth: 520,
       borderRadius: 16,
-      padding: "18px 18px",
+      padding: "10px 20px",
     }),
     []
   );
 
-  const titleRowStyle = useMemo(
-    () => ({
-      marginBottom: 8,
-    }),
-    []
-  );
+
 
   return (
     <div className="signInStyle container-fluid d-flex justify-content-center min-vh-100 align-items-center">
-      <div className="d-flex flex-column align-items-center w-100" style={{ gap: 14 }}>
+      <div className="d-flex flex-column align-items-center " style={{ gap: 14 }}>
         <Form
-          className="signupCard px-3"
+          className="signupCard"
           style={cardStyle}
           onSubmit={formik.handleSubmit}
         >
           {/* Title */}
-          <div style={titleRowStyle}>
-            <h2 className="d-flex justify-content-center align-items-center fs-3 mb-1">
-              <FcVoicePresentation style={{ fontSize: 52 }} />{" "}
+          <div >
+            <h3 className="d-flex justify-content-center align-items-center m-0 p-0">
+              <FcVoicePresentation style={{ fontSize: 40 }} />{" "}
               <span className="ms-2">Staff Sign Up</span>
-            </h2>
-            <div className="text-center" style={{ fontSize: 13, color: "#6b7280" }}>
-              Create an account using email & password
-            </div>
+            </h3>
           </div>
 
           {/* Row: Title / Country */}
-          <div className="row g-2 mt-2">
+          <div className="row  ">
             <Form.Group className="col-12 col-md-5">
               <Form.Label className="formLabel m-0">Title</Form.Label>
               <Form.Select name="title" value={formik.values.title} onChange={formik.handleChange}>
@@ -203,7 +195,7 @@ function SignUp() {
           </div>
 
           {/* Row: First / Last */}
-          <div className="row g-2 mt-1">
+          <div className="row  ">
             <Form.Group className="col-12 col-md-6">
               <Form.Label className="formLabel m-0">First Name</Form.Label>
               <Form.Control
@@ -230,7 +222,7 @@ function SignUp() {
           </div>
 
           {/* Email (full width) */}
-          <div className="row g-2 mt-1">
+          <div className="row ">
             <Form.Group className="col-12">
               <Form.Label className="formLabel m-0">Email Address</Form.Label>
               <Form.Control
@@ -246,7 +238,7 @@ function SignUp() {
           </div>
 
           {/* Phone / Role */}
-          <div className="row g-2 mt-1">
+          <div className="row  ">
             <Form.Group className="col-12 col-md-6">
               <Form.Label className="formLabel m-0">Phone (optional)</Form.Label>
               <Form.Control
@@ -281,7 +273,7 @@ function SignUp() {
           </div>
 
           {/* Password */}
-          <div className="row g-2 mt-1">
+          <div className="row ">
             <Form.Group className="col-12">
               <Form.Label className="formLabel m-0">Password</Form.Label>
               <Form.Control
@@ -311,18 +303,6 @@ function SignUp() {
             >
               SIGN UP
             </Button>
-          </div>
-
-          {/* Social */}
-          <div className="text-center mt-3" style={{ fontSize: 13, color: "#6b7280" }}>
-            Or sign up using
-          </div>
-
-          <div className="d-flex justify-content-center gap-2 mt-2">
-            <FacebookIcon className="socialIcons" sx={{ color: "navy" }} />
-            <LinkedInIcon className="socialIcons" sx={{ color: "#0077B5" }} />
-            <GitHubIcon className="socialIcons" />
-            <GoogleIcon sx={{ color: "#ea4335" }} className="socialIcons" />
           </div>
         </Form>
 
