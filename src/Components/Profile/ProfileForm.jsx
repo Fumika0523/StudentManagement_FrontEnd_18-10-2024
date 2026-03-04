@@ -87,7 +87,7 @@ const [openPhoneModal, setOpenPhoneModal] = useState(false);
   onSubmit: async (values) => {
     await axios.put(`${url}/users/profile`, values, config);
     setOpenBirthModal(false);
-    getUserData(); // refresh profile without reload
+    getUserData(); 
   },
 });
 

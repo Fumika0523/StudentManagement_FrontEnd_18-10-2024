@@ -32,7 +32,7 @@ const Header = ({
   sessionType, setSessionType,
 }) => {
   const [showAdd, setShowAdd] = useState(false);
-
+ // console.log("course data from header",courseData)
   return (
     <div>
       {/* Top actions */}

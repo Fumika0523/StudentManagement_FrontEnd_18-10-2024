@@ -28,7 +28,7 @@ function ModalAddStudent({ show, setShow, setStudentData, courseData }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const config = { headers: { Authorization: `Bearer ${token}` } };
-
+console.log("courseData from Modaladdstudent",courseData)
   const handleClose = () => {
     setShow(false);
     navigate("/studentdata");
@@ -182,8 +182,8 @@ const { countries, countryLoading } = useCountryCode();
                   />
                 </FieldGroup>
               </Col>
-
-              <Col xs={12}>
+               {/* Gender */}
+              <Col xs={12} md={6}>
                 <FieldGroup label="Gender" icon={<WcOutlined />}>
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                     {["male", "female", "Rather not say"].map((g) => {
@@ -223,82 +223,8 @@ const { countries, countryLoading } = useCountryCode();
                   </div>
                 </FieldGroup>
               </Col>
-            </Row>
 
-            <Row className="g-1">
-              <Col xs={12} md={7}>
-                <FieldGroup
-                  label="Email"
-                  icon={<Email />}
-                  required
-                  error={F.touched.email && F.errors.email}
-                >
-                  <Form.Control
-                    size="sm"
-                    type="email"
-                    name="email"
-                    value={F.values.email}
-                    onChange={F.handleChange}
-                    onBlur={F.handleBlur}
-                    placeholder="email@example.com"
-                    style={inputStyle}
-                  />
-                </FieldGroup>
-              </Col>
-
-              <Col xs={12} md={5}>
-                <FieldGroup
-                  label="Phone"
-                  icon={<Phone />}
-                  error={F.touched.phoneNumber && F.errors.phoneNumber}
-                >
-                  <Form.Control
-                    size="sm"
-                    name="phoneNumber"
-                    value={F.values.phoneNumber}
-                    onChange={F.handleChange}
-                    onBlur={F.handleBlur}
-                    placeholder="+81 90-0000-0000"
-                    style={inputStyle}
-                  />
-                </FieldGroup>
-              </Col>
-
-              <Col xs={12} md={6}>
-                <FieldGroup label="Birthdate" icon={<Cake />}>
-                  <Form.Control
-                    size="sm"
-                    type="date"
-                    name="birthdate"
-                    value={F.values.birthdate}
-                    onChange={F.handleChange}
-                    style={inputStyle}
-                  />
-                </FieldGroup>
-              </Col>
-
-              <Col xs={12} md={6}>
-                <FieldGroup label="Country" icon={<PublicOutlined />}>
-                  <Form.Select
-                    size="sm"
-                    name="country"
-                    value={F.values.country}
-                    onChange={F.handleChange}
-                    disabled={countryLoading}
-                    style={inputStyle}
-                  >
-                    <option value="">
-                      {countryLoading ? "Loading countries…" : "Select country"}
-                    </option>
-                    {countries?.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.name} ({c.code})
-                      </option>
-                    ))}
-                  </Form.Select>
-                </FieldGroup>
-              </Col>
-
+                {/* Password */}
               <Col xs={12} md={6}>
                 <FieldGroup
                   label="Password"
@@ -320,9 +246,87 @@ const { countries, countryLoading } = useCountryCode();
               </Col>
             </Row>
 
+            <Row className="g-1">
+              {/* Email */}
+              <Col xs={12} md={6}>
+                <FieldGroup
+                  label="Email"
+                  icon={<Email />}
+                  required
+                  error={F.touched.email && F.errors.email}
+                >
+                  <Form.Control
+                    size="sm"
+                    type="email"
+                    name="email"
+                    value={F.values.email}
+                    onChange={F.handleChange}
+                    onBlur={F.handleBlur}
+                    placeholder="email@example.com"
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
+            {/* PhoneNumber */}
+              <Col xs={12} md={6} className="">
+                <FieldGroup
+                  label="Phone"
+                  icon={<Phone />}
+                  error={F.touched.phoneNumber && F.errors.phoneNumber}
+                >
+                  <Form.Control
+                    size="sm"
+                    name="phoneNumber"
+                    value={F.values.phoneNumber}
+                    onChange={F.handleChange}
+                    onBlur={F.handleBlur}
+                    placeholder="+81 90-0000-0000"
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
+              
+              {/* Birthdate */}
+              <Col xs={12} md={6}>
+                <FieldGroup label="Birthdate" icon={<Cake />}>
+                  <Form.Control
+                    size="sm"
+                    type="date"
+                    name="birthdate"
+                    value={F.values.birthdate}
+                    onChange={F.handleChange}
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
+            {/* Country */}
+              <Col xs={12} md={6}>
+                <FieldGroup label="Country" icon={<PublicOutlined />}>
+                  <Form.Select
+                    size="sm"
+                    name="country"
+                    value={F.values.country}
+                    onChange={F.handleChange}
+                    disabled={countryLoading}
+                    style={inputStyle}
+                  >
+                    <option value="">
+                      {countryLoading ? "Loading countries…" : "Select country"}
+                    </option>
+                    {countries?.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name} ({c.code})
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FieldGroup>
+              </Col>
+            
+            </Row>
+
             <Section title="Preferred Courses" icon={<School />}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {(courseData || [])
+                {courseData 
                   .filter((c) => c?.courseName)
                   .map((c) => {
                     const name = String(c.courseName).trim();

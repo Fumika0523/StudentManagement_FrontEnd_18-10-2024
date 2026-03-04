@@ -24,8 +24,6 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 };
 
-
-
 const CustomizedTables = ({
   studentData,
   setStudentData,
@@ -40,7 +38,6 @@ const CustomizedTables = ({
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState(null);
-  
   const role = localStorage.getItem("role");
   const token = localStorage.getItem("token");
   const config = useMemo(
@@ -51,6 +48,8 @@ const CustomizedTables = ({
   const handleEditClick = (student) => {
     setShowEdit(true);
     setSingleStudent(student);
+      console.log(singleStudent)
+
   };
 
   const handleDeleteClick = (student) => {
@@ -286,16 +285,16 @@ const CustomizedTables = ({
                     <StyledTableCell>{student._id}</StyledTableCell>
 
                     <StyledTableCell>
-                      {(student.studentName || "")
+                      {(student.userId?.name || "")
                         .split(" ")
                         .filter(Boolean)
                         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                         .join(" ") || "-"}
                     </StyledTableCell>
-                    <StyledTableCell>{student.email || "-"}</StyledTableCell>
-                    <StyledTableCell>{student.phoneNumber || "-"}</StyledTableCell>
-                    <StyledTableCell>{student.gender || "-"}</StyledTableCell>
-                    <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
+                    <StyledTableCell>{student.userId?.email || "-"}</StyledTableCell>
+                    <StyledTableCell>{student.userId?.phoneNumber || "-"}</StyledTableCell>
+                    <StyledTableCell>{student.userId?.gender || "-"}</StyledTableCell>
+                    <StyledTableCell>{formatDate(student.userId?.birthdate)}</StyledTableCell>
 
                     <StyledTableCell>
                       {Array.isArray(student.preferredCourses) && student.preferredCourses.length
@@ -365,6 +364,7 @@ const CustomizedTables = ({
           singleStudent={singleStudent}
           setSingleStudent={setSingleStudent}
           setStudentData={setStudentData}
+          courseData={courseData}
         />
       )}
 

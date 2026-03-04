@@ -30,7 +30,7 @@ function ViewStudent() {
       Authorization: `Bearer ${token}`
     }
   }
-
+  //console.log(token, config)
   const getBatchData = async () => {
     let res = await axios.get(`${url}/allbatch`, config)
     setBatchData(res.data.batchData)
@@ -38,10 +38,9 @@ function ViewStudent() {
 
   const getStudentData = async () => {
     let res = await axios.get(`${url}/allstudent`, config)
-        console.log("getStudentData res:",res.data.studentData)
+    console.log("getStudentData res:",res.data.studentData)
     setStudentData(res.data.studentData)
-  }
-  
+  }  
   useEffect(() => {
     getStudentData()
     getCourseData()
@@ -51,11 +50,13 @@ function ViewStudent() {
 
   const getCourseData = async () => {
     let res = await axios.get(`${url}/allcourse`, config)
+   // console.log("getCourseData from ViewStudent",res)
     setCourseData(res.data.courseData)
   }
 
   const getAdmissionData = async () => {
     let res = await axios.get(`${url}/alladmission`, config)
+   // console.log("getAdmissionData",res.data)
     setAdmissionData(res.data.admissionData)
   }
 

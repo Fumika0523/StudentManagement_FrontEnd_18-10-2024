@@ -1,22 +1,19 @@
 // src/components/StudentData/EditStudent/EditStudentData.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { url } from "../../../utils/constant";
+import { FieldGroup, Section, panelStyle } from "../CreateStudent/studentFormStyle";
 import { editStudentSchema } from "./editStudentSchema";
-import FormikField from "../FormikField";
-import { FieldGroup, Section, inputStyle, panelStyle } from "../CreateStudent/studentFormStyle";
-import { studentSchema, studentInitialValues } from "../CreateStudent/StudentSchema";
 import useCountryCode from "../CreateStudent/CountryCode";
+
 import {
-  PersonAdd,
   Person,
   Email,
   Phone,
@@ -28,99 +25,133 @@ import {
   Edit as EditIcon,
 } from "@mui/icons-material";
 
+function EditStudentData({
+  show,
+  setShow,
+  setSingleStudent,
+  singleStudent,
+  setStudentData,
+  courseData,
+}) {
+  const [focusedField, setFocusedField] = useState(null);
 
-
-function EditStudentData({ show, setShow, setSingleStudent, singleStudent, setStudentData, courseData }) {
   const token = localStorage.getItem("token");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-const { countries, countryLoading } = useCountryCode();
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+
+  const { countries, countryLoading } = useCountryCode();
 
   const handleClose = () => {
     setShow(false);
     setSingleStudent(null);
   };
 
-  // Format birthdate for form
-  const formattedDate = singleStudent?.birthdate
-    ? new Date(singleStudent.birthdate).toISOString().split("T")[0]
-    : "";
-
-  // Update student function
-  const updateStudent = async (updatedStudent) => {
-    console.log("🔄 Updating student with data:", updatedStudent);
-    
-    try {
-      const res = await axios.put(
-        `${url}/updatestudent/${singleStudent._id}`,
-        updatedStudent,
-        config
-      );
-      console.log(" Update response:", res.data);
-
-      if (res) {
-        const refreshed = await axios.get(`${url}/allstudent`, config);
-        setStudentData(refreshed.data.studentData);
-        toast.success(`${updatedStudent.studentName} updated successfully!`);
-        setTimeout(() => handleClose(), 600);
-      }
-    } catch (e) {
-      console.error("Error updating student:", e);
-      console.error("Error response:", e.response?.data);
-      if (e.response?.data?.message) {
-        toast.error(e.response.data.message);
-      } else {
-        toast.error("Failed to update student. Please try again.");
-      }
-    }
+  // --------------------------
+  // Focus + disabled styles
+  // --------------------------
+  const inputBase = {
+    fontSize: 13,
+    borderRadius: 10,
+    border: "1px solid #e2e8f0",
+    padding: "9px 12px",
+    backgroundColor: "#fff",
+    color: "#1e293b",
+    boxShadow: "0 1px 0 rgba(15, 23, 42, 0.02)",
+    transition: "border-color .15s ease, box-shadow .15s ease, transform .05s ease",
   };
 
-  // Formik setup - IMPORTANT: initialValues must be set here, NOT in schema file
-  const formik = useFormik({
-    initialValues: {
-      studentName: singleStudent?.studentName || "",
-      username: singleStudent?.username || "",
-      password: singleStudent?.password || "",
-      email: singleStudent?.email || "",
-      phoneNumber: singleStudent?.phoneNumber || "",
-      gender: singleStudent?.gender || "",
-      birthdate: formattedDate, // Use the formatted date from above
-    },
-    validationSchema: editStudentSchema,
-    enableReinitialize: true, // This is KEY - it updates form when singleStudent changes
-    onSubmit: (values) => {
-      console.log("📋 Form submitted with values:", values);
-      updateStudent(values);
+  const inputFocus = {
+    border: "1px solid #60a5fa",
+    boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.18)",
+  };
+
+  const inputDisabled = {
+    backgroundColor: "#f1f5f9",
+    color: "#94a3b8",
+    cursor: "not-allowed",
+  };
+
+  const getInputStyle = ({ focused, disabled }) => ({
+    ...inputBase,
+    ...(focused ? inputFocus : {}),
+    ...(disabled ? inputDisabled : {}),
+  });
+
+  // helper for blur/focus
+  const focusProps = (name) => ({
+    onFocus: () => setFocusedField(name),
+    onBlur: (e) => {
+      formik.handleBlur(e);
+      setFocusedField(null);
     },
   });
 
-  // Debug: Log initial values
-  React.useEffect(() => {
-    console.log(" Formik Initial Values:", formik.initialValues);
-    console.log(" Formik Current Values:", formik.values);
-  }, [formik.initialValues, formik.values]);
+  // --------------------------
+  // Formik initial values
+  // --------------------------
+  const formattedBirthDate = singleStudent?.userId?.birthdate
+    ? new Date(singleStudent.userId.birthdate).toISOString().split("T")[0]
+    : "";
+  // console.log("singleStudent",singleStudent)
+  const formik = useFormik({
+    initialValues: {
+      title: singleStudent?.userId?.title || "",
+      firstName: singleStudent?.userId?.firstName || "",
+      lastName: singleStudent?.userId?.lastName || "",
 
-  // Auto-update username when studentName changes
-  React.useEffect(() => {
-    if (formik.values.studentName && formik.values.studentName !== singleStudent?.studentName) {
-      // Convert studentName to username format (lowercase, no spaces)
-      const autoUsername = formik.values.studentName
-        .toLowerCase()
-        .replace(/\s+/g, ''); // Remove all spaces
-      
-      formik.setFieldValue("username", autoUsername);
-      console.log("🔄 Auto-updated username to:", autoUsername);
-    }
-  }, [formik.values.studentName, singleStudent?.studentName]);
+      // password stays blank & disabled in UI
+      password: "",
+      email: singleStudent?.userId?.email || "",
+      phoneNumber: singleStudent?.userId?.phoneNumber || "",
+      gender: singleStudent?.userId?.gender || "Rather not say",
+      birthdate: formattedBirthDate,
+      country: singleStudent?.userId?.country || "",
+      preferredCourses: Array.isArray(singleStudent?.preferredCourses)
+  ? singleStudent.preferredCourses
+  : [],
+    },
+    validationSchema: editStudentSchema,
+    enableReinitialize: true,
+onSubmit: async (values, { setSubmitting }) => {
+  try {
+    // ✅ do NOT send password
+    const { password, ...payload } = values;
+
+    console.log("Sending payload:", payload);
+    console.log("Endpoint:", `${url}/updatestudent/${singleStudent?._id}`);
+
+    await updateStudent(payload);
+
+    // ✅ refresh list so you can see the update
+    const refreshed = await axios.get(`${url}/allstudent`, config);
+    setStudentData(refreshed.data.studentData);
+
+    toast.success("Student updated successfully!");
+    setTimeout(() => handleClose(), 400);
+  } catch (e) {
+    console.error("Update failed:", e.response?.data || e.message);
+    toast.error(e.response?.data?.message || "Failed to update student.");
+  } finally {
+    setSubmitting(false);
+  }
+}})
+
+const updateStudent = async (updatedStudent) => {
+  if (!singleStudent?._id) throw new Error("Missing student id");
+
+  console.log("updating student data...");
+  const res = await axios.put(
+    `${url}/updatestudent/${singleStudent._id}`,
+    updatedStudent,
+    config
+  );
+  console.log("update student res:", res.data);
+  return res.data;
+};
 
   const F = formik;
 
   const toggleCourse = (course) => {
-    const current = Array.isArray(F.values.preferredCourses)
-      ? F.values.preferredCourses
-      : [];
-
+    const current = Array.isArray(F.values.preferredCourses) ? F.values.preferredCourses : [];
     const next = current.includes(course)
       ? current.filter((c) => c !== course)
       : [...current, course];
@@ -128,16 +159,13 @@ const { countries, countryLoading } = useCountryCode();
     F.setFieldValue("preferredCourses", next, true);
     F.setFieldTouched("preferredCourses", true, false);
   };
+
+  // if you want to disable some fields in edit, do it here:
+  const lockFields = false;
+// console.log("courseData:",courseData)
   return (
-    <Modal
-      show={show}
-      onHide={handleClose}
-      size="lg"
-      centered
-      style={{ "--bs-modal-border-radius": "16px" }}
-    >
-      {/* Header with gradient */}
-    <Modal.Header
+    <Modal show={show} onHide={handleClose} size="lg" centered style={{ "--bs-modal-border-radius": "16px" }}>
+      <Modal.Header
         closeButton
         style={{
           background: "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
@@ -151,17 +179,21 @@ const { countries, countryLoading } = useCountryCode();
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "12px",
-            fontSize: "22px",
-            fontWeight: "600",
+            gap: 12,
+            fontSize: 22,
+            fontWeight: 600,
           }}
         >
-          <EditIcon sx={{ fontSize: "32px" }} />
+          <EditIcon sx={{ fontSize: 32 }} />
           Edit Student Information
         </Modal.Title>
       </Modal.Header>
 
-    <Form onSubmit={F.handleSubmit}>
+      <Form   onSubmit={(e) => {
+    e.preventDefault();
+    console.log("HTML FORM SUBMITTED");
+    F.handleSubmit(e);
+  }}>
         <Modal.Body style={{ padding: "16px 18px", backgroundColor: "#f1f5f9" }}>
           <div style={panelStyle}>
             <Row className="g-1">
@@ -172,7 +204,9 @@ const { countries, countryLoading } = useCountryCode();
                     name="title"
                     value={F.values.title}
                     onChange={F.handleChange}
-                    style={inputStyle}
+                    {...focusProps("title")}
+                    disabled={lockFields}
+                    style={getInputStyle({ focused: focusedField === "title", disabled: lockFields })}
                   >
                     {["", "Mr", "Ms", "Mrs", "Mx", "Dr", "Prof"].map((t) => (
                       <option key={t} value={t}>
@@ -195,9 +229,10 @@ const { countries, countryLoading } = useCountryCode();
                     name="firstName"
                     value={F.values.firstName}
                     onChange={F.handleChange}
-                    onBlur={F.handleBlur}
+                    {...focusProps("firstName")}
+                    disabled={lockFields}
                     placeholder="e.g. John"
-                    style={inputStyle}
+                    style={getInputStyle({ focused: focusedField === "firstName", disabled: lockFields })}
                   />
                 </FieldGroup>
               </Col>
@@ -214,9 +249,10 @@ const { countries, countryLoading } = useCountryCode();
                     name="lastName"
                     value={F.values.lastName}
                     onChange={F.handleChange}
-                    onBlur={F.handleBlur}
+                    {...focusProps("lastName")}
+                    disabled={lockFields}
                     placeholder="e.g. Doe"
-                    style={inputStyle}
+                    style={getInputStyle({ focused: focusedField === "lastName", disabled: lockFields })}
                   />
                 </FieldGroup>
               </Col>
@@ -233,7 +269,8 @@ const { countries, countryLoading } = useCountryCode();
                             display: "flex",
                             alignItems: "center",
                             gap: 8,
-                            cursor: "pointer",
+                            cursor: lockFields ? "not-allowed" : "pointer",
+                            opacity: lockFields ? 0.6 : 1,
                             padding: "8px 12px",
                             borderRadius: 999,
                             border: `1px solid ${checked ? "#93c5fd" : "#e2e8f0"}`,
@@ -250,11 +287,10 @@ const { countries, countryLoading } = useCountryCode();
                             value={g}
                             checked={checked}
                             onChange={F.handleChange}
+                            disabled={lockFields}
                             style={{ accentColor: "#2563eb" }}
                           />
-                          {g === "Rather not say"
-                            ? "Rather not say"
-                            : g[0].toUpperCase() + g.slice(1)}
+                          {g === "Rather not say" ? "Rather not say" : g[0].toUpperCase() + g.slice(1)}
                         </label>
                       );
                     })}
@@ -277,9 +313,10 @@ const { countries, countryLoading } = useCountryCode();
                     name="email"
                     value={F.values.email}
                     onChange={F.handleChange}
-                    onBlur={F.handleBlur}
+                    {...focusProps("email")}
+                    disabled={lockFields}
                     placeholder="email@example.com"
-                    style={inputStyle}
+                    style={getInputStyle({ focused: focusedField === "email", disabled: lockFields })}
                   />
                 </FieldGroup>
               </Col>
@@ -295,9 +332,10 @@ const { countries, countryLoading } = useCountryCode();
                     name="phoneNumber"
                     value={F.values.phoneNumber}
                     onChange={F.handleChange}
-                    onBlur={F.handleBlur}
+                    {...focusProps("phoneNumber")}
+                    disabled={lockFields}
                     placeholder="+81 90-0000-0000"
-                    style={inputStyle}
+                    style={getInputStyle({ focused: focusedField === "phoneNumber", disabled: lockFields })}
                   />
                 </FieldGroup>
               </Col>
@@ -310,7 +348,9 @@ const { countries, countryLoading } = useCountryCode();
                     name="birthdate"
                     value={F.values.birthdate}
                     onChange={F.handleChange}
-                    style={inputStyle}
+                    {...focusProps("birthdate")}
+                    disabled={lockFields}
+                    style={getInputStyle({ focused: focusedField === "birthdate", disabled: lockFields })}
                   />
                 </FieldGroup>
               </Col>
@@ -322,8 +362,12 @@ const { countries, countryLoading } = useCountryCode();
                     name="country"
                     value={F.values.country}
                     onChange={F.handleChange}
-                    disabled={countryLoading}
-                    style={inputStyle}
+                    {...focusProps("country")}
+                    disabled={lockFields || countryLoading}
+                    style={getInputStyle({
+                      focused: focusedField === "country",
+                      disabled: lockFields || countryLoading,
+                    })}
                   >
                     <option value="">
                       {countryLoading ? "Loading countries…" : "Select country"}
@@ -337,22 +381,18 @@ const { countries, countryLoading } = useCountryCode();
                 </FieldGroup>
               </Col>
 
+              {/* ✅ Password locked */}
               <Col xs={12} md={6}>
-                <FieldGroup
-                  label="Password"
-                  icon={<Lock />}
-                  required
-                  error={F.touched.password && F.errors.password}
-                >
+                <FieldGroup label="Password" icon={<Lock />}>
                   <Form.Control
                     size="sm"
                     type="password"
                     name="password"
                     value={F.values.password}
-                    onChange={F.handleChange}
-                    onBlur={F.handleBlur}
-                    placeholder="••••••••"
-                    style={inputStyle}
+                    disabled
+                    readOnly
+                    placeholder="********"
+                    style={getInputStyle({ focused: false, disabled: true })}
                   />
                 </FieldGroup>
               </Col>
@@ -370,17 +410,19 @@ const { countries, countryLoading } = useCountryCode();
                       <button
                         key={c._id || name}
                         type="button"
-                        onClick={() => toggleCourse(name)}
+                        onClick={() => !lockFields && toggleCourse(name)}
+                        disabled={lockFields}
                         style={{
                           fontSize: 12,
                           fontWeight: 600,
                           padding: "5px 13px",
                           borderRadius: 20,
-                          cursor: "pointer",
+                          cursor: lockFields ? "not-allowed" : "pointer",
                           transition: "all 0.15s",
                           border: `1.5px solid ${selected ? "#2563eb" : "#cbd5e1"}`,
                           backgroundColor: selected ? "#eff6ff" : "#fff",
                           color: selected ? "#1d4ed8" : "#64748b",
+                          opacity: lockFields ? 0.6 : 1,
                         }}
                       >
                         {selected ? "✓ " : ""}
@@ -389,12 +431,6 @@ const { countries, countryLoading } = useCountryCode();
                     );
                   })}
               </div>
-
-              {F.touched.preferredCourses && F.errors.preferredCourses && (
-                <p style={{ fontSize: 11, color: "#ef4444", marginTop: 6, marginBottom: 0 }}>
-                  {F.errors.preferredCourses}
-                </p>
-              )}
             </Section>
           </div>
         </Modal.Body>
@@ -407,7 +443,6 @@ const { countries, countryLoading } = useCountryCode();
             borderRadius: "0 0 16px 16px",
             gap: 10,
             display: "flex",
-            alignItems: "center",
             justifyContent: "flex-end",
           }}
         >
@@ -427,21 +462,25 @@ const { countries, countryLoading } = useCountryCode();
             Cancel
           </Button>
 
-          <Button
-            type="submit"
-            disabled={F.isSubmitting}
-            style={{
-              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-              border: "none",
-              fontWeight: 900,
-              fontSize: 13,
-              padding: "8px 18px",
-              borderRadius: 10,
-              boxShadow: "0 10px 22px rgba(37, 99, 235, 0.22)",
-            }}
-          >
-            Add Student
-          </Button>
+       <Button
+  type="submit"
+  disabled={F.isSubmitting }  
+  style={{
+    // background: F.dirty
+    //   ? "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)"
+    //   : "#cbd5e1",  // grey when disabled
+    border: "none",
+    fontWeight: 900,
+    fontSize: 13,
+    padding: "8px 18px",
+    borderRadius: 10,
+    boxShadow: F.dirty ? "0 10px 22px rgba(37, 99, 235, 0.22)" : "none",
+    transition: "all 0.2s",
+    cursor: F.dirty ? "pointer" : "not-allowed",
+  }}
+>
+  Save Changes
+</Button>
         </Modal.Footer>
       </Form>
     </Modal>
