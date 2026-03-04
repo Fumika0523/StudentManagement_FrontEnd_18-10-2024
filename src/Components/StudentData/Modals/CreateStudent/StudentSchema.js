@@ -19,7 +19,7 @@ export const studentSchema = (mode) => Yup.object().shape({
     firstName: Yup.string().trim().required("First name is required"),
     lastName: Yup.string().trim().required("Last name is required"),
     email: Yup.string().trim().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Pa ssword is required"),
+    password: Yup.string().required("Password is required"),
     phoneNumber: Yup.string()
       .trim()
       .matches(/^[0-9+() \-]*$/, "Invalid phone number")

@@ -115,6 +115,7 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+// Automatically expand on large screens, collapse on tablet sized screens
   useEffect(() => {
     // Desktop expand, tablet collapse
     if (screenWidth >= 1024) doToggle(true);

@@ -7,8 +7,8 @@ export const COLORS = {
 };
 
 export const ANIM = {
-  WIDTH_DURATION: 400,
-  LABEL_DURATION: 160,
+  WIDTH_DURATION: 800,
+  LABEL_DURATION: 150,
 };
 
 export const S = {
