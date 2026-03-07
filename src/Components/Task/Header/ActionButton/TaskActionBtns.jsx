@@ -2,9 +2,10 @@ import React from "react";
 import { Box, Button } from "@mui/material";
 import { PersonAdd, FileUpload, FileDownload } from "@mui/icons-material";
 import axios from "axios";
+import BulkUploadBtns from '../../../Bulkload/BulkUploadBtns'
+import { url } from "../../../utils/constant";
 
-
-const ActionBtns = ({ setShowAdd,courseData, config, setStudentData, urlBase ,showAdd  }) => {
+const ActionBtns = ({ setShowAdd,courseData, config, setStudentData, urlBase ,showAdd,  }) => {
   return (
      <Box
       sx={{
@@ -41,18 +42,28 @@ const ActionBtns = ({ setShowAdd,courseData, config, setStudentData, urlBase ,sh
         Add Task
       </Button>
 
-      {/* Bulk Upload ?? */}
+      {/* Bulk Upload */}
+      <BulkUploadBtns 
+      templateUrl="http://localhost:8001/api/excel/task-template" 
+      importUrl="http://localhost:8001/api/excel/task-import"
+      modalTitle="Bulk Upload Tasks"
+      axiosConfig={config}
+      onRefresh={
+      async()=>{
+        const refreshed = await axios.get(`${url}/alltask`,config)
+        setTaskData=(refreshed.data.taskData)
+      }       
+      }/>
 
-
-   {/* Add TaskAdd modal */}
-      {/* {showAdd && (
-        <ModalAddAdmission
+      {/* Add Task modal */}
+      {showAdd && (
+        <ModalAddTask
           show={showAdd}
           setShow={setShowAdd}
           courseData={courseData}
-          setStudentData={setStudentData}
+          taskData={taskData}
         />
-      )} */}
+      )}
     </Box>
    
   );

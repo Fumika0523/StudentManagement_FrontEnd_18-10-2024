@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes,useLocation, useNavigate  } from 'react-router-dom';
 import './App.css';
 import { useEffect, useState } from 'react';
-import ProfileForm from './Components/Profile/ProfileForm';
+import ViewProfile from './Components/Profile/ViewProfile';
 import { Box } from '@mui/material';
 import axios from 'axios';
 import UserNameForm from './Components/Profile/Edit/userNameForm';
@@ -154,7 +154,7 @@ return (
                     <Route path="/admissiondata" element={<ViewAdmission />} />
                     <Route path="/dashboard" element={ <DashboardCard/>}  />
                     <Route path="/attendance" element={ <UpdateAttendance/>}  />
-                    <Route path="/profile" element={<ProfileForm />} />
+                    <Route path="/profile" element={<ViewProfile />} />
                         <Route path="/task" element={<ViewTask />} />
                     {/* <Route path="*" element={<Navigate to="/dashboard" />} /> */}
                   </>

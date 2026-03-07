@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
-
 import ActionBtns from "./ActionBtns";
 import AdmissionFilter from "./Filter/AdmissionFilter";
-
 
 const Header = ({
   // ActionBtns

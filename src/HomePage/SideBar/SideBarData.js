@@ -26,6 +26,7 @@ export const getAcademicItems = (role) => {
     { iconKey: "admission", label: "Admission", path: "/admissiondata" },
     { iconKey: "task", label: "Task", path: "/task" },
     { iconKey: "attendance", label: "Update Attendance", path: "/attendance" },
+     { iconKey: "invoice", label: "Invoice", path: "/staff-invoice" },
   ];
 
   const studentItems = [
@@ -34,7 +35,7 @@ export const getAcademicItems = (role) => {
     { iconKey: "submitTask", label: "Submit Task", path: "/task-submit" },
     { iconKey: "raiseQuery", label: "Raise Query", path: "/raise-query" },
     { iconKey: "certificate", label: "Download Certificate", path: "/certificate" },
-    { iconKey: "invoice", label: "Invoice Download", path: "/invoice" },
+    { iconKey: "invoice", label: "Invoice Download", path: "/student-invoice" },
   ];
 
   return role === "admin" || role === "staff" ? adminItems : studentItems;

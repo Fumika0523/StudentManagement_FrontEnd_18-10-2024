@@ -125,9 +125,6 @@ function StaffSignIn() {
               <FcVoicePresentation className="mb-1" style={{ fontSize: 52 }} />
               <span className="ms-2">Staff Sign In</span>
             </h2>
-            <div style={{ fontSize: 13, color: "#6b7280" }}>
-              Sign in with your email and password
-            </div>
           </div>
 
           {/* Email */}

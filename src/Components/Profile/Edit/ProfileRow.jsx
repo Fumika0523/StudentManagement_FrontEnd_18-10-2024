@@ -14,16 +14,20 @@ export default function ProfileRow({
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       sx={{
-        display: "grid",
-        gridTemplateColumns: { xs: "120px 1fr", sm: "160px 1fr" },
+        display: "flex",
+        justifyContent:"space-between",
+        alignItems: "center", 
         gap: 1.5,
         px: 2,
-        py: 1.75,
+        py: 1.5,
         cursor: onClick ? "pointer" : "default",
         "&:hover": onClick ? { backgroundColor: "#f8fafc" } : undefined,
+       // border:"2px solid red"
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 , 
+      //border:"2px solid blue"
+}}>
         {icon}
         <Typography sx={{ fontSize: 13, color: "#6b7280" }}>
           {label}
@@ -35,7 +39,8 @@ export default function ProfileRow({
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          minWidth: 0,
+          // width: "100%",
+          //border:"2px solid blue"
         }}
       >
         <Typography sx={{ fontSize: 14, color: "#111827" }}>

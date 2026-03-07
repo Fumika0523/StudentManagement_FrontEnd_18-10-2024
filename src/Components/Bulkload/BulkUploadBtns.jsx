@@ -31,7 +31,7 @@ const Modal = ({ open, onClose, children }) => {
 const BulkUploadBtns = ({
   templateUrl,
   importUrl,
-  deleteUrl,       // NEW: endpoint for bulk delete
+  deleteUrl,      
   modalTitle = "Bulk Upload",
   onRefresh,
 }) => {
@@ -61,26 +61,66 @@ const token = localStorage.getItem("token");
     else toast.error("Please drop an .xlsx, .xls, or .csv file");
   };
 
-  const uploadExcel = async () => {
-    if (!file) return toast.error("Please choose an Excel file first");
-    try {
+  //Upload function
+const uploadExcel = async () => {
+  // If user didn't pick a file yet, stop here and show error toast
+  if (!file) return toast.error("Please choose an Excel file first");
 
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await axios.post(importUrl, formData, {headers:{"Content-Type":"multipart/form-data"}});
-      const { inserted = 0, updated = 0, failed = 0 } = res.data || {};
-      toast.success(`Done! ${inserted} added · ${updated} updated${failed ? ` · ${failed} failed` : ""}`);
-      if (onRefresh) await onRefresh();
-      closeModal();
-    } catch (e) {
-      toast.error(e?.response?.data?.message || "Upload failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    // Show loading spinner / disable buttons etc.
+    setLoading(true);
 
+    // FormData is required for file uploads (multipart/form-data)
+    const formData = new FormData();
 
+    // "file" MUST match your backend multer field name: upload.single("file")
+    // The second argument is the actual File object from <input type="file" />
+    formData.append("file", file);
+
+    // If your backend endpoint requires JWT auth, include the token like Postman did
+    const token = localStorage.getItem("token");
+
+    // Send the formData to backend
+    const res = await axios.post(importUrl, formData, {
+      headers: {
+        // Send token if your backend uses auth middleware
+        Authorization: `Bearer ${token}`,
+
+        // IMPORTANT:
+        // DO NOT set "Content-Type" manually when using FormData.
+        // Axios/browser will automatically set:
+        // "multipart/form-data; boundary=----xxxx"
+        // If you set it yourself, the boundary can be missing and multer fails.
+        // "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // Backend returns summary counts
+    const { inserted = 0, updated = 0, failed = 0 } = res.data || {};
+
+    // Show success message to the user
+    toast.success(
+      `Done! ${inserted} added · ${updated} updated${failed ? ` · ${failed} failed` : ""}`
+    );
+
+    // Optional: reload table/list after upload so UI updates
+    if (onRefresh) await onRefresh();
+
+    // Close the modal/dialog after successful upload
+    closeModal();
+  } catch (e) {
+    // Log full error to debug (status code, message, etc.)
+    console.log("upload error:", e?.response || e);
+
+    // Show readable error message (backend message if exists, otherwise generic)
+    toast.error(e?.response?.data?.message || e?.message || "Upload failed");
+  } finally {
+    // Always stop loading state (even if request fails)
+    setLoading(false);
+  }
+};
+
+//Delete function
   const deleteExcel = async () => {
     if (!file) return toast.error("Please choose an Excel file first");
     try {
