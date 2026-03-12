@@ -11,6 +11,11 @@ import { Col } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import { toast } from "react-toastify";
 import { admissionInitialValues, studentSchema } from "./AdmissionSchema";
+import { FieldGroup, Section, inputStyle, panelStyle } from "../../../StudentData/Modals/CreateStudent/studentFormStyle";
+import ModalHeaderBlock from "../../../Common/ModalHeaderBlock";
+import { MdAssignmentTurnedIn } from "react-icons/md";
+import ModalFooterBlock from "../../../Common/ModalFooterBlock";
+
 
 const ModalAddAdmission = ({
   show,
@@ -265,10 +270,11 @@ console.log("eligibleStudents",eligibleStudents)
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
-      <Modal.Header>
-        <Modal.Title style={{ padding: "0% 5%" }}>Add Admission</Modal.Title>
-      </Modal.Header>
+    <Modal show={show} onHide={handleClose} size="lg"   
+    centered style={{ "--bs-modal-border-radius": "16px" }}>
+    <ModalHeaderBlock
+      title="Add Admission"
+      icon={<MdAssignmentTurnedIn />} />
 
       <Form onSubmit={formik.handleSubmit} style={{ padding: "1.5% 5%" }}>
         <Modal.Body>
@@ -436,16 +442,12 @@ console.log("eligibleStudents",eligibleStudents)
           </Row>
         </Modal.Body>
 
-        <Modal.Footer>
-          <div className="d-flex gap-3">
-            <Button type="submit" style={{ backgroundColor: "#4e73df" }}>
-              Add Admission
-            </Button>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-          </div>
-        </Modal.Footer>
+       <ModalFooterBlock
+          onClose={handleClose}
+          submitText="Add Admission"
+          submitting={formik.isSubmitting}
+          // submitGradient="linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)"
+        />
       </Form>
     </Modal>
   );

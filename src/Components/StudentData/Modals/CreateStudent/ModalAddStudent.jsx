@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { studentSchema, studentInitialValues } from "./StudentSchema";
 import useCountryCode from "./CountryCode";
 import { FieldGroup, Section, inputStyle, panelStyle } from "./studentFormStyle";
-
+import ModalHeaderBlock from '../../../Common/ModalHeaderBlock'
 import { url } from "../../../utils/constant";
 import {
   PersonAdd,
@@ -85,43 +85,11 @@ const { countries, countryLoading } = useCountryCode();
       centered
       style={{ "--bs-modal-border-radius": "16px" }}
     >
-      <Modal.Header
-        closeButton
-        style={{
-          background: "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
-          color: "white",
-          borderBottom: "none",
-          borderRadius: "16px 16px 0 0",
-          padding: "16px 22px",
-        }}
-      >
-        <Modal.Title
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            fontSize: 18,
-            fontWeight: 900,
-          }}
-        >
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 12,
-              background: "rgba(255,255,255,0.14)",
-              border: "1px solid rgba(255,255,255,0.22)",
-              display: "grid",
-              placeItems: "center",
-            }}
-          >
-            <PersonAdd sx={{ fontSize: 24, color: "white" }} />
-          </div>
-          <div style={{ lineHeight: 1.1 }}>
-            <div style={{ fontSize: 18 }}>Add New Student</div>
-          </div>
-        </Modal.Title>
-      </Modal.Header>
+    
+      <ModalHeaderBlock
+      title="Add New Student"
+      icon={<PersonAdd  />}
+    />
 
       <Form onSubmit={F.handleSubmit}>
         <Modal.Body style={{ padding: "16px 18px", backgroundColor: "#f1f5f9" }}>

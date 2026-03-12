@@ -7,7 +7,8 @@ import axios from 'axios';
 import { url } from '../../utils/constant';
 import { toast } from 'react-toastify';
 import { Col, Row } from 'react-bootstrap';
-import { School, AttachMoney, Schedule, CalendarToday, AccessTime } from "@mui/icons-material";
+import {  AttachMoney, Schedule, CalendarToday, AccessTime } from "@mui/icons-material";
+import { MdMenuBook } from "react-icons/md";
 
 // Import reusable utilities
 import {
@@ -19,6 +20,7 @@ import {
   calculateNoOfDays,
   getAuthConfig
 } from './CourseValidation';
+import ModalHeaderBlock from '../../Common/ModalHeaderBlock';
 
 function ModalAddCourse({ show, setShow, setCourseData }) {
   const handleClose = () => {
@@ -66,37 +68,16 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
       centered
       style={{ '--bs-modal-border-radius': '16px' }}
     >
-      {/* Header with Gradient */}
-      <Modal.Header
-        closeButton
-        style={{
-          background: 'linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)',
-          color: 'white',
-          borderBottom: 'none',
-          borderRadius: '16px 16px 0 0',
-          padding: '20px 24px',
-        }}
-      >
-        <Modal.Title style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          fontSize: '22px',
-          fontWeight: '600'
-        }}>
-          <School sx={{ fontSize: "32px" }} />
-          Add New Course
-        </Modal.Title>
-      </Modal.Header>
+
+      <ModalHeaderBlock  title="Add Course" icon={<MdMenuBook />} />
 
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Body style={{ padding: '20px', backgroundColor: '#f9fafb' }}>
-          {/* Row 1: Name & Type */}
           <Row className="g-2 mb-2">
             <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label style={labelStyle}>
-                  <School sx={{ fontSize: 14 }} />
+                  <MdMenuBook sx={{ fontSize: 14 }} />
                   Course Name
                 </Form.Label>
                 <Form.Control
