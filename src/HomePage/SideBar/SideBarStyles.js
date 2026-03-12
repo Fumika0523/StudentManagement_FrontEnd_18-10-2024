@@ -1,4 +1,3 @@
-// sidebar.styles.js
 export const COLORS = {
   DARKER: "#05113f",
   DARK: "#1b3dc7",
@@ -7,8 +6,8 @@ export const COLORS = {
 };
 
 export const ANIM = {
-  WIDTH_DURATION: 800,
-  LABEL_DURATION: 150,
+  WIDTH_DURATION: 900,
+  LABEL_DURATION: 100,
 };
 
 export const S = {
@@ -16,20 +15,23 @@ export const S = {
     height: "100vh",
     display: "flex",
     flexDirection: "column",
-    overflow: "hidden",
+    overflowY: "hidden",
+    overflowX: "visible",
     boxShadow: "4px 0 28px rgba(0,0,0,0.5)",
     flexShrink: 0,
-    zIndex: 100,
+    position: "relative",
   },
+
   toggleRow: {
     display: "flex",
     alignItems: "center",
     flexShrink: 0,
-    padding: "10px 10px 0",
+    padding: "10px 10px 6px",
   },
+
   toggleBtn: {
     background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.15)",
+    border: "1.3px solid rgba(255,255,255,0.15)",
     borderRadius: "8px",
     color: "#fff",
     cursor: "pointer",
@@ -38,103 +40,93 @@ export const S = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "17px",
     transition: "background 0.2s",
     flexShrink: 0,
     padding: 0,
   },
-  logoRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    padding: "8px 12px 14px",
-    borderBottom: "1px solid rgba(255,255,255,0.1)",
-    flexShrink: 0,
-    minHeight: "52px",
-    overflow: "hidden",
-  },
-  logoText: {
-    color: "#f1f5f9",
-    fontWeight: 700,
-    fontSize: "15px",
-    whiteSpace: "nowrap",
-    letterSpacing: "0.4px",
-    transformOrigin: "left center",
-    overflow: "hidden",
-  },
-  nav: {
+
+  navOuter: {
     flex: 1,
+    position: "relative",
+    overflow: "hidden",
+  },
+
+  navScroll: {
     overflowY: "auto",
     overflowX: "hidden",
-    padding: "6px 0",
     scrollbarWidth: "none",
   },
+
   sectionLabel: {
-    fontSize: "10px",
+    fontSize: "13px",
     fontWeight: 700,
     letterSpacing: "1.6px",
     textTransform: "uppercase",
-    padding: "14px 18px 5px",
+    padding: "5px 18px",
     whiteSpace: "nowrap",
     overflow: "hidden",
   },
 
   divider: {
     borderBottom: "1px solid rgba(255,255,255,0.10)",
-    margin: "10px 0",
+    margin: "6px 0",
     width: "100%",
   },
 
   item: {
     display: "flex",
+    flex:"row",
     alignItems: "center",
+    height:"55px",
     cursor: "pointer",
-    fontSize: "14.5px",
-    fontWeight: 600,
-    borderRadius: "9px",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
     position: "relative",
+    overflow: "visible",
   },
+
   iconWrap: {
-    flexShrink: 0,
-    width: "40px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+  border:"2px solid white",
+    height: "50px",
+    width:"50px",
+    display: "flex", 
+    alignItems: "center" ,
+    justifyContent:"center",
+    padding:"0px"
   },
+
   itemLabel: {
     flex: 1,
     transformOrigin: "left center",
+    whiteSpace: "nowrap",
+    fontSize: "18px",
+    fontWeight: 500,
     overflow: "hidden",
+    // border:"2px solid green"
   },
+
   signout: {
-    display: "flex",
-    alignItems: "center",
     cursor: "pointer",
     color: "#f96f6f",
-    fontSize: "15px",
-    fontWeight: 500,
-    borderTop: "1px solid rgba(255,255,255,0.08)",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    flexShrink: 0,
+    height: "50px",
+    width: "100%",
+    position: "absolute",
+    bottom: 0,
   },
+
   tooltip: {
     position: "absolute",
-    left: "54px",
+    left: "60px",
     top: "50%",
-    transform: "translateY(-50%)",
-    background: "#0a1020",
+    transform: "translateY(-50%) translateX(6px)",
+    background: "#0f39b6",
     color: "#f1f5f9",
     padding: "5px 11px",
     borderRadius: "7px",
     fontSize: "12px",
     whiteSpace: "nowrap",
     pointerEvents: "none",
-    zIndex: 999,
+    zIndex: 9999,
     border: "1px solid rgba(255,255,255,0.12)",
     boxShadow: "0 4px 16px rgba(0,0,0,0.5)",
-    transition: "opacity 0.15s ease",
+    transition: "opacity 0.15s ease, transform 0.15s ease",
   },
 };

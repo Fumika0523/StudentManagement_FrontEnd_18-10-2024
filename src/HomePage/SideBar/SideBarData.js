@@ -1,21 +1,45 @@
 export const ICONS = {
-  dashboard: { name: "speed", size: 26 },
-  student: { name: "student-male", size: 26 },
-  batch: { name: "classmates-sitting", size: 26 },
-  course: { name: "book-shelf", size: 26 },
-  admission: { name: "enter-2", size: 26 },
-  task: { name: "task", size: 26 },
-  attendance: { name: "calendar", size: 26 },
+  dashboard: { name: "speed", height: 
+    54, width:54
+   },
+  student: { name: "student-male", 
+    width: 55, height: 50,
+   },
+  batch: { name: "badge", width: 55, height: 56,
+   },
+  course: { name: "book-shelf", width: 
+    56
+   },
+  admission: { name: "inscription", height: 48, width: 56
+   },
+  task: { name: "todo-list", width: 51
+   },
+  attendance: { name: "calendar", height: 
+    53
+   },
 
-  viewBatch: { name: "conference-call", size: 26 },
-  viewAtten: { name: "planner", size: 26 },
-  submitTask: { name: "open-book", size: 26 },
-  raiseQuery: { name: "ask-question", size: 26 },
-  certificate: { name: "certificate", size: 26 },
-  invoice: { name: "us-dollar-circled", size: 26 },
+  viewBatch: { name: "conference-call", size: 
+    55
+   },
+  viewAtten: { name: "planner", size: 
+    55
+   },
+  submitTask: { name: "open-book", size: 
+    55
+   },
+  raiseQuery: { name: "ask-question", size: 
+    55
+   },
+  certificate: { name: "certificate", size: 
+    55
+   },
+  invoice: { name: "us-dollar-circled", width: 55
+   },
 
-  settings: { name: "settings", size: 26 },
-  logo: { name: "graduation-cap", size: 30 },
+  settings: { name: "settings", height: 
+    52
+   },
+  logo: { name: "graduation-cap", height: 55,width: 52},
 };
 
 export const getAcademicItems = (role) => {

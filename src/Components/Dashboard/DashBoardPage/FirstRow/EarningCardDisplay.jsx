@@ -95,11 +95,10 @@ return (
     </div>
 
     {/* Content */}
-    <div className="mt-2">
-      <div className="fs-4 mb-2">MTD</div>
-
+    <div className="">
+      <div className="fs-4 ">MTD</div>
       {/* Cards grid */}
-      <div className="row g-3">
+      <div className="row">
         {earnings?.map((element, index) => (
           <React.Fragment key={index}>
             <div className="col-12 col-sm-6 col-lg-3">
@@ -108,7 +107,7 @@ return (
 
             {index === 3 && (
               <div className="col-12">
-                <div className="fs-4 mt-2">YTD</div>
+                <div className="fs-4 ">YTD</div>
               </div>
             )}
           </React.Fragment>

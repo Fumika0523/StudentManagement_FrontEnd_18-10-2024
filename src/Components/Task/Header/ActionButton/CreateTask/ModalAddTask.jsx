@@ -25,15 +25,14 @@ const ModalAddTask = ({ show, setShow, setTaskData, courseData, batchData }) => 
     () => ({ headers: { Authorization: `Bearer ${token}` } }),
     [token]
   );
-  console.log("courseData from Modal Add Task:",courseData)
+  //console.log("courseData from Modal Add Task:",courseData)
 
-const handleCourseNameChange=(e)=>{
+const handleCourseNameChange = (e) => {
   const selectedCourseName = e.target.value;
-  const selectedCourse = courseData?.find(c => c.courseName === selectedCourseName)
-  if(selectedCourse){
-    formik.setFieldValue("taskCourseName", selectedCourse.taskCourseName)
-  }
-}
+
+  formik.setFieldValue("taskCourseName", selectedCourseName, true);
+  formik.setFieldTouched("taskCourseName", false, false);
+};
 // console.log(selectedCourseName)
 
   const handleClose = () => {
@@ -67,9 +66,7 @@ const handleCourseNameChange=(e)=>{
     formik.setFieldValue("taskDetail", updated);
   };
 
-  //Get Course Data
-
-    // Input style
+  // Input style
   const inputStyle = {
     borderRadius: "6px",
     padding: "8px 12px",

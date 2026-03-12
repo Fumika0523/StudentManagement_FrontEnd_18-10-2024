@@ -13,9 +13,6 @@ export const TaskSchema = Yup.object().shape({
     .of(
       Yup.object().shape({
         taskQuestion: Yup.string().required("Task question is required"),
-        batchNumber: Yup.array()
-          .of(Yup.string())
-          .min(1, "At least one batch is required"),
         allocatedDay: Yup.number()
           .typeError("Must be a number")
           .min(1, "Min 1 day")

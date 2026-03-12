@@ -46,7 +46,6 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
         admissionMonth: Yup.string(),
     })
 
-
     const formik = useFormik({
         initialValues: {
             batchNumber: singleAdmission?.batchNumber,

@@ -18,12 +18,12 @@ import {
   tableContainerStyles,
   url,
 } from "../../utils/constant";
-
+import { toast } from "react-toastify";
 import ModalAssignTask from "./ModalAssignTask";
 import axios from "axios";
 import usePagination from "../../utils/usePagination";
 
-export default function CustomisedTaskTables({ taskData = [] }) {
+export default function CustomisedTaskTables({taskData, setTaskData }) {
   const [batchData, setBatchData] = useState([]);
   const [showAssign, setShowAssign] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
@@ -43,6 +43,28 @@ export default function CustomisedTaskTables({ taskData = [] }) {
     getBatchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // assign task
+  const handleAssignTask = async ({ taskDetailId, batchId, batchNumber }) => {
+  try {
+    console.log("Sending taskDetailId:", taskDetailId);
+    console.log("Sending batchId:", batchId);
+    console.log("Sending batchNumber:", batchNumber);
+    let res = await axios.put(
+      `${url}/update-task/${taskDetailId}`,
+      { batchId, batchNumber },
+      config
+    );
+    console.log("updated task:",res.data)
+    if (res.status === 200) {
+      const refreshRes = await axios.get(`${url}/alltask`, config);
+      setTaskData(refreshRes.data.taskData || []);
+      toast.success(`Task assigned successfully to Batch ${batchNumber}`);
+    }
+  } catch (error) {
+    console.error("Error assigning task:", error);
+  }
+};
 
   // Build the rows you actually display
   const rows = useMemo(() => {
@@ -186,6 +208,7 @@ export default function CustomisedTaskTables({ taskData = [] }) {
         onClose={closeAssignModal}
         task={selectedRow}
         batchData={batchData}
+        onConfirm={handleAssignTask}
       />
     </Box>
   );

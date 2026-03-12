@@ -202,6 +202,7 @@ export default function ViewTask() {
         setOpenFilters={setOpenFilters}
         onApply={handleApplyFilter}
         onReset={handleResetFilter}
+        setTaskData={setTaskData}
       />
       {showTable && (
         <CustomisedTaskTables

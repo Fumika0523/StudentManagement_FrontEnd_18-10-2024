@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import TaskFilter from "./Filter/TaskFilter";
 import TaskActionBtns from "./ActionButton/TaskActionBtns";
+import ModalAddTask from "../Header/ActionButton/CreateTask/ModalAddTask";
 
 const TaskHeader = ({
-  // AddTaskButton
   config,
   setTaskData,
   urlBase,
-
-  // Filter state + handlers from parent
   openFilters,
   setOpenFilters,
   onApply,
@@ -28,12 +26,10 @@ const TaskHeader = ({
   dateRange,
   setDateRange,
 }) => {
+  const [showAdd, setShowAdd] = useState(false);
 
-const [showAdd, setShowAdd] = useState(false);
-
-return (
+  return (
     <div>
-      {/* Top actions */}
       <TaskActionBtns
         setShowAdd={setShowAdd}
         config={config}
@@ -41,7 +37,6 @@ return (
         urlBase={urlBase}
       />
 
-      {/* Filters */}
       <Box
         sx={{
           display: "flex",
@@ -72,7 +67,13 @@ return (
         />
       </Box>
 
-  
+      <ModalAddTask
+        show={showAdd}
+        setShow={setShowAdd}
+        setTaskData={setTaskData}
+        courseData={courseData}
+        batchData={[]}
+      />
     </div>
   );
 };

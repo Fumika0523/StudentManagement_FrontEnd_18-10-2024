@@ -19,8 +19,8 @@ const ActionBtns = ({ setShowAdd }) => {
         variant="contained"
         startIcon={<School />}
         onClick={() => setShowAdd(true)}
-        sx={{
-          backgroundColor: "#3b82f6",
+       sx={{
+          backgroundColor: "#1f3fbf",
           textTransform: "none",
           fontWeight: 600,
           fontSize: "14px",
@@ -30,7 +30,7 @@ const ActionBtns = ({ setShowAdd }) => {
           boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
           transition: "all 0.2s ease",
           "&:hover": {
-            backgroundColor: "#2563eb",
+            backgroundColor: "#1b50c2",
             boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
             transform: "translateY(-1px)",
           },

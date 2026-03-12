@@ -8,7 +8,7 @@ export const batchInitialValues = {
       sessionDay: "",
       sessionTime: "",
       targetStudent: "",
-      location: "",
+      // location: "",
       courseFee: ""
 }
 
@@ -32,9 +32,9 @@ export const formSchema = Yup.object().shape({
     // .oneOf(["beginner", "intermediate", "advanced", "all"], "Select a valid target")
     .required("Target student is required"),
 
-  location: Yup.string()
-    .trim()
-    .min(2, "Location must be at least 2 characters")
-    .max(120, "Location is too long")
-    .required("Location is required"),
+  // location: Yup.string()
+  //   .trim()
+  //   .min(2, "Location must be at least 2 characters")
+  //   .max(120, "Location is too long")
+  //   .required("Location is required"),
 });
