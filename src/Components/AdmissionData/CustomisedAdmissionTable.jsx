@@ -31,7 +31,7 @@ const CustomisedAdmissionTable = ({
             Authorization: `Bearer ${token}`
         }
     }
-
+console.log("StudentData from AdmissionTable",studentData)
   const [showEdit, setShowEdit] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [singleAdmission, setSingleAdmission] = useState(null);
@@ -378,7 +378,7 @@ const confirmDeleteAdmission = async () => {
           setViewWarning={setViewWarning}
         />
       )}
-
+{/* 
       {showAdd && (
         <ModalAddAdmission
           show={showAdd}
@@ -388,7 +388,7 @@ const confirmDeleteAdmission = async () => {
           studentData={studentData}
           setStudentData={setStudentData}
         />
-      )}
+      )} */}
 
                                 {/* <ConfirmDeleteModal
   show={viewWarning}

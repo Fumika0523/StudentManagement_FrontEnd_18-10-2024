@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { Col, Row } from 'react-bootstrap';
 import {  AttachMoney, Schedule, CalendarToday, AccessTime } from "@mui/icons-material";
 import { MdMenuBook } from "react-icons/md";
+import ModalFooterBlock from '../../Common/ModalFooterBlock';
 
 // Import reusable utilities
 import {
@@ -66,11 +67,8 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
       onHide={handleClose}
       size='lg'
       centered
-      style={{ '--bs-modal-border-radius': '16px' }}
-    >
-
-      <ModalHeaderBlock  title="Add Course" icon={<MdMenuBook />} />
-
+      style={{ '--bs-modal-border-radius': '16px' }}    >
+      <ModalHeaderBlock title="Add Course" icon={<MdMenuBook />} />
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Body style={{ padding: '20px', backgroundColor: '#f9fafb' }}>
           <Row className="g-2 mb-2">
@@ -240,45 +238,10 @@ function ModalAddCourse({ show, setShow, setCourseData }) {
             </Col>
           </Row>
         </Modal.Body>
-
-        <Modal.Footer style={{
-          borderTop: '1px solid #e5e7eb',
-          padding: '12px 20px',
-          backgroundColor: '#ffffff',
-          borderRadius: '0 0 16px 16px',
-          gap: '8px'
-        }}>
-          <Button
-            variant="secondary"
-            onClick={handleClose}
-            style={{
-              backgroundColor: 'transparent',
-              border: '1px solid #d1d5db',
-              color: '#6b7280',
-              fontWeight: '600',
-              fontSize: '13px',
-              padding: '7px 18px',
-              borderRadius: '6px',
-            }}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            type='submit'
-            style={{
-              background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-              border: 'none',
-              fontWeight: '600',
-              fontSize: '13px',
-              padding: '7px 20px',
-              borderRadius: '6px',
-              boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-            }}
-          >
-            Add Course
-          </Button>
-        </Modal.Footer>
+        <ModalFooterBlock 
+        onClose={handleClose}
+        submitText="Submit" 
+        submitting={formik.isSubmitting}/>
       </Form>
     </Modal>
   );

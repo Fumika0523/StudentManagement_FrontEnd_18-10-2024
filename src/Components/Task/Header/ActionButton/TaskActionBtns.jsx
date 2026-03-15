@@ -4,6 +4,7 @@ import { PersonAdd, FileUpload, FileDownload } from "@mui/icons-material";
 import axios from "axios";
 import BulkUploadBtns from '../../../Bulkload/BulkUploadBtns'
 import { url } from "../../../utils/constant";
+import { RiTaskFill } from "react-icons/ri";
 
 const ActionBtns = ({ setShowAdd,courseData, config, setStudentData, urlBase ,showAdd,  }) => {
   return (
@@ -20,7 +21,7 @@ const ActionBtns = ({ setShowAdd,courseData, config, setStudentData, urlBase ,sh
       {/* Add Task Button */}
       <Button
         variant="contained"
-        startIcon={<PersonAdd />}
+        startIcon={<RiTaskFill />}
         onClick={() => setShowAdd(true)}
         sx={{
           backgroundColor: "#1f3fbf",

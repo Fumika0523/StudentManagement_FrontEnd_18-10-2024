@@ -17,6 +17,8 @@ import {
   GroupAdd, School, CalendarMonth,
   AccessTime, People, AttachMoney, Tag, Event, Wifi,
 } from '@mui/icons-material';
+import ModalHeaderBlock from '../../Common/ModalHeaderBlock';
+import ModalFooterBlock from '../../Common/ModalFooterBlock';
 
 function ModalAddBatch({ show, setShow, setBatchData }) {
   const [courseData, setCourseData] = useState([]);
@@ -104,20 +106,9 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
 
   return (
     <Modal show={show} onHide={handleClose} size="lg" centered style={{ "--bs-modal-border-radius": "16px" }}>
-      <Modal.Header closeButton style={{
-        background: "linear-gradient(180deg, #1f3fbf 0%, #1b2f7a 100%)",
-        color: "white", borderBottom: "none",
-        borderRadius: "16px 16px 0 0", padding: "20px 24px",
-      }}>
-        <Modal.Title style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "20px", fontWeight: 700 }}>
-          <GroupAdd sx={{ fontSize: "28px" }} />
-          Add New Batch
-        </Modal.Title>
-      </Modal.Header>
-
+    <ModalHeaderBlock title="Add Batch" icon={ <GroupAdd />}/>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Body style={{ padding: "24px", backgroundColor: "#f9fafb" }}>
-
           {/* Row 1: Batch No + Course Name */}
           <Row className="g-3 mb-3">
             <Col xs={12} md={6}>
@@ -202,17 +193,8 @@ function ModalAddBatch({ show, setShow, setBatchData }) {
               <Form.Control type="text" name="courseFee" value={formik.values.courseFee} disabled style={disabledInputStyle} />
             </Col>
           </Row>
-
         </Modal.Body>
-
-        <Modal.Footer style={{ borderTop: "1px solid #e5e7eb", padding: "14px 24px", backgroundColor: "#ffffff", borderRadius: "0 0 16px 16px", gap: "8px" }}>
-          <Button onClick={handleClose} style={{ backgroundColor: "transparent", border: "1px solid #d1d5db", color: "#6b7280", fontWeight: 600, fontSize: "13px", padding: "7px 18px", borderRadius: "8px" }}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={formik.isSubmitting} style={{ background: "linear-gradient(135deg, #10b981 0%, #059669 100%)", border: "none", fontWeight: 700, fontSize: "13px", padding: "7px 22px", borderRadius: "8px", boxShadow: "0 2px 8px rgba(16,185,129,0.3)" }}>
-            {formik.isSubmitting ? "Adding..." : "Add Batch"}
-          </Button>
-        </Modal.Footer>
+        <ModalFooterBlock onClose={handleClose} submitText="Submit" submitting={formik.isSubmitting}/>
       </Form>
     </Modal>
   );

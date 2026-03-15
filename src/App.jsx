@@ -29,7 +29,7 @@ import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendanc
 import BulkLoadButtons from './Components/Bulkload/TestBulkLoadButtons';
 import RaiseQuery from './Components/StudentPage/RaiseQuery';
 import ViewTask from './Components/Task/ViewTask'
-
+import ProfileSections from './Components/Profile/Sections/ProfileSections';
 
 function App() {
   const token = localStorage.getItem('token');
@@ -77,26 +77,26 @@ const hasApprovalRedirect = redirect && batchId;
   //  State for sidebar visibility (mobile toggle)
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
-  const getUserData = async () => {
-    try {
-      let config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      let res = await axios.get(`${url}/users/profile`, config);
-      setUserData(res.data.userData);
-    } catch (err) {
-      console.error('Failed to fetch user data:', err);
-    }
-  };
+  // const getUserData = async () => {
+  //   try {
+  //     let config = {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     };
+  //     let res = await axios.get(`${url}/users/profile`, config);
+  //     setUserData(res.data.userData);
+  //   } catch (err) {
+  //     console.error('Failed to fetch user data:', err);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (token) {
-      // setIsAuthenticated(true);
-      getUserData();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (token) {
+  //     // setIsAuthenticated(true);
+  //     getUserData();
+  //   }
+  // }, []);
 
 
 return (
@@ -160,14 +160,10 @@ return (
                   </>
                 ) : (
                   <>
-                       <Route path="/dashboard"  
-                       element={
-                        <DashboardCard
-                          // isAuthenticated={isAuthenticated}
-                          // setIsAuthenticated={setIsAuthenticated}
-                        />}/>
-                        <Route path="/raise-query" element={<RaiseQuery/>} />
-                    <Route path="/profile" element={<ProfileForm />} />
+                  {/* <Route path="/dashboard"  
+                       element={ <DashboardCard />}/> */}
+                    <Route path="/raise-query" element={<RaiseQuery/>} />
+                    <Route path="/profile" element={<ViewProfile />} />
                     <Route path="/usernameform" element={<UserNameForm />} />
                     <Route path="/genderform" element={<GenderForm />} />
                     <Route path="/birthdateform" element={<BirthdateForm />} />

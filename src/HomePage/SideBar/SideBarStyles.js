@@ -35,8 +35,8 @@ export const S = {
     borderRadius: "8px",
     color: "#fff",
     cursor: "pointer",
-    width: "30px",
-    height: "30px",
+    width: "35px",
+    height: "35px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -62,14 +62,14 @@ export const S = {
     fontWeight: 700,
     letterSpacing: "1.6px",
     textTransform: "uppercase",
-    padding: "5px 18px",
+    padding: "2px 18px",
     whiteSpace: "nowrap",
     overflow: "hidden",
   },
 
   divider: {
     borderBottom: "1px solid rgba(255,255,255,0.10)",
-    margin: "6px 0",
+    margin: "8px 0",
     width: "100%",
   },
 
@@ -84,7 +84,7 @@ export const S = {
   },
 
   iconWrap: {
-  border:"2px solid white",
+ // border:"2px solid white",
     height: "50px",
     width:"50px",
     display: "flex", 
@@ -100,17 +100,20 @@ export const S = {
     fontSize: "18px",
     fontWeight: 500,
     overflow: "hidden",
+    fontFamily:""
     // border:"2px solid green"
   },
 
-  signout: {
-    cursor: "pointer",
-    color: "#f96f6f",
-    height: "50px",
-    width: "100%",
-    position: "absolute",
-    bottom: 0,
-  },
+ signout: {
+  cursor: "pointer",
+  color: "#f96f6f",
+  height: "50px",
+  width: "100%",
+  position: "absolute",
+  bottom: 0,
+  //left: 0,
+  boxSizing: "border-box",
+},
 
   tooltip: {
     position: "absolute",

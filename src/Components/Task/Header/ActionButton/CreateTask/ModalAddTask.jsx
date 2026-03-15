@@ -7,52 +7,21 @@ import axios from "axios";
 import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { url } from "../../../../utils/constant";
-import { FiPlus, FiTrash2 } from "react-icons/fi";
-import { taskInitialValues, TaskSchema, emptyDetail } from "./TaskSchema"; // ← imported
-import {
-  Typography,
-  TextField,
-  Autocomplete,
-  FormControl,
-  Select,
-  MenuItem,
-  Box,
-  InputAdornment,
-} from "@mui/material";
+import { FiPlus, FiTrash2, FiBook, FiCheckCircle, FiClipboard, FiCalendar } from "react-icons/fi";
+import { taskInitialValues, TaskSchema, emptyDetail } from "./TaskSchema";
+import ModalHeaderBlock from "../../../../Common/ModalHeaderBlock";
+
 const ModalAddTask = ({ show, setShow, setTaskData, courseData, batchData }) => {
   const token = localStorage.getItem("token");
   const config = useMemo(
     () => ({ headers: { Authorization: `Bearer ${token}` } }),
     [token]
   );
-  //console.log("courseData from Modal Add Task:",courseData)
-
-const handleCourseNameChange = (e) => {
-  const selectedCourseName = e.target.value;
-
-  formik.setFieldValue("taskCourseName", selectedCourseName, true);
-  formik.setFieldTouched("taskCourseName", false, false);
-};
-// console.log(selectedCourseName)
 
   const handleClose = () => {
     formik.resetForm();
     setShow(false);
   };
-
-  const [filteredBatches, setFilteredBatches] = useState([]);
-
-  // const handleCourseChange = (e) => {
-  //   const chosen = e.target.value;
-  //   formik.setFieldValue("taskCourseName", chosen);
-  //   const matched = (batchData || []).filter((b) => b.courseName === chosen);
-  //   setFilteredBatches(matched);
-  //   const resetDetails = formik.values.taskDetail.map((d) => ({
-  //     ...d,
-  //     batchNumber: [],
-  //   }));
-  //   formik.setFieldValue("taskDetail", resetDetails);
-  // };
 
   const addDetailRow = () => {
     formik.setFieldValue("taskDetail", [
@@ -66,24 +35,9 @@ const handleCourseNameChange = (e) => {
     formik.setFieldValue("taskDetail", updated);
   };
 
-  // Input style
-  const inputStyle = {
-    borderRadius: "6px",
-    padding: "8px 12px",
-    fontSize: "13px",
-    border: "1px solid #e2e8f0",
-  };
-
-    const disabledInputStyle = {
-    ...inputStyle,
-    backgroundColor: "#f3f4f6",
-    color: "#6b7280",
-    cursor: "not-allowed",
-  };
-
   const formik = useFormik({
     initialValues: taskInitialValues,
-    validationSchema: TaskSchema,        // ← imported
+    validationSchema: TaskSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
@@ -105,100 +59,206 @@ const handleCourseNameChange = (e) => {
     formik.touched.taskDetail?.[index]?.[field] &&
     formik.errors.taskDetail?.[index]?.[field];
 
+  // ── Shared styles (matches ModalAssignTask) ──────────────────────────────
+  const infoCardStyle = {
+    backgroundColor: "#fff",
+    border: "1px solid #e2e8f0",
+    borderRadius: "10px",
+    padding: "16px 18px",
+    marginBottom: "10px",
+  };
+
+  const iconWrapStyle = (color) => ({
+    width: "34px",
+    height: "34px",
+    borderRadius: "8px",
+    backgroundColor: color,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  });
+
+  const labelStyle = {
+    fontSize: "11px",
+    fontWeight: 700,
+    color: "#94a3b8",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    marginBottom: "6px",
+  };
+
+  const selectStyle = {
+    borderRadius: "8px",
+    padding: "9px 12px",
+    fontSize: "13px",
+    border: "1px solid #e2e8f0",
+    backgroundColor: "#fff",
+    color: "#1e293b",
+    width: "100%",
+  };
+
+  const inputStyle = {
+    borderRadius: "8px",
+    padding: "9px 12px",
+    fontSize: "13px",
+    border: "1px solid #e2e8f0",
+    backgroundColor: "#fff",
+    color: "#1e293b",
+    width: "100%",
+    outline: "none",
+  };
+
+  const taskCardStyle = {
+    backgroundColor: "#fff",
+    border: "1px solid #e2e8f0",
+    borderRadius: "10px",
+    padding: "16px 18px",
+    marginBottom: "10px",
+  };
+
+  const isSubmitDisabled = formik.isSubmitting;
+
   return (
-    <Modal show={show} onHide={handleClose} size="lg"
-       style={{ "--bs-modal-border-radius": "16px",  }}
-       centered>
-      <Modal.Header closeButton
-        style={{
-          background: "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
-          color: "white",
-          borderBottom: "none",
-          borderRadius: "16px 16px 0 0",
-          padding: "20px 24px",
-        }}>
-        <Modal.Title style={{ padding: "0% 5%" }}>Add Task</Modal.Title>
-      </Modal.Header>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      size="lg"
+      centered
+      style={{ "--bs-modal-border-radius": "16px" }}
+    >
+      <ModalHeaderBlock title="Add Task" icon={<FiClipboard />} />
 
-      <Form onSubmit={formik.handleSubmit} style={{ padding: "1.5% 5%" }}>
-        <Modal.Body>
-          {/* Course Name */}
-          <Row>
-            <Col xs={12} md={6}>
-              <Form.Group className="mt-3">
-                <Form.Label className="mb-0">Course Name</Form.Label>
-             <Form.Select
-                  name="taskCourseName"
-                  value={formik.values.taskCourseName}
-                  onChange={handleCourseNameChange}
-                  onBlur={formik.handleBlur}
-                  style={inputStyle}
-                >
-                  <option value="">Select Course</option>
-                  {courseData?.map(c => (
-                    <option key={c._id} value={c.courseName}>{c.courseName}</option>
-                  ))}
-                </Form.Select>
-                {formik.touched.taskCourseName && formik.errors.taskCourseName && (
-                  <div className="text-danger">{formik.errors.taskCourseName}</div>
-                )}
-              </Form.Group>
-            </Col>
-          </Row>
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Body style={{ padding: "20px 24px", backgroundColor: "#f9fafb" }}>
 
-          {/* Task Details */}
-          <hr className="mt-4" />
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <strong>Task Details</strong>
-            <Button variant="outline-primary" size="sm" type="button" onClick={addDetailRow}>
-              <FiPlus className="me-1" />
+          {/* ── Course Name card ── */}
+          <div style={infoCardStyle}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
+              <div style={iconWrapStyle("#f0fdf4")}>
+                <FiBook size={16} color="#22c55e" />
+              </div>
+              <div style={labelStyle}>Course Name</div>
+            </div>
+
+            <Form.Select
+              name="taskCourseName"
+              value={formik.values.taskCourseName}
+              onChange={(e) => {
+                formik.setFieldValue("taskCourseName", e.target.value, true);
+                formik.setFieldTouched("taskCourseName", false, false);
+              }}
+              onBlur={formik.handleBlur}
+              style={selectStyle}
+            >
+              <option value="">Select Course</option>
+              {courseData?.map((c) => (
+                <option key={c._id} value={c.courseName}>
+                  {c.courseName}
+                </option>
+              ))}
+            </Form.Select>
+
+            {formik.touched.taskCourseName && formik.errors.taskCourseName && (
+              <div style={{ fontSize: "12px", color: "#ef4444", marginTop: "4px" }}>
+                {formik.errors.taskCourseName}
+              </div>
+            )}
+          </div>
+
+          {/* ── Task Details section ── */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "16px 0 10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={iconWrapStyle("#f5f3ff")}>
+                <FiClipboard size={15} color="#8b5cf6" />
+              </div>
+              <span style={{ fontSize: "13px", fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                Task Details
+              </span>
+            </div>
+            <Button
+              variant="outline-primary"
+              size="sm"
+              type="button"
+              onClick={addDetailRow}
+              style={{
+                fontSize: "12px",
+                fontWeight: 600,
+                borderRadius: "8px",
+                padding: "5px 12px",
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <FiPlus size={13} />
               Add Row
             </Button>
           </div>
 
           {formik.values.taskDetail.map((detail, index) => (
-            <div
-              key={index}
-              className="border rounded p-3 mb-3"
-              style={{ backgroundColor: "#f8f9fa" }}
-            >
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <span style={{ fontWeight: 600, color: "#475569" }}>Task #{index + 1}</span>
+            <div key={index} style={taskCardStyle}>
+              {/* Task row header */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <div style={iconWrapStyle("#eff6ff")}>
+                    <FiCalendar size={14} color="#3b82f6" />
+                  </div>
+                  <span style={{ fontSize: "12px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                    Task #{index + 1}
+                  </span>
+                </div>
                 {formik.values.taskDetail.length > 1 && (
                   <Button
                     variant="outline-danger"
                     size="sm"
                     type="button"
                     onClick={() => removeDetailRow(index)}
+                    style={{
+                      fontSize: "12px",
+                      borderRadius: "8px",
+                      padding: "4px 10px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
                   >
-                    <FiTrash2 />
+                    <FiTrash2 size={13} />
                   </Button>
                 )}
               </div>
 
               <Row>
+                {/* Task Question */}
                 <Col xs={12} md={8}>
-                  <Form.Group className="mb-2">
-                    <Form.Label className="mb-0">Task Question</Form.Label>
-                    <Form.Control
-                      as="textarea"
+                  <div style={{ marginBottom: "8px" }}>
+                    <div style={labelStyle}>Task Question</div>
+                    <textarea
                       rows={2}
                       name={`taskDetail[${index}].taskQuestion`}
                       value={detail.taskQuestion}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       placeholder="Enter task question..."
+                      style={{
+                        ...inputStyle,
+                        resize: "vertical",
+                        fontFamily: "inherit",
+                      }}
                     />
                     {getDetailError(index, "taskQuestion") && (
-                      <div className="text-danger">{getDetailError(index, "taskQuestion")}</div>
+                      <div style={{ fontSize: "12px", color: "#ef4444", marginTop: "3px" }}>
+                        {getDetailError(index, "taskQuestion")}
+                      </div>
                     )}
-                  </Form.Group>
+                  </div>
                 </Col>
 
+                {/* Allocated Day */}
                 <Col xs={12} md={4}>
-                  <Form.Group className="mb-2">
-                    <Form.Label className="mb-0">Allocated Day</Form.Label>
-                    <Form.Control
+                  <div style={{ marginBottom: "8px" }}>
+                    <div style={labelStyle}>Allocated Day</div>
+                    <input
                       type="number"
                       min={1}
                       name={`taskDetail[${index}].allocatedDay`}
@@ -206,30 +266,75 @@ const handleCourseNameChange = (e) => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       placeholder="e.g. 3"
+                      style={inputStyle}
                     />
                     {getDetailError(index, "allocatedDay") && (
-                      <div className="text-danger">{getDetailError(index, "allocatedDay")}</div>
+                      <div style={{ fontSize: "12px", color: "#ef4444", marginTop: "3px" }}>
+                        {getDetailError(index, "allocatedDay")}
+                      </div>
                     )}
-                  </Form.Group>
+                  </div>
                 </Col>
               </Row>
             </div>
           ))}
 
           {typeof formik.errors.taskDetail === "string" && (
-            <div className="text-danger">{formik.errors.taskDetail}</div>
+            <div style={{ fontSize: "12px", color: "#ef4444", marginTop: "4px" }}>
+              {formik.errors.taskDetail}
+            </div>
           )}
         </Modal.Body>
 
-        <Modal.Footer>
-          <div className="d-flex gap-3">
-            <Button type="submit" style={{ backgroundColor: "#4e73df", border: "none" }}>
-              Add Task
-            </Button>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-          </div>
+        {/* Footer — identical structure to ModalAssignTask */}
+        <Modal.Footer
+          style={{
+            borderTop: "1px solid #e5e7eb",
+            padding: "14px 24px",
+            backgroundColor: "#ffffff",
+            borderRadius: "0 0 16px 16px",
+            gap: "8px",
+          }}
+        >
+          <Button
+            onClick={handleClose}
+            disabled={isSubmitDisabled}
+            style={{
+              backgroundColor: "transparent",
+              border: "1px solid #d1d5db",
+              color: "#6b7280",
+              fontWeight: 600,
+              fontSize: "13px",
+              padding: "7px 18px",
+              borderRadius: "8px",
+            }}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            type="submit"
+            disabled={isSubmitDisabled}
+            style={{
+              background: isSubmitDisabled
+                ? "#e2e8f0"
+                : "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
+              border: "none",
+              fontWeight: 700,
+              fontSize: "13px",
+              padding: "7px 22px",
+              borderRadius: "8px",
+              color: isSubmitDisabled ? "#94a3b8" : "#fff",
+              boxShadow: isSubmitDisabled ? "none" : "0 2px 8px rgba(31,63,191,0.3)",
+              cursor: isSubmitDisabled ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            {/* <FiCheckCircle size={15} /> */}
+            {formik.isSubmitting ? "Loading..." : "Submit"}
+          </Button>
         </Modal.Footer>
       </Form>
     </Modal>
@@ -237,6 +342,3 @@ const handleCourseNameChange = (e) => {
 };
 
 export default ModalAddTask;
-
-
-//Task Number should be auto calculated/selected when you select courseName.

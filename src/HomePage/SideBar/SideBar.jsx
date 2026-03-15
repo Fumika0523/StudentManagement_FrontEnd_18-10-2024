@@ -44,8 +44,8 @@ function NavItem({
         color: hovered ? "#fff" : COLORS.TEXT,
         background: hovered ? "rgba(64, 155, 240, 0.36)" : "transparent",
         margin: !isCollapsed ? "10px 0px" : "15px 0px",
-        padding: !isCollapsed ? "0px 5px" : "0px",
-        justifyContent:!isCollapsed ? "start" : "center",
+        padding: isCollapsed ? "0px 10px" : "0px 6px",
+        justifyContent:"flex-start",
         transition: `background 0.38s, color 0.18s,
         padding ${widthDuration}ms cubic-bezier(0.4,0,0.2,1),
         margin ${widthDuration}ms cubic-bezier(0.4,0,0.2,1)`,
@@ -72,7 +72,7 @@ function NavItem({
         {label}
       </span>
 
-      <span
+      {/* <span
         style={{
           ...S.tooltip,
           opacity: showTooltip ? 1 : 0,
@@ -82,7 +82,7 @@ function NavItem({
         }}
       >
         {label}
-      </span>
+      </span> */}
     </div>
   );
 }
@@ -187,7 +187,8 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
         width: sidebarWidth,
         minWidth: 0,
         transition: `width ${ANIM.WIDTH_DURATION}ms cubic-bezier(0.4,0,0.2,1)`,
-        
+      //  border:"2px solid red"
+      fontFamily:"monospace"
       }}
     >
       {/* Toggle row */}
@@ -199,9 +200,9 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
             title={isSidebarOpen ? "Collapse" : "Expand"}
           >
             {isSidebarOpen ? (
-              <MdKeyboardDoubleArrowLeft style={{ fontSize: 22 }} />
+              <MdKeyboardDoubleArrowLeft style={{ fontSize: 30 }} />
             ) : (
-              <MdKeyboardDoubleArrowRight style={{ fontSize: 22 }} />
+              <MdKeyboardDoubleArrowRight style={{ fontSize: 30 }} />
             )}
           </button>
         )}
@@ -268,16 +269,15 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
         </div>
 
       {/* Sign out */}
-      <div
-      className="d-flex flex-row align-items-center border border-4 gap-2 border-warning"
-        style={{
-          ...S.signout,
-        justifyContent: isCollapsed ? "center" : "flex-start",
+      {/* <div
+      className="d-flex flex-row align-items-center gap-2"
+          style={{
+        ...S.signout,
+        justifyContent:"flex-start",
+        padding: "0 5px",
         transition: `background 0.18s, padding ${ANIM.WIDTH_DURATION}ms cubic-bezier(0.4,0,0.2,1)`,
-        left: isCollapsed ? "unset" : 0, 
-          right: !isCollapsed ? "unset" : 0, 
-        }}
-        onClick={() => {
+      }}
+          onClick={() => {
           localStorage.removeItem("token");
           navigate("/");
         }}
@@ -290,7 +290,7 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
         title={isCollapsed ? "Sign Out" : null}
       >
         <span style={S.iconWrap}>
-          <FaPowerOff style={{ fontSize: "28px", color: "#f87171" }} />
+          <FaPowerOff style={{ fontSize: "35px", color: "#f87171" }} />
         </span>
         <span
         className="d-none d-md-block"
@@ -299,16 +299,20 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
             opacity: effectiveLabelVisible ? 1 : 0,
             transform: effectiveLabelVisible ? "translateX(0)" : "translateX(-6px)",
             transition: `opacity ${ANIM.LABEL_DURATION}ms ease, transform ${ANIM.LABEL_DURATION}ms ease`,
-            border:"2px solid pink",
+         //   border:"2px solid pink",
             display: isCollapsed ? "none" : "block",
           }}
         >
           Sign Out
         </span>
-      </div>
+      </div> */}
       </div>    
     </div>
   );
 }
 
 export default SideBar;
+
+//Work on transition
+//icon should stay in the 
+// Change the font-family 

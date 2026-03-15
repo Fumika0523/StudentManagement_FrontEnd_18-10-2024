@@ -50,10 +50,9 @@ export const UpdateAttendance = () => {
   };
 
   const getStudentData = async () => {
-    const res = await axios.get(`${url}/allstudent`, config);
+    const res = await axios.get(`${url}/all-student`, config);
     setStudentData(res.data.studentData);
   };
-
   useEffect(() => {
     getBatchData();
     getAdmissionData();
@@ -78,7 +77,7 @@ export const UpdateAttendance = () => {
         .map((admission) => admission.studentName);
 
       const batchStudents = studentData.filter((student) =>
-        studentsInBatchNames.includes(student.username)
+        studentsInBatchNames.includes(student.studentName)
       );
 
       if (batchStudents.length === 0) {
@@ -141,7 +140,8 @@ export const UpdateAttendance = () => {
         attendanceRecords,
       };
 
-      await axios.post(`${url}/attendance`, payload, config);
+   let res = await axios.post(`${url}/update-attendance`, payload, config);
+console.log(res.data)
 
       toast.success("Attendance recorded successfully!");
       setShowStudentList(false);
@@ -297,7 +297,6 @@ export const UpdateAttendance = () => {
         {/*  Expandable section */}
         <Collapse in={showStudentList} timeout="auto" unmountOnExit>
           <Divider sx={{ my: 4 }} />
-
           <Box
             sx={{
               display: "flex",
@@ -364,7 +363,7 @@ export const UpdateAttendance = () => {
                       },
                     }}
                   >
-                    <TableCell sx={{ py: 2 }}>{student.username}</TableCell>
+                    <TableCell sx={{ py: 2 }}>{student.studentName.toUpperCase()}</TableCell>
                     <TableCell align="right">
                       <Checkbox
                         checked={selectedStudentIds.includes(student._id)}

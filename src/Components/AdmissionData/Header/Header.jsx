@@ -6,7 +6,6 @@ import AdmissionFilter from "./Filter/AdmissionFilter";
 const Header = ({
   // ActionBtns
   config,
-  setStudentData,
   urlBase,
 
   // Filters state + handlers from parent
@@ -20,7 +19,6 @@ const Header = ({
   setSelectedCourse,
   courseInput,
   setCourseInput,
-  courseData, setCourseData,
   batchStatus,
   setBatchStatus,
   studentName, setStudentName,
@@ -28,17 +26,28 @@ const Header = ({
   genderFilter, setGenderFilter,
   datePreset, setDatePreset, dateRange, setDateRange,
   sessionType, setSessionType,
+   studentData, setStudentData,  courseData, setCourseData, 
+  setAdmissionData, admissionData, batchData, setBatchData
 }) => {
   const [showAdd, setShowAdd] = useState(false);
 
   return (
     <div>
       {/* Top actions */}
-      <ActionBtns
+   <ActionBtns
       showAdd={showAdd}
-        setShowAdd={setShowAdd}
-        config={config}
-      />
+      setShowAdd={setShowAdd}
+      config={config}
+      urlBase={urlBase}
+      studentData={studentData}
+      setStudentData={setStudentData}
+      courseData={courseData}
+      setCourseData={setCourseData}
+      setAdmissionData={setAdmissionData}
+      admissionData={admissionData}
+      batchData={batchData}
+      setBatchData={setBatchData}
+    />
 
       {/* Filters */}
       <Box

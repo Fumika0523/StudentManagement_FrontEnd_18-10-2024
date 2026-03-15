@@ -1,393 +1,284 @@
 import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { url } from '../utils/constant';
-import { Col } from 'react-bootstrap';
-import Row from 'react-bootstrap/Row';
+import { Col, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-
+import ModalHeaderBlock from '../Common/ModalHeaderBlock';
+import { RiEdit2Fill } from "react-icons/ri";
+import ModalFooterBlock from '../Common/ModalFooterBlock';
+import { FieldGroup, inputStyle, panelStyle } from '../StudentData/Modals/CreateStudent/studentFormStyle';
+import {
+  LayersOutlined,
+  AssignmentIndOutlined,
+  School,
+  Person,
+  EventAvailable,
+  CalendarMonth,
+  PaymentsOutlined,
+  ShareOutlined,
+} from "@mui/icons-material";
 
 const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }) => {
-    console.log(singleAdmission._id)
-    const [courseData, setCourseData] = useState([])
-    const [studentData,setStudentData] = useState([])
-    const [batchData,setBatchData] = useState([])
-    
-    const token = localStorage.getItem('token')
-    // console.log(token)
+  const [courseData, setCourseData] = useState([]);
+  const [studentData, setStudentData] = useState([]);
+  const [batchData, setBatchData] = useState([]);
 
-    let config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
-    
-    const navigate = useNavigate()
-    const handleClose = () => {
-        setShow(false)
-        navigate('/admissiondata')
-    }
+  const token = localStorage.getItem('token');
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const navigate = useNavigate();
 
-    const formSchema = Yup.object().shape({
-         batchNumber:Yup.string().required("Please select Batch Number!"),
-        courseId: Yup.string().required("Mandatory field!"),
-        studentId: Yup.string().required(("Mandatory field!")),
-        courseName: Yup.string().required(("Mandatory field!")),
-        studentName: Yup.string().required(("Mandatory field!")),
-        admissionSource: Yup.string().required(("Mandatory field!")),
-        admissionFee: Yup.number().required(("Mandatory field!")),
-        admissionDate: Yup.date().required(("Mandatory field!")),
-        admissionYear: Yup.number().required(("Mandatory field!")),
-        admissionMonth: Yup.string(),
-    })
+  const handleClose = () => {
+    setShow(false);
+    navigate('/admissiondata');
+  };
 
-    const formik = useFormik({
-        initialValues: {
-            batchNumber: singleAdmission?.batchNumber,
-            courseId: singleAdmission?.courseId,
-            studentId: singleAdmission?.studentId,
-            studentName: singleAdmission?.studentName,
-            courseName: singleAdmission?.courseName,
-            admissionSource: singleAdmission?.admissionSource,
-            admissionFee: singleAdmission?.admissionFee,
-            admissionDate: singleAdmission.admissionDate
-            ? new Date(singleAdmission.admissionDate).toISOString().split('T')[0]
+  const formSchema = Yup.object().shape({
+    batchNumber: Yup.string().required("Please select Batch Number!"),
+    courseId: Yup.string().required("Mandatory field!"),
+    studentId: Yup.string().required("Mandatory field!"),
+    courseName: Yup.string().required("Mandatory field!"),
+    studentName: Yup.string().required("Mandatory field!"),
+    admissionSource: Yup.string().required("Mandatory field!"),
+    admissionFee: Yup.number().required("Mandatory field!"),
+    admissionDate: Yup.date().required("Mandatory field!"),
+    admissionYear: Yup.number().required("Mandatory field!"),
+    admissionMonth: Yup.string(),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      batchNumber: singleAdmission?.batchNumber,
+      courseId: singleAdmission?.courseId,
+      studentId: singleAdmission?.studentId,
+      studentName: singleAdmission?.studentName,
+      courseName: singleAdmission?.courseName,
+      admissionSource: singleAdmission?.admissionSource,
+      admissionFee: singleAdmission?.admissionFee,
+      admissionDate: singleAdmission.admissionDate
+        ? new Date(singleAdmission.admissionDate).toISOString().split('T')[0]
         : "",
-            admissionYear: singleAdmission?.admissionYear,
-            admissionMonth: singleAdmission?.admissionMonth,
-            status: singleAdmission?.status || "Assign"
-        },
-        validationSchema: formSchema,
-        enableReinitialize: true,
-        onSubmit: (values) => {
-            //console.log(values)
-            //console.log(formik)
-            updateAdmission(values)
-        }
-    })
-    //console.log(singleAdmission.admissionDate)
+      admissionYear: singleAdmission?.admissionYear,
+      admissionMonth: singleAdmission?.admissionMonth,
+      status: singleAdmission?.status || "Assign",
+    },
+    validationSchema: formSchema,
+    enableReinitialize: true,
+    onSubmit: (values) => updateAdmission(values),
+  });
 
-    const formatDate = (dateString) => {
-        console.log(dateString)
-        const date = new Date(dateString);
-        console.log(date)
-        return date.toLocaleDateString('en-US', {
-            year: "numeric",
-            month: 'short',
-            day: 'numeric'
-        })
+  const dateFun = (dateString) => {
+    const date = new Date(dateString);
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    return { month, year };
+  };
+
+  const updateAdmission = async (updatedAdmission) => {
+    try {
+      let res = await axios.put(`${url}/updateadmission/${singleAdmission._id}`, updatedAdmission, config);
+     // console.log("res from updateAdmission",res.data)
+      const updatedStudent = res.data.admission.studentName;
+      if (res) {
+        let list = await axios.get(`${url}/alladmission`, config);
+        toast.success(`Successfully Updated for ${updatedStudent}`);
+        setAdmissionData(list.data.admissionData);
+        setTimeout(() => handleClose(), 1000);
+        handleClose();
+      }
+    } catch (e) {
+      console.error("Error in Editing Admission:", e);
     }
-    // console.log(new Date("03-01-2025"))
+  };
 
-    const dateFun = (dateString) => {
-        const date = new Date(dateString)
-        // Get the full month name
-        const month = date.toLocaleString('default', { month: 'long' });
-        // Get the full year
-        const year = date.getFullYear();
-       // console.log(`${month} ${year}`);
-        return { month, year }
+  const getBatchData = async () => {
+    let res = await axios.get(`${url}/allbatch`, config);
+    setBatchData(res.data.batchData);
+  };
+
+  const getStudentData = async () => {
+    let res = await axios.get(`${url}/allstudent`, config);
+    setStudentData(res.data.studentData);
+  };
+
+  const getCourseData = async () => {
+    let res = await axios.get(`${url}/allcourse`, config);
+    setCourseData(res.data.courseData);
+  };
+
+  useEffect(() => {
+    getCourseData();
+    getStudentData();
+    getBatchData();
+  }, []);
+
+  // Selecting batch auto-fills courseId, courseName, admissionFee
+  const handleBatchChange = (e) => {
+    const selectedBatchNumber = e.target.value;
+    const selectedBatch = batchData.find((b) => b.batchNumber === selectedBatchNumber);
+    if (selectedBatch) {
+      formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
+      const matchedCourse = courseData.find((c) => c.courseName === selectedBatch.courseName);
+      formik.setFieldValue("courseName", selectedBatch.courseName || "");
+      formik.setFieldValue("courseId", matchedCourse?._id || "");
+      formik.setFieldValue("admissionFee", matchedCourse?.courseFee ?? "");
+    } else {
+      formik.setFieldValue("batchNumber", selectedBatchNumber);
     }
+  };
 
-    const a = dateFun(formik.values.admissionDate)
-   // console.log(a.month) //['january' '2025']
-    //console.log(a.year)
+  const handleStatusChange = (e) => {
+    formik.setFieldValue("status", e.target.value);
+    toast.info("The status is marked as De-assigned.");
+  };
 
-    const updateAdmission = async (updatedAdmission) => {
-        try {
-            let res = await axios.put(`${url}/updateadmission/${singleAdmission._id}`, updatedAdmission, config)
-            console.log("updated studentName",res.data.updateAdmission.studentName)
-            const updatedStudent = res.data.updateAdmission.studentName
-            if (res) {
-                let res = await axios.get(`${url}/alladmission`, config)
-                    toast.success(`Successfully Updated for ${updatedStudent}`, {
-                        style: {
-                          textWrap: "nowrap",
-                          textAlign: "center",
-                          color: "black",
-                          fontSize:"14px"
-                        },
-                      });
-                console.log("Successfully Updated the Admission", updatedAdmission)
-                setAdmissionData(res.data.admissionData)
-                   setTimeout(() => {
-                handleClose()
-            }, 1000)
-                handleClose()
-            }
-        } catch (e) {
-            console.error("Error in Editting Admission:", e)
-        }
-    }
+  const handleCourseIdChange = (e) => {
+    const selectedCourseId = e.target.value;
+    const selectedCourse = courseData.find((c) => c._id === selectedCourseId);
+    formik.setFieldValue("courseId", selectedCourseId);
+    formik.setFieldValue("courseName", selectedCourse?.courseName || "");
+    formik.setFieldValue("admissionFee", selectedCourse?.courseFee ?? "");
+  };
 
-    //Batch Data
-      const getBatchData = async()=>{
-        let res = await axios.get(`${url}/allbatch`,config)
-        console.log("BatchData",res.data.batchData)
-        setBatchData(res.data.batchData)
-    }
+  const handleStudentIdChange = (e) => {
+    const selectedStudentId = e.target.value;
+    const selectedStudent = studentData.find((s) => s._id === selectedStudentId);
+    formik.setFieldValue("studentId", selectedStudentId);
+    formik.setFieldValue("studentName", selectedStudent?.studentName || "");
+  };
 
-    //student Data
-    const getStudentData = async () => {
-        console.log("Student data is called.")
-        let res = await axios.get(`${url}/allstudent`, config)
-        // console.log("Student Data", res.data.studentData)
-        setStudentData(res.data.studentData)
-    }
+  const disabledStyle = { ...inputStyle, background: "#f8fafc", color: "#64748b" };
 
-    //Original Course Data
-     const getCourseData = async () => {
-            console.log("Console data is called....")
-            let res = await axios.get(`${url}/allcourse`, config)
-         //   console.log("Course Data", res.data.courseData)
-            setCourseData(res.data.courseData)
-    }
-        useEffect(() => {
-            getCourseData()
-            getStudentData()
-            getBatchData()
-        }, [])
-        console.log(courseData)
-        const handleBatchChange = (e) => {
-         console.log("handleBatchChange",e.target.value)
-        const selectedBatchNumber = e.target.value;
-        console.log("selectedBatchNumber",selectedBatchNumber)
-            // setBatchValue(selectedBatchNumber)
-        const selectedBatch = batchData.find(
-            (element) => element.batchNumber === selectedBatchNumber
-        );
-            console.log("selected Batch",selectedBatch)
-        if (selectedBatch) {
-            formik.setFieldValue("batchNumber", selectedBatch.batchNumber);
-        }
-    };
+  return (
+    <Modal show={show} onHide={handleClose} size="lg" centered style={{ "--bs-modal-border-radius": "16px" }}>
+      <ModalHeaderBlock title="Edit Admission" icon={<RiEdit2Fill />} />
 
-    const handleStatusChange = (e) => {
-    const selectedStatus = e.target.value;
-    formik.setFieldValue("status", selectedStatus);
-      toast.info("The stutatus is marked as De-assigned.");
-};
-    const handleCourseIdChange = (e) => {
-        // formik.handleChange === e.target.value
-        //console.log("handleCourseIdChange",e.target.value)
-        const selectedCourseId = e.target.value
-        //find() >> Array Method
-        const selectedCourse = courseData.find((element) => element._id == selectedCourseId)
-        console.log(selectedCourse.courseName)
-        console.log(selectedCourse.courseFee)
-        formik.setFieldValue("courseId", selectedCourseId)
-        formik.setFieldValue("courseName", selectedCourse.courseName)
-        formik.setFieldValue("admissionFee", selectedCourse.courseFee)
-    }
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Body style={{ padding: "16px 18px", backgroundColor: "#f1f5f9" }}>
+          <div style={panelStyle}>
 
-    const handleStudentIdChange = (e) => {
-        console.log(e.target.value)
-        const selectedStudentId = e.target.value
-        //find()
-        const selectedStudent = studentData.find((element) => element._id == selectedStudentId)
-        console.log(selectedStudent.studentName)
-        formik.setFieldValue("studentId", selectedStudentId)
-        formik.setFieldValue("studentName", (selectedStudent.studentName))
-    }
+            {/* Batch & Status */}
+            <Row className="g-1">
+              <Col xs={12} md={6}>
+                <FieldGroup label="Batch No." icon={<LayersOutlined />} required error={formik.touched.batchNumber && formik.errors.batchNumber}>
+                  <Form.Select size="sm" name="batchNumber" value={formik.values.batchNumber} onChange={handleBatchChange} onBlur={formik.handleBlur} style={inputStyle}>
+                    <option value="">Select Batch</option>
+                    {batchData
+                      ?.filter((b) => {
+                        if (!b.startDate) return true;
+                        const diffInDays = (new Date() - new Date(b.startDate)) / (1000 * 60 * 60 * 24);
+                        return diffInDays <= 7;
+                      })
+                      .map((b) => (
+                        <option key={b.batchNumber} value={b.batchNumber}>{b.batchNumber}</option>
+                      ))}
+                  </Form.Select>
+                </FieldGroup>
+              </Col>
 
-    return (
-    <Modal show={show} onHide={handleClose} size="lg">
-        <Modal.Header>
-            <Modal.Title className='ms-5'>Edit Admission</Modal.Title>
-        </Modal.Header>
-        <Form onSubmit={formik.handleSubmit} className='px-5' >
-        <Modal.Body>
-                <Row>
-                         <Col>
-                            {/* Select Batch Number */}
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Batch No.</Form.Label>
-                                <select name="batchNumber" id="" className="form-select"
-                                    value={formik.values.batchNumber}
-                                    // onChange={formik.handleChange} //e.target.value
-                                    onChange={handleBatchChange}
-                                    onBlur={formik.handleBlur}
-                                >
-                                    <option value="">Select Batch</option>
-                                    {batchData?.map((element) =>
-                                        <option key={element.batchNumber}
-                                            value={element.batchNumber} >{element.batchNumber}</option>
-                                    )}
-                                    {/* <option value="677a1998ed75982c18d258fb" >677a1998ed75982c18d258fb</option>  */}
-                                </select>
-                                {/* Error Message */}
-                                {formik.errors.batchNumber && formik.touched.batchNumber && <div className="text-danger text-center" >{formik.errors.batchNumber}</div>}
-                            </Form.Group>
-                        </Col>
-                       <Col>
-                    <Form.Group className='mt-3'>
-                        <Form.Label className='mb-0'>Assignment Status</Form.Label>
-                        <select 
-                            name="status" 
-                            className="form-select"
-                            value={formik.values.status}
-                            onChange={handleStatusChange}
-                            onBlur={formik.handleBlur}
-                        >
-                            <option value="Assigned">Assigned</option>
-                            <option value="De-assigned">De-assigned</option>
-                        </select>
-                        {formik.errors.status && formik.touched.status && (
-                            <div className="text-danger small">{formik.errors.status}</div>
-                        )}
-                    </Form.Group>
-                </Col>
-                </Row>
-                <Row>
-                        <Col>
-                            {/* Course ID << Editable*/}
-                            <Form.Group>
-                                <Form.Label className='mb-0'>Course ID</Form.Label>
-                                <select name="courseId" id="" className="form-select" value={formik.values.courseId}
-                                    // onChange={formik.handleChange} //e.target.value
-                                    onChange={handleCourseIdChange}
-                                >
-                                    <option value="">Select Course ID</option>
-                                    {courseData?.map((element) =>
-                                        <option key={element._id}
-                                            value={element._id} >{element._id}</option>
-                                    )}
-                                </select>
-                                {/* Error Message */}
-                                {formik.errors.courseId && <div className="text-danger text-center">{formik.errors.courseId}</div>}
-                            </Form.Group>
-                        </Col>
+              <Col xs={12} md={6}>
+                <FieldGroup label="Assignment Status" icon={<AssignmentIndOutlined />}>
+                  <Form.Select size="sm" name="status" value={formik.values.status} onChange={handleStatusChange} onBlur={formik.handleBlur} style={inputStyle}>
+                    <option value="Assigned">Assigned</option>
+                    <option value="De-assigned">De-assigned</option>
+                  </Form.Select>
+                </FieldGroup>
+              </Col>
+            </Row>
 
-                        {/* Course Name */}
-                        <Col>
-                        <Form.Group className='mt-3' >
-                                <Form.Label className='mb-0'>Course Name</Form.Label>
-                                <Form.Control disabled
-                                type="text" placeholder='Course Name'
-                                name='courseName' value={formik.values.courseName}>
-                                </Form.Control>
-                                {/* Error Message */}
-                                {formik.errors.courseName && <div className="text-danger text-center">{formik.errors.courseName}</div>}
-                                </Form.Group>
-                        </Col>
-                </Row>
-                <Row>
-                        {/* Student ID <<< NOT Editable but pre-filled*/}
-                        <Col>
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Student ID</Form.Label>
-                                <select disabled name="studentId" id="" className="form-select" value={formik.values.studentId}
-                                    // onChange={formik.handleChange}
-                                    onChange={handleStudentIdChange}
-                                >
-                                    <option value="">Select Student ID</option>
-                                    {studentData?.map((element) =>
-                                        <option key={element._id} value={element._id} >{element._id}</option>
-                                    )}
-                                </select>
-                                {/* Error Message */}
-                                {formik.errors.studentId && <div className="text-danger text-center">{formik.errors.studentId}</div>}
-                            </Form.Group>
-                        </Col>
+            {/* Course — auto-filled from batch */}
+            <Row className="g-1">
+              <Col xs={12} md={6}>
+                <FieldGroup label="Course ID" icon={<School />} error={formik.errors.courseId}>
+                  <Form.Select size="sm" name="courseId" value={formik.values.courseId} onChange={handleCourseIdChange}
+                  placeholder="Auto-filled from batch" style={disabledStyle} >
+                    <option value="">Select Course ID</option>
+                    {courseData?.map((c) => (
+                      <option key={c._id} value={c._id}>{c._id}</option>
+                    ))}
+                  </Form.Select>
+                </FieldGroup>
+              </Col>
 
-                        {/* Student Name */}
-                        <Col>
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Student Name</Form.Label>
-                                <Form.Control disabled
-                                    type='text' placeholder='Enter Student Name' name='studentName' value={formik.values.studentName}>
-                                </Form.Control>
-                                {/* Error Message */}
-                                {formik.errors.studentName && <div className="text-danger text-center">{formik.errors.studentName}</div>}
-                            </Form.Group>
-                        </Col>
-                </Row>
-                <Row>
-                        {/* Admission Date << Editable */}
-                        <Col>
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Date</Form.Label>
-                                <Form.Control
-                                    type="date" placeholder='Type your Admission Date'
-                                    name='admissionDate' value={formik.values.admissionDate} onChange={formik.handleChange
-                                    } />
-                                {/* console.log(new Date("03-01-2025")) */}
-                                {/* Error Message */}
-                                {formik.errors.admissionDate && <div className="text-danger text-center">{formik.errors.admissionDate}</div>}
-                            </Form.Group>
-                        </Col>
+              <Col xs={12} md={6}>
+                <FieldGroup label="Course Name" icon={<School />} error={formik.errors.courseName}>
+                  <Form.Control size="sm" disabled name="courseName" value={formik.values.courseName} placeholder="Auto-filled from batch" style={disabledStyle} />
+                </FieldGroup>
+              </Col>
+            </Row>
 
-                        {/* Admission Month */}
-                        <Col>
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Month</Form.Label>
-                                <Form.Control disabled
-                                    type="text" placeholder='Month'
-                                    //check
-                                    name="admissionMonth" value={(dateFun(formik.values.admissionDate)).month} onChange={formik.handleChange} />
-                                {/* Error Message */}
-                                {formik.errors.admissionMonth && <div className="text-danger text-center">{formik.errors.admissionMonth}</div>}
-                            </Form.Group>
-                        </Col>
-                        {/* Admission Year */}
-                        <Col>
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Year</Form.Label>
-                                <Form.Control disabled
-                                    type="text" placeholder='Year'
-                                    name='admissionYear' value={(dateFun(formik.values.admissionDate)).year}
-                                    onChange={formik.handleChange} />
-                                {/* Error Message */}
-                                {formik.errors.admissionYear && <div className="text-danger text-center">{formik.errors.admissionYear}</div>}
-                            </Form.Group>
-                        </Col>
-                </Row>
-                <Row>
-                        <Col>
-                            {/* Admission Fee */}
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Fee</Form.Label>
-                                <Form.Control disabled
-                                    type="text" placeholder='Type your Admission Fee'
-                                    name='admissionFee' value={formik.values.admissionFee} />
-                                {/* Error Message */}
-                                {formik.errors.admissionFee && <div className="text-danger text-center">{formik.errors.admissionFee}</div>}
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            {/* Admission Source << Editable */}
-                            <Form.Group className='mt-3'>
-                                <Form.Label className='mb-0'>Source</Form.Label>
-                                <select
-                                    name="admissionSource"
-                                    className="form-select"
-                                    value={formik.values.admissionSource}
-                                    onChange={formik.handleChange}>
-                                    <option value="">Select Admission Source</option>
-                                    <option value={"Social"}>Social</option>
-                                    <option value={"Referral"}>Referral</option>
-                                    <option value={"Direct"}>Direct</option>
-                                </select>
-                                {/* Error Message */}
-                                {formik.errors.admissionSource && <div className="text-danger text-center">{formik.errors.admissionSource}</div>}
-                            </Form.Group>
-                        </Col>
-                </Row>
+            {/* Student — locked */}
+            <Row className="g-1">
+              <Col xs={12} md={6}>
+                <FieldGroup label="Student ID" icon={<Person />} error={formik.errors.studentId}>
+                  <Form.Select size="sm" disabled name="studentId" value={formik.values.studentId} onChange={handleStudentIdChange} style={disabledStyle}>
+                    <option value="">Select Student ID</option>
+                    {studentData?.map((s) => (
+                      <option key={s._id} value={s._id}>{s._id}</option>
+                    ))}
+                  </Form.Select>
+                </FieldGroup>
+              </Col>
+
+              <Col xs={12} md={6}>
+                <FieldGroup label="Student Name" icon={<Person />} error={formik.errors.studentName}>
+                  <Form.Control size="sm" disabled name="studentName" value={formik.values.studentName} style={disabledStyle} />
+                </FieldGroup>
+              </Col>
+            </Row>
+
+            {/* Date */}
+            <Row className="g-1">
+              <Col xs={12} md={4}>
+                <FieldGroup label="Admission Date" icon={<EventAvailable />} required error={formik.touched.admissionDate && formik.errors.admissionDate}>
+                  <Form.Control size="sm" type="date" name="admissionDate" value={formik.values.admissionDate} onChange={formik.handleChange} style={inputStyle} />
+                </FieldGroup>
+              </Col>
+
+              <Col xs={12} md={4}>
+                <FieldGroup label="Month" icon={<CalendarMonth />}>
+                  <Form.Control size="sm" disabled value={dateFun(formik.values.admissionDate).month} style={disabledStyle} />
+                </FieldGroup>
+              </Col>
+
+              <Col xs={12} md={4}>
+                <FieldGroup label="Year" icon={<CalendarMonth />}>
+                  <Form.Control size="sm" disabled value={dateFun(formik.values.admissionDate).year} style={disabledStyle} />
+                </FieldGroup>
+              </Col>
+            </Row>
+
+            {/* Fee & Source */}
+            <Row className="g-1">
+              <Col xs={12} md={6}>
+                <FieldGroup label="Fee" icon={<PaymentsOutlined />} error={formik.errors.admissionFee}>
+                  <Form.Control size="sm" disabled name="admissionFee" value={formik.values.admissionFee} style={disabledStyle} />
+                </FieldGroup>
+              </Col>
+
+              <Col xs={12} md={6}>
+                <FieldGroup label="Source" icon={<ShareOutlined />} required error={formik.touched.admissionSource && formik.errors.admissionSource}>
+                  <Form.Select size="sm" name="admissionSource" value={formik.values.admissionSource} onChange={formik.handleChange} onBlur={formik.handleBlur} style={inputStyle}>
+                    <option value="">-- Select --</option>
+                    <option value="Social">Social</option>
+                    <option value="Referral">Referral</option>
+                    <option value="Direct">Direct</option>
+                  </Form.Select>
+                </FieldGroup>
+              </Col>
+            </Row>
+
+          </div>
         </Modal.Body>
-        <Modal.Footer>
-            {/* ADD BUTTON */}
-            <Button type="submit" style={{ backgroundColor: "#4e73df" }}>Update Admission</Button>
-             {/* CLOSE BUTTON*/}
-            <Button variant="secondary" onClick={handleClose}>Close</Button>
-        </Modal.Footer>
-        </Form>
-    </Modal>
-    )
-}
 
-export default ModalEditAdmission
+        <ModalFooterBlock onClose={handleClose} submitText="Update" submitting={formik.isSubmitting} />
+      </Form>
+    </Modal>
+  );
+};
+
+export default ModalEditAdmission;

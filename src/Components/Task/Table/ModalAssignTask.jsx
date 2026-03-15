@@ -3,6 +3,8 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { FiClipboard, FiBook, FiCalendar, FiLayers, FiCheckCircle } from "react-icons/fi";
+import ModalHeaderBlock from '../../Common/ModalHeaderBlock'
+
 
 const ModalAssignTask = ({ show, onClose, task, batchData, onConfirm, setTaskData }) => {
   const [loading, setLoading] = useState(false);
@@ -29,8 +31,7 @@ const ModalAssignTask = ({ show, onClose, task, batchData, onConfirm, setTaskDat
 
   const noBatches = courseName && filteredBatches.length === 0;
 
-  
-  const handleConfirm = async () => {
+    const handleConfirm = async () => {
     if (!onConfirm || loading || !task || !selectedBatchId) return;
     try {
       setLoading(true);
@@ -104,22 +105,7 @@ const ModalAssignTask = ({ show, onClose, task, batchData, onConfirm, setTaskDat
       style={{ "--bs-modal-border-radius": "16px" }}
     >
       {/* Header */}
-      <Modal.Header
-        closeButton
-        style={{
-          background: "linear-gradient(180deg, #1f3fbf 0%, #1b2f7a 100%)",
-          color: "white",
-          borderBottom: "none",
-          borderRadius: "16px 16px 0 0",
-          padding: "20px 24px",
-        }}
-      >
-        <Modal.Title style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "18px", fontWeight: 700 }}>
-          <FiClipboard size={22} />
-          Assign Task to Batch
-        </Modal.Title>
-      </Modal.Header>
-
+      <ModalHeaderBlock title="Assign Task to Batch" icon={   <FiClipboard  />}   />
       <Modal.Body style={{ padding: "20px 24px", backgroundColor: "#f9fafb" }}>
 
         {/* Allocated Day */}

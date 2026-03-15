@@ -1,7 +1,9 @@
 /* ===== Sign In & Sign Up Styles ===== */
 .signInStyle {
   background: linear-gradient(135deg, #4F74DF, #69C879);
+  display:flex;
   justify-content: center;
+  align-items:center
 }
 
 .google-btn:hover {
@@ -50,7 +52,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* padding: 1.5% 0%; */
   border-radius: 10px;
 }
 

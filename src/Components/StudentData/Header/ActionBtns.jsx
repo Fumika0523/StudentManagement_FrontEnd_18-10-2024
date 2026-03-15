@@ -11,8 +11,8 @@ const ActionBtns = ({ setShowAdd, config, setStudentData, urlBase }) => {
         display: "flex",
         flexWrap: "wrap",
         gap: 1.5,
-        mb: 2,
-        justifyContent: { xs: "flex-start", md: "flex-end" },
+        mb: 1,
+        justifyContent: "flex-end",
         alignItems: "center",
       }}
     >

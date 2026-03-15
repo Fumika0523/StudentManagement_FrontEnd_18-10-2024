@@ -12,6 +12,7 @@ import useCountryCode from "./CountryCode";
 import { FieldGroup, Section, inputStyle, panelStyle } from "./studentFormStyle";
 import ModalHeaderBlock from '../../../Common/ModalHeaderBlock'
 import { url } from "../../../utils/constant";
+
 import {
   PersonAdd,
   Person,
@@ -23,6 +24,7 @@ import {
   PublicOutlined,
   WcOutlined,
 } from "@mui/icons-material";
+import ModalFooterBlock from "../../../Common/ModalFooterBlock";
 
 function ModalAddStudent({ show, setShow, setStudentData, courseData }) {
   const navigate = useNavigate();
@@ -42,25 +44,25 @@ const { countries, countryLoading } = useCountryCode();
       console.log("onSubmit",values)
       addStudent(values)
     }})
-         const addStudent = async(addedStudent)=>{
-          console.log("Adding a new Student:",addedStudent)
-          let res = await axios.post(`${url}/signup`,addedStudent,config)
-          if(res){
-            toast.success()
-            setTimeout(() => handleClose(), 500);
-          }    }
+    const addStudent = async(addedStudent)=>{
+    console.log("Adding a new Student:",addedStudent)
+    let res = await axios.post(`${url}/signup-student`,addedStudent,config)
+    console.log("res from add student",res.data)
+    if(res){
+      toast.success(`New Student is added!`)
+      setTimeout(() => handleClose(), 500);
+    }}
      
-        const getStudentData = async()=>{
+      const getStudentData = async()=>{
           console.log("getStudentData is called")
-          let res = await fetch(`${url}/allstudent`,config)
+          let res = await fetch(`${url}/all-student`,config)
           console.log("getStudentData res:",res)
           const data= await res.json()
           console.log("getStudentData data:",data)
-        }
-        useEffect(()=>{
+      }
+       useEffect(()=>{
           getStudentData()
-        },[])
-    
+     },[])
 
   const F = formik;
 
@@ -87,33 +89,12 @@ const { countries, countryLoading } = useCountryCode();
     >
     
       <ModalHeaderBlock
-      title="Add New Student"
-      icon={<PersonAdd  />}
-    />
-
+      title="Add New Student"  icon={<PersonAdd  />} />
       <Form onSubmit={F.handleSubmit}>
         <Modal.Body style={{ padding: "16px 18px", backgroundColor: "#f1f5f9" }}>
           <div style={panelStyle}>
             <Row className="g-1">
-              <Col xs={12} md={3}>
-                <FieldGroup label="Title" icon={<Person />}>
-                  <Form.Select
-                    size="sm"
-                    name="title"
-                    value={F.values.title}
-                    onChange={F.handleChange}
-                    style={inputStyle}
-                  >
-                    {["", "Mr", "Ms", "Mrs", "Mx", "Dr", "Prof"].map((t) => (
-                      <option key={t} value={t}>
-                        {t || "—"}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </FieldGroup>
-              </Col>
-
-              <Col xs={12} md={4}>
+              <Col xs={12} md={6} >
                 <FieldGroup
                   label="First Name"
                   icon={<Person />}
@@ -132,7 +113,7 @@ const { countries, countryLoading } = useCountryCode();
                 </FieldGroup>
               </Col>
 
-              <Col xs={12} md={5}>
+              <Col xs={12} md={6}>
                 <FieldGroup
                   label="Last Name"
                   icon={<Person />}
@@ -191,31 +172,7 @@ const { countries, countryLoading } = useCountryCode();
                   </div>
                 </FieldGroup>
               </Col>
-
-                {/* Password */}
-              <Col xs={12} md={6}>
-                <FieldGroup
-                  label="Password"
-                  icon={<Lock />}
-                  required
-                  error={F.touched.password && F.errors.password}
-                >
-                  <Form.Control
-                    size="sm"
-                    type="password"
-                    name="password"
-                    value={F.values.password}
-                    onChange={F.handleChange}
-                    onBlur={F.handleBlur}
-                    placeholder="••••••••"
-                    style={inputStyle}
-                  />
-                </FieldGroup>
-              </Col>
-            </Row>
-
-            <Row className="g-1">
-              {/* Email */}
+  {/* Email */}
               <Col xs={12} md={6}>
                 <FieldGroup
                   label="Email"
@@ -231,6 +188,30 @@ const { countries, countryLoading } = useCountryCode();
                     onChange={F.handleChange}
                     onBlur={F.handleBlur}
                     placeholder="email@example.com"
+                    style={inputStyle}
+                  />
+                </FieldGroup>
+              </Col>
+           
+            </Row>
+
+            <Row className="g-1">
+                 {/* Password */}
+              <Col xs={12} md={6}>
+                <FieldGroup
+                  label="Password"
+                  icon={<Lock />}
+                  required
+                  error={F.touched.password && F.errors.password}
+                >
+                  <Form.Control
+                    size="sm"
+                    type="password"
+                    name="password"
+                    value={F.values.password}
+                    onChange={F.handleChange}
+                    onBlur={F.handleBlur}
+                    placeholder="••••••••"
                     style={inputStyle}
                   />
                 </FieldGroup>
@@ -332,51 +313,11 @@ const { countries, countryLoading } = useCountryCode();
             </Section>
           </div>
         </Modal.Body>
-
-        <Modal.Footer
-          style={{
-            borderTop: "1px solid #e5e7eb",
-            padding: "12px 16px",
-            backgroundColor: "#fff",
-            borderRadius: "0 0 16px 16px",
-            gap: 10,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button
-            variant="secondary"
-            onClick={handleClose}
-            style={{
-              backgroundColor: "transparent",
-              border: "1px solid #d1d5db",
-              color: "#6b7280",
-              fontWeight: 900,
-              fontSize: 13,
-              padding: "8px 16px",
-              borderRadius: 10,
-            }}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            type="submit"
-            disabled={F.isSubmitting}
-            style={{
-              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-              border: "none",
-              fontWeight: 900,
-              fontSize: 13,
-              padding: "8px 18px",
-              borderRadius: 10,
-              boxShadow: "0 10px 22px rgba(37, 99, 235, 0.22)",
-            }}
-          >
-            Add Student
-          </Button>
-        </Modal.Footer>
+        {/* Footer */}
+      <ModalFooterBlock
+      onClose={handleClose}
+      submitText="Submit"
+      submitting={formik.isSubmitting} />
       </Form>
     </Modal>
   );

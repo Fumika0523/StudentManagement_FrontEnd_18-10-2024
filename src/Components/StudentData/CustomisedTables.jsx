@@ -222,7 +222,8 @@ const CustomizedTables = ({
                 <StyledTableCell>Batch No.</StyledTableCell>
                 <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Student ID</StyledTableCell>
-                <StyledTableCell>Student Name</StyledTableCell>
+                <StyledTableCell>First Name</StyledTableCell>
+                 <StyledTableCell>Last Name</StyledTableCell>
                 <StyledTableCell>Email</StyledTableCell>
                 <StyledTableCell>Phone No.</StyledTableCell>
                 <StyledTableCell>Gender</StyledTableCell>
@@ -283,23 +284,24 @@ const CustomizedTables = ({
                     </StyledTableCell>
 
                     <StyledTableCell>{student._id}</StyledTableCell>
-
+                {/* First Name */}
                     <StyledTableCell>
-                      {(student.userId?.name || "")
-                        .split(" ")
-                        .filter(Boolean)
-                        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                        .join(" ") || "-"}
+                     {student.firstName}
                     </StyledTableCell>
-                    <StyledTableCell>{student.userId?.email || "-"}</StyledTableCell>
-                    <StyledTableCell>{student.userId?.phoneNumber || "-"}</StyledTableCell>
-                    <StyledTableCell>{student.userId?.gender || "-"}</StyledTableCell>
-                    <StyledTableCell>{formatDate(student.userId?.birthdate)}</StyledTableCell>
+                {/* Last Name */}
+                       <StyledTableCell>
+                      {student.lastName}
+                    </StyledTableCell>
+                    {/* EMail */}
+                    <StyledTableCell>{student.email || "-"}</StyledTableCell>
+                    <StyledTableCell>{student.phoneNumber || "-"}</StyledTableCell>
+                    <StyledTableCell>{student.gender || "-"}</StyledTableCell>
+                    <StyledTableCell>{formatDate(student.birthdate)}</StyledTableCell>
 
                     <StyledTableCell>
                       {Array.isArray(student.preferredCourses) && student.preferredCourses.length
                         ? student.preferredCourses.join(", ")
-                        : "Not selected yet"}
+                        : "Skipped"}
                     </StyledTableCell>
 
                     <StyledTableCell>{student.courseName || "-"}</StyledTableCell>

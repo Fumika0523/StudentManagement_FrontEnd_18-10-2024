@@ -23,7 +23,6 @@ const viewAdmission = () => {
     const [batchStatus, setBatchStatus] = useState("");
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [courseInput, setCourseInput] = useState("")
-
     const [filteredData, setFilteredData] = useState([]);
   
     const token = localStorage.getItem('token')
@@ -39,10 +38,10 @@ const viewAdmission = () => {
   }
 
   const getStudentData = async () => {
-    let res = await axios.get(`${url}/allstudent`, config)
+    let res = await axios.get(`${url}/all-student`, config)
+   // console.log("getStudentData:",res.data.studentData)
     setStudentData(res.data.studentData)
   }
-  
   useEffect(() => {
     getStudentData()
     getCourseData()
@@ -142,7 +141,7 @@ const viewAdmission = () => {
         assignedBatchByStudent[a.studentName] = a.batchNumber;
       });
 
-    return (studentData || []).map(s => {
+    return studentData.map(s => {
       const course = coursesById[s.courseId] || {};
       const assignedBatchNumber = assignedBatchByStudent[s.studentName];
       const batch = assignedBatchNumber ? batchByNumber[assignedBatchNumber] : null;
@@ -204,7 +203,6 @@ const viewAdmission = () => {
         isWithinRange(s.computedCreatedAt, from, to)
       );
     }
-
     return filtered;
   };
 
@@ -238,39 +236,45 @@ const viewAdmission = () => {
 
   const displayData = showTable ? filteredData : computedRows;
 
-
   return (
      <>
       <div className="py-2 border-4 border-danger row mx-auto w-100">
-        <Header
-          config={config}
-          datePreset={datePreset}
-          setDatePreset={setDatePreset}
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          courseData={courseData}
-          setCourseData={setCourseData}
-          setStudentData={setStudentData}
-          urlBase={url}
-          openFilters={openFilters}
-          setOpenFilters={setOpenFilters}
-          onApply={handleApplyFilter}
-          onReset={handleResetFilter}
-          uniqueCourses={uniqueCourses}
-          selectedCourse={selectedCourse}
-          setSelectedCourse={setSelectedCourse}
-          courseInput={courseInput}
-          setCourseInput={setCourseInput}
-          batchStatus={batchStatus}
-          setBatchStatus={setBatchStatus}
-          studentName={studentName}
-          setStudentName={setStudentName}
-          genderFilter={genderFilter}
-          setGenderFilter={setGenderFilter}
-          sessionType={sessionType}
-          setSessionType={setSessionType}
-        />
-        
+       <Header
+            config={config}
+            datePreset={datePreset}
+            setDatePreset={setDatePreset}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            courseData={courseData}
+            setCourseData={setCourseData}
+            setStudentData={setStudentData}
+            urlBase={url}
+            openFilters={openFilters}
+            setOpenFilters={setOpenFilters}
+            onApply={handleApplyFilter}
+            onReset={handleResetFilter}
+            uniqueCourses={uniqueCourses}
+            selectedCourse={selectedCourse}
+            setSelectedCourse={setSelectedCourse}
+            courseInput={courseInput}
+            setCourseInput={setCourseInput}
+            batchStatus={batchStatus}
+            setBatchStatus={setBatchStatus}
+            studentName={studentName}
+            setStudentName={setStudentName}
+            // emailSearch={emailSearch}
+            // setEmailSearch={setEmailSearch}
+            genderFilter={genderFilter}
+            setGenderFilter={setGenderFilter}
+            sessionType={sessionType}
+            setSessionType={setSessionType}
+            studentData={studentData}
+            setAdmissionData={setAdmissionData}
+            admissionData={admissionData}
+            batchData={batchData}
+            setBatchData={setBatchData}
+          />
+                  
         {/* Table - Always show if filters applied */}
         {showTable && (
           <CustomisedAdmissionTable 

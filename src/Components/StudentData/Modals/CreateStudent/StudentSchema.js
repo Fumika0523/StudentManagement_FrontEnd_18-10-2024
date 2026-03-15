@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 export const studentInitialValues = {
-      title: "",
+    //  title: "",
       firstName: "",
       lastName: "",
       email: "",
@@ -15,7 +15,7 @@ export const studentInitialValues = {
 };
 
 export const studentSchema = (mode) => Yup.object().shape({
-    title: Yup.string().oneOf(["", "Mr", "Ms", "Mrs", "Mx", "Dr", "Prof"]),
+    // title: Yup.string().oneOf(["", "Mr", "Ms", "Mrs", "Mx", "Dr", "Prof"]),
     firstName: Yup.string().trim().required("First name is required"),
     lastName: Yup.string().trim().required("Last name is required"),
     email: Yup.string().trim().email("Invalid email").required("Email is required"),
