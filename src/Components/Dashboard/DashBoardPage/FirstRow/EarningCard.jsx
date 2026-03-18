@@ -10,6 +10,7 @@ function EarningCard({ title, total, icon, color }) {
     FaClipboardList,
     IoIosChatbubbles,
   };
+  console.log("Earning Card bg color",color)
 
   const IconComponent = Icons[icon];
 
@@ -22,7 +23,7 @@ function EarningCard({ title, total, icon, color }) {
   };
 
   return (
-    <div className="rounded  border-4 border-warning d-flex align-items-center px-3 py-2 shadow mb-2" style={borderStyle}>
+    <div className="rounded  d-flex align-items-center px-3 py-2 shadow mb-2" style={borderStyle}>
       <div className="d-flex justify-content-between align-items-center w-100">
         <div>
           <div style={{ fontSize: 14, color, fontWeight: 600, letterSpacing: 0.3 }}>

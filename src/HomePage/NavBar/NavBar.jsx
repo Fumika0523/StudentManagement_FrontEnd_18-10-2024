@@ -71,7 +71,7 @@ const navName =
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("role");
-    navigate("/signin");
+    navigate("/");
   };
 
   return (
@@ -104,14 +104,14 @@ const navName =
             </NavDropdown.Item>
             <NavDropdown.Divider />
             
-            {/* Logout */}
+            {/* Sign out */}
             <NavDropdown.Item
             as="button" 
             className="d-flex align-items-center gap-2"
             onClick={handleLogOut}
           >
             <PiSignOutBold className="fs-5 iconStyle" />
-            Logout
+            Sign out
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>

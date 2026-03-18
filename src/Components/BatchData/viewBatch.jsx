@@ -36,7 +36,7 @@ function ViewBatch() {
   // Fetch all data
   const getStudentData = async () => {
     try {
-      let res = await axios.get(`${url}/allstudent`, config);
+      let res = await axios.get(`${url}/all-student`, config);
       setStudentData(res.data.studentData);
     } catch (error) {
       console.error("Error fetching students:", error);

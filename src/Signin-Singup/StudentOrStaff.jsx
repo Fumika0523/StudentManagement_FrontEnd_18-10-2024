@@ -19,8 +19,8 @@ function StudentOrStaff() {
                   Welcome Back
                 </div>
                 <div className="text-center text-muted mb-4" style={{ fontSize: "15px" }}>
-  Please select your role to continue
-</div>
+                  Please select your role to continue
+                </div>
                 {/* Student + Staff columns */}
                 <div className="row g-4 align-items-stretch">
                   {/* Student */}

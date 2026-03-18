@@ -113,7 +113,7 @@ function EditStudentData({
     enableReinitialize: true,
 onSubmit: async (values, { setSubmitting }) => {
   try {
-    // ✅ do NOT send password
+    //  do NOT send password
     const { password, ...payload } = values;
 
     console.log("Sending payload:", payload);
@@ -121,8 +121,8 @@ onSubmit: async (values, { setSubmitting }) => {
 
     await updateStudent(payload);
 
-    // ✅ refresh list so you can see the update
-    const refreshed = await axios.get(`${url}/allstudent`, config);
+    //  refresh list so you can see the update
+    const refreshed = await axios.get(`${url}/all-student`, config);
     setStudentData(refreshed.data.studentData);
 
     toast.success("Student updated successfully!");

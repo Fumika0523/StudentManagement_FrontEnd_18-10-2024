@@ -49,7 +49,7 @@ const ActionBtns = ({ setShowAdd, config, setStudentData, urlBase }) => {
         modalTitle="Bulk Upload Students"
         axiosConfig={config}
         onRefresh={async () => {
-          const refreshed = await axios.get(`${urlBase}/allstudent`, config);
+          const refreshed = await axios.get(`${urlBase}/all-student`, config);
           setStudentData(refreshed.data.studentData);
         }}
       />

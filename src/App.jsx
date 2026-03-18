@@ -184,7 +184,7 @@ return (
   <Route path="/oauth-success" element={null} />
 
   {/* Public routes */}
-  <Route path="/signin" element={<StudentOrStaff />} />
+  <Route path="/" element={<StudentOrStaff />} />
   <Route path="/student-signin" element={<StudentSignIn />} />
   <Route path="/student-signup" element={<StudentSignUp />} />
   <Route path="/staff-signin" element={<StaffSignIn />} />

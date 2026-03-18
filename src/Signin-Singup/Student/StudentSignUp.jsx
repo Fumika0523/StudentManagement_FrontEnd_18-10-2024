@@ -15,6 +15,7 @@ import useCountryCode from "../../Components/StudentData/Modals/CreateStudent/Co
 import { Person, Email, Phone, Lock, Cake, PublicOutlined, WcOutlined } from "@mui/icons-material";
 import { toast } from 'react-toastify';
 
+
 const GENDERS = ["male", "female", "Rather not say"];
 
 function SignUp() {

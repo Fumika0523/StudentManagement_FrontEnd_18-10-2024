@@ -69,7 +69,7 @@ const CustomizedTables = ({
       const res = await axios.delete(`${url}/deletestudent/${id}`, config);
       
       if (res) {
-        const refreshed = await axios.get(`${url}/allstudent`, config);
+        const refreshed = await axios.get(`${url}/all-student`, config);
         setStudentData(refreshed.data.studentData);
         
         toast.success(`🗑️ ${studentName} has been deleted successfully!`, {

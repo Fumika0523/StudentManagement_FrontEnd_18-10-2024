@@ -101,7 +101,7 @@ const ModalEditAdmission = ({ show, setShow, singleAdmission, setAdmissionData }
   };
 
   const getStudentData = async () => {
-    let res = await axios.get(`${url}/allstudent`, config);
+    let res = await axios.get(`${url}/all-student`, config);
     setStudentData(res.data.studentData);
   };
 

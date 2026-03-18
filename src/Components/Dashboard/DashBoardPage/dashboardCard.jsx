@@ -23,6 +23,7 @@ function DashboardCard() {
 
 const getEarnings = async () => {
   const res = await axios.get(`${url}/earnings?month=${month}&year=${year}`, config);
+ // console.log("getEarningData",res.data)
   setEarnings(res.data);
 };
 
@@ -33,7 +34,7 @@ const getAllBatch = async () => {
 };
 
 const getAllStudent = async () => {
-  const res = await axios.get(`${url}/allstudent`, config);
+  const res = await axios.get(`${url}/all-student`, config);
   console.log("getAllStudent",res.data.studentData)
   setStudentData(res.data.studentData);
 };
@@ -43,14 +44,13 @@ const getAllAdmission = async () => {
   console.log("getAllAdmissions",res.data.admissionData)
   setAdmissionData(res.data.admissionData);
 };
-
 useEffect(() => {
   const initializeDashboard = async () => {
     try {
       setLoading(true);
 
       if (role === "student") {
-        const res = await axios.get(`${url}/allstudent`, config);
+        const res = await axios.get(`${url}/all-student`, config);
         const student = res.data?.studentData?.find(
           s => s.username === username
         );
