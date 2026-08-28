@@ -17,7 +17,7 @@ export default function NavBar({ toggleSidebar }) {
   const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
 
-  const firstName = localStorage.getItem("firstName") 
+  const firstName = sessionStorage.getItem("firstName") 
     console.log("firstName",firstName)
   //display on Navbar
 const navName =
@@ -68,8 +68,10 @@ const navName =
   )
 
   const handleLogOut = () => {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("role");
     localStorage.removeItem("token");
-    localStorage.removeItem("username");
     localStorage.removeItem("role");
     navigate("/");
   };

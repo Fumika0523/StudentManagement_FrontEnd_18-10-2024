@@ -72,13 +72,13 @@ const ModalAddAdmission = ({
     return { month, year };
   };
 
-  const isOlderThan7Days = (dateString) => {
-    if (!dateString) return false;
-    const startDate = new Date(dateString);
-    const today = new Date();
-    const diffInDays = (today - startDate) / (1000 * 60 * 60 * 24);
-    return diffInDays > 7;
-  };
+  // const isOlderThan7Days = (dateString) => {
+  //   if (!dateString) return false;
+  //   const startDate = new Date(dateString);
+  //   const today = new Date();
+  //   const diffInDays = (today - startDate) / (1000 * 60 * 60 * 24);
+  //   return diffInDays > 7;
+  // };
 
   const COMPLETED_BATCH_STATUSES = new Set(["Batch Completed"]);
 
@@ -243,7 +243,8 @@ const ModalAddAdmission = ({
                   >
                     <option value="">Select Batch</option>
                     {batchData
-                      ?.filter((b) => !isOlderThan7Days(b.startDate))
+                     // ?
+                      //.filter((b) => !isOlderThan7Days(b.startDate))
                       .map((b) => (
                         <option key={b.batchNumber} value={b.batchNumber}>
                           {b.batchNumber}
