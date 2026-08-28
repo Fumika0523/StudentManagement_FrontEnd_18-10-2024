@@ -25,13 +25,16 @@ import ChartDisplay from './Components/Dashboard/DashBoardPage/SecondRow/ChartDi
 import NavBar from './HomePage/NavBar/NavBar';
 import SideBar from './HomePage/SideBar/SideBar';
 import ApprovePage from './Components/BatchData/AdminApproval/ApprovePage';
-import { UpdateAttendance } from './Components/Update Attendance/UpdateAttendance';
+import { UpdateAttendance } from './Components/Attendance/UpdateAttendance';
 import BulkLoadButtons from './Components/Bulkload/TestBulkLoadButtons';
 import RaiseQuery from './Components/StudentPage/RaiseQuery';
 import ViewTask from './Components/Task/ViewTask'
 import ProfileSections from './Components/Profile/Sections/ProfileSections';
+import ShowAttendance from './Components/Attendance/ShowAttendance';
+
 
 function App() {
+
   const token = localStorage.getItem('token');
   const location = useLocation();
   const navigate = useNavigate();
@@ -113,8 +116,7 @@ return (
             height: "100vh"           // Full viewport height
           }} > 
           <SideBar isSidebarVisible={isSidebarVisible}
-            onClose={() => setIsSidebarVisible(false)} 
-/>
+            onClose={() => setIsSidebarVisible(false)} />
           <div 
             className="backgroundDesign d-flex flex-column" 
             style={{
@@ -154,9 +156,10 @@ return (
                     <Route path="/admissiondata" element={<ViewAdmission />} />
                     <Route path="/dashboard" element={ <DashboardCard/>}  />
                     <Route path="/attendance" element={ <UpdateAttendance/>}  />
+                    <Route path="/view-attendance" element={ <ShowAttendance/>}  />
                     <Route path="/profile" element={<ViewProfile />} />
                         <Route path="/task" element={<ViewTask />} />
-                    {/* <Route path="*" element={<Navigate to="/dashboard" />} /> */}
+                    <Route path="/" element={<Navigate to="/dashboard" />} />
                   </>
                 ) : (
                   <>
@@ -178,7 +181,6 @@ return (
         </div>
       </>
     )}
-
 <Routes>
   {/* OAuth callback must always exist */}
   <Route path="/oauth-success" element={null} />
@@ -189,7 +191,6 @@ return (
   <Route path="/student-signup" element={<StudentSignUp />} />
   <Route path="/staff-signin" element={<StaffSignIn />} />
   <Route path="/staff-signup" element={<StaffSignUp />} />
-
 </Routes>
 
     <ToastContainer transition={Zoom} autoClose={2000} theme="light" draggable />
