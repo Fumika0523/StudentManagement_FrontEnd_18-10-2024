@@ -1,12 +1,11 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import { Box, Button } from "@mui/material";
-import { PersonAdd, FileUpload, FileDownload } from "@mui/icons-material";
 import axios from "axios";
 import BulkUploadBtns from '../../../Bulkload/BulkUploadBtns'
 import { url } from "../../../utils/constant";
 import { RiTaskFill } from "react-icons/ri";
 
-const ActionBtns = ({ setShowAdd,courseData, config, setStudentData, urlBase ,showAdd,  }) => {
+const ActionBtns = ({ setShowAdd, config, setTaskData }) => {
   return (
      <Box
       sx={{
@@ -52,19 +51,9 @@ const ActionBtns = ({ setShowAdd,courseData, config, setStudentData, urlBase ,sh
       onRefresh={
       async()=>{
         const refreshed = await axios.get(`${url}/alltask`,config)
-        setTaskData=(refreshed.data.taskData)
+        setTaskData(refreshed.data.taskData)
       }       
       }/>
-
-      {/* Add Task modal */}
-      {showAdd && (
-        <ModalAddTask
-          show={showAdd}
-          setShow={setShowAdd}
-          courseData={courseData}
-          taskData={taskData}
-        />
-      )}
     </Box>
    
   );

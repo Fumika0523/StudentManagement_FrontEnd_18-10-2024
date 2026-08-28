@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import CustomisedBatchTables from "./CustomisedBatchTables";
 import BatchHeader from "./Header/BatchHeader";
 import { url } from "../utils/constant";
 import axios from "axios";
+import { includesText } from "../utils/filterUtils";
+import { useAuthConfig } from "../utils/useAuthConfig";
+import { useFilteredTable } from "../utils/useFilteredTable";
 
 function ViewBatch() {
   // Data states
@@ -23,64 +26,52 @@ function ViewBatch() {
 
   // UI states
   const [openFilters, setOpenFilters] = useState(true);
-  const [showTable, setShowTable] = useState(false);
-  const [filteredData, setFilteredData] = useState([]);
 
-  const token = localStorage.getItem("token");
-  let config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  const config = useAuthConfig();
 
   // Fetch all data
-  const getStudentData = async () => {
+  const getStudentData = useCallback(async () => {
     try {
       let res = await axios.get(`${url}/all-student`, config);
       setStudentData(res.data.studentData);
     } catch (error) {
       console.error("Error fetching students:", error);
     }
-  };
+  }, [config]);
 
-  const getBatchData = async () => {
+  const getBatchData = useCallback(async () => {
     try {
       let res = await axios.get(`${url}/allbatch`, config);
-      console.log("BatchData", res.data.batchData);
       setBatchData(res.data.batchData);
     } catch (error) {
       console.error("Error fetching batches:", error);
     }
-  };
+  }, [config]);
 
-  const getAdmissionData = async () => {
+  const getAdmissionData = useCallback(async () => {
     try {
       let res = await axios.get(`${url}/alladmission`, config);
       setAdmissionData(res.data.admissionData);
     } catch (error) {
       console.error("Error fetching admissions:", error);
     }
-  };
+  }, [config]);
 
-  const getCourseData = async () => {
+  const getCourseData = useCallback(async () => {
     try {
       let res = await axios.get(`${url}/allcourse`, config);
-      console.log("CourseData", res.data.courseData);
       setCourseData(res.data.courseData);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
-  };
+  }, [config]);
 
   useEffect(() => {
     getAdmissionData();
     getBatchData();
     getStudentData();
     getCourseData();
-  }, []);
-
-  // Helper function to normalize strings
-  const norm = (v) => String(v ?? "").trim().toLowerCase();
+  }, [getAdmissionData, getBatchData, getCourseData, getStudentData]);
 
   // Compute status helper (same as in table)
   const computeStatus = (batch, course) => {
@@ -98,77 +89,46 @@ function ViewBatch() {
     return "Training Completed";
   };
 
-  // Apply filters function (memoized)
-  const applyCurrentFilters = useCallback(
-    (data) => {
-      let filtered = [...data];
+  const filterRows = useCallback(
+    (rows) => {
+      return rows.filter((batch) => {
+        if (batchNumber?.trim() && !includesText(batch.batchNumber, batchNumber)) {
+          return false;
+        }
 
-      // Batch Number
-      if (batchNumber?.trim()) {
-        const q = norm(batchNumber);
-        filtered = filtered.filter((b) => norm(b.batchNumber).includes(q));
-      }
+        if (courseName?.trim() && !includesText(batch.courseName, courseName)) {
+          return false;
+        }
 
-      // Course Name
-      if (courseName?.trim()) {
-        const q = norm(courseName);
-        filtered = filtered.filter((b) => norm(b.courseName).includes(q));
-      }
+        if (location?.trim() && !includesText(batch.location, location)) {
+          return false;
+        }
 
-      // Location
-      if (location?.trim()) {
-        const q = norm(location);
-        filtered = filtered.filter((b) => norm(b.location).includes(q));
-      }
+        if (createdBy?.trim() && !includesText(batch.createdBy, createdBy)) {
+          return false;
+        }
 
-      // Created By
-      if (createdBy?.trim()) {
-        const q = norm(createdBy);
-        filtered = filtered.filter((b) => norm(b.createdBy || "").includes(q));
-      }
-
-      // Status (using computed status from table)
-      if (status) {
-        filtered = filtered.filter((batch) => {
+        if (status) {
           const course = courseData?.find((c) => c.courseName === batch.courseName);
           const computedStatus = computeStatus(batch, course);
-          return computedStatus === status;
-        });
-      }
+          if (computedStatus !== status) return false;
+        }
 
-      // Session Type
-      if (sessionType) {
-        filtered = filtered.filter((b) => b.sessionType === sessionType);
-      }
+        if (sessionType && batch.sessionType !== sessionType) {
+          return false;
+        }
 
-      // Session Day
-      if (sessionDay) {
-        filtered = filtered.filter((b) => b.sessionDay === sessionDay);
-      }
+        if (sessionDay && batch.sessionDay !== sessionDay) {
+          return false;
+        }
 
-      return filtered;
+        return true;
+      });
     },
     [batchNumber, courseName, location, createdBy, status, sessionType, sessionDay, courseData]
   );
 
-  // Apply filters
-  const handleApplyFilter = () => {
-    const filtered = applyCurrentFilters(batchData);
-    setFilteredData(filtered);
-    setShowTable(true);
-  };
-
-  // Auto-refresh when batchData changes (only if table is visible)
-  useEffect(() => {
-    if (showTable && batchData.length > 0) {
-      console.log("Auto-refresh triggered! batchData length:", batchData.length);
-      const filtered = applyCurrentFilters(batchData);
-      setFilteredData(filtered);
-    }
-  }, [batchData, showTable, applyCurrentFilters]);
-
-  // Reset filters
-  const handleResetFilter = () => {
+  const resetFilters = useCallback(() => {
     setBatchNumber("");
     setCourseName("");
     setLocation("");
@@ -176,9 +136,18 @@ function ViewBatch() {
     setStatus("");
     setSessionType("");
     setSessionDay("");
-    setFilteredData([]);
-    setShowTable(false);
-  };
+  }, []);
+
+  const {
+    displayData,
+    showTable,
+    applyFilters,
+    resetTable,
+  } = useFilteredTable({
+    rows: batchData,
+    filterRows,
+    resetFilters,
+  });
 
   return (
     <Box className="py-2 row mx-auto w-100">
@@ -186,8 +155,8 @@ function ViewBatch() {
       <BatchHeader
         openFilters={openFilters}
         setOpenFilters={setOpenFilters}
-        onApply={handleApplyFilter}
-        onReset={handleResetFilter}
+        onApply={applyFilters}
+        onReset={resetTable}
         batchNumber={batchNumber}
         setBatchNumber={setBatchNumber}
         courseName={courseName}
@@ -213,7 +182,7 @@ function ViewBatch() {
           setAdmissionData={setAdmissionData}
           admissionData={admissionData}
           setBatchData={setBatchData}
-          batchData={filteredData}
+          batchData={displayData}
           studentData={studentData}
           setStudentData={setStudentData}
           courseData={courseData}
@@ -234,7 +203,7 @@ function ViewBatch() {
             No filters applied
           </Typography>
           <Typography variant="body2" sx={{ color: '#94a3b8' }}>
-            Please select filters and click "Apply Filters" to view batches
+            Please select filters and click Apply Filters to view batches
           </Typography>
         </Box>
       )}
