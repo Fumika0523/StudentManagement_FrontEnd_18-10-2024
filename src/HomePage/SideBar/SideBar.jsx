@@ -49,7 +49,6 @@ function NavItem({
         transition: `background 0.38s, color 0.18s,
         padding ${widthDuration}ms cubic-bezier(0.4,0,0.2,1),
         margin ${widthDuration}ms cubic-bezier(0.4,0,0.2,1)`,
-      //border:"2px solid yellow"
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -267,45 +266,6 @@ function SideBar({ isSidebarVisible = false, onCloseMobile }) {
             labelDuration={ANIM.LABEL_DURATION}
           />
         </div>
-
-      {/* Sign out */}
-      {/* <div
-      className="d-flex flex-row align-items-center gap-2"
-          style={{
-        ...S.signout,
-        justifyContent:"flex-start",
-        padding: "0 5px",
-        transition: `background 0.18s, padding ${ANIM.WIDTH_DURATION}ms cubic-bezier(0.4,0,0.2,1)`,
-      }}
-          onClick={() => {
-          localStorage.removeItem("token");
-          navigate("/");
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "rgba(248,113,113,0.08)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "transparent";
-        }}
-        title={isCollapsed ? "Sign Out" : null}
-      >
-        <span style={S.iconWrap}>
-          <FaPowerOff style={{ fontSize: "35px", color: "#f87171" }} />
-        </span>
-        <span
-        className="d-none d-md-block"
-          style={{
-          ...S.itemLabel,
-            opacity: effectiveLabelVisible ? 1 : 0,
-            transform: effectiveLabelVisible ? "translateX(0)" : "translateX(-6px)",
-            transition: `opacity ${ANIM.LABEL_DURATION}ms ease, transform ${ANIM.LABEL_DURATION}ms ease`,
-         //   border:"2px solid pink",
-            display: isCollapsed ? "none" : "block",
-          }}
-        >
-          Sign Out
-        </span>
-      </div> */}
       </div>    
     </div>
   );

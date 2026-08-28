@@ -1,4 +1,4 @@
-import React, { useMemo, useState , useEffect} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box, Typography, Grid, TextField, FormControl, InputLabel, Select, MenuItem,
   Button, Stack,  Divider, Alert, Chip,
@@ -8,7 +8,6 @@ import {
 import {
   AttachFile,
   Send,
-  Category,
   Subject,
   Message,
   Close,
@@ -36,10 +35,6 @@ const RaiseQuery = () => {
   const {
     username = "-",
     email = "-",
-    phoneNumber = "-",
-    gender = "-",
-    birthdate,
-    role="-"
   } = userData || {};
 
   const studentId = localStorage.getItem("studentId") || "";
@@ -102,19 +97,19 @@ const RaiseQuery = () => {
     }
   };
 
-   const getUserData = async () => {
+   const getUserData = useCallback(async () => {
       try {
         setLoading(true);
         const res = await axios.get(`${url}/users/profile`, config);
-        console.log("response Get user data from raiseQuery:",res.data.userData)
         setUserData(res.data.userData || {});
       } finally {
         setLoading(false);
       }
-    };
+    }, [config]);
+
     useEffect(() => {
       getUserData();
-    }, []);
+    }, [getUserData]);
 
   return (
    <Box sx={{ 
@@ -124,7 +119,7 @@ const RaiseQuery = () => {
     }}>
       {!token && (
         <Alert severity="warning" sx={{ mb: 3, borderRadius: 2 }}>
-          You're not logged in (token missing). Please log in again.
+          You are not logged in (token missing). Please log in again.
         </Alert>
       )}
 
@@ -175,7 +170,6 @@ const RaiseQuery = () => {
               disabled
                 label="Username *"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
                 fullWidth
                 placeholder="e.g. Attendance marked absent by mistake"
                 sx={{
@@ -204,7 +198,6 @@ const RaiseQuery = () => {
               fullWidth
                 label="Email *"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
                
                 sx={{
                   "& .MuiOutlinedInput-root": {
