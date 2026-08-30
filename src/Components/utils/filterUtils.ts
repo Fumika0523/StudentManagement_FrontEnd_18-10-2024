@@ -1,12 +1,37 @@
-export const normalizeText = (value) => String(value ?? "").trim().toLowerCase();
+export interface DateRange {
+  from: Date | string | null;
+  to: Date | string | null;
+}
 
-export const includesText = (value, searchText) =>
+export interface CourseOption {
+  label: string;
+  id: string;
+}
+
+export interface CourseItem {
+  _id?: string;
+  courseName?: string;
+  [key: string]: any;
+}
+
+export interface MatchesSelectedCourseParams {
+  row: Record<string, any>;
+  selectedCourse?: CourseOption | null;
+  courseInput?: string;
+  courseIdKey?: string;
+  courseNameKey?: string;
+}
+
+export const normalizeText = (value: unknown): string =>
+  String(value ?? "").trim().toLowerCase();
+
+export const includesText = (value: unknown, searchText: unknown): boolean =>
   normalizeText(value).includes(normalizeText(searchText));
 
-export const equalsText = (value, searchText) =>
+export const equalsText = (value: unknown, searchText: unknown): boolean =>
   normalizeText(value) === normalizeText(searchText);
 
-export const getPresetDateRange = (presetKey) => {
+export const getPresetDateRange = (presetKey?: string): DateRange => {
   if (!presetKey) return { from: null, to: null };
 
   const now = new Date();
@@ -16,7 +41,7 @@ export const getPresetDateRange = (presetKey) => {
   const from = new Date(now);
   from.setHours(0, 0, 0, 0);
 
-  const presetDays = {
+  const presetDays: Record<string, number> = {
     "7d": 7,
     "30d": 30,
   };
@@ -39,8 +64,13 @@ export const getPresetDateRange = (presetKey) => {
   return { from: null, to: null };
 };
 
-export const isWithinDateRange = (createdAt, from, to) => {
+export const isWithinDateRange = (
+  createdAt?: string | Date,
+  from?: Date | string | null,
+  to?: Date | string | null
+): boolean => {
   if (!from && !to) return true;
+  if (!createdAt) return false;
 
   const date = new Date(createdAt);
   if (Number.isNaN(date.getTime())) return false;
@@ -56,7 +86,11 @@ export const isWithinDateRange = (createdAt, from, to) => {
   return true;
 };
 
-export const isWithinSelectedDateFilter = (createdAt, datePreset, dateRange) => {
+export const isWithinSelectedDateFilter = (
+  createdAt?: string | Date,
+  datePreset?: string,
+  dateRange?: DateRange
+): boolean => {
   const isCustomRange = datePreset === "custom";
   const presetRange = isCustomRange
     ? { from: null, to: null }
@@ -68,9 +102,11 @@ export const isWithinSelectedDateFilter = (createdAt, datePreset, dateRange) => 
   return isWithinDateRange(createdAt, from, to);
 };
 
-export const buildCourseOptions = (courseData = []) =>
+export const buildCourseOptions = (courseData: CourseItem[] = []): CourseOption[] =>
   courseData
-    .filter((course) => course?._id && course?.courseName)
+    .filter((course): course is Required<Pick<CourseItem, "_id" | "courseName">> & CourseItem =>
+      Boolean(course?._id && course?.courseName)
+    )
     .map((course) => ({ label: course.courseName, id: course._id }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
@@ -80,7 +116,7 @@ export const matchesSelectedCourse = ({
   courseInput,
   courseIdKey = "courseId",
   courseNameKey = "courseName",
-}) => {
+}: MatchesSelectedCourseParams): boolean => {
   if (selectedCourse?.id) {
     return row?.[courseIdKey] === selectedCourse.id;
   }
