@@ -3,14 +3,9 @@ import { FaDollarSign } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosChatbubbles } from "react-icons/io";
 
-import { AiFillDashboard } from "react-icons/ai";
-import { IoSettings } from "react-icons/io5";
-import { FiTool } from "react-icons/fi";
-import { MdDateRange } from "react-icons/md";
-import { FaPowerOff } from "react-icons/fa";
 import { PiStudent } from "react-icons/pi";
 import { FaUsersViewfinder } from "react-icons/fa6";
-import { MdMenuBook, MdGridView } from "react-icons/md";
+import { MdMenuBook } from "react-icons/md";
 import { GiEntryDoor } from "react-icons/gi";
 import {
   TableCell,
@@ -133,7 +128,14 @@ export const secondaryColors = {
  * @param {boolean} openFilters - Whether filters are open
  * @returns {object} MUI sx styles
  */
-export const filterToggleButtonStyles = (openFilters) => ({
+/*
+ * TypeScript:
+ * openFilters controls whether the filter panel
+ * is expanded, so its value must be boolean.
+ */
+export const filterToggleButtonStyles = (
+  openFilters: boolean
+) => ({
   width: "100%",
   borderRadius: openFilters ? "10px 10px 0 0" : "10px",
   backgroundColor: openFilters ? primaryColors.main : primaryColors.dark,
