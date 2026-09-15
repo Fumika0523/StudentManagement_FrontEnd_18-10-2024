@@ -2,77 +2,71 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
 
-/*
-  Props expected by the reusable modal footer.
+// ========================================
+// COMPONENT PROPS
+// ========================================
 
-  This component is used by multiple forms/modals,
-  so typing it once helps all of them.
-*/
 interface ModalFooterBlockProps {
   /*
-    Function called when the Cancel button is clicked.
-
-    () => void means:
-      - no arguments are required
-      - no useful return value is expected
-  */
+   * Called when the user clicks Cancel.
+   */
   onClose: () => void;
 
 
   /*
-    Optional text shown on the submit button.
-
-    `?` means the prop does not have to be provided.
-
-    If it is missing, we use:
-      "Save"
-  */
+   * Optional text shown on the submit button.
+   *
+   * Default:
+   * "Save"
+   */
   submitText?: string;
 
 
   /*
-    Optional text shown on the cancel button.
-
-    Default:
-      "Cancel"
-  */
+   * Optional text shown on the cancel button.
+   *
+   * Default:
+   * "Cancel"
+   */
   cancelText?: string;
 
 
   /*
-    Used to disable the submit button while
-    an async form submission is in progress.
-
-    Example:
-      submitting={formik.isSubmitting}
-  */
+   * TypeScript:
+   * This should always be a boolean because
+   * it directly controls the disabled state
+   * of the submit button.
+   */
   submitting?: boolean;
 
 
   /*
-    Optional CSS gradient for the submit button.
-
-    Example:
-      linear-gradient(...)
-  */
+   * Allows different modals to override
+   * the default submit-button gradient.
+   */
   submitGradient?: string;
 }
 
 
-function ModalFooterBlock({
+// ========================================
+// COMPONENT
+// ========================================
+
+const ModalFooterBlock = ({
   onClose,
 
-  /*
-    These default values are used if the parent
-    does not provide the optional props.
-  */
-  submitText = "Save",
-  cancelText = "Cancel",
-  submitting = false,
+  submitText =
+    "Save",
+
+  cancelText =
+    "Cancel",
+
+  submitting =
+    false,
 
   submitGradient =
     "linear-gradient(135deg, #3b82f6 0%, #0f54eb 100%)",
-}: ModalFooterBlockProps) {
+}: ModalFooterBlockProps) => {
   return (
     <Modal.Footer
       style={{
@@ -88,7 +82,8 @@ function ModalFooterBlock({
         borderRadius:
           "0 0 16px 16px",
 
-        gap: 10,
+        gap:
+          10,
 
         display:
           "flex",
@@ -100,23 +95,16 @@ function ModalFooterBlock({
           "flex-end",
       }}
     >
-      {/* =====================================
-          Cancel Button
-      ====================================== */}
+      {/* ========================================
+          CANCEL BUTTON
+      ======================================== */}
 
       <Button
+        type="button"
         variant="secondary"
-
-        /*
-          onClose has the type:
-
-            () => void
-
-          so it is valid to use directly
-          as this button's click handler.
-        */
-        onClick={onClose}
-
+        onClick={
+          onClose
+        }
         style={{
           backgroundColor:
             "transparent",
@@ -144,25 +132,15 @@ function ModalFooterBlock({
       </Button>
 
 
-      {/* =====================================
-          Submit Button
-      ====================================== */}
+      {/* ========================================
+          SUBMIT BUTTON
+      ======================================== */}
 
       <Button
-        /*
-          Because this button is inside a <form>,
-          type="submit" triggers the form's onSubmit handler.
-        */
         type="submit"
-
-        /*
-          submitting is boolean.
-
-          true  → button disabled
-          false → button enabled
-        */
-        disabled={submitting}
-
+        disabled={
+          submitting
+        }
         style={{
           background:
             submitGradient,
@@ -190,7 +168,6 @@ function ModalFooterBlock({
       </Button>
     </Modal.Footer>
   );
-}
-
+};
 
 export default ModalFooterBlock;

@@ -1,0 +1,2184 @@
+import {
+  useRef,
+  useState,
+} from "react";
+
+import type {
+  ChangeEvent,
+  DragEvent,
+  MouseEvent,
+  ReactNode,
+} from "react";
+
+import {
+  Box,
+  Button,
+  Divider,
+  Typography,
+  Stack,
+  Chip,
+  CircularProgress,
+} from "@mui/material";
+
+import {
+  FiDownload,
+  FiUpload,
+  FiTrash2,
+  FiChevronDown,
+  FiFileText,
+  FiAlertTriangle,
+  FiX,
+  FiCheck,
+} from "react-icons/fi";
+
+import axios from "axios";
+
+import {
+  toast,
+} from "react-toastify";
+
+
+// ========================================
+// TYPES
+// ========================================
+
+type ActiveModal =
+  | "upload"
+  | "delete"
+  | null;
+
+
+/*
+ * TypeScript:
+ * onRefresh may either be a normal synchronous
+ * function or an async function.
+ */
+interface BulkUploadBtnsProps {
+  templateUrl: string;
+
+  importUrl: string;
+
+  /*
+   * Some pages only support Upload,
+   * such as the current Admission page.
+   *
+   * Therefore deleteUrl is optional.
+   */
+  deleteUrl?: string;
+
+  modalTitle?: string;
+
+  onRefresh?:
+    () =>
+      | void
+      | Promise<void>;
+}
+
+
+// ========================================
+// API RESPONSE TYPES
+// ========================================
+
+interface BulkUploadResponse {
+  inserted?: number;
+  updated?: number;
+  failed?: number;
+}
+
+interface BulkDeleteResponse {
+  deleted?: number;
+  failed?: number;
+}
+
+interface ApiErrorResponse {
+  message?: string;
+}
+
+
+// ========================================
+// CUSTOM MODAL PROPS
+// ========================================
+
+interface CustomModalProps {
+  open: boolean;
+
+  onClose: () => void;
+
+  children: ReactNode;
+}
+
+
+// ========================================
+// CUSTOM MODAL
+// ========================================
+
+const CustomModal = ({
+  open,
+  onClose,
+  children,
+}: CustomModalProps) => {
+  if (!open) {
+    return null;
+  }
+
+
+  return (
+    <Box
+      onClick={
+        onClose
+      }
+      sx={{
+        position:
+          "fixed",
+
+        inset:
+          0,
+
+        zIndex:
+          1300,
+
+        bgcolor:
+          "rgba(15,23,42,0.45)",
+
+        display:
+          "flex",
+
+        alignItems:
+          "center",
+
+        justifyContent:
+          "center",
+
+        backdropFilter:
+          "blur(2px)",
+      }}
+    >
+      <Box
+        /*
+         * Prevent clicks inside the modal itself
+         * from closing the backdrop.
+         */
+        onClick={(
+          event:
+            MouseEvent<HTMLDivElement>
+        ) =>
+          event.stopPropagation()
+        }
+        sx={{
+          width:
+            "100%",
+
+          maxWidth:
+            460,
+
+          mx:
+            2,
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
+  );
+};
+
+
+// ========================================
+// COMPONENT
+// ========================================
+
+const BulkUploadBtns = ({
+  templateUrl,
+  importUrl,
+  deleteUrl,
+  modalTitle =
+    "Bulk Upload",
+  onRefresh,
+}: BulkUploadBtnsProps) => {
+  // ========================================
+  // UI STATE
+  // ========================================
+
+  const [
+    menuOpen,
+    setMenuOpen,
+  ] =
+    useState<boolean>(
+      false
+    );
+
+  const [
+    activeModal,
+    setActiveModal,
+  ] =
+    useState<ActiveModal>(
+      null
+    );
+
+  const [
+    file,
+    setFile,
+  ] =
+    useState<File | null>(
+      null
+    );
+
+  const [
+    loading,
+    setLoading,
+  ] =
+    useState<boolean>(
+      false
+    );
+
+  const [
+    dragOver,
+    setDragOver,
+  ] =
+    useState<boolean>(
+      false
+    );
+
+
+  // ========================================
+  // REFS
+  // ========================================
+
+  /*
+   * TypeScript:
+   * These refs point to real DOM elements,
+   * so we give each ref its exact element type.
+   */
+  const fileInputRef =
+    useRef<HTMLInputElement | null>(
+      null
+    );
+
+  const menuRef =
+    useRef<HTMLDivElement | null>(
+      null
+    );
+
+
+  // ========================================
+  // AUTH
+  // ========================================
+
+  const token =
+    localStorage.getItem(
+      "token"
+    );
+
+
+  // ========================================
+  // OPEN MODAL
+  // ========================================
+
+  const openModal = (
+    type:
+      Exclude<
+        ActiveModal,
+        null
+      >
+  ): void => {
+    setMenuOpen(
+      false
+    );
+
+    setActiveModal(
+      type
+    );
+  };
+
+
+  // ========================================
+  // CLOSE MODAL
+  // ========================================
+
+  const closeModal =
+    (): void => {
+      setActiveModal(
+        null
+      );
+
+      setFile(
+        null
+      );
+
+      /*
+       * Reset the native file input too,
+       * otherwise selecting the same file twice
+       * might not fire onChange.
+       */
+      if (
+        fileInputRef.current
+      ) {
+        fileInputRef.current.value =
+          "";
+      }
+    };
+
+
+  // ========================================
+  // DOWNLOAD TEMPLATE
+  // ========================================
+
+  const downloadTemplate =
+    (): void => {
+      try {
+        window.open(
+          templateUrl,
+          "_blank"
+        );
+
+        setMenuOpen(
+          false
+        );
+      } catch (
+        error: unknown
+      ) {
+        console.error(
+          "Template download error:",
+          error
+        );
+
+        toast.error(
+          "Failed to download template"
+        );
+      }
+    };
+
+
+  // ========================================
+  // FILE PICKER
+  // ========================================
+
+  const onFilePicked = (
+    event:
+      ChangeEvent<HTMLInputElement>
+  ): void => {
+    const selectedFile =
+      event.target.files?.[0] ??
+      null;
+
+
+    setFile(
+      selectedFile
+    );
+  };
+
+
+  // ========================================
+  // DRAG AND DROP
+  // ========================================
+
+  const onDrop = (
+    event:
+      DragEvent<HTMLDivElement>
+  ): void => {
+    event.preventDefault();
+
+    setDragOver(
+      false
+    );
+
+
+    const droppedFile =
+      event.dataTransfer
+        .files?.[0];
+
+
+    /*
+     * Only Excel / CSV files are allowed.
+     */
+    if (
+      droppedFile &&
+      /\.(xlsx|xls|csv)$/i.test(
+        droppedFile.name
+      )
+    ) {
+      setFile(
+        droppedFile
+      );
+
+      return;
+    }
+
+
+    toast.error(
+      "Please drop an .xlsx, .xls, or .csv file"
+    );
+  };
+
+
+  // ========================================
+  // UPLOAD FILE
+  // ========================================
+
+  const uploadExcel =
+    async (): Promise<void> => {
+      if (!file) {
+        toast.error(
+          "Please choose an Excel file first"
+        );
+
+        return;
+      }
+
+
+      try {
+        setLoading(
+          true
+        );
+
+
+        /*
+         * FormData is required for multipart
+         * file uploads.
+         */
+        const formData =
+          new FormData();
+
+
+        /*
+         * "file" must match the multer field:
+         *
+         * upload.single("file")
+         */
+        formData.append(
+          "file",
+          file
+        );
+
+
+        /*
+         * Do NOT manually add Content-Type here.
+         *
+         * The browser/Axios automatically adds
+         * the required multipart boundary.
+         */
+        const response =
+          await axios.post<BulkUploadResponse>(
+            importUrl,
+            formData,
+            {
+              headers: {
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
+          );
+
+
+        const {
+          inserted = 0,
+          updated = 0,
+          failed = 0,
+        } =
+          response.data;
+
+
+        toast.success(
+          `Done! ${inserted} added · ${updated} updated${
+            failed
+              ? ` · ${failed} failed`
+              : ""
+          }`
+        );
+
+
+        /*
+         * Refresh the parent table if the caller
+         * provided an onRefresh callback.
+         */
+        if (
+          onRefresh
+        ) {
+          await onRefresh();
+        }
+
+
+        closeModal();
+      } catch (
+        error: unknown
+      ) {
+        /*
+         * TypeScript:
+         * catch values are unknown, so Axios errors
+         * must be narrowed before accessing response.
+         */
+        if (
+          axios.isAxiosError<ApiErrorResponse>(
+            error
+          )
+        ) {
+          console.error(
+            "Upload error:",
+            error.response ??
+              error
+          );
+
+
+          toast.error(
+            error.response
+              ?.data
+              ?.message ??
+              error.message ??
+              "Upload failed"
+          );
+
+          return;
+        }
+
+
+        console.error(
+          "Upload error:",
+          error
+        );
+
+
+        toast.error(
+          "Upload failed"
+        );
+      } finally {
+        setLoading(
+          false
+        );
+      }
+    };
+
+
+  // ========================================
+  // BULK DELETE
+  // ========================================
+
+  const deleteExcel =
+    async (): Promise<void> => {
+      if (!file) {
+        toast.error(
+          "Please choose an Excel file first"
+        );
+
+        return;
+      }
+
+
+      /*
+       * deleteUrl is optional because not every
+       * module supports bulk deletion.
+       */
+      if (!deleteUrl) {
+        toast.error(
+          "Bulk delete is not available for this page"
+        );
+
+        return;
+      }
+
+
+      try {
+        setLoading(
+          true
+        );
+
+
+        const formData =
+          new FormData();
+
+
+        formData.append(
+          "file",
+          file
+        );
+
+
+        const response =
+          await axios.post<BulkDeleteResponse>(
+            deleteUrl,
+            formData,
+            {
+              headers: {
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
+          );
+
+
+        const {
+          deleted = 0,
+          failed = 0,
+        } =
+          response.data;
+
+
+        toast.success(
+          `Done! ${deleted} deleted${
+            failed
+              ? ` · ${failed} failed`
+              : ""
+          }`
+        );
+
+
+        if (
+          onRefresh
+        ) {
+          await onRefresh();
+        }
+
+
+        closeModal();
+      } catch (
+        error: unknown
+      ) {
+        if (
+          axios.isAxiosError<ApiErrorResponse>(
+            error
+          )
+        ) {
+          console.error(
+            "Bulk delete error:",
+            error.response ??
+              error
+          );
+
+
+          toast.error(
+            error.response
+              ?.data
+              ?.message ??
+              error.message ??
+              "Request failed"
+          );
+
+          return;
+        }
+
+
+        console.error(
+          "Bulk delete error:",
+          error
+        );
+
+
+        toast.error(
+          "Request failed"
+        );
+      } finally {
+        setLoading(
+          false
+        );
+      }
+    };
+
+
+  // ========================================
+  // DROP ZONE
+  // ========================================
+
+  const DropZone = () => (
+    <Box
+      onDragOver={(
+        event:
+          DragEvent<HTMLDivElement>
+      ) => {
+        event.preventDefault();
+
+        setDragOver(
+          true
+        );
+      }}
+      onDragLeave={() =>
+        setDragOver(
+          false
+        )
+      }
+      onDrop={
+        onDrop
+      }
+      onClick={() =>
+        fileInputRef.current
+          ?.click()
+      }
+      sx={{
+        border:
+          "2px dashed",
+
+        borderColor:
+          dragOver
+            ? "#3b82f6"
+            : file
+              ? "#3b82f6"
+              : "#d1d5db",
+
+        borderRadius:
+          "8px",
+
+        p:
+          3,
+
+        textAlign:
+          "center",
+
+        bgcolor:
+          dragOver
+            ? "#eff6ff"
+            : file
+              ? "#f0f9ff"
+              : "#f9fafb",
+
+        cursor:
+          "pointer",
+
+        transition:
+          "all 0.2s",
+
+        "&:hover": {
+          borderColor:
+            "#3b82f6",
+
+          bgcolor:
+            "#f0f9ff",
+        },
+      }}
+    >
+      {file ? (
+        <Stack
+          spacing={1}
+          alignItems="center"
+        >
+          <Box
+            sx={{
+              width:
+                40,
+
+              height:
+                40,
+
+              borderRadius:
+                "50%",
+
+              bgcolor:
+                "#dbeafe",
+
+              display:
+                "flex",
+
+              alignItems:
+                "center",
+
+              justifyContent:
+                "center",
+            }}
+          >
+            <FiCheck
+              size={20}
+              color="#3b82f6"
+            />
+          </Box>
+
+
+          <Typography
+            sx={{
+              fontSize:
+                13,
+
+              fontWeight:
+                600,
+
+              color:
+                "#1e293b",
+            }}
+          >
+            {file.name}
+          </Typography>
+
+
+          <Chip
+            label={`${(
+              file.size /
+              1024
+            ).toFixed(1)} KB`}
+            size="small"
+            sx={{
+              fontSize:
+                11,
+
+              bgcolor:
+                "#dbeafe",
+
+              color:
+                "#3b82f6",
+
+              height:
+                20,
+            }}
+          />
+
+
+          <Typography
+            onClick={(
+              event:
+                MouseEvent<HTMLSpanElement>
+            ) => {
+              event.stopPropagation();
+
+              setFile(
+                null
+              );
+
+
+              if (
+                fileInputRef.current
+              ) {
+                fileInputRef.current.value =
+                  "";
+              }
+            }}
+            sx={{
+              fontSize:
+                11,
+
+              color:
+                "#ef4444",
+
+              cursor:
+                "pointer",
+
+              textDecoration:
+                "underline",
+
+              mt:
+                0.5,
+            }}
+          >
+            Remove
+          </Typography>
+        </Stack>
+      ) : (
+        <Stack
+          spacing={1}
+          alignItems="center"
+        >
+          <Box
+            sx={{
+              width:
+                40,
+
+              height:
+                40,
+
+              borderRadius:
+                "50%",
+
+              bgcolor:
+                "#f1f5f9",
+
+              display:
+                "flex",
+
+              alignItems:
+                "center",
+
+              justifyContent:
+                "center",
+            }}
+          >
+            <FiFileText
+              size={20}
+              color="#64748b"
+            />
+          </Box>
+
+
+          <Typography
+            sx={{
+              fontSize:
+                13,
+
+              fontWeight:
+                600,
+
+              color:
+                "#1e293b",
+            }}
+          >
+            Drop file here or{" "}
+            <span
+              style={{
+                color:
+                  "#3b82f6",
+              }}
+            >
+              browse
+            </span>
+          </Typography>
+
+
+          <Typography
+            sx={{
+              fontSize:
+                11,
+
+              color:
+                "#9ca3af",
+            }}
+          >
+            .xlsx · .xls · .csv supported
+          </Typography>
+        </Stack>
+      )}
+
+
+      <input
+        ref={
+          fileInputRef
+        }
+        type="file"
+        accept=".xlsx,.xls,.csv"
+        onChange={
+          onFilePicked
+        }
+        style={{
+          display:
+            "none",
+        }}
+      />
+    </Box>
+  );
+
+
+  return (
+    <>
+      {/* ========================================
+          BULK ACTIONS BUTTON
+      ======================================== */}
+
+      <Box
+        sx={{
+          position:
+            "relative",
+
+          display:
+            "inline-block",
+        }}
+        ref={
+          menuRef
+        }
+      >
+        <Button
+          variant="outlined"
+          endIcon={
+            <FiChevronDown
+              size={14}
+              style={{
+                transition:
+                  "transform 0.2s",
+
+                transform:
+                  menuOpen
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+              }}
+            />
+          }
+          onClick={() =>
+            setMenuOpen(
+              (
+                previous
+              ) =>
+                !previous
+            )
+          }
+          sx={{
+            borderRadius:
+              "8px",
+
+            borderColor:
+              "#1f3fbf",
+
+            color:
+              "#1f3fbf",
+
+            fontWeight:
+              600,
+
+            fontSize:
+              13,
+
+            textTransform:
+              "none",
+
+            px:
+              2,
+
+            py:
+              0.8,
+
+            "&:hover": {
+              bgcolor:
+                "#eff6ff",
+
+              borderColor:
+                "#1b2f7a",
+            },
+          }}
+        >
+          Bulk Actions
+        </Button>
+
+
+        {/* ========================================
+            DROPDOWN MENU
+        ======================================== */}
+
+        {menuOpen && (
+          <>
+            {/* Click-away backdrop */}
+
+            <Box
+              onClick={() =>
+                setMenuOpen(
+                  false
+                )
+              }
+              sx={{
+                position:
+                  "fixed",
+
+                inset:
+                  0,
+
+                zIndex:
+                  1200,
+              }}
+            />
+
+
+            <Box
+              sx={{
+                position:
+                  "absolute",
+
+                top:
+                  "calc(100% + 6px)",
+
+                right:
+                  0,
+
+                zIndex:
+                  1300,
+
+                width:
+                  260,
+
+                bgcolor:
+                  "white",
+
+                border:
+                  "1px solid #e5e7eb",
+
+                borderRadius:
+                  "12px",
+
+                boxShadow:
+                  "0 8px 24px rgba(0,0,0,0.10)",
+
+                overflow:
+                  "hidden",
+              }}
+            >
+              {/* Header */}
+
+              <Box
+                sx={{
+                  px:
+                    2,
+
+                  py:
+                    1.5,
+
+                  bgcolor:
+                    "#f8fafc",
+
+                  borderBottom:
+                    "1px solid #f1f5f9",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize:
+                      11,
+
+                    fontWeight:
+                      700,
+
+                    color:
+                      "#94a3b8",
+
+                    textTransform:
+                      "uppercase",
+
+                    letterSpacing:
+                      "0.5px",
+                  }}
+                >
+                  Bulk Actions
+                </Typography>
+              </Box>
+
+
+              {/* ========================================
+                  DOWNLOAD TEMPLATE
+              ======================================== */}
+
+              <Box
+                onClick={
+                  downloadTemplate
+                }
+                sx={{
+                  display:
+                    "flex",
+
+                  alignItems:
+                    "center",
+
+                  gap:
+                    1.5,
+
+                  px:
+                    2,
+
+                  py:
+                    1.4,
+
+                  cursor:
+                    "pointer",
+
+                  "&:hover": {
+                    bgcolor:
+                      "#f8fafc",
+                  },
+
+                  transition:
+                    "background 0.15s",
+                }}
+              >
+                <Box
+                  sx={{
+                    width:
+                      30,
+
+                    height:
+                      30,
+
+                    borderRadius:
+                      "8px",
+
+                    bgcolor:
+                      "#dbeafe",
+
+                    display:
+                      "flex",
+
+                    alignItems:
+                      "center",
+
+                    justifyContent:
+                      "center",
+
+                    flexShrink:
+                      0,
+                  }}
+                >
+                  <FiDownload
+                    size={14}
+                    color="#3b82f6"
+                  />
+                </Box>
+
+
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize:
+                        13,
+
+                      fontWeight:
+                        600,
+
+                      color:
+                        "#1e293b",
+                    }}
+                  >
+                    Download Template
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      fontSize:
+                        11,
+
+                      color:
+                        "#9ca3af",
+                    }}
+                  >
+                    Get the Excel format
+                  </Typography>
+                </Box>
+              </Box>
+
+
+              <Divider
+                sx={{
+                  mx:
+                    2,
+
+                  borderColor:
+                    "#f1f5f9",
+                }}
+              />
+
+
+              {/* ========================================
+                  UPLOAD
+              ======================================== */}
+
+              <Box
+                onClick={() =>
+                  openModal(
+                    "upload"
+                  )
+                }
+                sx={{
+                  display:
+                    "flex",
+
+                  alignItems:
+                    "center",
+
+                  gap:
+                    1.5,
+
+                  px:
+                    2,
+
+                  py:
+                    1.4,
+
+                  cursor:
+                    "pointer",
+
+                  "&:hover": {
+                    bgcolor:
+                      "#f8fafc",
+                  },
+
+                  transition:
+                    "background 0.15s",
+                }}
+              >
+                <Box
+                  sx={{
+                    width:
+                      30,
+
+                    height:
+                      30,
+
+                    borderRadius:
+                      "8px",
+
+                    bgcolor:
+                      "#dcfce7",
+
+                    display:
+                      "flex",
+
+                    alignItems:
+                      "center",
+
+                    justifyContent:
+                      "center",
+
+                    flexShrink:
+                      0,
+                  }}
+                >
+                  <FiUpload
+                    size={14}
+                    color="#10b981"
+                  />
+                </Box>
+
+
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize:
+                        13,
+
+                      fontWeight:
+                        600,
+
+                      color:
+                        "#1e293b",
+                    }}
+                  >
+                    Upload & Add / Update
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      fontSize:
+                        11,
+
+                      color:
+                        "#9ca3af",
+                    }}
+                  >
+                    Insert or update records
+                  </Typography>
+                </Box>
+              </Box>
+
+
+              {/* ========================================
+                  DELETE
+                  
+                  Only show this option when the parent
+                  supplied a real bulk-delete endpoint.
+              ======================================== */}
+
+              {deleteUrl && (
+                <>
+                  <Divider
+                    sx={{
+                      mx:
+                        2,
+
+                      borderColor:
+                        "#f1f5f9",
+                    }}
+                  />
+
+
+                  <Box
+                    onClick={() =>
+                      openModal(
+                        "delete"
+                      )
+                    }
+                    sx={{
+                      display:
+                        "flex",
+
+                      alignItems:
+                        "center",
+
+                      gap:
+                        1.5,
+
+                      px:
+                        2,
+
+                      py:
+                        1.4,
+
+                      cursor:
+                        "pointer",
+
+                      "&:hover": {
+                        bgcolor:
+                          "#fff5f5",
+                      },
+
+                      transition:
+                        "background 0.15s",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width:
+                          30,
+
+                        height:
+                          30,
+
+                        borderRadius:
+                          "8px",
+
+                        bgcolor:
+                          "#fee2e2",
+
+                        display:
+                          "flex",
+
+                        alignItems:
+                          "center",
+
+                        justifyContent:
+                          "center",
+
+                        flexShrink:
+                          0,
+                      }}
+                    >
+                      <FiTrash2
+                        size={14}
+                        color="#ef4444"
+                      />
+                    </Box>
+
+
+                    <Box>
+                      <Typography
+                        sx={{
+                          fontSize:
+                            13,
+
+                          fontWeight:
+                            600,
+
+                          color:
+                            "#1e293b",
+                        }}
+                      >
+                        Upload & Delete
+                      </Typography>
+
+                      <Typography
+                        sx={{
+                          fontSize:
+                            11,
+
+                          color:
+                            "#9ca3af",
+                        }}
+                      >
+                        Remove records by file
+                      </Typography>
+                    </Box>
+                  </Box>
+                </>
+              )}
+            </Box>
+          </>
+        )}
+      </Box>
+
+
+      {/* ========================================
+          UPLOAD MODAL
+      ======================================== */}
+
+      <CustomModal
+        open={
+          activeModal ===
+          "upload"
+        }
+        onClose={
+          closeModal
+        }
+      >
+        <Box
+          sx={{
+            bgcolor:
+              "white",
+
+            borderRadius:
+              "16px",
+
+            overflow:
+              "hidden",
+
+            boxShadow:
+              "0 20px 60px rgba(0,0,0,0.15)",
+          }}
+        >
+          {/* Header */}
+
+          <Box
+            sx={{
+              background:
+                "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
+
+              px:
+                3,
+
+              py:
+                2.5,
+
+              display:
+                "flex",
+
+              alignItems:
+                "center",
+
+              justifyContent:
+                "space-between",
+            }}
+          >
+            <Stack
+              direction="row"
+              spacing={1.5}
+              alignItems="center"
+            >
+              <Box
+                sx={{
+                  width:
+                    36,
+
+                  height:
+                    36,
+
+                  borderRadius:
+                    "10px",
+
+                  bgcolor:
+                    "rgba(255,255,255,0.15)",
+
+                  display:
+                    "flex",
+
+                  alignItems:
+                    "center",
+
+                  justifyContent:
+                    "center",
+                }}
+              >
+                <FiUpload
+                  size={18}
+                  color="white"
+                />
+              </Box>
+
+
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize:
+                      16,
+
+                    fontWeight:
+                      700,
+
+                    color:
+                      "white",
+
+                    lineHeight:
+                      1.1,
+                  }}
+                >
+                  {modalTitle}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontSize:
+                      11,
+
+                    color:
+                      "rgba(255,255,255,0.7)",
+
+                    mt:
+                      0.3,
+                  }}
+                >
+                  Add or update records from Excel
+                </Typography>
+              </Box>
+            </Stack>
+
+
+            <Box
+              onClick={
+                closeModal
+              }
+              sx={{
+                cursor:
+                  "pointer",
+
+                color:
+                  "rgba(255,255,255,0.7)",
+
+                "&:hover": {
+                  color:
+                    "white",
+                },
+              }}
+            >
+              <FiX
+                size={20}
+              />
+            </Box>
+          </Box>
+
+
+          {/* Body */}
+
+          <Box
+            sx={{
+              p:
+                3,
+
+              bgcolor:
+                "#f9fafb",
+            }}
+          >
+            <DropZone />
+
+
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="flex-start"
+              sx={{
+                mt:
+                  2,
+
+                p:
+                  1.5,
+
+                bgcolor:
+                  "#eff6ff",
+
+                borderRadius:
+                  "8px",
+
+                border:
+                  "1px solid #bfdbfe",
+              }}
+            >
+              <FiFileText
+                size={14}
+                color="#3b82f6"
+                style={{
+                  marginTop:
+                    1,
+
+                  flexShrink:
+                    0,
+                }}
+              />
+
+              <Typography
+                sx={{
+                  fontSize:
+                    11,
+
+                  color:
+                    "#3b82f6",
+
+                  lineHeight:
+                    1.6,
+                }}
+              >
+                Existing matching records will be{" "}
+                <strong>
+                  updated
+                </strong>
+                . New records will be{" "}
+                <strong>
+                  inserted
+                </strong>
+                .
+              </Typography>
+            </Stack>
+          </Box>
+
+
+          {/* Footer */}
+
+          <Box
+            sx={{
+              px:
+                3,
+
+              py:
+                2,
+
+              bgcolor:
+                "white",
+
+              borderTop:
+                "1px solid #e5e7eb",
+
+              display:
+                "flex",
+
+              justifyContent:
+                "flex-end",
+
+              gap:
+                1.5,
+            }}
+          >
+            <Button
+              onClick={
+                closeModal
+              }
+              disabled={
+                loading
+              }
+              sx={{
+                borderRadius:
+                  "8px",
+
+                textTransform:
+                  "none",
+
+                fontWeight:
+                  600,
+
+                fontSize:
+                  13,
+
+                px:
+                  2.5,
+
+                color:
+                  "#64748b",
+
+                border:
+                  "1px solid #d1d5db",
+
+                "&:hover": {
+                  bgcolor:
+                    "#f8fafc",
+                },
+              }}
+            >
+              Cancel
+            </Button>
+
+
+            <Button
+              onClick={() =>
+                void uploadExcel()
+              }
+              disabled={
+                !file ||
+                loading
+              }
+              startIcon={
+                loading
+                  ? (
+                    <CircularProgress
+                      size={14}
+                      color="inherit"
+                    />
+                  )
+                  : (
+                    <FiUpload
+                      size={14}
+                    />
+                  )
+              }
+              sx={{
+                borderRadius:
+                  "8px",
+
+                textTransform:
+                  "none",
+
+                fontWeight:
+                  600,
+
+                fontSize:
+                  13,
+
+                px:
+                  2.5,
+
+                background:
+                  "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+
+                color:
+                  "white",
+
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+                },
+
+                "&:disabled": {
+                  bgcolor:
+                    "#d1d5db",
+
+                  color:
+                    "#9ca3af",
+
+                  background:
+                    "none",
+                },
+              }}
+            >
+              {loading
+                ? "Uploading..."
+                : "Upload & Process"}
+            </Button>
+          </Box>
+        </Box>
+      </CustomModal>
+
+
+      {/* ========================================
+          DELETE MODAL
+      ======================================== */}
+
+      <CustomModal
+        open={
+          activeModal ===
+          "delete"
+        }
+        onClose={
+          closeModal
+        }
+      >
+        <Box
+          sx={{
+            bgcolor:
+              "white",
+
+            borderRadius:
+              "16px",
+
+            overflow:
+              "hidden",
+
+            boxShadow:
+              "0 20px 60px rgba(0,0,0,0.15)",
+          }}
+        >
+          {/* Header */}
+
+          <Box
+            sx={{
+              background:
+                "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)",
+
+              px:
+                3,
+
+              py:
+                2.5,
+
+              display:
+                "flex",
+
+              alignItems:
+                "center",
+
+              justifyContent:
+                "space-between",
+            }}
+          >
+            <Stack
+              direction="row"
+              spacing={1.5}
+              alignItems="center"
+            >
+              <Box
+                sx={{
+                  width:
+                    36,
+
+                  height:
+                    36,
+
+                  borderRadius:
+                    "10px",
+
+                  bgcolor:
+                    "rgba(255,255,255,0.15)",
+
+                  display:
+                    "flex",
+
+                  alignItems:
+                    "center",
+
+                  justifyContent:
+                    "center",
+                }}
+              >
+                <FiTrash2
+                  size={18}
+                  color="white"
+                />
+              </Box>
+
+
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize:
+                      16,
+
+                    fontWeight:
+                      700,
+
+                    color:
+                      "white",
+
+                    lineHeight:
+                      1.1,
+                  }}
+                >
+                  Bulk Delete
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontSize:
+                      11,
+
+                    color:
+                      "rgba(255,255,255,0.7)",
+
+                    mt:
+                      0.3,
+                  }}
+                >
+                  Remove records using an Excel file
+                </Typography>
+              </Box>
+            </Stack>
+
+
+            <Box
+              onClick={
+                closeModal
+              }
+              sx={{
+                cursor:
+                  "pointer",
+
+                color:
+                  "rgba(255,255,255,0.7)",
+
+                "&:hover": {
+                  color:
+                    "white",
+                },
+              }}
+            >
+              <FiX
+                size={20}
+              />
+            </Box>
+          </Box>
+
+
+          {/* Body */}
+
+          <Box
+            sx={{
+              p:
+                3,
+
+              bgcolor:
+                "#f9fafb",
+            }}
+          >
+            <DropZone />
+
+
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="flex-start"
+              sx={{
+                mt:
+                  2,
+
+                p:
+                  1.5,
+
+                bgcolor:
+                  "#fff5f5",
+
+                borderRadius:
+                  "8px",
+
+                border:
+                  "1px solid #fecaca",
+              }}
+            >
+              <FiAlertTriangle
+                size={14}
+                color="#ef4444"
+                style={{
+                  marginTop:
+                    1,
+
+                  flexShrink:
+                    0,
+                }}
+              />
+
+              <Typography
+                sx={{
+                  fontSize:
+                    11,
+
+                  color:
+                    "#ef4444",
+
+                  lineHeight:
+                    1.6,
+                }}
+              >
+                <strong>
+                  Warning:
+                </strong>{" "}
+                Records matched by the file will be{" "}
+                <strong>
+                  permanently deleted
+                </strong>
+                . This action cannot be undone.
+              </Typography>
+            </Stack>
+          </Box>
+
+
+          {/* Footer */}
+
+          <Box
+            sx={{
+              px:
+                3,
+
+              py:
+                2,
+
+              bgcolor:
+                "white",
+
+              borderTop:
+                "1px solid #e5e7eb",
+
+              display:
+                "flex",
+
+              justifyContent:
+                "flex-end",
+
+              gap:
+                1.5,
+            }}
+          >
+            <Button
+              onClick={
+                closeModal
+              }
+              disabled={
+                loading
+              }
+              sx={{
+                borderRadius:
+                  "8px",
+
+                textTransform:
+                  "none",
+
+                fontWeight:
+                  600,
+
+                fontSize:
+                  13,
+
+                px:
+                  2.5,
+
+                color:
+                  "#64748b",
+
+                border:
+                  "1px solid #d1d5db",
+
+                "&:hover": {
+                  bgcolor:
+                    "#f8fafc",
+                },
+              }}
+            >
+              Cancel
+            </Button>
+
+
+            <Button
+              onClick={() =>
+                void deleteExcel()
+              }
+              disabled={
+                !file ||
+                loading
+              }
+              startIcon={
+                loading
+                  ? (
+                    <CircularProgress
+                      size={14}
+                      color="inherit"
+                    />
+                  )
+                  : (
+                    <FiTrash2
+                      size={14}
+                    />
+                  )
+              }
+              sx={{
+                borderRadius:
+                  "8px",
+
+                textTransform:
+                  "none",
+
+                fontWeight:
+                  600,
+
+                fontSize:
+                  13,
+
+                px:
+                  2.5,
+
+                background:
+                  "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)",
+
+                color:
+                  "white",
+
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #dc2626 0%, #991b1b 100%)",
+                },
+
+                "&:disabled": {
+                  bgcolor:
+                    "#d1d5db",
+
+                  color:
+                    "#9ca3af",
+
+                  background:
+                    "none",
+                },
+              }}
+            >
+              {loading
+                ? "Deleting..."
+                : "Delete Records"}
+            </Button>
+          </Box>
+        </Box>
+      </CustomModal>
+    </>
+  );
+};
+
+export default BulkUploadBtns;
