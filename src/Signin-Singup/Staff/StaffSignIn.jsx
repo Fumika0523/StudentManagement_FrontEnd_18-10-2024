@@ -25,8 +25,10 @@ function StaffSignIn() {
 
   // Auto-redirect if already logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
+
+
+    const token = sessionStorage.getItem("token");
+    const role = sessionStorage.getItem("role");
     if (token && (role === "admin" || role === "staff")) goAfterLogin();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -35,12 +37,13 @@ function StaffSignIn() {
     try {
       const payload = { email: values.email.trim().toLowerCase(), password: values.password };
       const { data } = await axios.post(`${url}/signin`, payload);
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("firstName", data.user?.firstName || payload.email.split("@")[0]);
-      localStorage.setItem("userId", data.user?._id || "");
-      localStorage.setItem("email", data.user?.email || payload.email);
+    localStorage.setItem("token", data.token)
+    localStorage.setItem("role", data.role)
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("role", data.role);
+      sessionStorage.setItem("firstName", data.user?.firstName);
+      sessionStorage.setItem("userId", data.user?._id || "");
+      sessionStorage.setItem("email", data.user?.email);
 
       toast.success(data.message || "Signed in!");
       goAfterLogin();

@@ -1,6 +1,6 @@
 export const ICONS = {
   dashboard: { name: "speed", height: 
-    54, width:54
+    53, width:53
    },
   student: { name: "student-male", 
     width: 55, height: 50,
@@ -17,6 +17,7 @@ export const ICONS = {
   attendance: { name: "calendar", height: 
     53
    },
+viewAttendance: { name: "data-sheet", height: 53, width: 53 },
 
   viewBatch: { name: "conference-call", size: 
     55
@@ -39,7 +40,7 @@ export const ICONS = {
   settings: { name: "settings", height: 
     52
    },
-  logo: { name: "graduation-cap", height: 55,width: 52},
+  logo: { name: "graduation-cap", height: 55,width: 50},
 };
 
 export const getAcademicItems = (role) => {
@@ -50,6 +51,7 @@ export const getAcademicItems = (role) => {
     { iconKey: "admission", label: "Admission", path: "/admissiondata" },
     { iconKey: "task", label: "Task", path: "/task" },
     { iconKey: "attendance", label: "Update Attendance", path: "/attendance" },
+      { iconKey: "viewAttendance", label: "View Attendance", path: "/view-attendance" },
      { iconKey: "invoice", label: "Invoice", path: "/staff-invoice" },
   ];
 
@@ -59,6 +61,7 @@ export const getAcademicItems = (role) => {
     { iconKey: "submitTask", label: "Submit Task", path: "/task-submit" },
     { iconKey: "raiseQuery", label: "Raise Query", path: "/raise-query" },
     { iconKey: "certificate", label: "Download Certificate", path: "/certificate" },
+
     { iconKey: "invoice", label: "Invoice Download", path: "/student-invoice" },
   ];
 

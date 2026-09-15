@@ -1,13 +1,20 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import CustomisedTaskTables from "./Table/CustomisedTaskTables";
 import TaskHeader from "./Header/TaskHeader";
 import axios from "axios";
 import { url } from "../utils/constant";
+import {
+  buildCourseOptions,
+  includesText,
+  isWithinSelectedDateFilter,
+  matchesSelectedCourse,
+} from "../utils/filterUtils";
+import { useAuthConfig } from "../utils/useAuthConfig";
+import { useFilteredTable } from "../utils/useFilteredTable";
 
 export default function ViewTask() {
   const [taskData, setTaskData] = useState([]);
   const [courseData, setCourseData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
 
   const [datePreset, setDatePreset] = useState("");
   const [dateRange, setDateRange] = useState({ from: null, to: null });
@@ -15,16 +22,10 @@ export default function ViewTask() {
   const [courseInput, setCourseInput] = useState("");
   const [batchNumberFilter, setBatchNumberFilter] = useState("");
   const [openFilters, setOpenFilters] = useState(true);
-  const [showTable, setShowTable] = useState(false);
 
-  const token = localStorage.getItem("token");
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  const config = useAuthConfig();
 
-  const getTaskData = async () => {
+  const getTaskData = useCallback(async () => {
     try {
       const res = await axios.get(`${url}/alltask`, config);
       setTaskData(res.data.taskData);
@@ -32,9 +33,9 @@ export default function ViewTask() {
       console.error("Fetch tasks failed:", err?.response?.data || err.message);
       setTaskData([]);
     }
-  };
+  }, [config]);
 
-  const getCourseData = async () => {
+  const getCourseData = useCallback(async () => {
     try {
       const res = await axios.get(`${url}/allcourse`, config);
       setCourseData(res.data.courseData);
@@ -42,23 +43,17 @@ export default function ViewTask() {
       console.error("Fetch courses failed:", err?.response?.data || err.message);
       setCourseData([]);
     }
-  };
+  }, [config]);
 
   useEffect(() => {
     getTaskData();
     getCourseData();
-  }, []);
-
-  const norm = (v) => String(v ?? "").trim().toLowerCase();
+  }, [getCourseData, getTaskData]);
 
   const uniqueCourses = useMemo(() => {
-    return (courseData || [])
-      .filter((c) => c?._id && c?.courseName)
-      .map((c) => ({ label: c.courseName, id: c._id }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+    return buildCourseOptions(courseData);
   }, [courseData]);
 
-  // Enrich task rows with computed fields if needed
   const computedRows = useMemo(() => {
     const coursesById = {};
     (courseData || []).forEach((c) => { coursesById[c._id] = c; });
@@ -70,115 +65,50 @@ export default function ViewTask() {
     }));
   }, [taskData, courseData]);
 
-  const getPresetRange = (presetKey) => {
-    if (!presetKey) return { from: null, to: null };
-    const now = new Date();
-    const to = new Date(now);
-    to.setHours(23, 59, 59, 999);
+  const filterRows = useCallback((rows) => {
+    return rows.filter((task) => {
+      if (!matchesSelectedCourse({
+        row: task,
+        selectedCourse,
+        courseInput,
+        courseNameKey: "computedCourseName",
+      })) {
+        return false;
+      }
 
-    if (presetKey === "today") {
-      const from = new Date(now);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-    if (presetKey === "7d") {
-      const from = new Date(now);
-      from.setDate(now.getDate() - 7);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-    if (presetKey === "30d") {
-      const from = new Date(now);
-      from.setDate(now.getDate() - 30);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-    if (presetKey === "month") {
-      const from = new Date(now.getFullYear(), now.getMonth(), 1);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-    if (presetKey === "year") {
-      const from = new Date(now.getFullYear(), 0, 1);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-    return { from: null, to: null };
-  };
+      if (
+        batchNumberFilter.trim() &&
+        !includesText(task.batchNumber, batchNumberFilter)
+      ) {
+        return false;
+      }
 
-  const isWithinRange = (createdAt, from, to) => {
-    if (!from && !to) return true;
-    const d = new Date(createdAt);
-    if (isNaN(d)) return false;
-    const start = from ? new Date(from) : null;
-    if (start) start.setHours(0, 0, 0, 0);
-    const end = to ? new Date(to) : null;
-    if (end) end.setHours(23, 59, 59, 999);
-    if (start && d < start) return false;
-    if (end && d > end) return false;
-    return true;
-  };
-
-  const applyCurrentFilters = (dataToFilter) => {
-    let filtered = [...dataToFilter];
-
-    // Course filter
-    if (selectedCourse?.id) {
-      filtered = filtered.filter((t) => t.courseId === selectedCourse.id);
-    } else if ((courseInput || "").trim()) {
-      filtered = filtered.filter(
-        (t) => norm(t.computedCourseName) === norm(courseInput)
+      return isWithinSelectedDateFilter(
+        task.computedCreatedAt,
+        datePreset,
+        dateRange
       );
-    }
+    });
+  }, [batchNumberFilter, courseInput, datePreset, dateRange, selectedCourse]);
 
-    // Batch number filter
-    if (batchNumberFilter.trim()) {
-      const q = norm(batchNumberFilter);
-      filtered = filtered.filter((t) =>
-        norm(t.batchNumber).includes(q)
-      );
-    }
-
-    // Date filter (preset OR custom)
-    const isCustom = datePreset === "custom";
-    const presetRange = !isCustom ? getPresetRange(datePreset) : { from: null, to: null };
-    const from = isCustom ? dateRange?.from : presetRange.from;
-    const to = isCustom ? dateRange?.to : presetRange.to;
-
-    if (from || to) {
-      filtered = filtered.filter((t) =>
-        isWithinRange(t.computedCreatedAt, from, to)
-      );
-    }
-
-    return filtered;
-  };
-
-  const handleApplyFilter = () => {
-    const filtered = applyCurrentFilters(computedRows);
-    setFilteredData(filtered);
-    setShowTable(true);
-  };
-
-  // Re-apply filters automatically when underlying data refreshes
-  useEffect(() => {
-    if (showTable) {
-      const filtered = applyCurrentFilters(computedRows);
-      setFilteredData(filtered);
-    }
-  }, [computedRows, showTable]);
-
-  const handleResetFilter = () => {
+  const resetFilters = useCallback(() => {
     setDatePreset("");
     setDateRange({ from: null, to: null });
     setSelectedCourse(null);
     setCourseInput("");
     setBatchNumberFilter("");
-    setFilteredData([]);
-    setShowTable(false);
-  };
+  }, []);
 
-  const displayData = showTable ? filteredData : computedRows;
+  const {
+    displayData,
+    showTable,
+    applyFilters,
+    resetTable,
+  } = useFilteredTable({
+    rows: computedRows,
+    filterRows,
+    resetFilters,
+  });
 
   return (
     <div className="py-2 border-4 border-danger row mx-auto w-100">
@@ -200,8 +130,8 @@ export default function ViewTask() {
         setBatchNumberFilter={setBatchNumberFilter}
         openFilters={openFilters}
         setOpenFilters={setOpenFilters}
-        onApply={handleApplyFilter}
-        onReset={handleResetFilter}
+        onApply={applyFilters}
+        onReset={resetTable}
         setTaskData={setTaskData}
       />
       {showTable && (

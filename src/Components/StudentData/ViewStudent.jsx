@@ -1,8 +1,17 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { url } from "../utils/constant"
 import axios from "axios"
 import CustomizedTables from "./CustomisedTables"
 import Header from "./Header/Header"
+import {
+  buildCourseOptions,
+  equalsText,
+  includesText,
+  isWithinSelectedDateFilter,
+  matchesSelectedCourse,
+} from "../utils/filterUtils";
+import { useAuthConfig } from "../utils/useAuthConfig";
+import { useFilteredTable } from "../utils/useFilteredTable";
 
 function ViewStudent() {
   const [datePreset, setDatePreset] = useState("");
@@ -12,7 +21,6 @@ function ViewStudent() {
   const [admissionData, setAdmissionData] = useState([])
   const [batchData, setBatchData] = useState([])
   const [openFilters, setOpenFilters] = useState(true);
-  const [showTable, setShowTable] = useState(false);
   
   // Filter states
   const [studentName, setStudentName] = useState("");
@@ -21,111 +29,38 @@ function ViewStudent() {
   const [batchStatus, setBatchStatus] = useState("");
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [courseInput, setCourseInput] = useState("");
-
-  const [filteredData, setFilteredData] = useState([]);
   
-  const token = localStorage.getItem('token')
-  let config = {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }
-  //console.log(token, config)
-  const getBatchData = async () => {
+  const config = useAuthConfig();
+
+  const getBatchData = useCallback(async () => {
     let res = await axios.get(`${url}/allbatch`, config)
     setBatchData(res.data.batchData)
-  }
+  }, [config]);
 
-  const getStudentData = async () => {
+  const getStudentData = useCallback(async () => {
     let res = await axios.get(`${url}/all-student`, config)
-    console.log("getStudentData res:",res.data.studentData)
     setStudentData(res.data.studentData)
-  }  
+  }, [config]);
+
+  const getCourseData = useCallback(async () => {
+    let res = await axios.get(`${url}/allcourse`, config)
+    setCourseData(res.data.courseData)
+  }, [config]);
+
+  const getAdmissionData = useCallback(async () => {
+    let res = await axios.get(`${url}/alladmission`, config)
+    setAdmissionData(res.data.admissionData)
+  }, [config]);
+
   useEffect(() => {
     getStudentData()
     getCourseData()
     getAdmissionData()
     getBatchData()
-  }, [])
-
-  const getCourseData = async () => {
-    let res = await axios.get(`${url}/allcourse`, config)
-   // console.log("getCourseData from ViewStudent",res)
-    setCourseData(res.data.courseData)
-  }
-
-  const getAdmissionData = async () => {
-    let res = await axios.get(`${url}/alladmission`, config)
-   // console.log("getAdmissionData",res.data)
-    setAdmissionData(res.data.admissionData)
-  }
-
-  const norm = (v) => String(v ?? "").trim().toLowerCase();
-  
-  const getPresetRange = (presetKey) => {
-    if (!presetKey) return { from: null, to: null };
-
-    const now = new Date();
-    const to = new Date(now);
-    to.setHours(23, 59, 59, 999);
-
-    if (presetKey === "today") {
-      const from = new Date(now);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-
-    if (presetKey === "7d") {
-      const from = new Date(now);
-      from.setDate(now.getDate() - 7);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-
-    if (presetKey === "30d") {
-      const from = new Date(now);
-      from.setDate(now.getDate() - 30);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-
-    if (presetKey === "month") {
-      const from = new Date(now.getFullYear(), now.getMonth(), 1);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-
-    if (presetKey === "year") {
-      const from = new Date(now.getFullYear(), 0, 1);
-      from.setHours(0, 0, 0, 0);
-      return { from, to };
-    }
-
-    return { from: null, to: null };
-  };
-
-  const isWithinRange = (createdAt, from, to) => {
-    if (!from && !to) return true;
-
-    const d = new Date(createdAt);
-    if (isNaN(d)) return false;
-
-    const start = from ? new Date(from) : null;
-    if (start) start.setHours(0, 0, 0, 0);
-
-    const end = to ? new Date(to) : null;
-    if (end) end.setHours(23, 59, 59, 999);
-
-    if (start && d < start) return false;
-    if (end && d > end) return false;
-    return true;
-  };
+  }, [getAdmissionData, getBatchData, getCourseData, getStudentData])
 
   const uniqueCourses = useMemo(() => {
-    return (courseData || [])
-      .filter((c) => c?._id && c?.courseName)
-      .map((c) => ({ label: c.courseName, id: c._id }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+    return buildCourseOptions(courseData);
   }, [courseData]);
 
   const computedRows = useMemo(() => {
@@ -156,74 +91,46 @@ function ViewStudent() {
     });
   }, [studentData, courseData, admissionData, batchData]);
 
-  // Function to apply filters (can be called anytime)
-  const applyCurrentFilters = (dataToFilter) => {
-    let filtered = [...dataToFilter];
+  const filterRows = useCallback((rows) => {
+    return rows.filter((student) => {
+      if (studentName?.trim() && !includesText(student.studentName, studentName)) {
+        return false;
+      }
 
-    // student name filter
-    if (studentName?.trim()) {
-      const q = norm(studentName);
-      filtered = filtered.filter((s) => norm(s.studentName).includes(q));
-    }
+      if (genderFilter && !equalsText(student.gender, genderFilter)) {
+        return false;
+      }
 
-    // gender filter
-    if (genderFilter) {
-      filtered = filtered.filter((s) => norm(s.gender) === norm(genderFilter));
-    }
+      if (!matchesSelectedCourse({ row: student, selectedCourse, courseInput })) {
+        return false;
+      }
 
-    // course filter
-    if (selectedCourse?.id) {
-      filtered = filtered.filter((s) => s.courseId === selectedCourse.id);
-    } else if ((courseInput || "").trim()) {
-      filtered = filtered.filter((s) => norm(s.courseName) === norm(courseInput));
-    }
+      if (batchStatus && !equalsText(student.computedBatchStatus, batchStatus)) {
+        return false;
+      }
 
-    // batch status filter
-    if (batchStatus) {
-      filtered = filtered.filter(
-        (s) => norm(s.computedBatchStatus) === norm(batchStatus)
+      if (sessionType && !equalsText(student.computedSessionType, sessionType)) {
+        return false;
+      }
+
+      return isWithinSelectedDateFilter(
+        student.computedCreatedAt,
+        datePreset,
+        dateRange
       );
-    }
+    });
+  }, [
+    batchStatus,
+    courseInput,
+    datePreset,
+    dateRange,
+    genderFilter,
+    selectedCourse,
+    sessionType,
+    studentName,
+  ]);
 
-    // session type filter
-    if (sessionType) {
-      filtered = filtered.filter(
-        (s) => norm(s.computedSessionType) === norm(sessionType)
-      );
-    }
-
-    // created date filter (preset OR custom)
-    const isCustom = datePreset === "custom";
-    const presetRange = !isCustom ? getPresetRange(datePreset) : { from: null, to: null };
-
-    const from = isCustom ? dateRange?.from : presetRange.from;
-    const to = isCustom ? dateRange?.to : presetRange.to;
-
-    if (from || to) {
-      filtered = filtered.filter((s) =>
-        isWithinRange(s.computedCreatedAt, from, to)
-      );
-    }
-
-    return filtered;
-  };
-
-  const handleApplyFilter = () => {
-    const filtered = applyCurrentFilters(computedRows);
-    setFilteredData(filtered);
-    setShowTable(true);
-  };
-
-  // Auto-refresh filtered data when studentData changes
-  useEffect(() => {
-    if (showTable) {
-      console.log("StudentData changed, re-applying filters...");
-      const filtered = applyCurrentFilters(computedRows);
-      setFilteredData(filtered);
-    }
-  }, [computedRows, showTable]);
-
-  const handleResetFilter = () => {
+  const resetFilters = useCallback(() => {
     setStudentName("");
     setGenderFilter("");
     setDatePreset("");
@@ -232,11 +139,18 @@ function ViewStudent() {
     setSelectedCourse(null);
     setCourseInput("");
     setBatchStatus("");
-    setFilteredData([]);
-    setShowTable(false);
-  };
+  }, []);
 
-  const displayData = showTable ? filteredData : computedRows;
+  const {
+    displayData,
+    showTable,
+    applyFilters,
+    resetTable,
+  } = useFilteredTable({
+    rows: computedRows,
+    filterRows,
+    resetFilters,
+  });
 
   return (
     <>
@@ -253,8 +167,8 @@ function ViewStudent() {
           urlBase={url}
           openFilters={openFilters}
           setOpenFilters={setOpenFilters}
-          onApply={handleApplyFilter}
-          onReset={handleResetFilter}
+          onApply={applyFilters}
+          onReset={resetTable}
           uniqueCourses={uniqueCourses}
           selectedCourse={selectedCourse}
           setSelectedCourse={setSelectedCourse}

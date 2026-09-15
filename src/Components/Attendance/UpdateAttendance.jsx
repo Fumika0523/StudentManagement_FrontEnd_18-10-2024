@@ -19,14 +19,18 @@ export const UpdateAttendance = () => {
   const [attendanceDate, setAttendanceDate] = useState(
     new Date().toISOString().split("T")[0]
   );
-  const [attendanceStatus, setAttendanceStatus] = useState("present");
-
-  // Student list section 
+  const [attendanceStatus, setAttendanceStatus] = useState("");
+  console.log("attendanceStatus",attendanceStatus)
+  const [selectedStudentName, setSelectedStudentName]=useState([])
+    const [selectedStudentId, setSelectedStudentId]=useState([])
+  // Student list section p
   const [showStudentList, setShowStudentList] = useState(false);
   const [students, setStudents] = useState([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
+  const email = sessionStorage.getItem("email")
+
   const config = { headers: { Authorization: `Bearer ${token}` } };
 
   const getBatchData = async () => {
@@ -75,27 +79,29 @@ export const UpdateAttendance = () => {
       const studentsInBatchNames = admissionData
         .filter((admission) => admission.batchNumber === selectedBatch)
         .map((admission) => admission.studentName);
+      console.log("studentsInBatchNames",studentsInBatchNames)
+      setSelectedStudentName(studentsInBatchNames)
+
+      const studentIdInBatch = admissionData.filter((admission)=>admission.batchNumber === selectedBatch).map((admission) => admission.studentId)
+      console.log("studentIdInBatch",studentIdInBatch)
+      setSelectedStudentId(studentIdInBatch)
 
       const batchStudents = studentData.filter((student) =>
         studentsInBatchNames.includes(student.studentName)
       );
-
       if (batchStudents.length === 0) {
         toast.info("No students found in this batch.");
         setStudents([]);
         setShowStudentList(false);
         return;
       }
-
       setStudents(batchStudents);
-
       // default selection based on global status
-      if (attendanceStatus === "present") {
+      if (attendanceStatus === "Present") {
         setSelectedStudentIds(batchStudents.map((s) => s._id));
       } else {
         setSelectedStudentIds([]);
       }
-
       setShowStudentList(true); //  expand section
     } catch (error) {
       console.error("Filter error:", error);
@@ -122,35 +128,39 @@ export const UpdateAttendance = () => {
     setSelectedStudentIds([]);
     setSelectedBatch("");
     setAttendanceDate(new Date().toISOString().split("T")[0]);
-    setAttendanceStatus("present");
+    setAttendanceStatus("Present");
   };
 
-  const handleSaveAttendance = async () => {
-    if (!students.length) return toast.warning("No students to save.");
+const handleSaveAttendance = async () => {
+  if (!students.length) 
+    return toast.warning("No students to save.");
 
-    try {
-      const attendanceRecords = students.map((student) => ({
-        studentId: student._id,
-        status: selectedStudentIds.includes(student._id) ? "Present" : "Absent",
-      }));
+  try {
+    const oppositeStatus = attendanceStatus === "Present" ? "Absent" : "Present";
+    // Build per-student records with name, id, and individual status
+    const studentsPayload = students.map((student) => ({
+      studentId: student._id,
+      studentName: student.studentName,
+      status: selectedStudentIds? attendanceStatus   // explicitly checked → chosen status
+        : oppositeStatus, 
+          }));
+    
+    const payload = {
+      batchNumber: selectedBatch,
+      attendanceDate: attendanceDate,
+      students: studentsPayload,   //  array of objects with per-student status
+      recordedBy: email,
+    };
 
-      const payload = {
-        batchId: selectedBatch, 
-        date: attendanceDate,
-        attendanceRecords,
-      };
-
-   let res = await axios.post(`${url}/update-attendance`, payload, config);
-console.log(res.data)
-
-      toast.success("Attendance recorded successfully!");
-      setShowStudentList(false);
-      setStudents([]);
-      setSelectedStudentIds([]);
-    } catch (error) {
-      toast.error("Failed to save attendance");
-    }
-  };
+    const res = await axios.post(`${url}/update-attendance`, payload, config);
+    console.log(res.data);
+    toast.success("Attendance recorded successfully!");
+    handleCancel();
+  } catch (error) {
+  //  console.error(error);
+    toast.error("Already added the attendance record");
+  }
+};
 
   return (
     <Box
@@ -259,8 +269,8 @@ console.log(res.data)
                   },
                 }}
               >
-                <MenuItem value="present">Present</MenuItem>
-                <MenuItem value="absent">Absent</MenuItem>
+                <MenuItem value="Present">Present</MenuItem>
+                <MenuItem value="Absent">Absent</MenuItem>
               </Select>
             </FormControl>
           </Grid>
