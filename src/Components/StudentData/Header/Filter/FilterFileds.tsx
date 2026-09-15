@@ -6,27 +6,21 @@ import type {
 import Grid from "@mui/material/Grid";
 
 import {
-  Typography,
-  TextField,
   Autocomplete,
-  FormControl,
-  Select,
-  MenuItem,
   Box,
-  InputAdornment,
   Chip,
+  FormControl,
+  InputAdornment,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from "@mui/material";
 
-/*
-  SxProps and Theme are MUI types.
-
-  We use them to tell TypeScript that our reusable style
-  objects are valid values for MUI's `sx` prop.
-*/
 import type {
+  SelectChangeEvent,
   SxProps,
   Theme,
-  SelectChangeEvent,
 } from "@mui/material";
 
 import {
@@ -34,67 +28,37 @@ import {
   LocalizationProvider,
 } from "@mui/x-date-pickers";
 
+import {
+  AdapterDayjs,
+} from "@mui/x-date-pickers/AdapterDayjs";
+
 import dayjs from "dayjs";
 
-/*
-  Dayjs is imported only as a TypeScript type.
-
-  The MUI DatePicker uses Dayjs because we are using:
-    AdapterDayjs
-*/
-import type { Dayjs } from "dayjs";
-
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
 import {
-  Search,
-  School,
+  CalendarMonth,
   Groups,
   Person,
-  CalendarMonth,
+  School,
+  Search,
   Wifi,
   WifiOff,
 } from "@mui/icons-material";
 
-
-/*
-  This represents one option in the Course Autocomplete.
-
-  Example:
-
-    {
-      label: "Full Stack Development",
-      id: "67abc123..."
-    }
-*/
-interface CourseOption {
-  label: string;
-  id: string;
-}
+import type {
+  CourseOption,
+  DateRange,
+} from "../../../utils/filterUtils";
 
 
-/*
-  Our React state stores normal JavaScript Date objects.
+// ========================================
+// COMPONENT PROPS
+// ========================================
 
-  Either value may be null when the user has not selected a date.
-*/
-interface DateRange {
-  from: Date | null;
-  to: Date | null;
-}
-
-
-/*
-  Props received from StudentFilter.tsx.
-
-  Notice how the type of every state value matches
-  the type of its corresponding React setter.
-*/
 interface FilterFieldsProps {
-  // -----------------------------
-  // Course
-  // -----------------------------
-
+  /*
+   * Course dropdown options are produced by
+   * buildCourseOptions() in filterUtils.
+   */
   uniqueCourses: CourseOption[];
 
   selectedCourse: CourseOption | null;
@@ -103,16 +67,16 @@ interface FilterFieldsProps {
     SetStateAction<CourseOption | null>
   >;
 
+  /*
+   * freeSolo Autocomplete text is stored separately
+   * from the selected CourseOption.
+   */
   courseInput: string;
 
   setCourseInput: Dispatch<
     SetStateAction<string>
   >;
 
-
-  // -----------------------------
-  // Batch
-  // -----------------------------
 
   batchStatus: string;
 
@@ -121,20 +85,12 @@ interface FilterFieldsProps {
   >;
 
 
-  // -----------------------------
-  // Student
-  // -----------------------------
-
   studentName: string;
 
   setStudentName: Dispatch<
     SetStateAction<string>
   >;
 
-
-  // -----------------------------
-  // Gender
-  // -----------------------------
 
   genderFilter: string;
 
@@ -143,15 +99,12 @@ interface FilterFieldsProps {
   >;
 
 
-  // -----------------------------
-  // Date
-  // -----------------------------
-
   datePreset: string;
 
   setDatePreset: Dispatch<
     SetStateAction<string>
   >;
+
 
   dateRange: DateRange;
 
@@ -159,10 +112,6 @@ interface FilterFieldsProps {
     SetStateAction<DateRange>
   >;
 
-
-  // -----------------------------
-  // Session Type
-  // -----------------------------
 
   sessionType: string;
 
@@ -172,273 +121,296 @@ interface FilterFieldsProps {
 }
 
 
-/*
-  Small type used by getBatchStatusColor().
+// ========================================
+// BATCH STATUS COLOURS
+// ========================================
 
-  Both properties are CSS colour strings.
-*/
-interface StatusColor {
+interface StatusColour {
   bg: string;
+
   text: string;
 }
 
+
+const BATCH_STATUS_COLOURS:
+  Record<
+    string,
+    StatusColour
+  > = {
+  "In Progress": {
+    bg: "#dbeafe",
+    text: "#1e40af",
+  },
+
+  "Training Completed": {
+    bg: "#d1fae5",
+    text: "#065f46",
+  },
+
+  "Batch Completed": {
+    bg: "#e0e7ff",
+    text: "#4338ca",
+  },
+
+  "Not Started": {
+    bg: "#fee2e2",
+    text: "#991b1b",
+  },
+};
+
+
+// ========================================
+// SHARED STYLES
+// ========================================
+
+/*
+ * TypeScript:
+ * Explicit SxProps<Theme> types make these objects
+ * safe to pass into MUI's sx prop.
+ */
+const labelSx:
+  SxProps<Theme> = {
+  fontSize: 12,
+
+  fontWeight: 600,
+
+  mb: 0.1,
+
+  color: "#475569",
+
+  letterSpacing:
+    "0.025em",
+
+  display: "flex",
+
+  alignItems: "center",
+
+  gap: 0.5,
+};
+
+
+const inputSx:
+  SxProps<Theme> = {
+  "& .MuiOutlinedInput-root":
+    {
+      borderRadius:
+        "8px",
+
+      backgroundColor:
+        "#ffffff",
+
+      fontSize:
+        "14px",
+
+      transition:
+        "all 0.2s ease",
+
+      "&:hover": {
+        backgroundColor:
+          "#f8fafc",
+
+        "& .MuiOutlinedInput-notchedOutline":
+          {
+            borderColor:
+              "#3b82f6",
+          },
+      },
+
+      "&.Mui-focused": {
+        backgroundColor:
+          "#ffffff",
+
+        "& .MuiOutlinedInput-notchedOutline":
+          {
+            borderColor:
+              "#3b82f6",
+
+            borderWidth:
+              "2px",
+          },
+      },
+    },
+
+  "& .MuiOutlinedInput-notchedOutline":
+    {
+      borderColor:
+        "#e2e8f0",
+    },
+};
+
+
+const selectSx:
+  SxProps<Theme> = {
+  borderRadius:
+    "8px",
+
+  backgroundColor:
+    "#ffffff",
+
+  fontSize:
+    "14px",
+
+  transition:
+    "all 0.2s ease",
+
+  "&:hover": {
+    backgroundColor:
+      "#f8fafc",
+
+    "& .MuiOutlinedInput-notchedOutline":
+      {
+        borderColor:
+          "#3b82f6",
+      },
+  },
+
+  "&.Mui-focused": {
+    backgroundColor:
+      "#ffffff",
+
+    "& .MuiOutlinedInput-notchedOutline":
+      {
+        borderColor:
+          "#3b82f6",
+
+        borderWidth:
+          "2px",
+      },
+  },
+
+  "& .MuiOutlinedInput-notchedOutline":
+    {
+      borderColor:
+        "#e2e8f0",
+    },
+};
+
+
+// ========================================
+// STATUS COLOUR HELPER
+// ========================================
+
+const getBatchStatusColor = (
+  status: string
+): StatusColour => {
+  return (
+    BATCH_STATUS_COLOURS[
+      status
+    ] ?? {
+      bg: "#f1f5f9",
+
+      text: "#475569",
+    }
+  );
+};
+
+
+// ========================================
+// COMPONENT
+// ========================================
 
 const FilterFields = ({
   uniqueCourses,
   selectedCourse,
   setSelectedCourse,
-
   courseInput,
   setCourseInput,
-
   batchStatus,
   setBatchStatus,
-
   studentName,
   setStudentName,
-
   genderFilter,
   setGenderFilter,
-
   datePreset,
   setDatePreset,
-
   dateRange,
   setDateRange,
-
   sessionType,
   setSessionType,
 }: FilterFieldsProps) => {
-  /*
-    dateRange should always exist because its state is typed
-    as DateRange.
+  // ========================================
+  // DATE FILTER
+  // ========================================
 
-    We keep this fallback because the old JavaScript code had it,
-    but TypeScript now knows safeDateRange definitely has:
-
-      from
-      to
-  */
-  const safeDateRange: DateRange =
+  const safeDateRange:
+    DateRange =
     dateRange ?? {
       from: null,
+
       to: null,
     };
 
 
-  /*
-    TypeScript infers this as boolean.
-
-    isCustom === true
-    only when datePreset is "custom".
-  */
   const isCustom =
-    datePreset === "custom";
+    datePreset ===
+    "custom";
 
 
-  /*
-    `value` must be a string.
-
-    Examples:
-      ""
-      "today"
-      "7d"
-      "30d"
-      "month"
-      "year"
-      "custom"
-  */
   const handleDatePresetChange = (
     value: string
   ): void => {
-    setDatePreset(value);
+    setDatePreset(
+      value
+    );
+
 
     /*
-      If the user leaves custom mode,
-      clear any manually selected dates.
-    */
-    if (value !== "custom") {
+     * If the user switches away from Custom Range,
+     * clear any previously selected dates.
+     */
+    if (
+      value !==
+      "custom"
+    ) {
       setDateRange({
         from: null,
+
         to: null,
       });
     }
   };
 
 
-  /*
-    MUI Select provides a SelectChangeEvent.
+  // ========================================
+  // SELECT CHANGE HANDLERS
+  // ========================================
 
-    `SelectChangeEvent<string>` tells TypeScript that:
-
-      event.target.value
-
-    is expected to contain a string.
-  */
   const handleBatchStatusChange = (
-    event: SelectChangeEvent<string>
+    event:
+      SelectChangeEvent<string>
   ): void => {
-    setBatchStatus(event.target.value);
-  };
-
-
-  const handleGenderChange = (
-    event: SelectChangeEvent<string>
-  ): void => {
-    setGenderFilter(event.target.value);
-  };
-
-
-  const handleSessionTypeChange = (
-    event: SelectChangeEvent<string>
-  ): void => {
-    setSessionType(event.target.value);
-  };
-
-
-  const handleDatePresetSelectChange = (
-    event: SelectChangeEvent<string>
-  ): void => {
-    handleDatePresetChange(
+    setBatchStatus(
       event.target.value
     );
   };
 
 
-  /*
-    These are MUI `sx` style objects.
-
-    SxProps<Theme> tells TypeScript:
-      "this object must be valid MUI styling."
-  */
-  const labelSx: SxProps<Theme> = {
-    fontSize: 12,
-    fontWeight: 600,
-    mb: 0.1,
-    color: "#475569",
-    letterSpacing: "0.025em",
-    display: "flex",
-    alignItems: "center",
-    gap: 0.5,
+  const handleGenderChange = (
+    event:
+      SelectChangeEvent<string>
+  ): void => {
+    setGenderFilter(
+      event.target.value
+    );
   };
 
 
-  const inputSx: SxProps<Theme> = {
-    "& .MuiOutlinedInput-root": {
-      borderRadius: "8px",
-      backgroundColor: "#ffffff",
-      fontSize: "14px",
-      transition: "all 0.2s ease",
-
-      "&:hover": {
-        backgroundColor: "#f8fafc",
-
-        "& .MuiOutlinedInput-notchedOutline":
-          {
-            borderColor: "#3b82f6",
-          },
-      },
-
-      "&.Mui-focused": {
-        backgroundColor: "#ffffff",
-
-        "& .MuiOutlinedInput-notchedOutline":
-          {
-            borderColor: "#3b82f6",
-            borderWidth: "2px",
-          },
-      },
-    },
-
-    "& .MuiOutlinedInput-notchedOutline":
-      {
-        borderColor: "#e2e8f0",
-      },
+  const handleSessionTypeChange = (
+    event:
+      SelectChangeEvent<string>
+  ): void => {
+    setSessionType(
+      event.target.value
+    );
   };
 
 
-  const selectSx: SxProps<Theme> = {
-    borderRadius: "8px",
-    backgroundColor: "#ffffff",
-    fontSize: "14px",
-    transition: "all 0.2s ease",
-
-    "&:hover": {
-      backgroundColor: "#f8fafc",
-
-      "& .MuiOutlinedInput-notchedOutline":
-        {
-          borderColor: "#3b82f6",
-        },
-    },
-
-    "&.Mui-focused": {
-      backgroundColor: "#ffffff",
-
-      "& .MuiOutlinedInput-notchedOutline":
-        {
-          borderColor: "#3b82f6",
-          borderWidth: "2px",
-        },
-    },
-
-    "& .MuiOutlinedInput-notchedOutline":
-      {
-        borderColor: "#e2e8f0",
-      },
-  };
-
-
-  /*
-    Record<string, StatusColor> means:
-
-      every key is a string
-
-      and every value must look like:
-
-        {
-          bg: string,
-          text: string
-        }
-  */
-  const getBatchStatusColor = (
-    status: string
-  ): StatusColor => {
-    const colors: Record<
-      string,
-      StatusColor
-    > = {
-      "In Progress": {
-        bg: "#dbeafe",
-        text: "#1e40af",
-      },
-
-      "Training Completed": {
-        bg: "#d1fae5",
-        text: "#065f46",
-      },
-
-      "Batch Completed": {
-        bg: "#e0e7ff",
-        text: "#4338ca",
-      },
-
-      "Not Started": {
-        bg: "#fee2e2",
-        text: "#991b1b",
-      },
-    };
-
-
-    /*
-      If the supplied status does not exist in `colors`,
-      return our default colour.
-    */
-    return (
-      colors[status] ?? {
-        bg: "#f1f5f9",
-        text: "#475569",
-      }
+  const handlePresetSelectChange = (
+    event:
+      SelectChangeEvent<string>
+  ): void => {
+    handleDatePresetChange(
+      event.target.value
     );
   };
 
@@ -449,9 +421,9 @@ const FilterFields = ({
         container
         spacing={1.5}
       >
-        {/* =====================================
-            Student Name
-        ====================================== */}
+        {/* ========================================
+            STUDENT NAME
+        ======================================== */}
 
         <Grid
           size={{
@@ -461,10 +433,13 @@ const FilterFields = ({
             lg: 2.4,
           }}
         >
-          <Typography sx={labelSx}>
+          <Typography
+            sx={labelSx}
+          >
             <Person
               sx={{
-                fontSize: 16,
+                fontSize:
+                  16,
               }}
             />
 
@@ -474,45 +449,43 @@ const FilterFields = ({
 
           <TextField
             size="small"
-            value={studentName}
-
-            /*
-              Because this is a TextField,
-              TypeScript understands `event.target.value`
-              is a string.
-
-              Therefore it can safely be passed into:
-                setStudentName(...)
-            */
-            onChange={(event) =>
+            value={
+              studentName
+            }
+            onChange={(
+              event
+            ) =>
               setStudentName(
                 event.target.value
               )
             }
-
             placeholder="Search by name..."
             fullWidth
             sx={inputSx}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search
+                      sx={{
+                        color:
+                          "#94a3b8",
 
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search
-                    sx={{
-                      color: "#94a3b8",
-                      fontSize: 18,
-                    }}
-                  />
-                </InputAdornment>
-              ),
+                        fontSize:
+                          18,
+                      }}
+                    />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Grid>
 
 
-        {/* =====================================
-            Course Name
-        ====================================== */}
+        {/* ========================================
+            COURSE NAME
+        ======================================== */}
 
         <Grid
           size={{
@@ -522,10 +495,13 @@ const FilterFields = ({
             lg: 2.4,
           }}
         >
-          <Typography sx={labelSx}>
+          <Typography
+            sx={labelSx}
+          >
             <School
               sx={{
-                fontSize: 16,
+                fontSize:
+                  16,
               }}
             />
 
@@ -534,94 +510,66 @@ const FilterFields = ({
 
 
           <Autocomplete
-            /*
-              `freeSolo` means the user is allowed
-              to type text that is NOT one of the options.
-
-              Because of that, Autocomplete may give us:
-
-                CourseOption
-                string
-                null
-
-              rather than only CourseOption.
-            */
             freeSolo
-
             options={
-              uniqueCourses ?? []
+              uniqueCourses
             }
-
-            /*
-              `option` can be:
-
-                string
-                OR
-                CourseOption
-
-              because freeSolo is enabled.
-            */
-            getOptionLabel={(option) =>
-              typeof option === "string"
+            getOptionLabel={(
+              option
+            ) =>
+              typeof option ===
+              "string"
                 ? option
                 : option.label
             }
-
-            value={selectedCourse}
-
-            inputValue={courseInput}
-
-
-            /*
-              `value` here is simply the text currently
-              displayed inside the input box.
-            */
+            value={
+              selectedCourse
+            }
+            inputValue={
+              courseInput
+            }
             onInputChange={(
               _event,
               value
             ) => {
-              setCourseInput(value);
+              setCourseInput(
+                value
+              );
             }}
-
-
-            /*
-              Because freeSolo is enabled,
-              `value` can be:
-
-                CourseOption
-                string
-                null
-
-              Our selectedCourse state accepts only:
-
-                CourseOption | null
-
-              Therefore we explicitly handle strings.
-
-              If the user types their own text:
-                - keep it in courseInput
-                - selectedCourse becomes null
-
-              matchesSelectedCourse() can then filter using
-              the typed courseInput text.
-            */
             onChange={(
               _event,
               value
             ) => {
+              /*
+               * freeSolo can return either a typed
+               * string or a CourseOption object.
+               *
+               * We keep typed text in courseInput and
+               * only store real options in selectedCourse.
+               */
               if (
-                typeof value === "string"
+                typeof value ===
+                "string"
               ) {
-                setCourseInput(value);
-                setSelectedCourse(null);
+                setSelectedCourse(
+                  null
+                );
+
+                setCourseInput(
+                  value
+                );
+
                 return;
               }
 
-              setSelectedCourse(value);
+
+              setSelectedCourse(
+                value
+              );
             }}
-
-
-            renderInput={(params) => (
+            renderInput={(
+              params
+            ) => (
               <TextField
                 {...params}
                 size="small"
@@ -630,20 +578,20 @@ const FilterFields = ({
                 sx={inputSx}
               />
             )}
-
             sx={{
               "& .MuiAutocomplete-popupIndicator":
                 {
-                  color: "#94a3b8",
+                  color:
+                    "#94a3b8",
                 },
             }}
           />
         </Grid>
 
 
-        {/* =====================================
-            Batch Status
-        ====================================== */}
+        {/* ========================================
+            BATCH STATUS
+        ======================================== */}
 
         <Grid
           size={{
@@ -653,10 +601,13 @@ const FilterFields = ({
             lg: 2.4,
           }}
         >
-          <Typography sx={labelSx}>
+          <Typography
+            sx={labelSx}
+          >
             <Groups
               sx={{
-                fontSize: 16,
+                fontSize:
+                  16,
               }}
             />
 
@@ -668,24 +619,23 @@ const FilterFields = ({
             size="small"
             fullWidth
           >
-            <Select
-              value={batchStatus}
-
-              /*
-                We created a properly typed
-                SelectChangeEvent handler above.
-              */
+            <Select<string>
+              value={
+                batchStatus
+              }
               onChange={
                 handleBatchStatusChange
               }
-
               sx={selectSx}
             >
               <MenuItem value="">
                 <em
                   style={{
-                    color: "#94a3b8",
-                    fontSize: "14px",
+                    color:
+                      "#94a3b8",
+
+                    fontSize:
+                      "14px",
                   }}
                 >
                   All Statuses
@@ -693,104 +643,64 @@ const FilterFields = ({
               </MenuItem>
 
 
-              <MenuItem value="In Progress">
-                <Chip
-                  label="In Progress"
-                  size="small"
-                  sx={{
-                    backgroundColor:
-                      getBatchStatusColor(
-                        "In Progress"
-                      ).bg,
-
-                    color:
-                      getBatchStatusColor(
-                        "In Progress"
-                      ).text,
-
-                    fontWeight: 600,
-                    fontSize: "11px",
-                    height: "22px",
-                  }}
-                />
-              </MenuItem>
+              {[
+                "In Progress",
+                "Training Completed",
+                "Batch Completed",
+                "Not Started",
+              ].map(
+                (
+                  status
+                ) => {
+                  const colours =
+                    getBatchStatusColor(
+                      status
+                    );
 
 
-              <MenuItem value="Training Completed">
-                <Chip
-                  label="Training Completed"
-                  size="small"
-                  sx={{
-                    backgroundColor:
-                      getBatchStatusColor(
-                        "Training Completed"
-                      ).bg,
+                  return (
+                    <MenuItem
+                      key={
+                        status
+                      }
+                      value={
+                        status
+                      }
+                    >
+                      <Chip
+                        label={
+                          status
+                        }
+                        size="small"
+                        sx={{
+                          backgroundColor:
+                            colours.bg,
 
-                    color:
-                      getBatchStatusColor(
-                        "Training Completed"
-                      ).text,
+                          color:
+                            colours.text,
 
-                    fontWeight: 600,
-                    fontSize: "11px",
-                    height: "22px",
-                  }}
-                />
-              </MenuItem>
+                          fontWeight:
+                            600,
 
+                          fontSize:
+                            "11px",
 
-              <MenuItem value="Batch Completed">
-                <Chip
-                  label="Batch Completed"
-                  size="small"
-                  sx={{
-                    backgroundColor:
-                      getBatchStatusColor(
-                        "Batch Completed"
-                      ).bg,
-
-                    color:
-                      getBatchStatusColor(
-                        "Batch Completed"
-                      ).text,
-
-                    fontWeight: 600,
-                    fontSize: "11px",
-                    height: "22px",
-                  }}
-                />
-              </MenuItem>
-
-
-              <MenuItem value="Not Started">
-                <Chip
-                  label="Not Started"
-                  size="small"
-                  sx={{
-                    backgroundColor:
-                      getBatchStatusColor(
-                        "Not Started"
-                      ).bg,
-
-                    color:
-                      getBatchStatusColor(
-                        "Not Started"
-                      ).text,
-
-                    fontWeight: 600,
-                    fontSize: "11px",
-                    height: "22px",
-                  }}
-                />
-              </MenuItem>
+                          height:
+                            "22px",
+                        }}
+                      />
+                    </MenuItem>
+                  );
+                }
+              )}
             </Select>
           </FormControl>
         </Grid>
 
 
-        {/* =====================================
-            Gender
-        ====================================== */}
+        {/* ========================================
+            GENDER
+        ======================================== */}
 
         <Grid
           size={{
@@ -800,10 +710,13 @@ const FilterFields = ({
             lg: 2.4,
           }}
         >
-          <Typography sx={labelSx}>
+          <Typography
+            sx={labelSx}
+          >
             <Person
               sx={{
-                fontSize: 16,
+                fontSize:
+                  16,
               }}
             />
 
@@ -815,8 +728,10 @@ const FilterFields = ({
             size="small"
             fullWidth
           >
-            <Select
-              value={genderFilter}
+            <Select<string>
+              value={
+                genderFilter
+              }
               onChange={
                 handleGenderChange
               }
@@ -825,8 +740,11 @@ const FilterFields = ({
               <MenuItem value="">
                 <em
                   style={{
-                    color: "#94a3b8",
-                    fontSize: "14px",
+                    color:
+                      "#94a3b8",
+
+                    fontSize:
+                      "14px",
                   }}
                 >
                   All Genders
@@ -845,9 +763,9 @@ const FilterFields = ({
         </Grid>
 
 
-        {/* =====================================
-            Session Type
-        ====================================== */}
+        {/* ========================================
+            SESSION TYPE
+        ======================================== */}
 
         <Grid
           size={{
@@ -857,10 +775,13 @@ const FilterFields = ({
             lg: 2.4,
           }}
         >
-          <Typography sx={labelSx}>
+          <Typography
+            sx={labelSx}
+          >
             <Wifi
               sx={{
-                fontSize: 16,
+                fontSize:
+                  16,
               }}
             />
 
@@ -872,8 +793,10 @@ const FilterFields = ({
             size="small"
             fullWidth
           >
-            <Select
-              value={sessionType}
+            <Select<string>
+              value={
+                sessionType
+              }
               onChange={
                 handleSessionTypeChange
               }
@@ -882,8 +805,11 @@ const FilterFields = ({
               <MenuItem value="">
                 <em
                   style={{
-                    color: "#94a3b8",
-                    fontSize: "14px",
+                    color:
+                      "#94a3b8",
+
+                    fontSize:
+                      "14px",
                   }}
                 >
                   All Types
@@ -894,15 +820,23 @@ const FilterFields = ({
               <MenuItem value="Online">
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
+                    display:
+                      "flex",
+
+                    alignItems:
+                      "center",
+
+                    gap:
+                      1,
                   }}
                 >
                   <Wifi
                     sx={{
-                      fontSize: 16,
-                      color: "#059669",
+                      fontSize:
+                        16,
+
+                      color:
+                        "#059669",
                     }}
                   />
 
@@ -914,15 +848,23 @@ const FilterFields = ({
               <MenuItem value="Offline">
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
+                    display:
+                      "flex",
+
+                    alignItems:
+                      "center",
+
+                    gap:
+                      1,
                   }}
                 >
                   <WifiOff
                     sx={{
-                      fontSize: 16,
-                      color: "#dc2626",
+                      fontSize:
+                        16,
+
+                      color:
+                        "#dc2626",
                     }}
                   />
 
@@ -934,9 +876,9 @@ const FilterFields = ({
         </Grid>
 
 
-        {/* =====================================
-            Created Date Preset
-        ====================================== */}
+        {/* ========================================
+            CREATED DATE PRESET
+        ======================================== */}
 
         <Grid
           size={{
@@ -946,10 +888,13 @@ const FilterFields = ({
             lg: 2.4,
           }}
         >
-          <Typography sx={labelSx}>
+          <Typography
+            sx={labelSx}
+          >
             <CalendarMonth
               sx={{
-                fontSize: 16,
+                fontSize:
+                  16,
               }}
             />
 
@@ -961,10 +906,12 @@ const FilterFields = ({
             size="small"
             fullWidth
           >
-            <Select
-              value={datePreset || ""}
+            <Select<string>
+              value={
+                datePreset
+              }
               onChange={
-                handleDatePresetSelectChange
+                handlePresetSelectChange
               }
               sx={selectSx}
               displayEmpty
@@ -972,8 +919,11 @@ const FilterFields = ({
               <MenuItem value="">
                 <em
                   style={{
-                    color: "#94a3b8",
-                    fontSize: "14px",
+                    color:
+                      "#94a3b8",
+
+                    fontSize:
+                      "14px",
                   }}
                 >
                   All Dates
@@ -1008,9 +958,9 @@ const FilterFields = ({
         </Grid>
 
 
-        {/* =====================================
-            Custom Date Range - FROM
-        ====================================== */}
+        {/* ========================================
+            CUSTOM DATE - FROM
+        ======================================== */}
 
         {isCustom && (
           <Grid
@@ -1021,10 +971,15 @@ const FilterFields = ({
               lg: 2.4,
             }}
           >
-            <Typography sx={labelSx}>
+            <Typography
+              sx={
+                labelSx
+              }
+            >
               <CalendarMonth
                 sx={{
-                  fontSize: 16,
+                  fontSize:
+                    16,
                 }}
               />
 
@@ -1033,23 +988,11 @@ const FilterFields = ({
 
 
             <LocalizationProvider
-              dateAdapter={AdapterDayjs}
+              dateAdapter={
+                AdapterDayjs
+              }
             >
               <DatePicker
-                /*
-                  MUI DatePicker expects Dayjs because
-                  we're using AdapterDayjs.
-
-                  Our application state stores Date.
-
-                  Therefore:
-
-                    Date
-                      ↓
-                    dayjs(Date)
-                      ↓
-                    Dayjs
-                */
                 value={
                   safeDateRange.from
                     ? dayjs(
@@ -1057,41 +1000,37 @@ const FilterFields = ({
                       )
                     : null
                 }
-
-                /*
-                  The DatePicker gives us:
-                    Dayjs | null
-
-                  But our React state wants:
-                    Date | null
-
-                  Therefore:
-                    value.toDate()
-
-                  converts Dayjs → normal JavaScript Date.
-                */
                 onChange={(
-                  value: Dayjs | null
+                  value
                 ) => {
                   setDateRange(
-                    (previousRange) => ({
-                      ...previousRange,
+                    (
+                      previous
+                    ) => ({
+                      ...previous,
 
-                      from: value
-                        ? value.toDate()
-                        : null,
+                      from:
+                        value
+                          ? value.toDate()
+                          : null,
                     })
                   );
                 }}
-
                 slotProps={{
-                  textField: {
-                    size: "small",
-                    fullWidth: true,
-                    sx: inputSx,
-                    placeholder:
-                      "Start date",
-                  },
+                  textField:
+                    {
+                      size:
+                        "small",
+
+                      fullWidth:
+                        true,
+
+                      sx:
+                        inputSx,
+
+                      placeholder:
+                        "Start date",
+                    },
                 }}
               />
             </LocalizationProvider>
@@ -1099,9 +1038,9 @@ const FilterFields = ({
         )}
 
 
-        {/* =====================================
-            Custom Date Range - TO
-        ====================================== */}
+        {/* ========================================
+            CUSTOM DATE - TO
+        ======================================== */}
 
         {isCustom && (
           <Grid
@@ -1112,10 +1051,15 @@ const FilterFields = ({
               lg: 2.4,
             }}
           >
-            <Typography sx={labelSx}>
+            <Typography
+              sx={
+                labelSx
+              }
+            >
               <CalendarMonth
                 sx={{
-                  fontSize: 16,
+                  fontSize:
+                    16,
                 }}
               />
 
@@ -1124,7 +1068,9 @@ const FilterFields = ({
 
 
             <LocalizationProvider
-              dateAdapter={AdapterDayjs}
+              dateAdapter={
+                AdapterDayjs
+              }
             >
               <DatePicker
                 value={
@@ -1134,29 +1080,37 @@ const FilterFields = ({
                       )
                     : null
                 }
-
                 onChange={(
-                  value: Dayjs | null
+                  value
                 ) => {
                   setDateRange(
-                    (previousRange) => ({
-                      ...previousRange,
+                    (
+                      previous
+                    ) => ({
+                      ...previous,
 
-                      to: value
-                        ? value.toDate()
-                        : null,
+                      to:
+                        value
+                          ? value.toDate()
+                          : null,
                     })
                   );
                 }}
-
                 slotProps={{
-                  textField: {
-                    size: "small",
-                    fullWidth: true,
-                    sx: inputSx,
-                    placeholder:
-                      "End date",
-                  },
+                  textField:
+                    {
+                      size:
+                        "small",
+
+                      fullWidth:
+                        true,
+
+                      sx:
+                        inputSx,
+
+                      placeholder:
+                        "End date",
+                    },
                 }}
               />
             </LocalizationProvider>
@@ -1166,6 +1120,5 @@ const FilterFields = ({
     </Box>
   );
 };
-
 
 export default FilterFields;

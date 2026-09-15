@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 
 import {
-  FilterList,
   Close,
+  FilterList,
 } from "@mui/icons-material";
 
 import FilterFields from "./FilterFileds";
@@ -26,91 +26,57 @@ import {
   applyButtonStyles,
 } from "../../../utils/constant";
 
-
-/*
-  A course option is used by the Autocomplete filter.
-
-  Example:
-    {
-      label: "Web Development",
-      id: "67abc123..."
-    }
-*/
-interface CourseOption {
-  label: string;
-  id: string;
-}
+import type {
+  CourseOption,
+  DateRange,
+} from "../../../utils/filterUtils";
 
 
-/*
-  Represents the custom date range used by the filter.
+// ========================================
+// COMPONENT PROPS
+// ========================================
 
-  A date can be null because the user may not have
-  selected a start or end date yet.
-*/
-interface DateRange {
-  from: Date | null;
-  to: Date | null;
-}
-
-
-/*
-  This interface describes everything StudentFilter
-  expects to receive from Header.tsx.
-
-  TypeScript will now warn us if Header:
-    - forgets a required prop
-    - passes the wrong type
-    - misspells a prop name
-*/
 interface StudentFilterProps {
-  // Controls whether the filter panel is visible.
+  // ----------------------------------------
+  // FILTER PANEL
+  // ----------------------------------------
+
   openFilters: boolean;
 
-  /*
-    Setter belonging to:
-
-      useState<boolean>()
-
-    It allows:
-
-      setOpenFilters(true)
-
-    AND:
-
-      setOpenFilters(previous => !previous)
-  */
   setOpenFilters: Dispatch<
     SetStateAction<boolean>
   >;
 
 
-  /*
-    Functions from useFilteredTable.
+  // ----------------------------------------
+  // FILTER ACTIONS
+  // ----------------------------------------
 
-    () => void means:
-      no required arguments
-      no return value that we use.
-  */
+  /*
+   * These functions are supplied by ViewStudent
+   * through useFilteredTable.
+   */
   onApply: () => void;
+
   onReset: () => void;
 
 
-  // -----------------------------
-  // Course filter
-  // -----------------------------
+  // ----------------------------------------
+  // COURSE FILTER
+  // ----------------------------------------
 
   uniqueCourses: CourseOption[];
 
-  /*
-    null means no course is currently selected.
-  */
   selectedCourse: CourseOption | null;
 
   setSelectedCourse: Dispatch<
     SetStateAction<CourseOption | null>
   >;
 
+  /*
+   * freeSolo text is stored separately from the
+   * selected CourseOption object.
+   */
   courseInput: string;
 
   setCourseInput: Dispatch<
@@ -118,9 +84,9 @@ interface StudentFilterProps {
   >;
 
 
-  // -----------------------------
-  // Batch status filter
-  // -----------------------------
+  // ----------------------------------------
+  // BATCH STATUS
+  // ----------------------------------------
 
   batchStatus: string;
 
@@ -129,9 +95,9 @@ interface StudentFilterProps {
   >;
 
 
-  // -----------------------------
-  // Student name filter
-  // -----------------------------
+  // ----------------------------------------
+  // STUDENT NAME
+  // ----------------------------------------
 
   studentName: string;
 
@@ -140,9 +106,9 @@ interface StudentFilterProps {
   >;
 
 
-  // -----------------------------
-  // Gender filter
-  // -----------------------------
+  // ----------------------------------------
+  // GENDER
+  // ----------------------------------------
 
   genderFilter: string;
 
@@ -151,20 +117,9 @@ interface StudentFilterProps {
   >;
 
 
-  // -----------------------------
-  // Session type filter
-  // -----------------------------
-
-  sessionType: string;
-
-  setSessionType: Dispatch<
-    SetStateAction<string>
-  >;
-
-
-  // -----------------------------
-  // Date filter
-  // -----------------------------
+  // ----------------------------------------
+  // DATE FILTER
+  // ----------------------------------------
 
   datePreset: string;
 
@@ -177,81 +132,91 @@ interface StudentFilterProps {
   setDateRange: Dispatch<
     SetStateAction<DateRange>
   >;
+
+
+  // ----------------------------------------
+  // SESSION TYPE
+  // ----------------------------------------
+
+  sessionType: string;
+
+  setSessionType: Dispatch<
+    SetStateAction<string>
+  >;
 }
 
+
+// ========================================
+// COMPONENT
+// ========================================
 
 const StudentFilter = ({
   openFilters,
   setOpenFilters,
-
   onApply,
   onReset,
-
   uniqueCourses,
   selectedCourse,
   setSelectedCourse,
   courseInput,
   setCourseInput,
-
   batchStatus,
   setBatchStatus,
-
   studentName,
   setStudentName,
-
   genderFilter,
   setGenderFilter,
-
-  sessionType,
-  setSessionType,
-
   datePreset,
   setDatePreset,
   dateRange,
   setDateRange,
+  sessionType,
+  setSessionType,
 }: StudentFilterProps) => {
+  // ========================================
+  // TOGGLE FILTER PANEL
+  // ========================================
+
+  const handleToggleFilters =
+    (): void => {
+      /*
+       * Functional state update preserves the
+       * existing behaviour and gives TypeScript
+       * the previous value as a boolean.
+       */
+      setOpenFilters(
+        (
+          previous
+        ) =>
+          !previous
+      );
+    };
+
+
   return (
     <Box
       sx={{
-        width: "100%",
-        mb: 2,
+        width:
+          "100%",
+
+        mb:
+          2,
       }}
     >
-      {/* --------------------------------
-          Filter Toggle Button
-      -------------------------------- */}
+      {/* ========================================
+          SHOW / HIDE FILTERS
+      ======================================== */}
 
       <Button
         variant="contained"
-
-        /*
-          setOpenFilters is a React boolean setter.
-
-          We use its callback form:
-
-            previousValue => !previousValue
-
-          because the new value depends on
-          the previous state.
-        */
-        onClick={() =>
-          setOpenFilters(
-            (previousOpen) => !previousOpen
-          )
+        onClick={
+          handleToggleFilters
         }
-
-        /*
-          openFilters is boolean, so TypeScript
-          knows which JSX icon should be rendered.
-        */
         startIcon={
-          openFilters ? (
-            <Close />
-          ) : (
-            <FilterList />
-          )
+          openFilters
+            ? <Close />
+            : <FilterList />
         }
-
         sx={
           filterToggleButtonStyles(
             openFilters
@@ -264,22 +229,30 @@ const StudentFilter = ({
       </Button>
 
 
-      {/* --------------------------------
-          Collapsible Filter Panel
-      -------------------------------- */}
+      {/* ========================================
+          FILTER PANEL
+      ======================================== */}
 
       <Collapse
-        in={openFilters}
-        timeout={300}
+        in={
+          openFilters
+        }
+        timeout={
+          300
+        }
         unmountOnExit
       >
         <Paper
-          elevation={2}
-          sx={filterPanelStyles}
+          elevation={
+            2
+          }
+          sx={
+            filterPanelStyles
+          }
         >
-          {/* ----------------------------
-              Filter input fields
-          ---------------------------- */}
+          {/* ========================================
+              FILTER FIELDS
+          ======================================== */}
 
           <Box
             sx={
@@ -290,56 +263,48 @@ const StudentFilter = ({
               uniqueCourses={
                 uniqueCourses
               }
-
               selectedCourse={
                 selectedCourse
               }
               setSelectedCourse={
                 setSelectedCourse
               }
-
               courseInput={
                 courseInput
               }
               setCourseInput={
                 setCourseInput
               }
-
               batchStatus={
                 batchStatus
               }
               setBatchStatus={
                 setBatchStatus
               }
-
               studentName={
                 studentName
               }
               setStudentName={
                 setStudentName
               }
-
               genderFilter={
                 genderFilter
               }
               setGenderFilter={
                 setGenderFilter
               }
-
               sessionType={
                 sessionType
               }
               setSessionType={
                 setSessionType
               }
-
               datePreset={
                 datePreset
               }
               setDatePreset={
                 setDatePreset
               }
-
               dateRange={
                 dateRange
               }
@@ -350,9 +315,9 @@ const StudentFilter = ({
           </Box>
 
 
-          {/* ----------------------------
-              Reset / Apply buttons
-          ---------------------------- */}
+          {/* ========================================
+              FILTER ACTION BUTTONS
+          ======================================== */}
 
           <Box
             sx={
@@ -360,30 +325,30 @@ const StudentFilter = ({
             }
           >
             <Button
+              type="button"
               variant="outlined"
-
-              /*
-                onReset has the type:
-
-                  () => void
-
-                so TypeScript knows this is
-                a valid click handler.
-              */
-              onClick={onReset}
-
+              onClick={
+                onReset
+              }
               size="small"
-              sx={resetButtonStyles}
+              sx={
+                resetButtonStyles
+              }
             >
               Reset
             </Button>
 
 
             <Button
+              type="button"
               variant="contained"
-              onClick={onApply}
+              onClick={
+                onApply
+              }
               size="small"
-              sx={applyButtonStyles}
+              sx={
+                applyButtonStyles
+              }
             >
               Apply Filters
             </Button>
@@ -393,6 +358,5 @@ const StudentFilter = ({
     </Box>
   );
 };
-
 
 export default StudentFilter;
