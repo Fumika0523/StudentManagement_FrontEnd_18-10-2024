@@ -5,7 +5,9 @@
  * @param {number} noOfDays  - number of days the course runs
  * @returns {string} - end date formatted as "YYYY-MM-DD", or "" if inputs are invalid
  */
-export const calcEndDate = (startDate, noOfDays) => {
+export const calcEndDate = (
+  startDate:string,
+  noOfDays:number | string | undefined) => {
   if (!startDate || !noOfDays) return "";
 
   const start = new Date(startDate);

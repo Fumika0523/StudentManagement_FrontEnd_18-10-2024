@@ -1,11 +1,17 @@
-import React from "react";
+import type { ReactNode } from "react";
 import Modal from "react-bootstrap/Modal";
+
+interface ModalHeaderBlockProps {
+  title: string;
+  icon: ReactNode;
+  gradient?: string;
+}
 
 function ModalHeaderBlock({
   title,
   icon,
   gradient = "linear-gradient(135deg, #1f3fbf 0%, #1b2f7a 100%)",
-}) {
+}: ModalHeaderBlockProps) {
   return (
     <Modal.Header
       closeButton
@@ -31,12 +37,12 @@ function ModalHeaderBlock({
             width: 38,
             height: 38,
             borderRadius: 12,
-            fontSize:"24px",
+            fontSize: "24px",
             background: "rgba(255,255,255,0.14)",
             border: "1px solid rgba(255,255,255,0.22)",
             display: "grid",
             placeItems: "center",
-             color: "white"
+            color: "white",
           }}
         >
           {icon}
