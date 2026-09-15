@@ -1,0 +1,104 @@
+/*
+  Dispatch and SetStateAction are used to type the React
+  state setter that controls whether the Add Course modal is open.
+*/
+import type {
+  Dispatch,
+  SetStateAction,
+} from "react";
+
+import {
+  Box,
+  Button,
+} from "@mui/material";
+
+import {
+  School,
+} from "@mui/icons-material";
+
+
+/*
+  This component receives only one prop:
+
+    setShowAdd
+
+  That prop comes from:
+
+    const [showAdd, setShowAdd]
+      = useState<boolean>(false);
+
+  Therefore its type is:
+
+    Dispatch<SetStateAction<boolean>>
+*/
+interface ActionBtnsProps {
+  setShowAdd: Dispatch<
+    SetStateAction<boolean>
+  >;
+}
+
+
+const ActionBtns = ({
+  setShowAdd,
+}: ActionBtnsProps) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 1.5,
+        mb: 1,
+        justifyContent: "flex-end",
+        alignItems: "center",
+      }}
+    >
+      {/* Add Course Button */}
+      <Button
+        variant="contained"
+        startIcon={<School />}
+
+        /*
+          setShowAdd expects a boolean state update.
+
+          true means:
+            open the Add Course modal.
+        */
+        onClick={() =>
+          setShowAdd(true)
+        }
+
+        sx={{
+          backgroundColor: "#1f3fbf",
+          textTransform: "none",
+          fontWeight: 600,
+          fontSize: "14px",
+          px: 2.5,
+          py: 1,
+          borderRadius: "8px",
+
+          boxShadow:
+            "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+
+          transition:
+            "all 0.2s ease",
+
+          "&:hover": {
+            backgroundColor:
+              "#1b50c2",
+
+            boxShadow:
+              "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+
+            transform:
+              "translateY(-1px)",
+          },
+        }}
+      >
+        Add Course
+      </Button>
+    </Box>
+  );
+};
+
+
+export default ActionBtns;
